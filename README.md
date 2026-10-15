@@ -1,1 +1,39 @@
-# apb-itbs
+# 🚀 Analisa Proses Bisnis (INF1104)
+
+**Selamat datang di repositori materi perkuliahan interaktif S1 Teknik Informatika - ITBS!** 👋
+
+Perusahaan membayar mahal seorang ahli IT bukan sekadar untuk *ngoding*, tapi untuk **menyelesaikan masalah bisnis**. Aplikasi secanggih apa pun akan menjadi produk gagal jika tidak mampu menjawab kebutuhan operasional (*Standard Operating Procedure*).
+
+Di kelas ini, kita tidak akan langsung membuka *code editor*. Kita akan belajar menjadi **"Jembatan Penerjemah"** (*Systems Analyst*) untuk merancang cetak biru (*blueprint*) sebelum sebuah aplikasi dibangun.
+
+---
+
+## 📚 Daftar Materi Interaktif
+Klik tautan di bawah ini untuk membuka *slide* presentasi secara *full-screen*. 
+
+### 📌 [Pertemuan 1: Pengantar Sistem & Alur Operasional](https://ardiariansyah07.github.io/<nama-repo>/pertemuan1.html)
+> Mengapa sistem e-commerce yang canggih bisa gagal memuaskan pelanggan? Kita pelajari anatomi dasar proses bisnis dan seberapa krusial peran *Systems Analyst*.
+
+### 📌 [Pertemuan 2: Stakeholders & Value Chain](https://ardiariansyah07.github.io/<nama-repo>/pertemuan2.html)
+> Mengenali aktor-aktor penting di balik layar operasional dan membedah Rantai Nilai (*Value Chain*) perusahaan. Temukan di titik mana teknologi IT bisa disuntikkan!
+
+### 📌 [Pertemuan 3: Pemetaan Proses & BPMN 2.0](https://ardiariansyah07.github.io/<nama-repo>/pertemuan3.html)
+> Selamat tinggal *flowchart* biasa yang membingungkan! Mari belajar *Business Process Model and Notation* (BPMN), bahasa visual standar internasional.
+
+### 📌 [Pertemuan 4: Swimlanes, Artifacts & Praktik Digital](https://ardiariansyah07.github.io/<nama-repo>/pertemuan4.html)
+> Praktikum digital menyusun *Pools*, *Lanes*, dan *Data Store* menggunakan platform kolaboratif [Draw.io](https://app.diagrams.net/). 
+
+---
+
+## 🎮 Panduan Belajar Mandiri
+Modul ini **bukan PDF atau PowerPoint statis biasa**, melainkan presentasi web interaktif berbasis HTML. Untuk pengalaman belajar terbaik:
+
+1. 💻 **Gunakan Layar Lebar:** Sangat disarankan membukanya melalui *browser* di Laptop/PC.
+2. ⌨️ **Navigasi Cepat:** Gunakan tombol panah **Kanan/Kiri** atau **Spasi** pada *keyboard* Anda untuk berpindah *slide*. Anda juga bisa melompat ke slide tertentu menggunakan menu *dropdown* di bagian atas.
+3. 🧩 **Ikuti Praktik Langsung:** Beberapa *slide* dilengkapi dengan permainan **Drag & Drop** dan **Kuis Interaktif**. Jangan ragu untuk mengklik dan menarik elemen-elemen tersebut untuk menguji pemahaman Anda!
+
+---
+
+💡 *"Sistem yang hebat berawal dari proses yang tepat."*
+
+**Dosen Pengampu:** [Ardi Ariansyah, S.Kom., Gr.](https://github.com/ardiariansyah07)
