@@ -67,13 +67,6 @@
       gap: 8px;
     }
     .nav-btn:hover { background: #334155; }
-    
-    .btn-edit { border-color: #EA580C; color: #EA580C; }
-    .btn-edit:hover { background: #EA580C; color: white; }
-    .btn-save { border-color: #10B981; color: #10B981; display: none;}
-    .btn-save:hover { background: #10B981; color: white; }
-    .btn-pdf { border-color: #EF4444; color: #EF4444; }
-    .btn-pdf:hover { background: #EF4444; color: white; }
 
     /* DROPDOWN MENU SLIDES */
     .slide-selector {
@@ -97,9 +90,8 @@
       top: var(--navbar-height);
       left: 0;
       right: 0;
-      bottom: 0;
+      bottom: 0; /* Dikembalikan ke 0 karena footer dihapus */
       overflow: hidden;
-      /* Dihapus display flex center untuk mencegah konflik dengan absolute positioning */
     }
 
     /* HARD LOCK 16:9 CONTAINER (1280x720px) */
@@ -112,7 +104,7 @@
       flex-direction: column;
       box-shadow: 0 10px 40px rgba(0,0,0,0.5);
       
-      /* PERBAIKAN POSITIONING: MEMAKSA SLIDE KE TENGAH */
+      /* POSITIONING TENGAH */
       position: absolute;
       top: 50%;
       left: 50%;
@@ -135,18 +127,18 @@
     /* TYPOGRAPHY */
     h1, h2, h3, h4, .eyebrow { font-family: 'Montserrat', sans-serif; }
     h1 { font-size: 64px; font-weight: 800; line-height: 1.1; margin-bottom: 24px; color: var(--color-text-dark); }
-    h2 { font-size: 48px; font-weight: 700; line-height: 1.2; margin-bottom: 32px; color: var(--color-text-dark); }
+    h2 { font-size: 44px; font-weight: 700; line-height: 1.2; margin-bottom: 24px; color: var(--color-text-dark); } /* Size reduced */
     h3 { font-size: 32px; font-weight: 700; margin-bottom: 16px; color: var(--color-blue); }
-    p, li { font-size: 26px; line-height: 1.5; color: var(--color-text-muted); }
-    .eyebrow { font-size: 20px; font-weight: 700; color: var(--color-orange); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 16px; }
-    .divider { width: 80px; height: 6px; background: var(--color-orange); margin: 24px 0 32px 0; }
+    p, li { font-size: 24px; line-height: 1.5; color: var(--color-text-muted); } /* Size reduced slightly */
+    .eyebrow { font-size: 18px; font-weight: 700; color: var(--color-orange); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; }
+    .divider { width: 80px; height: 6px; background: var(--color-orange); margin: 20px 0 24px 0; }
     
     .bg-dark { background: var(--color-dark-bg) !important; color: var(--color-white) !important; }
     .bg-dark h1, .bg-dark h2, .bg-dark h3, .bg-dark p, .bg-dark li { color: var(--color-white) !important; }
     
     /* LAYOUT: SPLIT SCREEN */
     .layout-split { display: flex; flex-direction: row; flex: 1 1 100%; width: 100%; height: 100%; }
-    .split-col { display: flex; flex-direction: column; justify-content: center; height: 100%; padding: 64px 80px; }
+    .split-col { display: flex; flex-direction: column; justify-content: center; height: 100%; padding: 40px 80px; } /* Reduced padding */
     .split-img-col { padding: 0 !important; margin: 0 !important; display: flex; }
     .split-img-col img { width: 100%; height: 100%; object-fit: cover; display: block; margin: 0; padding: 0; }
     
@@ -156,68 +148,40 @@
     .w-60 { flex: 0 0 60%; width: 60%; }
 
     /* LAYOUT: STANDARD / CENTERED */
-    .pad-standard { padding: 64px 80px; display: flex; flex-direction: column; flex: 1; height: 100%; }
-    .center-content { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; flex: 1; height: 100%; padding: 64px 80px; }
+    .pad-standard { padding: 40px 80px; display: flex; flex-direction: column; flex: 1; height: 100%; } /* Reduced padding to prevent cutoff */
+    .center-content { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; flex: 1; height: 100%; padding: 40px 80px; }
     .flex-grow-center { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; }
 
     /* COMPONENTS: LISTS & CARDS */
-    .minimal-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 24px; }
-    .minimal-list li { display: flex; align-items: flex-start; gap: 24px; font-weight: 600; }
-    .minimal-list li i { font-size: 36px; color: var(--color-blue); width: 48px; text-align: center; margin-top: 4px; }
+    .minimal-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 20px; }
+    .minimal-list li { display: flex; align-items: flex-start; gap: 20px; font-weight: 600; }
+    .minimal-list li i { font-size: 32px; color: var(--color-blue); width: 40px; text-align: center; margin-top: 4px; }
 
-    .card-grid { display: flex; gap: 32px; align-items: stretch; width: 100%; justify-content: center; }
-    .card { background: var(--color-white); border-radius: 16px; padding: 48px 40px; flex: 1 1 0; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #E2E8F0; display: flex; flex-direction: column; align-items: flex-start; }
-    .card i { font-size: 56px; color: var(--color-orange); margin-bottom: 24px; }
+    .card-grid { display: flex; gap: 24px; align-items: stretch; width: 100%; justify-content: center; }
+    .card { background: var(--color-white); border-radius: 16px; padding: 32px 32px; flex: 1 1 0; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #E2E8F0; display: flex; flex-direction: column; align-items: flex-start; } /* Reduced padding */
+    .card i { font-size: 48px; color: var(--color-orange); margin-bottom: 16px; }
 
-    /* INTERACTIVE: DRAG AND DROP */
-    .draggable-container { display: flex; gap: 16px; margin-bottom: 32px; justify-content: center; min-height: 80px; flex-wrap: wrap; }
-    .drag-item { cursor: grab; padding: 12px 24px; font-size: 20px; background: white; border: 3px solid #0369A1; border-radius: 12px; font-weight: 700; user-select: none; color: #0F172A; text-align: center; margin-bottom: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.2s; display: inline-block; }
+    /* INTERACTIVE: DRAG AND DROP (OPTIMIZED SIZES) */
+    .draggable-container { display: flex; gap: 16px; margin-bottom: 16px; justify-content: center; min-height: 60px; flex-wrap: wrap; }
+    .drag-item { cursor: grab; padding: 10px 20px; font-size: 18px; background: white; border: 3px solid #0369A1; border-radius: 12px; font-weight: 700; user-select: none; color: #0F172A; text-align: center; margin-bottom: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.2s; display: inline-block; }
     .drag-item:active { cursor: grabbing; transform: scale(0.95); }
     .drag-item.dragging { opacity: 0.5; }
     
     .dropzones-container { display: flex; gap: 24px; justify-content: center; align-items: stretch; width: 100%; }
-    .drop-zone { border: 4px dashed #CBD5E1; border-radius: 16px; flex: 1; min-height: 160px; padding: 24px; display: flex; flex-direction: column; align-items: center; background: #FFFFFF; transition: 0.3s; }
-    .drop-zone h3 { font-size: 24px; margin-bottom: 16px; color: #475569; border-bottom: 2px solid #CBD5E1; padding-bottom: 12px; width: 100%; text-align: center;}
+    .drop-zone { border: 4px dashed #CBD5E1; border-radius: 16px; flex: 1; min-height: 140px; padding: 16px; display: flex; flex-direction: column; align-items: center; background: #FFFFFF; transition: 0.3s; }
+    .drop-zone h3 { font-size: 22px; margin-bottom: 12px; color: #475569; border-bottom: 2px solid #CBD5E1; padding-bottom: 8px; width: 100%; text-align: center;}
     .drop-zone.drag-over { border-color: #EA580C; background: #FFF7ED; }
     .drop-content { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; width: 100%; gap: 8px; }
 
     /* INTERACTIVE: QUIZ */
-    .quiz-option { background: #F8FAFC; border: 2px solid #CBD5E1; padding: 12px 20px; border-radius: 12px; font-size: 22px; font-weight: 600; cursor: pointer; text-align: left; transition: 0.2s; margin-bottom: 12px; width: 100%; color: #334155; display: flex; align-items: center; gap: 16px; }
+    .quiz-option { background: #F8FAFC; border: 2px solid #CBD5E1; padding: 12px 20px; border-radius: 12px; font-size: 20px; font-weight: 600; cursor: pointer; text-align: left; transition: 0.2s; margin-bottom: 12px; width: 100%; color: #334155; display: flex; align-items: center; gap: 16px; }
     .quiz-option:hover { background: #E2E8F0; transform: translateX(8px); }
     .quiz-option.correct { background: #D1FAE5; border-color: #10B981; color: #065F46; }
     .quiz-option.wrong { background: #FEE2E2; border-color: #EF4444; color: #991B1B; }
-    .quiz-feedback { display: none; margin-top: 16px; padding: 16px 24px; background: #F0F9FF; border-left: 8px solid #0369A1; border-radius: 0 12px 12px 0; font-size: 20px; animation: fadeIn 0.4s ease-in-out; }
+    .quiz-feedback { display: none; margin-top: 16px; padding: 16px 24px; background: #F0F9FF; border-left: 8px solid #0369A1; border-radius: 0 12px 12px 0; font-size: 18px; animation: fadeIn 0.4s ease-in-out; }
     .quiz-feedback.show { display: block; }
-    .quiz-feedback h4 { font-size: 24px; margin-bottom: 8px; color: #0369A1; }
+    .quiz-feedback h4 { font-size: 22px; margin-bottom: 8px; color: #0369A1; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-    /* --- PRINT STYLES FOR PDF EXPORT --- */
-    @media print {
-      @page { size: 1280px 720px; margin: 0; }
-      body, html { height: auto !important; overflow: visible !important; background: var(--color-bg-light) !important; }
-      
-      /* Hide UI Elements */
-      .top-navbar, .presentation-controls { display: none !important; }
-      
-      /* Reset Container for Print */
-      #presentation-area { position: static !important; display: block !important; }
-      
-      /* Make all slides visible and break pages */
-      .slide-container {
-        position: relative !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-        transform: none !important;
-        page-break-after: always !important;
-        break-after: page !important;
-        box-shadow: none !important;
-        top: auto !important;
-        left: auto !important;
-      }
-      
-      /* Background colors in print */
-      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-    }
   </style>
 </head>
 <body>
@@ -225,7 +189,7 @@
   <!-- TOP NAVIGATION BAR -->
   <div class="top-navbar" id="navbar">
     <div class="nav-left">
-      <div style="font-weight: 800; font-size: 18px; color: #38BDF8;">ITBS <span style="font-weight:400; color:#94A3B8;">| INF1104</span></div>
+      <div style="font-weight: 800; font-size: 18px; color: #38BDF8;">ITB Swadharma</div>
     </div>
     
     <div class="nav-center">
@@ -239,17 +203,9 @@
       <button class="nav-btn" onclick="nextSlide()" title="Slide Berikutnya"><i class="fa-solid fa-chevron-right"></i></button>
     </div>
 
+    <!-- NAMA DOSEN DI HEADER KANAN -->
     <div class="nav-right">
-      <!-- EXPORT & EDIT CONTROLS -->
-      <button class="nav-btn btn-pdf" onclick="exportToPDF()" title="Simpan sebagai PDF">
-        <i class="fa-solid fa-file-pdf"></i> Cetak PDF
-      </button>
-      <button class="nav-btn btn-edit" id="btnEditToggle" onclick="toggleEditMode()">
-        <i class="fa-solid fa-pen"></i> Edit Teks
-      </button>
-      <button class="nav-btn btn-save" id="btnSaveDownload" onclick="saveAndDownloadHTML()">
-        <i class="fa-solid fa-download"></i> Simpan HTML
-      </button>
+      <div style="font-weight: 600; font-size: 14px; color: #94A3B8;">Analisa Proses Bisnis (3 SKS) • Ardi Ariansyah, S.Kom., Gr.</div>
     </div>
   </div>
 
@@ -260,14 +216,14 @@
       <!-- SLIDE 1 (COVER) -->
       <div class="slide-container layout-split bg-dark active" data-title="Sampul Depan">
         <div class="split-col w-60 bg-dark">
-          <p class="eyebrow" contenteditable="false">Pertemuan 1 • INF1104</p>
-          <h1 contenteditable="false">Analisa Proses Bisnis</h1>
+          <p class="eyebrow">Pertemuan 1 • INF1104</p>
+          <h1>Analisa Proses Bisnis</h1>
           <div class="divider"></div>
-          <p contenteditable="false" style="font-size: 32px; font-weight: 600;">Pengantar Sistem &amp; Alur Operasional</p>
+          <p style="font-size: 32px; font-weight: 600;">Pengantar Sistem &amp; Alur Operasional</p>
           <div style="margin-top: 40px; border-top: 2px solid #334155; padding-top: 20px;">
-            <p contenteditable="false" style="color: #94A3B8; font-size: 18px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Dosen Pengampu:</p>
-            <p contenteditable="false" style="color: #FFFFFF; font-size: 26px; font-weight: 700; margin-top: 6px;">Ardi Ariansyah, S.Kom., Gr.</p>
-            <p contenteditable="false" style="color: #0369A1; font-size: 20px; font-weight: 600;">S1 Teknik Informatika • ITBS</p>
+            <p style="color: #94A3B8; font-size: 18px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Dosen Pengampu:</p>
+            <p style="color: #FFFFFF; font-size: 26px; font-weight: 700; margin-top: 6px;">Ardi Ariansyah, S.Kom., Gr.</p>
+            <p style="color: #0369A1; font-size: 20px; font-weight: 600;">S1 Teknik Informatika • ITB Swadharma</p>
           </div>
         </div>
         <div class="split-col split-img-col w-40">
@@ -278,12 +234,12 @@
       <!-- SLIDE 2 -->
       <div class="slide-container layout-split" data-title="Cek Audio & Layar">
         <div class="split-col w-50">
-          <p class="eyebrow" contenteditable="false">Kesiapan Teknis</p>
-          <h2 contenteditable="false" style="font-size: 56px;">Cek Audio &amp; Layar</h2>
+          <p class="eyebrow">Kesiapan Teknis</p>
+          <h2 style="font-size: 56px;">Cek Audio &amp; Layar</h2>
           <ul class="minimal-list" style="margin-top: 32px;">
-            <li><i class="fa-solid fa-volume-high"></i> <span contenteditable="false">Suara saya terdengar jelas?</span></li>
-            <li><i class="fa-solid fa-display"></i> <span contenteditable="false">Slide tampil penuh (*Full Screen*)?</span></li>
-            <li><i class="fa-solid fa-keyboard"></i> <span contenteditable="false">Ketik "SIAP" di kolom chat GMeet.</span></li>
+            <li><i class="fa-solid fa-volume-high"></i> <span>Suara saya terdengar jelas?</span></li>
+            <li><i class="fa-solid fa-display"></i> <span>Slide tampil penuh (*Full Screen*)?</span></li>
+            <li><i class="fa-solid fa-keyboard"></i> <span>Ketik "SIAP" di kolom chat GMeet.</span></li>
           </ul>
         </div>
         <div class="split-col split-img-col w-50" style="background: #E0F2FE; align-items: center; justify-content: center;">
@@ -293,23 +249,23 @@
 
       <!-- SLIDE 3 -->
       <div class="slide-container pad-standard" data-title="Fokus Utama Kelas">
-        <h2 contenteditable="false">Fokus Utama Kelas Kita</h2>
+        <h2>Fokus Utama Kelas Kita</h2>
         <div class="flex-grow-center">
           <div class="card-grid">
             <div class="card">
               <i class="fa-regular fa-lightbulb"></i>
-              <h3 contenteditable="false">Problem Solving</h3>
-              <p contenteditable="false">Mengurai masalah rumit menjadi langkah logis.</p>
+              <h3>Problem Solving</h3>
+              <p>Mengurai masalah rumit menjadi langkah logis.</p>
             </div>
             <div class="card">
               <i class="fa-solid fa-magnifying-glass-chart"></i>
-              <h3 contenteditable="false">Analisis Kritis</h3>
-              <p contenteditable="false">Mencari inefisiensi dan celah pada sistem manual.</p>
+              <h3>Analisis Kritis</h3>
+              <p>Mencari inefisiensi dan celah pada sistem manual.</p>
             </div>
             <div class="card">
               <i class="fa-solid fa-pen-ruler"></i>
-              <h3 contenteditable="false">Desain Solusi</h3>
-              <p contenteditable="false">Merancang arsitektur baru berbasis Teknologi Informasi.</p>
+              <h3>Desain Solusi</h3>
+              <p>Merancang arsitektur baru berbasis Teknologi Informasi.</p>
             </div>
           </div>
         </div>
@@ -318,26 +274,26 @@
       <!-- SLIDE 4 -->
       <div class="slide-container center-content" data-title="Ice Breaking">
         <i class="fa-solid fa-hand-sparkles" style="font-size: 100px; color: #EA580C; margin-bottom: 32px;"></i>
-        <p class="eyebrow" contenteditable="false">Ice Breaking Virtual</p>
-        <h1 contenteditable="false" style="color: #0369A1;">Mari Lakukan Polling Cepat</h1>
-        <p contenteditable="false" style="font-weight: 700; font-size: 32px; margin-top: 16px;">Buka kembali kolom chat Google Meet Anda.</p>
+        <p class="eyebrow">Ice Breaking Virtual</p>
+        <h1 style="color: #0369A1;">Mari Lakukan Polling Cepat</h1>
+        <p style="font-weight: 700; font-size: 32px; margin-top: 16px;">Buka kembali kolom chat Google Meet Anda.</p>
       </div>
 
       <!-- SLIDE 5 -->
       <div class="slide-container center-content" data-title="Polling Pengiriman">
-        <h2 contenteditable="false" style="font-size: 56px; color: #0F172A; max-width: 1000px; line-height: 1.3;">"Berapa lama rata-rata paket belanja online (e-commerce) sampai ke rumah Anda?"</h2>
+        <h2 style="font-size: 56px; color: #0F172A; max-width: 1000px; line-height: 1.3;">"Berapa lama rata-rata paket belanja online (e-commerce) sampai ke rumah Anda?"</h2>
         <div style="display: flex; gap: 40px; margin-top: 64px; width: 100%; max-width: 1000px;">
           <div class="card" style="align-items: center; text-align: center; border: 3px solid #CBD5E1; padding: 32px;">
-            <h3 contenteditable="false" style="font-size: 40px; margin-bottom: 8px;">Ketik A</h3>
-            <p contenteditable="false" style="font-weight: 600;">1 Hari (Instan)</p>
+            <h3 style="font-size: 40px; margin-bottom: 8px;">Ketik A</h3>
+            <p style="font-weight: 600;">1 Hari (Instan)</p>
           </div>
           <div class="card" style="align-items: center; text-align: center; background: #0369A1; color: white; padding: 32px;">
-            <h3 contenteditable="false" style="color: white; font-size: 40px; margin-bottom: 8px;">Ketik B</h3>
-            <p contenteditable="false" style="color: white; font-weight: 600;">2-3 Hari</p>
+            <h3 style="color: white; font-size: 40px; margin-bottom: 8px;">Ketik B</h3>
+            <p style="color: white; font-weight: 600;">2-3 Hari</p>
           </div>
           <div class="card" style="align-items: center; text-align: center; border: 3px solid #CBD5E1; padding: 32px;">
-            <h3 contenteditable="false" style="font-size: 40px; margin-bottom: 8px;">Ketik C</h3>
-            <p contenteditable="false" style="font-weight: 600;">Lebih dari 3 Hari</p>
+            <h3 style="font-size: 40px; margin-bottom: 8px;">Ketik C</h3>
+            <p style="font-weight: 600;">Lebih dari 3 Hari</p>
           </div>
         </div>
       </div>
@@ -345,13 +301,13 @@
       <!-- SLIDE 6 -->
       <div class="slide-container layout-split" data-title="Dibalik Layar TI">
         <div class="split-col w-60">
-          <p class="eyebrow" contenteditable="false">Dibalik Layar TI</p>
-          <h2 contenteditable="false">Apa Setelah "Klik Beli"?</h2>
+          <p class="eyebrow">Dibalik Layar TI</p>
+          <h2>Apa Setelah "Klik Beli"?</h2>
           <ul class="minimal-list">
-            <li><i class="fa-solid fa-credit-card"></i> <span contenteditable="false">Sistem memanggil *Payment Gateway* Bank.</span></li>
-            <li><i class="fa-solid fa-boxes-stacked"></i> <span contenteditable="false">Sistem Gudang (*WMS*) mengurangi stok.</span></li>
-            <li><i class="fa-solid fa-barcode"></i> <span contenteditable="false">Pencetakan label pengiriman otomatis.</span></li>
-            <li><i class="fa-solid fa-truck-fast"></i> <span contenteditable="false">Integrasi API dengan pihak logistik/kurir.</span></li>
+            <li><i class="fa-solid fa-credit-card"></i> <span>Sistem memanggil *Payment Gateway* Bank.</span></li>
+            <li><i class="fa-solid fa-boxes-stacked"></i> <span>Sistem Gudang (*WMS*) mengurangi stok.</span></li>
+            <li><i class="fa-solid fa-barcode"></i> <span>Pencetakan label pengiriman otomatis.</span></li>
+            <li><i class="fa-solid fa-truck-fast"></i> <span>Integrasi API dengan pihak logistik/kurir.</span></li>
           </ul>
         </div>
         <div class="split-col split-img-col w-40">
@@ -362,37 +318,37 @@
       <!-- SLIDE 7 -->
       <div class="slide-container center-content bg-dark" data-title="Realita Sistem Gagal">
         <i class="fa-solid fa-triangle-exclamation" style="font-size: 100px; color: #EF4444; margin-bottom: 32px;"></i>
-        <h1 contenteditable="false" style="color: #EF4444;">Realita Sistem yang Gagal</h1>
-        <p contenteditable="false" style="font-size: 32px; font-weight: 600; max-width: 1000px; margin-top: 24px;">"80% keluhan e-commerce bukan karena aplikasinya error (nge-bug), melainkan karena alur proses di gudangnya (SOP) yang berantakan."</p>
+        <h1 style="color: #EF4444;">Realita Sistem yang Gagal</h1>
+        <p style="font-size: 32px; font-weight: 600; max-width: 1000px; margin-top: 24px;">"80% keluhan e-commerce bukan karena aplikasinya error (nge-bug), melainkan karena alur proses di gudangnya (SOP) yang berantakan."</p>
       </div>
 
       <!-- SLIDE 8 -->
       <div class="slide-container center-content" style="background: #F1F5F9;" data-title="Kontrak Perkuliahan">
-        <p class="eyebrow" contenteditable="false">Pedoman Kelas Daring</p>
-        <h2 contenteditable="false" style="font-size: 64px;">Kontrak Perkuliahan &amp; RPS</h2>
+        <p class="eyebrow">Pedoman Kelas Daring</p>
+        <h2 style="font-size: 64px;">Kontrak Perkuliahan &amp; RPS</h2>
         <div class="divider"></div>
-        <p contenteditable="false" style="font-size: 32px;">Kesepakatan selama 16 sesi Google Meet.</p>
+        <p style="font-size: 32px;">Kesepakatan selama 16 sesi Google Meet.</p>
       </div>
 
       <!-- SLIDE 9 -->
       <div class="slide-container pad-standard" data-title="Etika GMeet">
-        <h2 contenteditable="false">Etika Google Meet</h2>
+        <h2>Etika Google Meet</h2>
         <div class="flex-grow-center">
           <div class="card-grid">
             <div class="card" style="border-top: 8px solid #0369A1;">
               <i class="fa-solid fa-microphone-lines-slash"></i>
-              <h3 contenteditable="false">Mute Mic</h3>
-              <p contenteditable="false">Wajib *mute* saat dosen atau teman sedang bicara.</p>
+              <h3>Mute Mic</h3>
+              <p>Wajib *mute* saat dosen atau teman sedang bicara.</p>
             </div>
             <div class="card" style="border-top: 8px solid #0369A1;">
               <i class="fa-solid fa-video"></i>
-              <h3 contenteditable="false">Kamera On</h3>
-              <p contenteditable="false">Sangat dihargai jika *On Cam* (Jika kuota/sinyal stabil).</p>
+              <h3>Kamera On</h3>
+              <p>Sangat dihargai jika *On Cam* (Jika kuota/sinyal stabil).</p>
             </div>
             <div class="card" style="border-top: 8px solid #0369A1;">
               <i class="fa-solid fa-hand"></i>
-              <h3 contenteditable="false">Raise Hand</h3>
-              <p contenteditable="false">Gunakan fitur angkat tangan jika ingin bertanya/memotong.</p>
+              <h3>Raise Hand</h3>
+              <p>Gunakan fitur angkat tangan jika ingin bertanya/memotong.</p>
             </div>
           </div>
         </div>
@@ -404,74 +360,74 @@
           <i class="fa-solid fa-clipboard-user" style="font-size: 200px; color: #EA580C;"></i>
         </div>
         <div class="split-col w-60">
-          <h2 contenteditable="false">Kehadiran &amp; Kedisiplinan</h2>
+          <h2>Kehadiran &amp; Kedisiplinan</h2>
           <ul class="minimal-list">
-            <li><i class="fa-regular fa-clock"></i> <span contenteditable="false">Toleransi keterlambatan gabung *Meet*: 15 menit.</span></li>
-            <li><i class="fa-solid fa-list-check"></i> <span contenteditable="false">Presensi melalui portal *e-learning* kampus.</span></li>
-            <li><i class="fa-solid fa-bed" style="color: #EF4444;"></i> <span contenteditable="false">Dilarang mengikuti kuliah sambil rebahan/tiduran.</span></li>
+            <li><i class="fa-regular fa-clock"></i> <span>Toleransi keterlambatan gabung *Meet*: 15 menit.</span></li>
+            <li><i class="fa-solid fa-list-check"></i> <span>Presensi melalui portal *e-learning* kampus.</span></li>
+            <li><i class="fa-solid fa-bed" style="color: #EF4444;"></i> <span>Dilarang mengikuti kuliah sambil rebahan/tiduran.</span></li>
           </ul>
         </div>
       </div>
 
       <!-- SLIDE 11 -->
       <div class="slide-container pad-standard" data-title="Project Based">
-        <h2 contenteditable="false">Fokus: Project-Based Learning</h2>
+        <h2>Fokus: Project-Based Learning</h2>
         <div class="flex-grow-center">
-          <div style="background: #E0F2FE; border-left: 12px solid #0369A1; padding: 64px; border-radius: 0 16px 16px 0;">
-            <h3 contenteditable="false" style="font-size: 48px; margin-bottom: 24px;">Tidak Sekadar Menghafal</h3>
-            <p contenteditable="false" style="font-size: 32px; font-weight: 600; color: #0F172A;">Penilaian UTS &amp; UAS berpusat pada perancangan diagram proses secara digital (studi kasus riil) dalam kerja kelompok jarak jauh.</p>
+          <div style="background: #E0F2FE; border-left: 12px solid #0369A1; padding: 48px; border-radius: 0 16px 16px 0;">
+            <h3 style="font-size: 40px; margin-bottom: 20px;">Tidak Sekadar Menghafal</h3>
+            <p style="font-size: 28px; font-weight: 600; color: #0F172A;">Penilaian UTS &amp; UAS berpusat pada perancangan diagram proses secara digital (studi kasus riil) dalam kerja kelompok jarak jauh.</p>
           </div>
         </div>
       </div>
 
       <!-- SLIDE 12 -->
       <div class="slide-container pad-standard" data-title="Komponen Nilai">
-        <h2 contenteditable="false">Komponen Bobot Nilai Akhir</h2>
+        <h2>Komponen Bobot Nilai Akhir</h2>
         <div class="flex-grow-center" style="flex-direction: row; align-items: center; justify-content: space-around;">
           <div style="text-align: center;">
-            <div style="font-size: 100px; font-weight: 800; font-family: 'Montserrat'; color: #0369A1;">10%</div>
-            <p contenteditable="false" style="font-weight: 700; margin-top: 16px;">Partisipasi GMeet</p>
+            <div style="font-size: 80px; font-weight: 800; font-family: 'Montserrat'; color: #0369A1;">10%</div>
+            <p style="font-weight: 700; margin-top: 16px;">Partisipasi GMeet</p>
           </div>
           <div style="text-align: center;">
-            <div style="font-size: 100px; font-weight: 800; font-family: 'Montserrat'; color: #0369A1;">20%</div>
-            <p contenteditable="false" style="font-weight: 700; margin-top: 16px;">Tugas Digital</p>
+            <div style="font-size: 80px; font-weight: 800; font-family: 'Montserrat'; color: #0369A1;">20%</div>
+            <p style="font-weight: 700; margin-top: 16px;">Tugas Digital</p>
           </div>
           <div style="text-align: center;">
-            <div style="font-size: 100px; font-weight: 800; font-family: 'Montserrat'; color: #0369A1;">30%</div>
-            <p contenteditable="false" style="font-weight: 700; margin-top: 16px;">UTS (Praktik)</p>
+            <div style="font-size: 80px; font-weight: 800; font-family: 'Montserrat'; color: #0369A1;">30%</div>
+            <p style="font-weight: 700; margin-top: 16px;">UTS (Praktik)</p>
           </div>
           <div style="text-align: center;">
-            <div style="font-size: 100px; font-weight: 800; font-family: 'Montserrat'; color: #EA580C;">40%</div>
-            <p contenteditable="false" style="font-weight: 700; margin-top: 16px; color: #EA580C;">Proyek Akhir (UAS)</p>
+            <div style="font-size: 80px; font-weight: 800; font-family: 'Montserrat'; color: #EA580C;">40%</div>
+            <p style="font-weight: 700; margin-top: 16px; color: #EA580C;">Proyek Akhir (UAS)</p>
           </div>
         </div>
       </div>
 
       <!-- SLIDE 13 -->
       <div class="slide-container pad-standard" data-title="Peta Jalan RPS">
-        <h2 contenteditable="false">Peta Jalan (RPS 16 Sesi)</h2>
+        <h2>Peta Jalan (RPS 16 Sesi)</h2>
         <div class="flex-grow-center" style="position: relative;">
-          <div style="position: absolute; top: 80px; left: 10%; right: 10%; height: 6px; background: #CBD5E1; z-index: 1;"></div>
+          <div style="position: absolute; top: 60px; left: 10%; right: 10%; height: 6px; background: #CBD5E1; z-index: 1;"></div>
           <div style="display: flex; justify-content: space-between; position: relative; z-index: 2;">
             <div style="text-align: center; flex: 1;">
-              <div style="width: 100px; height: 100px; background: #94A3B8; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 800; font-family: 'Montserrat'; margin: 0 auto 24px auto; border: 8px solid var(--color-bg-light);">1-7</div>
-              <h3 contenteditable="false">Fase As-Is</h3>
-              <p contenteditable="false" style="font-size: 20px;">Memotret kondisi saat ini (Teori).</p>
+              <div style="width: 80px; height: 80px; background: #94A3B8; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 800; font-family: 'Montserrat'; margin: 0 auto 16px auto; border: 6px solid var(--color-bg-light);">1-7</div>
+              <h3 style="font-size: 24px;">Fase As-Is</h3>
+              <p style="font-size: 18px;">Memotret kondisi saat ini.</p>
             </div>
             <div style="text-align: center; flex: 1;">
-              <div style="width: 100px; height: 100px; background: #EA580C; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 800; font-family: 'Montserrat'; margin: 0 auto 24px auto; border: 8px solid var(--color-bg-light);">8</div>
-              <h3 contenteditable="false">UTS</h3>
-              <p contenteditable="false" style="font-size: 20px;">Evaluasi Diagram Dasar.</p>
+              <div style="width: 80px; height: 80px; background: #EA580C; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 800; font-family: 'Montserrat'; margin: 0 auto 16px auto; border: 6px solid var(--color-bg-light);">8</div>
+              <h3 style="font-size: 24px;">UTS</h3>
+              <p style="font-size: 18px;">Evaluasi Diagram Dasar.</p>
             </div>
             <div style="text-align: center; flex: 1;">
-              <div style="width: 100px; height: 100px; background: #0369A1; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 800; font-family: 'Montserrat'; margin: 0 auto 24px auto; border: 8px solid var(--color-bg-light);">9-15</div>
-              <h3 contenteditable="false">Fase To-Be</h3>
-              <p contenteditable="false" style="font-size: 20px;">Desain solusi TI masa depan.</p>
+              <div style="width: 80px; height: 80px; background: #0369A1; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 800; font-family: 'Montserrat'; margin: 0 auto 16px auto; border: 6px solid var(--color-bg-light);">9-15</div>
+              <h3 style="font-size: 24px;">Fase To-Be</h3>
+              <p style="font-size: 18px;">Desain solusi TI.</p>
             </div>
             <div style="text-align: center; flex: 1;">
-              <div style="width: 100px; height: 100px; background: #0F172A; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 800; font-family: 'Montserrat'; margin: 0 auto 24px auto; border: 8px solid var(--color-bg-light);">16</div>
-              <h3 contenteditable="false">UAS</h3>
-              <p contenteditable="false" style="font-size: 20px;">Presentasi Proyek Online.</p>
+              <div style="width: 80px; height: 80px; background: #0F172A; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 800; font-family: 'Montserrat'; margin: 0 auto 16px auto; border: 6px solid var(--color-bg-light);">16</div>
+              <h3 style="font-size: 24px;">UAS</h3>
+              <p style="font-size: 18px;">Presentasi Proyek.</p>
             </div>
           </div>
         </div>
@@ -479,18 +435,18 @@
 
       <!-- SLIDE 14 -->
       <div class="slide-container pad-standard" data-title="Mekanisme Tugas">
-        <h2 contenteditable="false">Mekanisme Tugas Proyek Digital</h2>
+        <h2>Mekanisme Tugas Proyek Digital</h2>
         <div class="flex-grow-center">
           <div class="card-grid">
             <div class="card" style="border-top: 8px solid #EA580C;">
               <i class="fa-solid fa-people-group"></i>
-              <h3 contenteditable="false">Kerja Tim Jarak Jauh</h3>
-              <p contenteditable="false">Bentuk tim 3-4 orang. Kolaborasi via WhatsApp / Google Docs / GMeet.</p>
+              <h3>Kerja Tim Jarak Jauh</h3>
+              <p>Bentuk tim 3-4 orang. Kolaborasi via WhatsApp / Google Docs / GMeet.</p>
             </div>
             <div class="card" style="border-top: 8px solid #EA580C;">
               <i class="fa-solid fa-magnifying-glass-location"></i>
-              <h3 contenteditable="false">Studi Kasus Digital</h3>
-              <p contenteditable="false">Analisis alur aplikasi e-commerce, UMKM online, atau sistem akademik ITBS.</p>
+              <h3>Studi Kasus Digital</h3>
+              <p>Analisis alur aplikasi e-commerce, UMKM online, atau sistem akademik.</p>
             </div>
           </div>
         </div>
@@ -499,38 +455,36 @@
       <!-- SLIDE 15 -->
       <div class="slide-container layout-split" data-title="Software Modeler">
         <div class="split-col w-50" style="background: #F1F5F9;">
-          <p class="eyebrow" contenteditable="false">Web-Based (Rekomendasi)</p>
-          <h2 contenteditable="false">Draw.io</h2>
+          <p class="eyebrow">Web-Based (Rekomendasi)</p>
+          <h2>Draw.io</h2>
           <ul class="minimal-list">
-            <li><i class="fa-brands fa-chrome"></i> <span contenteditable="false">Gratis, buka di Browser.</span></li>
-            <li><i class="fa-brands fa-google-drive"></i> <span contenteditable="false">Simpan di Google Drive.</span></li>
-            <li><i class="fa-solid fa-users"></i> <span contenteditable="false">Bisa edit bareng-bareng (*Real-time*).</span></li>
+            <li><i class="fa-brands fa-chrome"></i> <span>Gratis, buka di Browser.</span></li>
+            <li><i class="fa-brands fa-google-drive"></i> <span>Simpan di Google Drive.</span></li>
+            <li><i class="fa-solid fa-users"></i> <span>Bisa edit bareng-bareng (*Real-time*).</span></li>
           </ul>
         </div>
         <div class="split-col w-50">
-          <p class="eyebrow" contenteditable="false">Desktop App (Opsional)</p>
-          <h2 contenteditable="false">Bizagi Modeler</h2>
+          <p class="eyebrow">Desktop App (Opsional)</p>
+          <h2>Bizagi Modeler</h2>
           <ul class="minimal-list">
-            <li><i class="fa-solid fa-download"></i> <span contenteditable="false">Wajib install di Windows/Laptop.</span></li>
-            <li><i class="fa-solid fa-industry"></i> <span contenteditable="false">Standar industri korporat.</span></li>
-            <li><i class="fa-solid fa-file-pdf"></i> <span contenteditable="false">Export ke PDF sangat rapi.</span></li>
+            <li><i class="fa-solid fa-download"></i> <span>Wajib install di Windows/Laptop.</span></li>
+            <li><i class="fa-solid fa-industry"></i> <span>Standar industri korporat.</span></li>
+            <li><i class="fa-solid fa-file-pdf"></i> <span>Export ke PDF sangat rapi.</span></li>
           </ul>
         </div>
       </div>
 
       <!-- SLIDE 16 -->
       <div class="slide-container pad-standard" data-title="Referensi Buku">
-        <h2 contenteditable="false">Buku Referensi Akademik</h2>
+        <h2>Buku Referensi Akademik</h2>
         <div class="flex-grow-center">
-          <div style="background: white; border: 1px solid #CBD5E1; padding: 40px; border-radius: 16px; margin-bottom: 24px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-            <h3 contenteditable="false" style="color: #0F172A; margin-bottom: 8px;">Fundamentals of Business Process Management</h3>
-            <p contenteditable="false" style="font-weight: 700; color: #64748B;">Dumas et al., Edisi ke-2 (2018). Springer.</p>
-            <p contenteditable="false" style="margin-top: 16px; font-size: 20px;">*Buku rujukan utama standar global.</p>
+          <div style="background: white; border: 1px solid #CBD5E1; padding: 32px; border-radius: 16px; margin-bottom: 24px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+            <h3 style="color: #0F172A; margin-bottom: 8px;">Fundamentals of Business Process Management</h3>
+            <p style="font-weight: 700; color: #64748B;">Dumas et al., Edisi ke-2 (2018). Springer.</p>
           </div>
-          <div style="background: white; border: 1px solid #CBD5E1; padding: 40px; border-radius: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-            <h3 contenteditable="false" style="color: #0F172A; margin-bottom: 8px;">BPMN Method and Style</h3>
-            <p contenteditable="false" style="font-weight: 700; color: #64748B;">Silver, B. (2011). Cody-Cassidy Press.</p>
-            <p contenteditable="false" style="margin-top: 16px; font-size: 20px;">*Panduan praktis menggambar diagram.</p>
+          <div style="background: white; border: 1px solid #CBD5E1; padding: 32px; border-radius: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+            <h3 style="color: #0F172A; margin-bottom: 8px;">BPMN Method and Style</h3>
+            <p style="font-weight: 700; color: #64748B;">Silver, B. (2011). Cody-Cassidy Press.</p>
           </div>
         </div>
       </div>
@@ -541,10 +495,10 @@
 
       <!-- SLIDE 17 -->
       <div class="slide-container center-content bg-dark" data-title="Apa Itu Proses Bisnis?">
-        <p class="eyebrow" contenteditable="false">Bagian I</p>
-        <h1 contenteditable="false" style="font-size: 80px;">Apa Itu Proses Bisnis?</h1>
+        <p class="eyebrow">Bagian I</p>
+        <h1 style="font-size: 80px;">Apa Itu Proses Bisnis?</h1>
         <div class="divider"></div>
-        <p contenteditable="false" style="font-size: 32px;">Mengenal anatomi pekerjaan manusia dan sistem komputer.</p>
+        <p style="font-size: 32px;">Mengenal anatomi pekerjaan manusia dan sistem komputer.</p>
       </div>
 
       <!-- SLIDE 18 -->
@@ -553,46 +507,46 @@
           <i class="fa-solid fa-shoe-prints" style="font-size: 240px; color: #0369A1;"></i>
         </div>
         <div class="split-col w-60">
-          <p class="eyebrow" contenteditable="false">Definisi Sederhana</p>
-          <h2 contenteditable="false">Urutan Langkah Logis</h2>
+          <p class="eyebrow">Definisi Sederhana</p>
+          <h2>Urutan Langkah Logis</h2>
           <ul class="minimal-list">
-            <li><i class="fa-solid fa-list-ol"></i> <span contenteditable="false">Memiliki urutan yang jelas dari awal ke akhir.</span></li>
-            <li><i class="fa-solid fa-robot"></i> <span contenteditable="false">Dikerjakan oleh orang, mesin, atau aplikasi.</span></li>
-            <li><i class="fa-solid fa-bullseye"></i> <span contenteditable="false">Punya satu tujuan akhir yang spesifik.</span></li>
+            <li><i class="fa-solid fa-list-ol"></i> <span>Memiliki urutan yang jelas dari awal ke akhir.</span></li>
+            <li><i class="fa-solid fa-robot"></i> <span>Dikerjakan oleh orang, mesin, atau aplikasi.</span></li>
+            <li><i class="fa-solid fa-bullseye"></i> <span>Punya satu tujuan akhir yang spesifik.</span></li>
           </ul>
         </div>
       </div>
 
       <!-- SLIDE 19 -->
       <div class="slide-container pad-standard" data-title="Definisi Formal">
-        <h2 contenteditable="false">Definisi Formal Akademik</h2>
+        <h2>Definisi Formal Akademik</h2>
         <div class="flex-grow-center">
-          <div style="background: #F8F9FA; border-left: 12px solid #0369A1; padding: 64px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); text-align: left;">
-            <p contenteditable="false" style="font-size: 40px; font-weight: 600; font-style: italic; color: #0F172A; margin-bottom: 32px; line-height: 1.4;">"Kumpulan aktivitas terstruktur yang saling terkait untuk menghasilkan layanan atau nilai bagi pelanggan tertentu."</p>
-            <p contenteditable="false" style="font-size: 28px; color: #64748B; font-weight: 700;">— Dumas et al., 2018</p>
+          <div style="background: #F8F9FA; border-left: 12px solid #0369A1; padding: 48px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); text-align: left;">
+            <p style="font-size: 36px; font-weight: 600; font-style: italic; color: #0F172A; margin-bottom: 24px; line-height: 1.4;">"Kumpulan aktivitas terstruktur yang saling terkait untuk menghasilkan layanan atau nilai bagi pelanggan tertentu."</p>
+            <p style="font-size: 24px; color: #64748B; font-weight: 700;">— Dumas et al., 2018</p>
           </div>
         </div>
       </div>
 
       <!-- SLIDE 20 -->
       <div class="slide-container pad-standard" data-title="Anatomi Dasar">
-        <h2 contenteditable="false">Anatomi Proses Dasar (3 Pilar)</h2>
+        <h2>Anatomi Proses Dasar (3 Pilar)</h2>
         <div class="flex-grow-center">
           <div class="card-grid">
             <div class="card" style="align-items: center; text-align: center; border-top: 8px solid #94A3B8;">
               <i class="fa-solid fa-inbox" style="color: #94A3B8;"></i>
-              <h3 contenteditable="false" style="color: #475569;">1. Input</h3>
-              <p contenteditable="false">Masukan / Pemicu Awal.</p>
+              <h3 style="color: #475569;">1. Input</h3>
+              <p>Masukan / Pemicu Awal.</p>
             </div>
             <div class="card" style="align-items: center; text-align: center; border-top: 8px solid #EA580C;">
               <i class="fa-solid fa-gears" style="color: #EA580C;"></i>
-              <h3 contenteditable="false" style="color: #EA580C;">2. Proses</h3>
-              <p contenteditable="false">Transformasi / Pekerjaan.</p>
+              <h3 style="color: #EA580C;">2. Proses</h3>
+              <p>Transformasi / Pekerjaan.</p>
             </div>
             <div class="card" style="align-items: center; text-align: center; border-top: 8px solid #10B981;">
               <i class="fa-solid fa-gift" style="color: #10B981;"></i>
-              <h3 contenteditable="false" style="color: #10B981;">3. Output</h3>
-              <p contenteditable="false">Keluaran / Hasil Akhir.</p>
+              <h3 style="color: #10B981;">3. Output</h3>
+              <p>Keluaran / Hasil Akhir.</p>
             </div>
           </div>
         </div>
@@ -604,12 +558,12 @@
           <i class="fa-solid fa-file-import" style="font-size: 200px; color: #94A3B8;"></i>
         </div>
         <div class="split-col w-60">
-          <p class="eyebrow" contenteditable="false">Komponen 1</p>
-          <h2 contenteditable="false">Input (Masukan)</h2>
+          <p class="eyebrow">Komponen 1</p>
+          <h2>Input (Masukan)</h2>
           <ul class="minimal-list">
-            <li><i class="fa-solid fa-play"></i> <span contenteditable="false">Pelatuk (*Trigger*) yang memulai proses.</span></li>
-            <li><i class="fa-solid fa-database"></i> <span contenteditable="false">Data mentah atau bahan baku.</span></li>
-            <li><i class="fa-solid fa-check"></i> <span contenteditable="false">Contoh TI: User mengisi *Form Login* (Email &amp; Password).</span></li>
+            <li><i class="fa-solid fa-play"></i> <span>Pelatuk (*Trigger*) yang memulai proses.</span></li>
+            <li><i class="fa-solid fa-database"></i> <span>Data mentah atau bahan baku.</span></li>
+            <li><i class="fa-solid fa-check"></i> <span>Contoh TI: User mengisi *Form Login* (Email &amp; Password).</span></li>
           </ul>
         </div>
       </div>
@@ -620,12 +574,12 @@
           <i class="fa-solid fa-rotate" style="font-size: 200px; color: #EA580C;"></i>
         </div>
         <div class="split-col w-60">
-          <p class="eyebrow" contenteditable="false">Komponen 2</p>
-          <h2 contenteditable="false">Aktivitas (Transformasi)</h2>
+          <p class="eyebrow">Komponen 2</p>
+          <h2>Aktivitas (Transformasi)</h2>
           <ul class="minimal-list">
-            <li><i class="fa-solid fa-person-digging"></i> <span contenteditable="false">Pekerjaan nyata yang dieksekusi.</span></li>
-            <li><i class="fa-solid fa-stopwatch"></i> <span contenteditable="false">Membutuhkan mesin, CPU, atau waktu manusia.</span></li>
-            <li><i class="fa-solid fa-check"></i> <span contenteditable="false">Contoh TI: Server melakukan enkripsi dan validasi *password*.</span></li>
+            <li><i class="fa-solid fa-person-digging"></i> <span>Pekerjaan nyata yang dieksekusi.</span></li>
+            <li><i class="fa-solid fa-stopwatch"></i> <span>Membutuhkan mesin, CPU, atau waktu manusia.</span></li>
+            <li><i class="fa-solid fa-check"></i> <span>Contoh TI: Server melakukan enkripsi dan validasi *password*.</span></li>
           </ul>
         </div>
       </div>
@@ -636,35 +590,35 @@
           <i class="fa-solid fa-door-open" style="font-size: 200px; color: #10B981;"></i>
         </div>
         <div class="split-col w-60">
-          <p class="eyebrow" contenteditable="false">Komponen 3</p>
-          <h2 contenteditable="false">Output (Keluaran)</h2>
+          <p class="eyebrow">Komponen 3</p>
+          <h2>Output (Keluaran)</h2>
           <ul class="minimal-list">
-            <li><i class="fa-solid fa-flag-checkered"></i> <span contenteditable="false">Hasil akhir yang diharapkan.</span></li>
-            <li><i class="fa-solid fa-face-smile"></i> <span contenteditable="false">Harus memberikan nilai bagi penerima.</span></li>
-            <li><i class="fa-solid fa-check"></i> <span contenteditable="false">Contoh TI: Aplikasi menampilkan halaman *Dashboard* (Akses Diberikan).</span></li>
+            <li><i class="fa-solid fa-flag-checkered"></i> <span>Hasil akhir yang diharapkan.</span></li>
+            <li><i class="fa-solid fa-face-smile"></i> <span>Harus memberikan nilai bagi penerima.</span></li>
+            <li><i class="fa-solid fa-check"></i> <span>Contoh TI: Aplikasi menampilkan halaman *Dashboard* (Akses Diberikan).</span></li>
           </ul>
         </div>
       </div>
 
       <!-- SLIDE 24 -->
       <div class="slide-container pad-standard" data-title="Karakteristik Proses">
-        <h2 contenteditable="false">3 Karakteristik Proses yang Baik</h2>
+        <h2>3 Karakteristik Proses yang Baik</h2>
         <div class="flex-grow-center">
           <div class="card-grid">
             <div class="card">
               <i class="fa-solid fa-ruler-combined"></i>
-              <h3 contenteditable="false">1. Measurable</h3>
-              <p contenteditable="false">Bisa diukur durasi waktu dan beban biayanya.</p>
+              <h3>1. Measurable</h3>
+              <p>Bisa diukur durasi waktu dan beban biayanya.</p>
             </div>
             <div class="card">
               <i class="fa-solid fa-barcode"></i>
-              <h3 contenteditable="false">2. Spesifik</h3>
-              <p contenteditable="false">Hasil akhirnya unik, dapat dilacak (misal: ID Transaksi).</p>
+              <h3>2. Spesifik</h3>
+              <p>Hasil akhirnya unik, dapat dilacak (misal: ID Transaksi).</p>
             </div>
             <div class="card">
               <i class="fa-solid fa-heart"></i>
-              <h3 contenteditable="false">3. Customer</h3>
-              <p contenteditable="false">Disampaikan ke penerima akhir yang merasakan manfaatnya.</p>
+              <h3>3. Customer</h3>
+              <p>Disampaikan ke penerima akhir yang merasakan manfaatnya.</p>
             </div>
           </div>
         </div>
@@ -672,10 +626,10 @@
 
       <!-- SLIDE 25 -->
       <div class="slide-container center-content" style="background: #F1F5F9;" data-title="Kuis Cepat Awal">
-        <p class="eyebrow" contenteditable="false">Kuis Cepat Awal</p>
-        <h2 contenteditable="false" style="font-size: 56px;">Mana yang Termasuk "Proses Bisnis"?</h2>
+        <p class="eyebrow">Kuis Cepat Awal</p>
+        <h2 style="font-size: 56px;">Mana yang Termasuk "Proses Bisnis"?</h2>
         <div class="divider"></div>
-        <p contenteditable="false" style="font-size: 32px; font-weight: 600; text-align: left; max-width: 900px; line-height: 1.6;">A. Mahasiswa belajar mandiri baca e-book di kamar.<br><br>B. Mahasiswa meminjam e-book melalui aplikasi e-Library kampus.</p>
+        <p style="font-size: 32px; font-weight: 600; text-align: left; max-width: 900px; line-height: 1.6;">A. Mahasiswa belajar mandiri baca e-book di kamar.<br><br>B. Mahasiswa meminjam e-book melalui aplikasi e-Library kampus.</p>
       </div>
 
       <!-- ==========================================
@@ -683,37 +637,37 @@
            ========================================== -->
       <!-- SLIDE 26 -->
       <div class="slide-container pad-standard" style="background: #F8F9FA;" id="drag-drop-1" data-title="Praktik 1 (Drag Drop)">
-        <p class="eyebrow" contenteditable="false">Praktik Langsung (Drag & Drop)</p>
-        <h2 contenteditable="false" style="font-size: 44px; margin-bottom: 12px;">Susun Alur Anatomi: Operasional Kedai Kopi</h2>
-        <p style="margin-bottom: 28px; font-size: 20px;">Tarik (*Drag*) kotak biru di bawah dan lepaskan (*Drop*) ke pilar yang tepat!</p>
+        <p class="eyebrow">Praktik Langsung (Drag & Drop)</p>
+        <h2 style="font-size: 36px; margin-bottom: 12px;">Susun Alur Anatomi: Operasional Kedai Kopi</h2>
+        <p style="margin-bottom: 20px; font-size: 18px;">Tarik (*Drag*) kotak biru di bawah dan lepaskan (*Drop*) ke pilar yang tepat!</p>
         
         <div class="flex-grow-center" style="justify-content: flex-start; margin-top: 10px;">
-          <div class="draggable-container" style="display: flex; gap: 24px; margin-bottom: 36px; justify-content: center; min-height: 80px;">
+          <div class="draggable-container" style="display: flex; gap: 16px; margin-bottom: 24px; justify-content: center; min-height: 60px;">
             <div class="drag-item" draggable="true" data-type="output">☕ Kopi Americano Siap Saji</div>
             <div class="drag-item" draggable="true" data-type="input">🌱 Biji Kopi &amp; Air Mineral</div>
             <div class="drag-item" draggable="true" data-type="process">⚙️ Ekstraksi Mesin Espresso</div>
           </div>
 
-          <div style="display: flex; gap: 24px; justify-content: center; align-items: stretch;" class="dropzones-container">
+          <div style="display: flex; gap: 20px; justify-content: center; align-items: stretch;" class="dropzones-container">
             <div class="drop-zone" data-target="input">
               <h3>1. Input</h3>
               <div class="drop-content"></div>
             </div>
-            <i class="fa-solid fa-arrow-right" style="font-size: 48px; color: #94A3B8; align-self: center;"></i>
+            <i class="fa-solid fa-arrow-right" style="font-size: 40px; color: #94A3B8; align-self: center;"></i>
             <div class="drop-zone" data-target="process">
               <h3>2. Proses</h3>
               <div class="drop-content"></div>
             </div>
-            <i class="fa-solid fa-arrow-right" style="font-size: 48px; color: #94A3B8; align-self: center;"></i>
+            <i class="fa-solid fa-arrow-right" style="font-size: 40px; color: #94A3B8; align-self: center;"></i>
             <div class="drop-zone" data-target="output">
               <h3>3. Output</h3>
               <div class="drop-content"></div>
             </div>
           </div>
 
-          <div class="practice-feedback" style="text-align: center; margin-top: 28px; display: none;">
-            <p style="font-size: 30px; font-weight: 800; color: #10B981;"><i class="fa-solid fa-circle-check"></i> Tepat Sekali!</p>
-            <p style="font-size: 20px; color: #475569; margin-top: 6px;">Logika Input-Proses-Output berhasil dipetakan pada operasional nyata kedai kopi.</p>
+          <div class="practice-feedback" style="text-align: center; margin-top: 20px; display: none;">
+            <p style="font-size: 28px; font-weight: 800; color: #10B981;"><i class="fa-solid fa-circle-check"></i> Tepat Sekali!</p>
+            <p style="font-size: 18px; color: #475569; margin-top: 4px;">Logika Input-Proses-Output berhasil dipetakan pada operasional nyata kedai kopi.</p>
           </div>
         </div>
       </div>
@@ -724,21 +678,21 @@
 
       <!-- SLIDE 27 -->
       <div class="slide-container center-content bg-dark" data-title="Kenapa TI Butuh Bisnis?">
-        <p class="eyebrow" contenteditable="false">Bagian II</p>
-        <h1 contenteditable="false" style="font-size: 80px;">Kenapa Anak TI Butuh Bisnis?</h1>
+        <p class="eyebrow">Bagian II</p>
+        <h1 style="font-size: 80px;">Kenapa Anak TI Butuh Bisnis?</h1>
         <div class="divider"></div>
-        <p contenteditable="false" style="font-size: 32px;">Menjembatani dua dunia yang menggunakan bahasa berbeda.</p>
+        <p style="font-size: 32px;">Menjembatani dua dunia yang menggunakan bahasa berbeda.</p>
       </div>
 
       <!-- SLIDE 28 -->
       <div class="slide-container layout-split" data-title="Realitas vs Mitos">
         <div class="split-col w-60">
-          <p class="eyebrow" contenteditable="false">Realitas vs Mitos</p>
-          <h2 contenteditable="false">Mitos Mahasiswa TI</h2>
+          <p class="eyebrow">Realitas vs Mitos</p>
+          <h2>Mitos Mahasiswa TI</h2>
           <ul class="minimal-list">
-            <li><i class="fa-solid fa-xmark" style="color: #EF4444;"></i> <span contenteditable="false">Cuma ngoding seharian di ruangan gelap.</span></li>
-            <li><i class="fa-solid fa-xmark" style="color: #EF4444;"></i> <span contenteditable="false">Gak perlu komunikasi sama klien (Anti-sosial).</span></li>
-            <li><i class="fa-solid fa-xmark" style="color: #EF4444;"></i> <span contenteditable="false">Aplikasi jalan = Tugas selesai sempurna.</span></li>
+            <li><i class="fa-solid fa-xmark" style="color: #EF4444;"></i> <span>Cuma ngoding seharian di ruangan gelap.</span></li>
+            <li><i class="fa-solid fa-xmark" style="color: #EF4444;"></i> <span>Gak perlu komunikasi sama klien (Anti-sosial).</span></li>
+            <li><i class="fa-solid fa-xmark" style="color: #EF4444;"></i> <span>Aplikasi jalan = Tugas selesai sempurna.</span></li>
           </ul>
         </div>
         <div class="split-col split-img-col w-40">
@@ -752,32 +706,32 @@
           <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&amp;auto=format&amp;fit=crop&amp;w=800&amp;q=80" alt="Grafik Bisnis Analitik">
         </div>
         <div class="split-col w-60">
-          <p class="eyebrow" contenteditable="false">Tujuan Sebenarnya</p>
-          <h2 contenteditable="false">Teknologi Melayani Bisnis</h2>
+          <p class="eyebrow">Tujuan Sebenarnya</p>
+          <h2>Teknologi Melayani Bisnis</h2>
           <ul class="minimal-list">
-            <li><i class="fa-solid fa-bolt"></i> <span contenteditable="false">TI dibuat untuk mempercepat operasional.</span></li>
-            <li><i class="fa-solid fa-money-bill-trend-up"></i> <span contenteditable="false">Aplikasi dibayar mahal agar profit perusahaan naik.</span></li>
-            <li><i class="fa-solid fa-triangle-exclamation"></i> <span contenteditable="false">Gagal paham alur bisnis = Salah bikin fitur aplikasi.</span></li>
+            <li><i class="fa-solid fa-bolt"></i> <span>TI dibuat untuk mempercepat operasional.</span></li>
+            <li><i class="fa-solid fa-money-bill-trend-up"></i> <span>Aplikasi dibayar mahal agar profit perusahaan naik.</span></li>
+            <li><i class="fa-solid fa-triangle-exclamation"></i> <span>Gagal paham alur bisnis = Salah bikin fitur aplikasi.</span></li>
           </ul>
         </div>
       </div>
 
       <!-- SLIDE 30 -->
       <div class="slide-container pad-standard" data-title="Jurang Komunikasi">
-        <h2 contenteditable="false">Jurang Komunikasi (The Gap)</h2>
+        <h2>Jurang Komunikasi (The Gap)</h2>
         <div class="flex-grow-center" style="flex-direction: row; gap: 40px; align-items: center;">
           <div class="card" style="align-items: center; text-align: center; background: #FFF7ED; border: none;">
             <i class="fa-solid fa-user-tie" style="font-size: 80px; color: #EA580C; margin-bottom: 24px;"></i>
-            <h3 contenteditable="false">Orang Bisnis</h3>
-            <p contenteditable="false">Fokus profit &amp; kecepatan. Buta teknis *Database*.</p>
+            <h3>Orang Bisnis</h3>
+            <p>Fokus profit &amp; kecepatan. Buta teknis *Database*.</p>
           </div>
           <div style="width: 80px; text-align: center;">
             <i class="fa-solid fa-bolt" style="font-size: 64px; color: #EF4444;"></i>
           </div>
           <div class="card" style="align-items: center; text-align: center; background: #F0F9FF; border: none;">
             <i class="fa-solid fa-laptop-code" style="font-size: 80px; color: #0369A1; margin-bottom: 24px;"></i>
-            <h3 contenteditable="false">Programmer</h3>
-            <p contenteditable="false">Fokus algoritma kode. Buta aturan bisnis klien.</p>
+            <h3>Programmer</h3>
+            <p>Fokus algoritma kode. Buta aturan bisnis klien.</p>
           </div>
         </div>
       </div>
@@ -785,8 +739,8 @@
       <!-- SLIDE 31 -->
       <div class="slide-container center-content" data-title="Peran Systems Analyst">
         <i class="fa-solid fa-bridge" style="font-size: 120px; color: #0369A1; margin-bottom: 32px;"></i>
-        <h2 contenteditable="false" style="font-size: 64px;">Peran "Systems Analyst"</h2>
-        <p contenteditable="false" style="font-size: 32px; max-width: 900px; margin-top: 24px;">Menjadi Jembatan Penerjemah. Menganalisis kebutuhan manual, lalu merancang arsitektur IT untuk dikerjakan *Programmer*.</p>
+        <h2 style="font-size: 64px;">Peran "Systems Analyst"</h2>
+        <p style="font-size: 32px; max-width: 900px; margin-top: 24px;">Menjadi Jembatan Penerjemah. Menganalisis kebutuhan manual, lalu merancang arsitektur IT untuk dikerjakan *Programmer*.</p>
       </div>
 
       <!-- ==========================================
@@ -794,38 +748,38 @@
            ========================================== -->
       <!-- SLIDE 32 -->
       <div class="slide-container pad-standard" style="background: #F8F9FA;" id="drag-drop-2" data-title="Praktik 2 (The Gap)">
-        <p class="eyebrow" contenteditable="false">Praktik Langsung (Drag & Drop)</p>
-        <h2 contenteditable="false" style="font-size: 44px; margin-bottom: 12px;">Cocokkan Pola Pikir &amp; Peran (*The Gap*)</h2>
-        <p style="margin-bottom: 28px; font-size: 20px;">Siapa yang bertugas untuk fokus pada hal apa? Seret jawaban ke kotak profil yang tepat!</p>
+        <p class="eyebrow">Praktik Langsung (Drag & Drop)</p>
+        <h2 style="font-size: 40px; margin-bottom: 12px;">Cocokkan Pola Pikir &amp; Peran (*The Gap*)</h2>
+        <p style="margin-bottom: 20px; font-size: 18px;">Siapa yang bertugas untuk fokus pada hal apa? Seret jawaban ke kotak profil yang tepat!</p>
         
         <div class="flex-grow-center" style="justify-content: flex-start; margin-top: 10px;">
-          <div class="draggable-container" style="display: flex; gap: 24px; margin-bottom: 36px; justify-content: center; min-height: 80px;">
+          <div class="draggable-container" style="display: flex; gap: 20px; margin-bottom: 24px; justify-content: center; min-height: 60px;">
             <div class="drag-item" draggable="true" data-type="analyst">🌉 Penerjemah &amp; Desain Arsitektur</div>
             <div class="drag-item" draggable="true" data-type="business">📈 Fokus Profit &amp; Kecepatan Layanan</div>
             <div class="drag-item" draggable="true" data-type="programmer">💻 Fokus Algoritma &amp; Penulisan Kode</div>
           </div>
 
-          <div style="display: flex; gap: 24px; justify-content: center; align-items: stretch;" class="dropzones-container">
-            <div class="drop-zone" data-target="business" style="border-color: #EA580C; background: #FFF7ED;">
-              <i class="fa-solid fa-user-tie" style="font-size: 44px; color: #EA580C; margin-bottom: 12px;"></i>
-              <h3 style="color: #EA580C;">Orang Bisnis</h3>
+          <div style="display: flex; gap: 20px; justify-content: center; align-items: stretch;" class="dropzones-container">
+            <div class="drop-zone" data-target="business" style="border-color: #EA580C; background: #FFF7ED; min-height:140px; padding:16px;">
+              <i class="fa-solid fa-user-tie" style="font-size: 36px; color: #EA580C; margin-bottom: 12px;"></i>
+              <h3 style="color: #EA580C; font-size: 20px;">Orang Bisnis</h3>
               <div class="drop-content"></div>
             </div>
-            <div class="drop-zone" data-target="analyst" style="border-color: #10B981; background: #ECFDF5;">
-              <i class="fa-solid fa-bridge" style="font-size: 44px; color: #10B981; margin-bottom: 12px;"></i>
-              <h3 style="color: #10B981;">Systems Analyst</h3>
+            <div class="drop-zone" data-target="analyst" style="border-color: #10B981; background: #ECFDF5; min-height:140px; padding:16px;">
+              <i class="fa-solid fa-bridge" style="font-size: 36px; color: #10B981; margin-bottom: 12px;"></i>
+              <h3 style="color: #10B981; font-size: 20px;">Systems Analyst</h3>
               <div class="drop-content"></div>
             </div>
-            <div class="drop-zone" data-target="programmer" style="border-color: #0369A1; background: #F0F9FF;">
-              <i class="fa-solid fa-laptop-code" style="font-size: 44px; color: #0369A1; margin-bottom: 12px;"></i>
-              <h3 style="color: #0369A1;">Programmer</h3>
+            <div class="drop-zone" data-target="programmer" style="border-color: #0369A1; background: #F0F9FF; min-height:140px; padding:16px;">
+              <i class="fa-solid fa-laptop-code" style="font-size: 36px; color: #0369A1; margin-bottom: 12px;"></i>
+              <h3 style="color: #0369A1; font-size: 20px;">Programmer</h3>
               <div class="drop-content"></div>
             </div>
           </div>
 
-          <div class="practice-feedback" style="text-align: center; margin-top: 28px; display: none;">
-            <p style="font-size: 30px; font-weight: 800; color: #10B981;"><i class="fa-solid fa-circle-check"></i> Sempurna!</p>
-            <p style="font-size: 20px; color: #475569; margin-top: 6px;">*Systems Analyst* hadir sebagai jembatan penengah.</p>
+          <div class="practice-feedback" style="text-align: center; margin-top: 20px; display: none;">
+            <p style="font-size: 28px; font-weight: 800; color: #10B981;"><i class="fa-solid fa-circle-check"></i> Sempurna!</p>
+            <p style="font-size: 18px; color: #475569; margin-top: 4px;">*Systems Analyst* hadir sebagai jembatan penengah.</p>
           </div>
         </div>
       </div>
@@ -833,12 +787,12 @@
       <!-- SLIDE 33 -->
       <div class="slide-container layout-split" data-title="Security-Aware">
         <div class="split-col w-60">
-          <p class="eyebrow" contenteditable="false">Security-Aware Process</p>
-          <h2 contenteditable="false">Integrasi Siber Dasar</h2>
+          <p class="eyebrow">Security-Aware Process</p>
+          <h2>Integrasi Siber Dasar</h2>
           <ul class="minimal-list">
-            <li><i class="fa-solid fa-shield-virus"></i> <span contenteditable="false">Celah keamanan bukan cuma urusan *Hacker/Malware*.</span></li>
-            <li><i class="fa-solid fa-user-xmark"></i> <span contenteditable="false">Sering lahir dari Proses Operasional yang salah desain.</span></li>
-            <li><i class="fa-solid fa-key"></i> <span contenteditable="false">Contoh: Sistem kasir mengharuskan *sharing password* saat antre.</span></li>
+            <li><i class="fa-solid fa-shield-virus"></i> <span>Celah keamanan bukan cuma urusan *Hacker/Malware*.</span></li>
+            <li><i class="fa-solid fa-user-xmark"></i> <span>Sering lahir dari Proses Operasional yang salah desain.</span></li>
+            <li><i class="fa-solid fa-key"></i> <span>Contoh: Sistem kasir mengharuskan *sharing password* saat antre.</span></li>
           </ul>
         </div>
         <div class="split-col split-img-col w-40">
@@ -848,11 +802,11 @@
 
       <!-- SLIDE 34 -->
       <div class="slide-container pad-standard" data-title="Human Error">
-        <h2 contenteditable="false">Human Error &amp; Celah Keamanan</h2>
+        <h2>Human Error &amp; Celah Keamanan</h2>
         <div class="flex-grow-center">
-          <div style="background: #FFF7ED; border-left: 12px solid #EA580C; padding: 64px; border-radius: 0 16px 16px 0;">
-            <i class="fa-solid fa-unlock-keyhole" style="font-size: 64px; color: #EA580C; margin-bottom: 24px;"></i>
-            <p contenteditable="false" style="font-size: 36px; font-weight: 600; color: #9A3412; line-height: 1.4;">"Jika proses operasional terlalu lambat/ribet, karyawan akan mencari 'jalan pintas' yang justru melanggar aturan keamanan IT."</p>
+          <div style="background: #FFF7ED; border-left: 12px solid #EA580C; padding: 48px; border-radius: 0 16px 16px 0;">
+            <i class="fa-solid fa-unlock-keyhole" style="font-size: 56px; color: #EA580C; margin-bottom: 20px;"></i>
+            <p style="font-size: 32px; font-weight: 600; color: #9A3412; line-height: 1.4;">"Jika proses operasional terlalu lambat/ribet, karyawan akan mencari 'jalan pintas' yang justru melanggar aturan keamanan IT."</p>
           </div>
         </div>
       </div>
@@ -863,22 +817,22 @@
 
       <!-- SLIDE 35 -->
       <div class="slide-container center-content bg-dark" data-title="Studi Kasus Nyata">
-        <p class="eyebrow" contenteditable="false">Bagian III</p>
-        <h1 contenteditable="false" style="font-size: 80px;">Studi Kasus Nyata</h1>
+        <p class="eyebrow">Bagian III</p>
+        <h1 style="font-size: 80px;">Studi Kasus Nyata</h1>
         <div class="divider"></div>
-        <p contenteditable="false" style="font-size: 32px;">Kondisi Manual (As-Is) vs Sistem TI Modern (To-Be).</p>
+        <p style="font-size: 32px;">Kondisi Manual (As-Is) vs Sistem TI Modern (To-Be).</p>
       </div>
 
       <!-- SLIDE 36 -->
       <div class="slide-container layout-split" data-title="Kasus 1: As-Is">
         <div class="split-col w-60">
-          <p class="eyebrow" contenteditable="false">KASUS 1 (AS-IS / MANUAL)</p>
-          <h2 contenteditable="false">Pendaftaran E-Card Perpustakaan</h2>
+          <p class="eyebrow">KASUS 1 (AS-IS / MANUAL)</p>
+          <h2>Pendaftaran E-Card Perpustakaan</h2>
           <ul class="minimal-list">
-            <li><i class="fa-solid fa-1"></i> <span contenteditable="false">Mahasiswa isi form registrasi kertas.</span></li>
-            <li><i class="fa-solid fa-2"></i> <span contenteditable="false">Pustakawan ketik ulang data ke MS Excel.</span></li>
-            <li><i class="fa-solid fa-3"></i> <span contenteditable="false">Pustakawan cetak kartu &amp; laminating.</span></li>
-            <li><i class="fa-solid fa-4"></i> <span contenteditable="false">Mahasiswa ambil kartu 2 hari kemudian.</span></li>
+            <li><i class="fa-solid fa-1"></i> <span>Mahasiswa isi form registrasi kertas.</span></li>
+            <li><i class="fa-solid fa-2"></i> <span>Pustakawan ketik ulang data ke MS Excel.</span></li>
+            <li><i class="fa-solid fa-3"></i> <span>Pustakawan cetak kartu &amp; laminating.</span></li>
+            <li><i class="fa-solid fa-4"></i> <span>Mahasiswa ambil kartu 2 hari kemudian.</span></li>
           </ul>
         </div>
         <div class="split-col split-img-col w-40" style="background: #F1F5F9; align-items: center; justify-content: center;">
@@ -888,20 +842,20 @@
 
       <!-- SLIDE 37 -->
       <div class="slide-container pad-standard" data-title="Analisis Titik Sakit">
-        <h2 contenteditable="false">Analisis Titik Sakit (*Pain Points*)</h2>
+        <h2>Analisis Titik Sakit (*Pain Points*)</h2>
         <div class="flex-grow-center">
           <div class="card-grid">
             <div class="card" style="border-top: 8px solid #EF4444;">
-              <h3 contenteditable="false">Redundancy</h3>
-              <p contenteditable="false">Kerja ganda. Menulis form kertas, lalu harus mengetik ulang ke komputer.</p>
+              <h3>Redundancy</h3>
+              <p>Kerja ganda. Menulis form kertas, lalu harus mengetik ulang ke komputer.</p>
             </div>
             <div class="card" style="border-top: 8px solid #EF4444;">
-              <h3 contenteditable="false">Human Error</h3>
-              <p contenteditable="false">Risiko salah ketik nama/NIM yang sangat tinggi saat *data entry* manual.</p>
+              <h3>Human Error</h3>
+              <p>Risiko salah ketik nama/NIM yang sangat tinggi saat *data entry* manual.</p>
             </div>
             <div class="card" style="border-top: 8px solid #EF4444;">
-              <h3 contenteditable="false">Time Wasted</h3>
-              <p contenteditable="false">Mahasiswa harus menunggu proses 2 hari dan bolak-balik kampus.</p>
+              <h3>Time Wasted</h3>
+              <p>Mahasiswa harus menunggu proses 2 hari dan bolak-balik kampus.</p>
             </div>
           </div>
         </div>
@@ -913,14 +867,14 @@
           <i class="fa-solid fa-mobile-screen" style="font-size: 200px; color: #0369A1;"></i>
         </div>
         <div class="split-col w-60">
-          <p class="eyebrow" contenteditable="false">SOLUSI DIGITAL (TO-BE)</p>
-          <h2 contenteditable="false">Integrasi SSO (Pendaftaran 5 Detik)</h2>
+          <p class="eyebrow">SOLUSI DIGITAL (TO-BE)</p>
+          <h2>Integrasi SSO (Pendaftaran 5 Detik)</h2>
           <ul class="minimal-list">
-            <li><i class="fa-solid fa-fingerprint"></i> <span contenteditable="false">Mhs login Portal via HP menggunakan *Single Sign-On*.</span></li>
-            <li><i class="fa-solid fa-qrcode"></i> <span contenteditable="false">Sistem otomatis generate QR E-Card tanpa input ulang data.</span></li>
+            <li><i class="fa-solid fa-fingerprint"></i> <span>Mhs login Portal via HP menggunakan *Single Sign-On*.</span></li>
+            <li><i class="fa-solid fa-qrcode"></i> <span>Sistem otomatis generate QR E-Card tanpa input ulang data.</span></li>
           </ul>
-          <div style="margin-top: 48px; padding: 24px; background: #ECFDF5; border-left: 6px solid #10B981;">
-            <p contenteditable="false" style="font-weight: 700; color: #047857; font-size: 28px; margin: 0;">Waktu Proses Dipangkas:<br>2 Hari &rarr; 5 Detik.</p>
+          <div style="margin-top: 40px; padding: 20px; background: #ECFDF5; border-left: 6px solid #10B981;">
+            <p style="font-weight: 700; color: #047857; font-size: 24px; margin: 0;">Waktu Proses Dipangkas:<br>2 Hari &rarr; 5 Detik.</p>
           </div>
         </div>
       </div>
@@ -928,12 +882,12 @@
       <!-- SLIDE 39 -->
       <div class="slide-container layout-split" data-title="Kasus 2: Cloud POS">
         <div class="split-col w-60">
-          <p class="eyebrow" contenteditable="false">KASUS 2 (KETERGANTUNGAN TI)</p>
-          <h2 contenteditable="false">Kasir Retail Modern (*Cloud POS*)</h2>
+          <p class="eyebrow">KASUS 2 (KETERGANTUNGAN TI)</p>
+          <h2>Kasir Retail Modern (*Cloud POS*)</h2>
           <ul class="minimal-list">
-            <li><i class="fa-solid fa-barcode"></i> <span contenteditable="false">Scan *barcode* (Otomatis).</span></li>
-            <li><i class="fa-solid fa-calculator"></i> <span contenteditable="false">Sistem hitung pajak/total (Otomatis).</span></li>
-            <li><i class="fa-solid fa-wifi" style="color: #EF4444;"></i> <span contenteditable="false">**Masalah:** Internet mati = Transaksi lumpuh total.</span></li>
+            <li><i class="fa-solid fa-barcode"></i> <span>Scan *barcode* (Otomatis).</span></li>
+            <li><i class="fa-solid fa-calculator"></i> <span>Sistem hitung pajak/total (Otomatis).</span></li>
+            <li><i class="fa-solid fa-wifi" style="color: #EF4444;"></i> <span>**Masalah:** Internet mati = Transaksi lumpuh total.</span></li>
           </ul>
         </div>
         <div class="split-col split-img-col w-40" style="background: #F1F5F9; align-items: center; justify-content: center;">
@@ -943,18 +897,18 @@
 
       <!-- SLIDE 40 -->
       <div class="slide-container pad-standard" data-title="Celah Operasional TI">
-        <h2 contenteditable="false">Celah Operasional TI (Risiko Kasus 2)</h2>
+        <h2>Celah Operasional TI (Risiko Kasus 2)</h2>
         <div class="flex-grow-center">
           <div class="card-grid">
             <div class="card" style="border: 2px solid #EF4444; background: #FEF2F2;">
               <i class="fa-solid fa-globe" style="color: #EF4444;"></i>
-              <h3 contenteditable="false" style="color: #B91C1C;">Availability Issue (Ketersediaan)</h3>
-              <p contenteditable="false">Ketergantungan absolut pada infrastruktur internet (Cloud). Butuh SOP manual cadangan (*Fallback*).</p>
+              <h3 style="color: #B91C1C;">Availability Issue (Ketersediaan)</h3>
+              <p>Ketergantungan absolut pada infrastruktur internet (Cloud). Butuh SOP manual cadangan (*Fallback*).</p>
             </div>
             <div class="card" style="border: 2px solid #EF4444; background: #FEF2F2;">
               <i class="fa-solid fa-eye" style="color: #EF4444;"></i>
-              <h3 contenteditable="false" style="color: #B91C1C;">Confidentiality Issue (Kerahasiaan)</h3>
-              <p contenteditable="false">Layar monitor kasir sering menghadap jalan, rentan intipan (*Shoulder Surfing*) PIN/Data pelanggan.</p>
+              <h3 style="color: #B91C1C;">Confidentiality Issue (Kerahasiaan)</h3>
+              <p>Layar monitor kasir sering menghadap jalan, rentan intipan (*Shoulder Surfing*) PIN/Data pelanggan.</p>
             </div>
           </div>
         </div>
@@ -962,12 +916,12 @@
 
       <!-- SLIDE 41 -->
       <div class="slide-container pad-standard" data-title="Dampak Revolusi TI">
-        <h2 contenteditable="false">Dampak Revolusi TI pada Bisnis</h2>
+        <h2>Dampak Revolusi TI pada Bisnis</h2>
         <div class="flex-grow-center">
           <ul class="minimal-list" style="gap: 48px;">
-            <li><i class="fa-solid fa-robot"></i> <span contenteditable="false">**Otomatisasi Massal:** Pekerjaan rutinitas berulang digantikan skrip/mesin.</span></li>
-            <li><i class="fa-solid fa-bolt"></i> <span contenteditable="false">**Kecepatan Real-time:** Akses *Big Data* seketika di seluruh dunia.</span></li>
-            <li><i class="fa-solid fa-scissors"></i> <span contenteditable="false">**Disintermediasi:** Hilangnya "Calo" atau perantara (Misal: Travel Agent vs Tiket.com).</span></li>
+            <li><i class="fa-solid fa-robot"></i> <span>**Otomatisasi Massal:** Pekerjaan rutinitas berulang digantikan skrip/mesin.</span></li>
+            <li><i class="fa-solid fa-bolt"></i> <span>**Kecepatan Real-time:** Akses *Big Data* seketika di seluruh dunia.</span></li>
+            <li><i class="fa-solid fa-scissors"></i> <span>**Disintermediasi:** Hilangnya "Calo" atau perantara (Misal: Travel Agent vs Tiket.com).</span></li>
           </ul>
         </div>
       </div>
@@ -978,25 +932,25 @@
 
       <!-- SLIDE 42 -->
       <div class="slide-container center-content bg-dark" data-title="BPM Lifecycle">
-        <p class="eyebrow" contenteditable="false">Bagian IV</p>
-        <h1 contenteditable="false" style="font-size: 80px;">BPM Lifecycle</h1>
+        <p class="eyebrow">Bagian IV</p>
+        <h1 style="font-size: 80px;">BPM Lifecycle</h1>
         <div class="divider"></div>
-        <p contenteditable="false" style="font-size: 32px;">Siklus hidup tanpa henti dari pengelolaan proses bisnis (Metodologi Dumas).</p>
+        <p style="font-size: 32px;">Siklus hidup tanpa henti dari pengelolaan proses bisnis (Metodologi Dumas).</p>
       </div>
 
       <!-- SLIDE 43 -->
       <div class="slide-container pad-standard" data-title="6 Fase Siklus">
-        <h2 contenteditable="false">6 Fase Siklus BPM</h2>
+        <h2>6 Fase Siklus BPM</h2>
         <div class="flex-grow-center">
-          <div style="display: flex; flex-wrap: wrap; gap: 24px; justify-content: center; align-items: center;">
-            <div style="background: #F1F5F9; padding: 24px 40px; border-radius: 12px; font-weight: 700; font-size: 28px;">1. Identifikasi</div>
-            <div style="background: #F1F5F9; padding: 24px 40px; border-radius: 12px; font-weight: 700; font-size: 28px;">2. Discovery</div>
-            <div style="background: #F1F5F9; padding: 24px 40px; border-radius: 12px; font-weight: 700; font-size: 28px;">3. Analisis</div>
-            <div style="background: #E0F2FE; color: #0369A1; padding: 24px 40px; border-radius: 12px; font-weight: 700; font-size: 28px; border: 2px solid #0369A1;">4. Redesign</div>
-            <div style="background: #E0F2FE; color: #0369A1; padding: 24px 40px; border-radius: 12px; font-weight: 700; font-size: 28px; border: 2px solid #0369A1;">5. Implementasi</div>
-            <div style="background: #F1F5F9; padding: 24px 40px; border-radius: 12px; font-weight: 700; font-size: 28px;">6. Monitoring</div>
+          <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; align-items: center;">
+            <div style="background: #F1F5F9; padding: 20px 32px; border-radius: 12px; font-weight: 700; font-size: 24px;">1. Identifikasi</div>
+            <div style="background: #F1F5F9; padding: 20px 32px; border-radius: 12px; font-weight: 700; font-size: 24px;">2. Discovery</div>
+            <div style="background: #F1F5F9; padding: 20px 32px; border-radius: 12px; font-weight: 700; font-size: 24px;">3. Analisis</div>
+            <div style="background: #E0F2FE; color: #0369A1; padding: 20px 32px; border-radius: 12px; font-weight: 700; font-size: 24px; border: 2px solid #0369A1;">4. Redesign</div>
+            <div style="background: #E0F2FE; color: #0369A1; padding: 20px 32px; border-radius: 12px; font-weight: 700; font-size: 24px; border: 2px solid #0369A1;">5. Implementasi</div>
+            <div style="background: #F1F5F9; padding: 20px 32px; border-radius: 12px; font-weight: 700; font-size: 24px;">6. Monitoring</div>
           </div>
-          <p contenteditable="false" style="text-align: center; margin-top: 40px; font-size: 24px; color: #64748B;">*Proyek Mini kita selama 1 semester akan sepenuhnya mempraktikkan siklus ini.</p>
+          <p style="text-align: center; margin-top: 40px; font-size: 24px; color: #64748B;">*Proyek Mini kita selama 1 semester akan sepenuhnya mempraktikkan siklus ini.</p>
         </div>
       </div>
 
@@ -1006,12 +960,12 @@
           <i class="fa-solid fa-helicopter" style="font-size: 200px; color: #0F172A;"></i>
         </div>
         <div class="split-col w-60">
-          <p class="eyebrow" contenteditable="false">Fase 1 (AS-IS)</p>
-          <h2 contenteditable="false">Identifikasi</h2>
+          <p class="eyebrow">Fase 1 (AS-IS)</p>
+          <h2>Identifikasi</h2>
           <ul class="minimal-list">
-            <li><i class="fa-solid fa-eye"></i> <span contenteditable="false">Pandangan luas (*Helicopter View*).</span></li>
-            <li><i class="fa-solid fa-triangle-exclamation"></i> <span contenteditable="false">Proses mana yang pelayanannya paling lambat/bermasalah?</span></li>
-            <li><i class="fa-solid fa-list-ol"></i> <span contenteditable="false">Tentukan prioritas proyek perbaikan.</span></li>
+            <li><i class="fa-solid fa-eye"></i> <span>Pandangan luas (*Helicopter View*).</span></li>
+            <li><i class="fa-solid fa-triangle-exclamation"></i> <span>Proses mana yang pelayanannya paling lambat/bermasalah?</span></li>
+            <li><i class="fa-solid fa-list-ol"></i> <span>Tentukan prioritas proyek perbaikan.</span></li>
           </ul>
         </div>
       </div>
@@ -1022,12 +976,12 @@
           <i class="fa-solid fa-magnifying-glass" style="font-size: 200px; color: #0369A1;"></i>
         </div>
         <div class="split-col w-60">
-          <p class="eyebrow" contenteditable="false">Fase 2 (AS-IS)</p>
-          <h2 contenteditable="false">Discovery (Penemuan)</h2>
+          <p class="eyebrow">Fase 2 (AS-IS)</p>
+          <h2>Discovery (Penemuan)</h2>
           <ul class="minimal-list">
-            <li><i class="fa-solid fa-comments"></i> <span contenteditable="false">Wawancara virtual dengan aktor terkait (Staf/User).</span></li>
-            <li><i class="fa-solid fa-diagram-project"></i> <span contenteditable="false">Mulai menggambar diagram kondisi saat ini (*As-Is Model*).</span></li>
-            <li><i class="fa-solid fa-folder-open"></i> <span contenteditable="false">Kumpulkan dokumen SOP panduan kerja.</span></li>
+            <li><i class="fa-solid fa-comments"></i> <span>Wawancara virtual dengan aktor terkait (Staf/User).</span></li>
+            <li><i class="fa-solid fa-diagram-project"></i> <span>Mulai menggambar diagram kondisi saat ini (*As-Is Model*).</span></li>
+            <li><i class="fa-solid fa-folder-open"></i> <span>Kumpulkan dokumen SOP panduan kerja.</span></li>
           </ul>
         </div>
       </div>
@@ -1038,28 +992,28 @@
           <i class="fa-solid fa-fish" style="font-size: 200px; color: #EA580C;"></i>
         </div>
         <div class="split-col w-60">
-          <p class="eyebrow" contenteditable="false">Fase 3 (AS-IS)</p>
-          <h2 contenteditable="false">Analisis Kualitatif</h2>
+          <p class="eyebrow">Fase 3 (AS-IS)</p>
+          <h2>Analisis Kualitatif</h2>
           <ul class="minimal-list">
-            <li><i class="fa-solid fa-tree"></i> <span contenteditable="false">Cari akar masalah (*Root Cause Analysis/Fishbone*).</span></li>
-            <li><i class="fa-solid fa-trash-can"></i> <span contenteditable="false">Identifikasi sumber pemborosan (Waktu/Biaya).</span></li>
-            <li><i class="fa-solid fa-question"></i> <span contenteditable="false">Apakah butuh sistem *database* baru?</span></li>
+            <li><i class="fa-solid fa-tree"></i> <span>Cari akar masalah (*Root Cause Analysis/Fishbone*).</span></li>
+            <li><i class="fa-solid fa-trash-can"></i> <span>Identifikasi sumber pemborosan (Waktu/Biaya).</span></li>
+            <li><i class="fa-solid fa-question"></i> <span>Apakah butuh sistem *database* baru?</span></li>
           </ul>
         </div>
       </div>
 
       <!-- SLIDE 47 -->
       <div class="slide-container pad-standard" data-title="Fase 4 & 5">
-        <h2 contenteditable="false">Fase 4 &amp; 5: Eksekusi Teknologi (TO-BE)</h2>
+        <h2>Fase 4 &amp; 5: Eksekusi Teknologi (TO-BE)</h2>
         <div class="flex-grow-center">
           <div class="card-grid">
             <div class="card" style="border-top: 8px solid #0369A1;">
-              <h3 contenteditable="false">Redesign (Desain Ulang)</h3>
-              <p contenteditable="false">Merancang model masa depan (*To-Be*) dengan menyuntikkan arsitektur IT baru.</p>
+              <h3>Redesign (Desain Ulang)</h3>
+              <p>Merancang model masa depan (*To-Be*) dengan menyuntikkan arsitektur IT baru.</p>
             </div>
             <div class="card" style="border-top: 8px solid #0369A1;">
-              <h3 contenteditable="false">Implementasi</h3>
-              <p contenteditable="false">Eksekusi aktual: Tim *programmer* mulai *coding* sistem berdasarkan diagram *To-Be* tersebut.</p>
+              <h3>Implementasi</h3>
+              <p>Eksekusi aktual: Tim *programmer* mulai *coding* sistem berdasarkan diagram *To-Be* tersebut.</p>
             </div>
           </div>
         </div>
@@ -1071,12 +1025,12 @@
           <i class="fa-solid fa-desktop" style="font-size: 200px; color: #10B981;"></i>
         </div>
         <div class="split-col w-60">
-          <p class="eyebrow" contenteditable="false">Fase 6</p>
-          <h2 contenteditable="false">Monitoring (Pemantauan)</h2>
+          <p class="eyebrow">Fase 6</p>
+          <h2>Monitoring (Pemantauan)</h2>
           <ul class="minimal-list">
-            <li><i class="fa-solid fa-server"></i> <span contenteditable="false">Sistem TI baru tayang (*Go-Live*).</span></li>
-            <li><i class="fa-solid fa-circle-check"></i> <span contenteditable="false">Apakah masalah kelambatan sudah terpecahkan?</span></li>
-            <li><i class="fa-solid fa-chart-line"></i> <span contenteditable="false">Evaluasi performa SLA (*Service Level Agreement*).</span></li>
+            <li><i class="fa-solid fa-server"></i> <span>Sistem TI baru tayang (*Go-Live*).</span></li>
+            <li><i class="fa-solid fa-circle-check"></i> <span>Apakah masalah kelambatan sudah terpecahkan?</span></li>
+            <li><i class="fa-solid fa-chart-line"></i> <span>Evaluasi performa SLA (*Service Level Agreement*).</span></li>
           </ul>
         </div>
       </div>
@@ -1086,9 +1040,9 @@
            ========================================== -->
 
       <!-- SLIDE 49: KUIS 1 -->
-      <div class="slide-container pad-standard" style="background: #FFFFFF; padding: 40px 80px;" id="slide49" data-title="Kuis 1: Esensi Bisnis">
-        <p class="eyebrow" contenteditable="false" style="margin-bottom: 8px;">Kuis Evaluasi Interaktif • Soal 1/3</p>
-        <h2 contenteditable="false" style="margin-bottom: 16px;">Apa esensi utama dari definisi Proses Bisnis?</h2>
+      <div class="slide-container pad-standard" style="background: #FFFFFF;" id="slide49" data-title="Kuis 1: Esensi Bisnis">
+        <p class="eyebrow" style="margin-bottom: 8px;">Kuis Evaluasi Interaktif • Soal 1/3</p>
+        <h2 style="margin-bottom: 16px;">Apa esensi utama dari definisi Proses Bisnis?</h2>
         <div class="flex-grow-center" style="justify-content: flex-start; margin-top: 10px;">
           <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q1')" data-correct="false">
             <i class="fa-regular fa-circle"></i> A. Sekumpulan baris kode (*source code*) yang dieksekusi mesin server.
@@ -1108,10 +1062,10 @@
       </div>
 
       <!-- SLIDE 50: KUIS 2 -->
-      <div class="slide-container pad-standard" style="background: #FFFFFF; padding: 40px 80px;" id="slide50" data-title="Kuis 2: Input Proses">
-        <p class="eyebrow" contenteditable="false" style="margin-bottom: 8px;">Kuis Evaluasi Interaktif • Soal 2/3</p>
-        <h2 contenteditable="false" style="margin-bottom: 12px;">Dalam 3 Pilar Proses Bisnis, manakah yang merupakan "Input"?</h2>
-        <p style="font-size: 20px; color: #64748B; margin-bottom: 16px;">Kasus: Sistem Login Autentikasi Mahasiswa ITBS</p>
+      <div class="slide-container pad-standard" style="background: #FFFFFF;" id="slide50" data-title="Kuis 2: Input Proses">
+        <p class="eyebrow" style="margin-bottom: 8px;">Kuis Evaluasi Interaktif • Soal 2/3</p>
+        <h2 style="margin-bottom: 12px;">Dalam 3 Pilar Proses Bisnis, manakah yang merupakan "Input"?</h2>
+        <p style="font-size: 18px; color: #64748B; margin-bottom: 16px;">Kasus: Sistem Login Autentikasi Mahasiswa ITBS</p>
         
         <div class="flex-grow-center" style="justify-content: flex-start;">
           <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q2')" data-correct="false">
@@ -1132,9 +1086,9 @@
       </div>
 
       <!-- SLIDE 51: KUIS 3 -->
-      <div class="slide-container pad-standard" style="background: #FFFFFF; padding: 40px 80px;" id="slide51" data-title="Kuis 3: Peran Analyst">
-        <p class="eyebrow" contenteditable="false" style="margin-bottom: 8px;">Kuis Evaluasi Interaktif • Soal 3/3</p>
-        <h2 contenteditable="false" style="margin-bottom: 16px;">Mengapa *Systems Analyst* sangat dibutuhkan di industri TI?</h2>
+      <div class="slide-container pad-standard" style="background: #FFFFFF;" id="slide51" data-title="Kuis 3: Peran Analyst">
+        <p class="eyebrow" style="margin-bottom: 8px;">Kuis Evaluasi Interaktif • Soal 3/3</p>
+        <h2 style="margin-bottom: 16px;">Mengapa *Systems Analyst* sangat dibutuhkan di industri TI?</h2>
         <div class="flex-grow-center" style="justify-content: flex-start; margin-top: 10px;">
           <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q3')" data-correct="false">
             <i class="fa-regular fa-circle"></i> A. Menggantikan peran programmer agar tidak perlu mengetik kode lagi.
@@ -1160,30 +1114,30 @@
       <!-- SLIDE 52 -->
       <div class="slide-container center-content bg-dark" id="slide52" data-title="Q&A Session">
         <i class="fa-regular fa-comments" style="font-size: 120px; color: #EA580C; margin-bottom: 32px;"></i>
-        <h1 contenteditable="false">Sesi Tanya Jawab (Q&amp;A)</h1>
-        <p contenteditable="false" style="font-size: 32px; font-weight: 700; margin-top: 24px;">Silakan klik "Raise Hand" atau ketik di Chat GMeet.</p>
+        <h1>Sesi Tanya Jawab (Q&amp;A)</h1>
+        <p style="font-size: 32px; font-weight: 700; margin-top: 24px;">Silakan klik "Raise Hand" atau ketik di Chat GMeet.</p>
       </div>
 
       <!-- SLIDE 53 -->
       <div class="slide-container pad-standard" id="slide53" data-title="Ringkasan">
-        <h2 contenteditable="false">Ringkasan Hari Ini</h2>
+        <h2>Ringkasan Hari Ini</h2>
         <div class="flex-grow-center">
           <ul class="minimal-list" style="gap: 40px;">
-            <li><i class="fa-solid fa-check-double" style="color: #10B981;"></i> <span contenteditable="false">Proses operasional yang rapi adalah fondasi penciptaan sistem IT yang sukses.</span></li>
-            <li><i class="fa-solid fa-check-double" style="color: #10B981;"></i> <span contenteditable="false">Programmer butuh peran *Systems Analyst* untuk paham masalah bisnis user.</span></li>
-            <li><i class="fa-solid fa-check-double" style="color: #10B981;"></i> <span contenteditable="false">6 Siklus BPM akan menjadi pedoman proyek digital kita.</span></li>
+            <li><i class="fa-solid fa-check-double" style="color: #10B981;"></i> <span>Proses operasional yang rapi adalah fondasi penciptaan sistem IT yang sukses.</span></li>
+            <li><i class="fa-solid fa-check-double" style="color: #10B981;"></i> <span>Programmer butuh peran *Systems Analyst* untuk paham masalah bisnis user.</span></li>
+            <li><i class="fa-solid fa-check-double" style="color: #10B981;"></i> <span>6 Siklus BPM akan menjadi pedoman proyek digital kita.</span></li>
           </ul>
         </div>
       </div>
 
       <!-- SLIDE 54 -->
       <div class="slide-container pad-standard" id="slide54" data-title="Tugas Mandiri">
-        <h2 contenteditable="false">Instruksi Observasi Digital (Mandiri)</h2>
+        <h2>Instruksi Observasi Digital (Mandiri)</h2>
         <div class="flex-grow-center">
-          <div style="background: #FFF7ED; border-left: 12px solid #EA580C; padding: 48px; border-radius: 0 16px 16px 0;">
-            <h3 contenteditable="false" style="color: #EA580C; font-size: 36px; margin-bottom: 16px;">Persiapan Materi Pertemuan 2</h3>
-            <p contenteditable="false" style="font-size: 28px; font-weight: 600; color: #0F172A;">Topik: Identifikasi *Stakeholders* &amp; *Value Chain*.</p>
-            <p contenteditable="false" style="margin-top: 24px;">Amati 1 layanan *Platform Digital* (misal: Tokopedia, Grab, atau E-learning Kampus) via HP/Laptop. Catat siapa saja Aktor Manusia dan Sistem yang berinteraksi di dalamnya!</p>
+          <div style="background: #FFF7ED; border-left: 12px solid #EA580C; padding: 40px; border-radius: 0 16px 16px 0;">
+            <h3 style="color: #EA580C; font-size: 32px; margin-bottom: 16px;">Persiapan Materi Pertemuan 2</h3>
+            <p style="font-size: 24px; font-weight: 600; color: #0F172A;">Topik: Identifikasi *Stakeholders* &amp; *Value Chain*.</p>
+            <p style="margin-top: 16px; font-size: 20px;">Amati 1 layanan *Platform Digital* (misal: Tokopedia, Grab, atau E-learning Kampus) via HP/Laptop. Catat siapa saja Aktor Manusia dan Sistem yang berinteraksi di dalamnya!</p>
           </div>
         </div>
       </div>
@@ -1191,12 +1145,12 @@
       <!-- SLIDE 55 -->
       <div class="slide-container layout-split" id="slide55" data-title="Persiapan Draw.io">
         <div class="split-col w-50">
-          <p class="eyebrow" contenteditable="false">Aksi Berikutnya</p>
-          <h2 contenteditable="false">Daftar Akun Draw.io</h2>
+          <p class="eyebrow">Aksi Berikutnya</p>
+          <h2>Daftar Akun Draw.io</h2>
           <ul class="minimal-list">
-            <li><i class="fa-solid fa-link"></i> <span contenteditable="false">Buka **app.diagrams.net** di browser.</span></li>
-            <li><i class="fa-solid fa-sign-in-alt"></i> <span contenteditable="false">Hubungkan/Login dengan akun Google Drive Anda.</span></li>
-            <li><i class="fa-solid fa-mouse-pointer"></i> <span contenteditable="false">Coba buat file kosong dan pelajari *interface*-nya.</span></li>
+            <li><i class="fa-solid fa-link"></i> <span>Buka **app.diagrams.net** di browser.</span></li>
+            <li><i class="fa-solid fa-sign-in-alt"></i> <span>Hubungkan/Login dengan akun Google Drive Anda.</span></li>
+            <li><i class="fa-solid fa-mouse-pointer"></i> <span>Coba buat file kosong dan pelajari *interface*-nya.</span></li>
           </ul>
         </div>
         <div class="split-col split-img-col w-50" style="background: #F1F5F9; align-items: center; justify-content: center;">
@@ -1206,16 +1160,16 @@
 
       <!-- SLIDE 56 (CLOSING) -->
       <div class="slide-container center-content bg-dark" id="slide56" data-title="Penutup">
-        <h1 contenteditable="false" style="font-size: 100px; margin-bottom: 32px;">Terima Kasih</h1>
+        <h1 style="font-size: 100px; margin-bottom: 32px;">Terima Kasih</h1>
         <div class="divider"></div>
-        <p contenteditable="false" style="font-size: 40px; font-weight: 700; color: #0369A1; font-style: italic; margin-top: 24px;">"Sistem yang hebat berawal dari proses yang tepat."</p>
-        <p contenteditable="false" style="font-size: 24px; color: #94A3B8; margin-top: 64px;">Ardi Ariansyah, S.Kom., Gr. • ITBS</p>
+        <p style="font-size: 40px; font-weight: 700; color: #0369A1; font-style: italic; margin-top: 24px;">"Sistem yang hebat berawal dari proses yang tepat."</p>
+        <p style="font-size: 24px; color: #94A3B8; margin-top: 64px;">Ardi Ariansyah, S.Kom., Gr. • ITB Swadharma</p>
       </div>
 
     </div> <!-- End of slides-wrapper -->
   </div> <!-- End of presentation-area -->
 
-  <!-- PRESENTATION, INTERACTION & EDITING SCRIPTS -->
+  <!-- PRESENTATION & INTERACTION SCRIPTS -->
   <script>
     // --- 1. CORE PRESENTATION LOGIC ---
     const slides = document.querySelectorAll('.slide-container');
@@ -1223,8 +1177,8 @@
     const selector = document.getElementById('slideSelector');
     let currentSlide = 0;
 
-    // Initialize Dropdown
     function initDropdown() {
+      if(!selector) return;
       selector.innerHTML = '';
       slides.forEach((slide, index) => {
         let title = slide.getAttribute('data-title') || `Slide ${index + 1}`;
@@ -1243,11 +1197,11 @@
           slide.classList.remove('active');
         }
       });
-      counter.innerText = `${currentSlide + 1} / ${slides.length}`;
-      selector.value = currentSlide;
+      if(counter) counter.innerText = `${currentSlide + 1} / ${slides.length}`;
+      if(selector) selector.value = currentSlide;
       
       // Auto-scaling proporsional 16:9 
-      const presArea = document.getElementById('presentation-area');
+      const presArea = document.getElementById('presentation-area') || document.body;
       const scaleX = presArea.clientWidth / 1280;
       const scaleY = presArea.clientHeight / 720;
       const scale = Math.min(scaleX, scaleY) * 0.95;
@@ -1256,185 +1210,86 @@
     }
 
     function nextSlide() {
-      if (currentSlide < slides.length - 1) {
-        currentSlide++;
-        updatePresentation();
-      }
+      if (currentSlide < slides.length - 1) { currentSlide++; updatePresentation(); }
     }
 
     function prevSlide() {
-      if (currentSlide > 0) {
-        currentSlide--;
-        updatePresentation();
-      }
+      if (currentSlide > 0) { currentSlide--; updatePresentation(); }
     }
 
     function jumpToSlide(index) {
-      currentSlide = parseInt(index);
-      updatePresentation();
+      currentSlide = parseInt(index); updatePresentation();
     }
 
     document.addEventListener('keydown', (e) => {
-      // Prevent slide change when editing text
-      if(e.target.isContentEditable) return; 
-
+      if(e.target.isContentEditable || e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return; 
       if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') nextSlide();
       if (e.key === 'ArrowLeft' || e.key === 'PageUp') prevSlide();
     });
 
     window.addEventListener('resize', updatePresentation);
-    
-    // Init
     initDropdown();
     updatePresentation();
 
-    // --- 2. EDIT & SAVE HTML LOGIC ---
-    let isEditMode = false;
-    const btnEdit = document.getElementById('btnEditToggle');
-    const btnSave = document.getElementById('btnSaveDownload');
+    // --- 2. DRAG AND DROP LOGIC (AUTO-APPLY TO ALL) ---
+    const dropZones = document.querySelectorAll('.drop-zone');
+    const draggables = document.querySelectorAll('.drag-item');
+    const containers = document.querySelectorAll('.draggable-container');
 
-    function toggleEditMode() {
-      isEditMode = !isEditMode;
-      const editableElements = document.querySelectorAll('[contenteditable]');
-      
-      if (isEditMode) {
-        // Turn ON editing
-        editableElements.forEach(el => el.setAttribute('contenteditable', 'true'));
-        btnEdit.innerHTML = '<i class="fa-solid fa-xmark"></i> Selesai Edit';
-        btnEdit.style.borderColor = '#EF4444';
-        btnEdit.style.color = '#EF4444';
-        btnSave.style.display = 'flex'; // Show Save Button
-        alert("Mode Edit AKTIF. Anda sekarang bisa mengklik dan merubah teks apa saja di layar.");
-      } else {
-        // Turn OFF editing
-        editableElements.forEach(el => el.setAttribute('contenteditable', 'false'));
-        btnEdit.innerHTML = '<i class="fa-solid fa-pen"></i> Edit Teks';
-        btnEdit.style.borderColor = '#EA580C';
-        btnEdit.style.color = '#EA580C';
-        // We keep save button visible just in case they want to save after viewing
-      }
-    }
-
-    function saveAndDownloadHTML() {
-      // 1. Ensure edit mode is off before saving so the downloaded file isn't in edit mode
-      if(isEditMode) toggleEditMode(); 
-
-      // 2. Clone the entire document
-      let htmlContent = document.documentElement.outerHTML;
-
-      // 3. Create a Blob and trigger download
-      let blob = new Blob([htmlContent], {type: "text/html;charset=utf-8"});
-      let url = URL.createObjectURL(blob);
-      let a = document.createElement('a');
-      a.href = url;
-      a.download = "APB-Pertemuan1-Revisi.html";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      
-      alert("File HTML yang sudah direvisi berhasil diunduh ke folder Downloads Anda. Silakan buka file tersebut untuk melihat perubahannya.");
-    }
-
-    // --- 3. EXPORT PDF LOGIC ---
-    function exportToPDF() {
-      // 1. Ensure edit mode is off
-      if(isEditMode) toggleEditMode();
-      
-      alert("TIPS MENCETAK PDF:\n1. Pada jendela Print, ubah 'Destination' menjadi 'Save as PDF'.\n2. Di bagian 'More settings', pastikan opsi 'Background graphics' DICENTANG.\n3. Pastikan 'Margins' di-set ke 'None' atau 'Default'.");
-      
-      // 2. Trigger browser's native print dialog
-      window.print();
-    }
-
-
-    // --- 4. LOGIKA DRAG AND DROP PRAKTIK ---
-    function setupDragAndDrop(slideId) {
-      const slide = document.getElementById(slideId);
-      if (!slide) return;
-
-      const draggables = slide.querySelectorAll('.drag-item');
-      const dropZones = slide.querySelectorAll('.drop-zone');
-      const originalContainer = slide.querySelector('.draggable-container');
-      const feedback = slide.querySelector('.practice-feedback');
-      const totalItems = draggables.length;
-
-      draggables.forEach(draggable => {
-        draggable.addEventListener('dragstart', () => { draggable.classList.add('dragging'); });
-        draggable.addEventListener('dragend', () => { 
-          draggable.classList.remove('dragging'); 
-          checkCompletion();
-        });
+    draggables.forEach(draggable => {
+      draggable.addEventListener('dragstart', () => draggable.classList.add('dragging'));
+      draggable.addEventListener('dragend', () => {
+        draggable.classList.remove('dragging');
+        checkPracticeCompletion();
       });
+    });
 
-      dropZones.forEach(zone => {
-        zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
-        zone.addEventListener('dragleave', () => { zone.classList.remove('drag-over'); });
-        zone.addEventListener('drop', e => {
-          e.preventDefault();
-          zone.classList.remove('drag-over');
-          const draggable = document.querySelector('.dragging');
-          if (!draggable) return;
-
-          const contentArea = zone.querySelector('.drop-content');
-          contentArea.appendChild(draggable);
-        });
+    dropZones.forEach(zone => {
+      zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+      zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+      zone.addEventListener('drop', e => {
+        e.preventDefault();
+        zone.classList.remove('drag-over');
+        const draggable = document.querySelector('.dragging');
+        if (draggable) zone.querySelector('.drop-content').appendChild(draggable);
       });
+    });
 
-      if (originalContainer) {
-          originalContainer.addEventListener('dragover', e => { e.preventDefault(); });
-          originalContainer.addEventListener('drop', e => {
-            const draggable = document.querySelector('.dragging');
-            if (draggable) originalContainer.appendChild(draggable);
-          });
-      }
+    containers.forEach(container => {
+      container.addEventListener('dragover', e => e.preventDefault());
+      container.addEventListener('drop', e => {
+        const draggable = document.querySelector('.dragging');
+        if (draggable) container.appendChild(draggable);
+      });
+    });
 
-      function checkCompletion() {
-        let correctScore = 0;
-        dropZones.forEach(zone => {
-          const itemsInZone = zone.querySelectorAll('.drag-item');
-          itemsInZone.forEach(item => {
-            if (item.dataset.type === zone.dataset.target) {
-              correctScore++;
-            }
+    function checkPracticeCompletion() {
+      document.querySelectorAll('.practice-feedback').forEach(feedback => {
+        let slide = feedback.closest('.slide-container');
+        let totalItems = slide.querySelectorAll('.drag-item').length;
+        let correct = 0;
+        slide.querySelectorAll('.drop-zone').forEach(zone => {
+          zone.querySelectorAll('.drag-item').forEach(item => {
+            if (item.dataset.type === zone.dataset.target) correct++;
           });
         });
-
-        if (correctScore === totalItems) {
-          if(feedback) feedback.style.display = 'block';
-        } else {
-          if(feedback) feedback.style.display = 'none';
-        }
-      }
+        feedback.style.display = (correct === totalItems && totalItems > 0) ? 'block' : 'none';
+      });
     }
 
-    setupDragAndDrop('drag-drop-1');
-    setupDragAndDrop('drag-drop-2');
-
-    // --- 5. LOGIKA KUIS EVALUASI INTERAKTIF ---
-    function handleQuiz(clickedBtn, isCorrect, feedbackId) {
+    // --- 3. QUIZ LOGIC ---
+    window.handleQuiz = function(clickedBtn, isCorrect, feedbackId) {
       const parent = clickedBtn.parentElement;
       const allButtons = parent.querySelectorAll('.quiz-option');
-      
       allButtons.forEach(btn => {
         btn.style.pointerEvents = 'none';
         const icon = btn.querySelector('i');
-        icon.classList.remove('fa-regular', 'fa-circle');
-        
-        if (btn.dataset.correct === "true") {
-          btn.classList.add('correct');
-          icon.classList.add('fa-solid', 'fa-check-circle');
-        } else {
-          icon.classList.add('fa-solid', 'fa-circle-xmark');
-        }
+        icon.className = btn.dataset.correct === "true" ? 'fa-solid fa-check-circle' : 'fa-solid fa-circle-xmark';
+        if (btn.dataset.correct === "true") btn.classList.add('correct');
       });
-
-      if (!isCorrect) {
-        clickedBtn.classList.add('wrong');
-      }
-
+      if (!isCorrect) clickedBtn.classList.add('wrong');
       document.getElementById(feedbackId).classList.add('show');
-    }
+    };
   </script>
 </body>
 </html>
