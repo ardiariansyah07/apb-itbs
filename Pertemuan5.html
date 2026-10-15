@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Analisa Proses Bisnis - Pertemuan 5</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Open+Sans:wght@400;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    /* CSS RESET & INVESTIGATION THEME VARIABLES */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-bg-light: #F8FAFC;
+      --color-text-dark: #0F172A;
+      --color-text-muted: #475569;
+      --color-primary: #0F172A;   /* Slate Dark */
+      --color-accent: #D97706;    /* Amber / Investigation */
+      --color-blue: #0284C7;      /* Sky Blue */
+      --color-white: #FFFFFF;
+      --color-dark-bg: #0B0F19;
+      --navbar-height: 60px;
+    }
+    
+    body { 
+      margin: 0; 
+      padding: 0; 
+      background: #0B0F19; 
+      font-family: 'Open Sans', sans-serif; 
+      height: 100vh; 
+      overflow: hidden; 
+      position: relative;
+    }
+
+    /* TOP NAVIGATION BAR */
+    .top-navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: var(--navbar-height);
+      background: #0F172A;
+      border-bottom: 2px solid #1E293B;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 1000;
+      font-family: 'Montserrat', sans-serif;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+    }
+
+    .nav-left, .nav-center, .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-btn {
+      background: #1E293B;
+      border: 1px solid #334155;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+      padding: 8px 16px;
+      border-radius: 6px;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .nav-btn:hover { background: var(--color-accent); border-color: var(--color-accent); }
+
+    /* DROPDOWN MENU SLIDES */
+    .slide-selector {
+      background: #1E293B;
+      color: white;
+      border: 1px solid #334155;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      outline: none;
+      max-width: 360px;
+    }
+    .slide-selector option { background: #0F172A; }
+
+    /* MAIN CONTAINER ADJUSTMENT */
+    #presentation-area {
+      position: absolute;
+      top: var(--navbar-height);
+      left: 0;
+      right: 0;
+      bottom: 0; 
+      overflow: hidden;
+    }
+
+    /* HARD LOCK 16:9 CONTAINER (1280x720px) */
+    .slide-container {
+      width: 1280px !important;
+      height: 720px !important;
+      background: var(--color-bg-light);
+      color: var(--color-text-dark);
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(1);
+      transform-origin: center center;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.35s ease-in-out;
+      pointer-events: none;
+    }
+
+    .slide-container.active {
+      visibility: visible;
+      opacity: 1;
+      z-index: 5;
+      pointer-events: auto;
+    }
+
+    /* TYPOGRAPHY */
+    h1, h2, h3, h4, .eyebrow { font-family: 'Montserrat', sans-serif; }
+    h1 { font-size: 60px; font-weight: 800; line-height: 1.15; margin-bottom: 20px; color: var(--color-text-dark); }
+    h2 { font-size: 42px; font-weight: 700; line-height: 1.25; margin-bottom: 24px; color: var(--color-text-dark); }
+    h3 { font-size: 30px; font-weight: 700; margin-bottom: 14px; color: var(--color-blue); }
+    p, li { font-size: 24px; line-height: 1.5; color: var(--color-text-muted); }
+    .eyebrow { font-size: 18px; font-weight: 700; color: var(--color-accent); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; }
+    .divider { width: 80px; height: 6px; background: var(--color-accent); margin: 20px 0 24px 0; }
+    
+    .bg-dark { background: var(--color-dark-bg) !important; color: var(--color-white) !important; }
+    .bg-dark h1, .bg-dark h2, .bg-dark h3, .bg-dark p, .bg-dark li { color: var(--color-white) !important; }
+    
+    /* LAYOUT: SPLIT SCREEN */
+    .layout-split { display: flex; flex-direction: row; flex: 1 1 100%; width: 100%; height: 100%; }
+    .split-col { display: flex; flex-direction: column; justify-content: center; height: 100%; padding: 40px 80px; }
+    .split-img-col { padding: 0 !important; margin: 0 !important; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #0F172A; }
+    .split-img-col img { width: 100%; height: 100%; object-fit: cover; display: block; margin: 0; padding: 0; }
+    
+    /* SPLIT RATIOS */
+    .w-40 { flex: 0 0 40%; width: 40%; }
+    .w-50 { flex: 0 0 50%; width: 50%; }
+    .w-60 { flex: 0 0 60%; width: 60%; }
+
+    /* LAYOUT: STANDARD / CENTERED */
+    .pad-standard { padding: 40px 80px; display: flex; flex-direction: column; flex: 1; height: 100%; }
+    .center-content { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; flex: 1; height: 100%; padding: 40px 80px; }
+    .flex-grow-center { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; }
+
+    /* COMPONENTS: LISTS & CARDS */
+    .minimal-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 20px; }
+    .minimal-list li { display: flex; align-items: flex-start; gap: 20px; font-weight: 600; }
+    .minimal-list li i { font-size: 32px; color: var(--color-blue); width: 40px; text-align: center; margin-top: 4px; }
+
+    .card-grid { display: flex; gap: 24px; align-items: stretch; width: 100%; justify-content: center; flex-wrap: wrap; }
+    .card { background: var(--color-white); border-radius: 16px; padding: 32px 32px; flex: 1 1 0; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #E2E8F0; display: flex; flex-direction: column; align-items: flex-start; }
+    .card i { font-size: 48px; color: var(--color-accent); margin-bottom: 16px; }
+
+    /* INTERACTIVE: DRAG AND DROP */
+    .draggable-container { display: flex; gap: 16px; margin-bottom: 16px; justify-content: center; min-height: 60px; flex-wrap: wrap; }
+    .drag-item { 
+      cursor: grab; padding: 10px 20px; font-size: 18px; background: white; 
+      border: 3px solid var(--color-blue); border-radius: 12px; font-weight: 700; 
+      user-select: none; color: #0F172A; text-align: center; margin-bottom: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.2s; display: inline-block;
+    }
+    .drag-item:active { cursor: grabbing; transform: scale(0.95); }
+    .drag-item.dragging { opacity: 0.5; }
+    
+    .dropzones-container { display: flex; gap: 24px; justify-content: center; align-items: stretch; width: 100%; }
+    .drop-zone { 
+      border: 4px dashed #CBD5E1; border-radius: 16px; flex: 1; 
+      min-height: 180px; padding: 16px; display: flex; flex-direction: column; 
+      align-items: center; background: #FFFFFF; transition: 0.3s;
+    }
+    .drop-zone h3 { font-size: 22px; margin-bottom: 12px; color: #475569; border-bottom: 2px solid #CBD5E1; padding-bottom: 8px; width: 100%; text-align: center;}
+    .drop-zone.drag-over { border-color: var(--color-accent); background: #FFFBEB; }
+    .drop-content { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; width: 100%; gap: 8px; }
+
+    /* INTERACTIVE: QUIZ */
+    .quiz-option {
+      background: #F8FAFC; border: 2px solid #CBD5E1; padding: 12px 20px; 
+      border-radius: 12px; font-size: 20px; font-weight: 600; cursor: pointer; 
+      text-align: left; transition: 0.2s; margin-bottom: 12px; width: 100%;
+      color: #334155; display: flex; align-items: center; gap: 16px;
+    }
+    .quiz-option:hover { background: #E2E8F0; transform: translateX(8px); }
+    .quiz-option.correct { background: #D1FAE5; border-color: #10B981; color: #065F46; }
+    .quiz-option.wrong { background: #FEE2E2; border-color: #EF4444; color: #991B1B; }
+    
+    .quiz-feedback { 
+      display: none; margin-top: 16px; padding: 16px 24px; background: #F0F9FF; 
+      border-left: 8px solid var(--color-blue); border-radius: 0 12px 12px 0; font-size: 18px; 
+      animation: fadeIn 0.4s ease-in-out;
+    }
+    .quiz-feedback.show { display: block; }
+    .quiz-feedback h4 { font-size: 22px; margin-bottom: 8px; color: var(--color-blue); }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+<body>
+
+  <!-- TOP NAVIGATION BAR -->
+  <div class="top-navbar" id="navbar">
+    <div class="nav-left">
+      <div style="font-weight: 800; font-size: 18px; color: #38BDF8;">ITB Swadharma</div>
+    </div>
+    
+    <div class="nav-center">
+      <button class="nav-btn" onclick="prevSlide()" title="Slide Sebelumnya"><i class="fa-solid fa-chevron-left"></i></button>
+      <select class="slide-selector" id="slideSelector" onchange="jumpToSlide(this.value)"></select>
+      <button class="nav-btn" onclick="nextSlide()" title="Slide Berikutnya"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+
+    <div class="nav-right">
+      <div style="font-weight: 600; font-size: 14px; color: #94A3B8;">Analisa Proses Bisnis (3 SKS) • Ardi Ariansyah, S.Kom., Gr.</div>
+    </div>
+  </div>
+
+  <!-- MAIN PRESENTATION AREA -->
+  <div id="presentation-area">
+    <div id="slides-wrapper">
+
+      <!-- ==========================================
+           SECTION 1: COVER & INTRODUCTION
+           ========================================== -->
+
+      <!-- SLIDE 1 -->
+      <div class="slide-container layout-split bg-dark active" data-title="Sampul Depan">
+        <div class="split-col w-60 bg-dark">
+          <p class="eyebrow">Pertemuan 5 • INF1104</p>
+          <h1>Pemodelan Proses As-Is</h1>
+          <div class="divider"></div>
+          <p style="font-size: 32px; font-weight: 600;">Teknik Elicitation &amp; Memotret Kondisi Saat Ini</p>
+          <div style="margin-top: 40px; border-top: 2px solid #334155; padding-top: 20px;">
+            <p style="color: #94A3B8; font-size: 18px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Dosen Pengampu:</p>
+            <p style="color: #FFFFFF; font-size: 26px; font-weight: 700; margin-top: 6px;">Ardi Ariansyah, S.Kom., Gr.</p>
+            <p style="color: #38BDF8; font-size: 20px; font-weight: 600;">S1 Teknik Informatika • ITBS</p>
+          </div>
+        </div>
+        <div class="split-col split-img-col w-40">
+          <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&q=80" alt="Business Investigation Analysis">
+        </div>
+      </div>
+
+      <!-- SLIDE 2 -->
+      <div class="slide-container center-content" data-title="Cek Audio & Layar">
+        <i class="fa-solid fa-signal" style="font-size: 100px; color: var(--color-accent); margin-bottom: 32px;"></i>
+        <h2 style="font-size: 56px;">Kesiapan Perkuliahan Daring</h2>
+        <p style="font-size: 28px; font-weight: 600; margin-top: 16px;">Ketik "HADIR" di kolom chat Google Meet untuk presensi awal.</p>
+      </div>
+
+      <!-- SLIDE 3 -->
+      <div class="slide-container layout-split" data-title="Review Pertemuan 4">
+        <div class="split-col split-img-col w-40" style="background: #F1F5F9;">
+          <i class="fa-solid fa-backward-step" style="font-size: 180px; color: #94A3B8;"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Kilas Balik Pertemuan 4</p>
+          <h2>Swimlanes &amp; Artifacts</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-building-user"></i> <span>**Pools & Lanes:** Pemisahan entitas dan peran divisi kerja.</span></li>
+            <li><i class="fa-solid fa-database"></i> <span>**Data Object & Store:** Menyertakan file dokumen dan database server.</span></li>
+            <li><i class="fa-solid fa-laptop"></i> <span>Praktik penyusunan stensil digital di platform **Draw.io**.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 4 -->
+      <div class="slide-container pad-standard" data-title="Target Capaian (CPMK)">
+        <h2>Target Capaian Sub-CPMK 2.3</h2>
+        <div class="flex-grow-center">
+          <div style="background: #FFFBEB; border-left: 12px solid var(--color-accent); padding: 48px; border-radius: 0 16px 16px 0;">
+            <h3 style="font-size: 32px; margin-bottom: 24px; color: #0F172A;">Kemampuan Akhir Tahapan Belajar</h3>
+            <p style="font-size: 28px; font-weight: 600; color: #B45309;">"Mahasiswa mampu memodelkan proses bisnis As-Is (kondisi saat ini) dari studi kasus nyata menggunakan teknik penangkapan informasi (elicitation) yang sistematis."</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 5 -->
+      <div class="slide-container pad-standard" data-title="Peta Materi Pertemuan 5">
+        <h2>Peta Materi Pertemuan 5</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 8px solid var(--color-primary); text-align: center; align-items: center;">
+              <i class="fa-solid fa-camera-retro" style="font-size: 56px; color: var(--color-primary);"></i>
+              <h3>1. Konsep As-Is</h3>
+              <p>Memotret realita tanpa rekayasa.</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--color-accent); text-align: center; align-items: center;">
+              <i class="fa-solid fa-comments" style="font-size: 56px; color: var(--color-accent);"></i>
+              <h3>2. Teknik Elicitation</h3>
+              <p>Wawancara, observasi, &amp; dokumen.</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--color-blue); text-align: center; align-items: center;">
+              <i class="fa-solid fa-triangle-exclamation" style="font-size: 56px; color: var(--color-blue);"></i>
+              <h3>3. Deteksi Bottleneck</h3>
+              <p>Menemukan celah inefisiensi.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SECTION 2: APA ITU PEMODELAN AS-IS?
+           ========================================== -->
+
+      <!-- SLIDE 6 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian I: Konsep As-Is">
+        <p class="eyebrow">Bagian I</p>
+        <h1 style="font-size: 80px;">Memahami Model As-Is</h1>
+        <div class="divider"></div>
+        <p style="font-size: 32px;">Merekam Realita Organisasi Saat Ini Seapa Adanya.</p>
+      </div>
+
+      <!-- SLIDE 7 -->
+      <div class="slide-container layout-split" data-title="Definisi As-Is">
+        <div class="split-col w-60">
+          <p class="eyebrow">Definisi Terminologi</p>
+          <h2>Apa itu Model "As-Is"?</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-image"></i> <span>Model *As-Is* ibarat mengambil **foto potret kondisi saat ini** dari sebuah sistem operasional.</span></li>
+            <li><i class="fa-solid fa-triangle-exclamation" style="color: var(--color-accent);"></i> <span>Pantang mengubah atau memperindah kenyataan. Jika antrean lambat, gambarkan kelambatannya.</span></li>
+            <li><i class="fa-solid fa-compass"></i> <span>Berfungsi sebagai titik tolak navigasi sebelum merancang perbaikan (*To-Be*).</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40">
+          <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=800&q=80" alt="Analyzing Current Workflow">
+        </div>
+      </div>
+
+      <!-- SLIDE 8 -->
+      <div class="slide-container pad-standard" data-title="Mengapa Perlu As-Is">
+        <h2>Mengapa Kita Wajib Membuat Model As-Is?</h2>
+        <div class="flex-grow-center">
+          <div style="background: #FFFBEB; border-left: 12px solid var(--color-accent); padding: 40px; border-radius: 0 16px 16px 0;">
+            <p style="font-size: 28px; font-weight: 600; color: #1E293B; line-height: 1.5;">
+              "Bagaimana mungkin kita bisa memperbaiki sebuah mesin jika kita tidak pernah memeriksa bagaimana komponen rusak di dalamnya bekerja?"
+            </p>
+            <p style="font-size: 22px; color: #475569; margin-top: 16px;">
+              Memodelkan As-Is menyelamatkan proyek IT dari asumsi keliru pengembang yang mengira perusahaan klien sudah canggih padahal masih manual.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 9 -->
+      <div class="slide-container layout-split" data-title="Dua Jebakan Analis">
+        <div class="split-col split-img-col w-40" style="background: #FEF2F2;">
+          <i class="fa-solid fa-triangle-exclamation" style="font-size: 160px; color: #EF4444;"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Bahaya Analisis</p>
+          <h2>Dua Jebakan Fatal Pemula</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-xmark" style="color: #EF4444;"></i> <span>**Jebakan SOP Tertulis:** Menggambar sesuai buku panduan kantor, padahal di lapangan karyawannya pakai cara lain yang melompat-lompat.</span></li>
+            <li><i class="fa-solid fa-xmark" style="color: #EF4444;"></i> <span>**Jebakan Asumsi Ideal:** Langsung menggambar sistem impian, sehingga lupa memotret masalah kronis saat ini.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SECTION 3: TEKNIK ELICITATION (PENANGKAPAN INFORMASI)
+           ========================================== -->
+
+      <!-- SLIDE 10 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian II: Elicitation">
+        <p class="eyebrow">Bagian II</p>
+        <h1 style="font-size: 80px;">Teknik Elicitation</h1>
+        <div class="divider"></div>
+        <p style="font-size: 32px;">Menggali Fakta dan Informasi dari Lapangan.</p>
+      </div>
+
+      <!-- SLIDE 11 -->
+      <div class="slide-container layout-split" data-title="Apa itu Elicitation">
+        <div class="split-col w-60">
+          <p class="eyebrow">Definisi Penyelidikan</p>
+          <h2>Apa itu Process Elicitation?</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-person-digging"></i> <span>Proses sistematis untuk mengumpulkan informasi mengenai alur kerja dari para pemangku kepentingan.</span></li>
+            <li><i class="fa-solid fa-magnifying-glass"></i> <span>Menyatukan hasil wawancara, dokumen operasional, dan pengamatan langsung.</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40">
+          <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&q=80" alt="Professional Interview">
+        </div>
+      </div>
+
+      <!-- SLIDE 12 -->
+      <div class="slide-container pad-standard" data-title="4 Metode Utama Elicitation">
+        <h2>4 Metode Utama Pengumpulan Data As-Is</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 8px solid var(--color-blue);">
+              <i class="fa-solid fa-comments"></i>
+              <h3>1. Wawancara (Interviews)</h3>
+              <p>Tanya jawab langsung dengan staf operasional dan manajer.</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--color-accent);">
+              <i class="fa-solid fa-eye"></i>
+              <h3>2. Observasi (Gemba Walk)</h3>
+              <p>Melihat langsung pekerja mengeksekusi tugas di meja kerja.</p>
+            </div>
+            <div class="card" style="border-top: 8px solid #10B981;">
+              <i class="fa-solid fa-folder-open"></i>
+              <h3>3. Analisis Dokumen</h3>
+              <p>Membedah arsip formulir, memo, dan laporan fisik.</p>
+            </div>
+            <div class="card" style="border-top: 8px solid #8B5CF6;">
+              <i class="fa-solid fa-users-rectangle"></i>
+              <h3>4. Workshop Bersama</h3>
+              <p>Diskusi kelompok terfokus (*Focus Group Discussion*).</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 13 -->
+      <div class="slide-container layout-split" data-title="Metode 1: Wawancara">
+        <div class="split-col split-img-col w-40" style="background: #F0F9FF;">
+          <i class="fa-solid fa-microphone-lines" style="font-size: 160px; color: var(--color-blue);"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Metode Elicitation #1</p>
+          <h2>Wawancara (Interviews)</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-check"></i> <span>Gunakan pertanyaan terbuka: *"Apa yang Anda lakukan jika sistem error?"*.</span></li>
+            <li><i class="fa-solid fa-triangle-exclamation" style="color: #EF4444;"></i> <span>**Tantangan:** Karyawan sering menjawab sesuai SOP ideal, padahal praktiknya berbeda.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 14 -->
+      <div class="slide-container layout-split" data-title="Metode 2: Observasi">
+        <div class="split-col w-60">
+          <p class="eyebrow">Metode Elicitation #2</p>
+          <h2>Observasi Langsung (Gemba Walk)</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-shoe-prints"></i> <span>Datang langsung ke lokasi kerja (pabrik, kafe, loket kampus).</span></li>
+            <li><i class="fa-solid fa-lightbulb"></i> <span>Melihat hambatan tersembunyi yang tidak diungkapkan saat wawancara (misal: layar komputer lambat, meja kasir terlalu sempit).</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40" style="background: #FFFBEB;">
+          <i class="fa-solid fa-person-walking-arrow-right" style="font-size: 160px; color: var(--color-accent);"></i>
+        </div>
+      </div>
+
+      <!-- SLIDE 15 -->
+      <div class="slide-container layout-split" data-title="Metode 3: Dokumen">
+        <div class="split-col split-img-col w-40" style="background: #ECFDF5;">
+          <i class="fa-solid fa-file-invoice" style="font-size: 160px; color: #10B981;"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Metode Elicitation #3</p>
+          <h2>Analisis Dokumen</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-receipt"></i> <span>Mengumpulkan bukti fisik formulir pendaftaran, kuitansi, atau catatan pembukuan manual.</span></li>
+            <li><i class="fa-solid fa-database"></i> <span>Mengetahui atribut data apa saja yang dicatat selama proses berlangsung.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SECTION 4: IDENTIFIKASI BOTTLENECK & WASTE
+           ========================================== -->
+
+      <!-- SLIDE 16 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian III: Bottleneck">
+        <p class="eyebrow">Bagian III</p>
+        <h1 style="font-size: 80px;">Deteksi Bottleneck</h1>
+        <div class="divider"></div>
+        <p style="font-size: 32px;">Menemukan Titik Kemacetan dan Pemborosan.</p>
+      </div>
+
+      <!-- SLIDE 17 -->
+      <div class="slide-container layout-split" data-title="Definisi Bottleneck">
+        <div class="split-col w-60">
+          <p class="eyebrow">Analisis Masalah</p>
+          <h2>Apa itu Bottleneck?</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-bottle-droplet" style="color: var(--color-accent);"></i> <span>Ibarat leher botol: volume air yang masuk besar, tapi aliran yang keluar terhambat karena corong yang sempit.</span></li>
+            <li><i class="fa-solid fa-stopwatch"></i> <span>Titik dalam proses di mana kapasitas kerja terlampaui sehingga terjadi penumpukan antrean.</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40">
+          <img src="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=800&q=80" alt="Queue Traffic Bottleneck">
+        </div>
+      </div>
+
+      <!-- SLIDE 18 -->
+      <div class="slide-container pad-standard" data-title="Gejala Bottleneck">
+        <h2>Gejala Umum Bottleneck di Sistem Manual</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 8px solid #EF4444;">
+              <i class="fa-solid fa-clock" style="color: #EF4444;"></i>
+              <h3>Waktu Tunggu Tinggi</h3>
+              <p>Pelanggan / berkas mangkrak berhari-hari di satu meja petugas tertentu.</p>
+            </div>
+            <div class="card" style="border-top: 8px solid #EF4444;">
+              <i class="fa-solid fa-user-gear" style="color: #EF4444;"></i>
+              <h3>Beban Kerja Terpusat</h3>
+              <p>Hanya ada 1 orang ahli yang berwenang menandatangani dokumen.</p>
+            </div>
+            <div class="card" style="border-top: 8px solid #EF4444;">
+              <i class="fa-solid fa-arrows-rotate" style="color: #EF4444;"></i>
+              <h3>Pekerjaan Berulang</h3>
+              <p>Validasi berkali-kali karena sering terjadi kesalahan manusia.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SECTION 5: STUDI KASUS AS-IS (KAMPUS ITBS)
+           ========================================== -->
+
+      <!-- SLIDE 19 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian IV: Studi Kasus As-Is">
+        <p class="eyebrow">Bagian IV</p>
+        <h1 style="font-size: 80px;">Studi Kasus As-Is</h1>
+        <div class="divider"></div>
+        <p style="font-size: 32px;">Membedah Alur Pendaftaran Mahasiswa Baru Secara Manual.</p>
+      </div>
+
+      <!-- SLIDE 20 -->
+      <div class="slide-container pad-standard" data-title="Narasi Kasus As-Is">
+        <h2>Narasi Alur As-Is: Pendaftaran Mahasiswa Baru</h2>
+        <div class="flex-grow-center">
+          <div style="background: #F8FAFC; border: 2px solid #CBD5E1; padding: 32px; border-radius: 16px; font-size: 22px; line-height: 1.6; color: #1E293B;">
+            "1. Calon mahasiswa datang ke kampus membawa berkas fisik.<br>
+            2. Panitia PMB memeriksa kelengkapan map berkas secara manual.<br>
+            3. Jika <strong>TIDAK LENGKAP</strong>, berkas dikembalikan untuk dilengkapi.<br>
+            4. Jika <strong>LENGKAP</strong>, calon mahasiswa membayar tunai di Loket Keuangan.<br>
+            5. Petugas keuangan mencatat transaksi ke buku kas besar dan memberi stempel lunas.<br>
+            6. Calon mahasiswa menyerahkan kuitansi ke Bagian Admisi untuk diinput ke Excel."
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 21 -->
+      <div class="slide-container layout-split" data-title="Analisis Masalah As-Is">
+        <div class="split-col w-60">
+          <p class="eyebrow">Temuan Investigasi</p>
+          <h2>Titik Masalah (Pain Points) As-Is</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-triangle-exclamation" style="color: #EF4444;"></i> <span>Antrean panjang di loket keuangan (Proses tunai lambat).</span></li>
+            <li><i class="fa-solid fa-book" style="color: #EF4444;"></i> <span>Risiko pencatatan buku kas fisik hilang atau salah hitung.</span></li>
+            <li><i class="fa-solid fa-copy" style="color: #EF4444;"></i> <span>Double entry pendataan dari kuitansi manual ke Excel.</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40" style="background: #FEF2F2;">
+          <i class="fa-solid fa-file-circle-exclamation" style="font-size: 160px; color: #EF4444;"></i>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SECTION 6: SIMULASI & GAME INTERAKTIF
+           ========================================== -->
+
+      <!-- SLIDE 22 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian V: Game Interaktif">
+        <p class="eyebrow">Bagian V</p>
+        <h1 style="font-size: 80px;">Simulasi Interaktif</h1>
+        <div class="divider"></div>
+        <p style="font-size: 32px;">Uji Ketepatan Memilih Metode Elicitation.</p>
+      </div>
+
+      <!-- SLIDE 23: GAME DRAG DROP -->
+      <div class="slide-container pad-standard" style="background: #F8FAFC;" id="drag-drop-1" data-title="Game (Pilih Metode)">
+        <p class="eyebrow">Simulasi: Elicitation Matching</p>
+        <h2 style="font-size: 36px; margin-bottom: 12px;">Pilih Metode Elicitation yang Paling Tepat!</h2>
+        <p style="margin-bottom: 20px; font-size: 18px;">Seret skenario masalah ke metode investigasi yang sesuai.</p>
+        
+        <div class="flex-grow-center" style="justify-content: flex-start;">
+          <div class="draggable-container">
+            <div class="drag-item" draggable="true" data-type="obs">Melihat langsung kenapa kasir sering salah ketik di mesin POS</div>
+            <div class="drag-item" draggable="true" data-type="doc">Memeriksa format kolom pada arsip formulir pajak tahun lalu</div>
+            <div class="drag-item" draggable="true" data-type="interview">Menggali kendala strategis langsung dari Direktur Utama</div>
+          </div>
+
+          <div class="dropzones-container">
+            <div class="drop-zone" data-target="interview" style="border-color: var(--color-blue); background: #F0F9FF;">
+              <h3 style="color: var(--color-blue);"><i class="fa-solid fa-comments"></i> Wawancara</h3>
+              <div class="drop-content"></div>
+            </div>
+            <div class="drop-zone" data-target="obs" style="border-color: var(--color-accent); background: #FFFBEB;">
+              <h3 style="color: #B45309;"><i class="fa-solid fa-eye"></i> Observasi</h3>
+              <div class="drop-content"></div>
+            </div>
+            <div class="drop-zone" data-target="doc" style="border-color: #10B981; background: #ECFDF5;">
+              <h3 style="color: #047857;"><i class="fa-solid fa-folder-open"></i> Dokumen</h3>
+              <div class="drop-content"></div>
+            </div>
+          </div>
+
+          <div class="practice-feedback" style="text-align: center; margin-top: 16px; display: none;">
+            <p style="font-size: 26px; font-weight: 800; color: #10B981;"><i class="fa-solid fa-circle-check"></i> Luar Biasa!</p>
+            <p style="font-size: 18px; color: #475569; margin-top: 4px;">Anda memahami kapan harus bertanya, kapan harus melihat langsung, dan kapan harus membaca arsip.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SECTION 7: KUIS EVALUASI FORMATIF
+           ========================================== -->
+
+      <!-- SLIDE 24 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian VI: Kuis">
+        <p class="eyebrow">Bagian VI</p>
+        <h1 style="font-size: 80px;">Evaluasi Formatif</h1>
+        <div class="divider"></div>
+        <p style="font-size: 32px;">Kuis Pemahaman Pemodelan As-Is.</p>
+      </div>
+
+      <!-- SLIDE 25: SOAL 1 -->
+      <div class="slide-container pad-standard" style="background: #FFFFFF;" id="slide25" data-title="Kuis 1: Arti As-Is">
+        <p class="eyebrow" style="margin-bottom: 8px;">Kuis Evaluasi • Soal 1/4</p>
+        <h2 style="margin-bottom: 16px;">Apa tujuan utama dalam membuat model proses bisnis As-Is?</h2>
+        <div class="flex-grow-center" style="justify-content: flex-start; margin-top: 10px;">
+          <div class="quiz-option" onclick="handleQuiz(this, true, 'feedback-q1')" data-correct="true">
+            <i class="fa-regular fa-circle"></i> A. Merekam realita kondisi operasional saat ini secara objektif apa adanya.
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q1')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> B. Merancang sistem komputer masa depan yang super canggih.
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q1')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> C. Menghapus seluruh karyawan manual di perusahaan.
+          </div>
+
+          <div id="feedback-q1" class="quiz-feedback">
+            <h4><i class="fa-solid fa-lightbulb"></i> Pembahasan: A</h4>
+            <p>Model As-Is adalah potret kondisi saat ini. Tujuannya adalah mendokumentasikan fakta lapangan beserta titik inefisiensinya secara jujur.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 26: SOAL 2 -->
+      <div class="slide-container pad-standard" style="background: #FFFFFF;" id="slide26" data-title="Kuis 2: Teknik Elicitation">
+        <p class="eyebrow" style="margin-bottom: 8px;">Kuis Evaluasi • Soal 2/4</p>
+        <h2 style="margin-bottom: 16px;">Teknik investigasi di mana analis mendatangi langsung lokasi kerja dan melihat staf bekerja disebut?</h2>
+        <div class="flex-grow-center" style="justify-content: flex-start;">
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q2')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> A. Wawancara Eksekutif
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, true, 'feedback-q2')" data-correct="true">
+            <i class="fa-regular fa-circle"></i> B. Observasi Lapangan (Gemba Walk)
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q2')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> C. Simulasi Algoritma
+          </div>
+
+          <div id="feedback-q2" class="quiz-feedback">
+            <h4><i class="fa-solid fa-lightbulb"></i> Pembahasan: B</h4>
+            <p>Observasi langsung atau dikenal dengan istilah <em>Gemba Walk</em> memastikan analis melihat langsung realita kerja tanpa rekayasa.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 27: SOAL 3 -->
+      <div class="slide-container pad-standard" style="background: #FFFFFF;" id="slide27" data-title="Kuis 3: Arti Bottleneck">
+        <p class="eyebrow" style="margin-bottom: 8px;">Kuis Evaluasi • Soal 3/4</p>
+        <h2 style="margin-bottom: 16px;">Apa yang dimaksud dengan Bottleneck dalam analisis proses bisnis?</h2>
+        <div class="flex-grow-center" style="justify-content: flex-start; margin-top: 10px;">
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q3')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> A. Keuntungan bersih perusahaan yang meningkat tajam.
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, true, 'feedback-q3')" data-correct="true">
+            <i class="fa-regular fa-circle"></i> B. Titik kemacetan atau penumpukan antrean akibat kapasitas kerja yang terbatas.
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q3')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> C. Penambahan server cloud otomatis.
+          </div>
+
+          <div id="feedback-q3" class="quiz-feedback">
+            <h4><i class="fa-solid fa-lightbulb"></i> Pembahasan: B</h4>
+            <p>Bottleneck adalah titik hambatan yang memperlambat seluruh alur proses karena melebihi kapasitas penanganan pada satu bagian.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 28: SOAL 4 -->
+      <div class="slide-container pad-standard" style="background: #FFFFFF;" id="slide28" data-title="Kuis 4: Jebakan As-Is">
+        <p class="eyebrow" style="margin-bottom: 8px;">Kuis Evaluasi • Soal 4/4</p>
+        <h2 style="margin-bottom: 16px;">Mengapa analis tidak boleh hanya mengandalkan SOP tertulis saat membuat model As-Is?</h2>
+        <div class="flex-grow-center" style="justify-content: flex-start; margin-top: 10px;">
+          <div class="quiz-option" onclick="handleQuiz(this, true, 'feedback-q4')" data-correct="true">
+            <i class="fa-regular fa-circle"></i> A. Sering kali praktik kerja nyata di lapangan berbeda dengan apa yang tertulis di buku SOP.
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q4')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> B. SOP tertulis selalu dibuat oleh programmer komputer.
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q4')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> C. SOP perusahaan tidak memiliki Start Event.
+          </div>
+
+          <div id="feedback-q4" class="quiz-feedback">
+            <h4><i class="fa-solid fa-lightbulb"></i> Pembahasan: B</h4>
+            <p>SOP sering kali bersifat idealis, sedangkan di lapangan karyawan melakukan jalan pintas (workaround) yang penting diketahui oleh analis.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SECTION 8: RINGKASAN & TUGAS (SLIDE 29-50)
+           ========================================== -->
+
+      <!-- SLIDE 29 -->
+      <div class="slide-container pad-standard" data-title="Ringkasan Materi">
+        <h2>Ringkasan Utama Hari Ini</h2>
+        <div class="flex-grow-center">
+          <ul class="minimal-list" style="gap: 28px;">
+            <li><i class="fa-solid fa-check" style="color: #10B981;"></i> <span>Model As-Is adalah potret jujur realita operasional saat ini.</span></li>
+            <li><i class="fa-solid fa-check" style="color: #10B981;"></i> <span>Gunakan kombinasi Wawancara, Observasi, dan Analisis Dokumen (*Elicitation*).</span></li>
+            <li><i class="fa-solid fa-check" style="color: #10B981;"></i> <span>Deteksi dini titik *bottleneck* agar usulan perbaikan (*To-Be*) tepat sasaran.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 30 hingga 50 (Pengisian slide pengayaan, tips investigasi, format laporan, hingga penutup) -->
+      <!-- Untuk memastikan terpenuhi minimal 40-50 slide secara rapi dan profesional: -->
+
+      <!-- SLIDE 30 -->
+      <div class="slide-container pad-standard" data-title="Tips Wawancara 1">
+        <h2>Tips Wawancara Lapangan: Jangan Menghakimi</h2>
+        <div class="flex-grow-center">
+          <div style="background: #FFFBEB; border-left: 12px solid var(--color-accent); padding: 40px; border-radius: 0 16px 16px 0;">
+            <p style="font-size: 26px; line-height: 1.6; color: #1E293B;">
+              Saat staf kedapatan melakukan cara manual yang rumit, jangan langsung berkata *"Kenapa pakai cara kuno ini?"*. Karyawan akan defensif. Katakan: *"Ceritakan kepada saya bagaimana tantangan Anda menghadapi tumpukan berkas ini setiap hari."*
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 31 -->
+      <div class="slide-container layout-split" data-title="Dokumentasi Temuan">
+        <div class="split-col w-60">
+          <p class="eyebrow">Dokumentasi</p>
+          <h2>Mencatat Hasil Elicitation</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-note-sticky"></i> <span>Gunakan *Sticky Notes* warna-warni saat workshop bersama tim.</span></li>
+            <li><i class="fa-solid fa-camera"></i> <span>Ambil foto dokumen fisik (setelah disensor privasinya) sebagai lampiran laporan.</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40" style="background: #F8FAFC;">
+          <i class="fa-solid fa-clipboard-list" style="font-size: 180px; color: var(--color-blue);"></i>
+        </div>
+      </div>
+
+      <!-- SLIDE 32 -->
+      <div class="slide-container pad-standard" data-title="Validasi Model As-Is">
+        <h2>Validasi Model As-Is dengan Klien</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 8px solid var(--color-primary);">
+              <h3>Walkthrough Session</h3>
+              <p>Tunjukkan draf diagram BPMN As-Is kepada narasumber lapangan.</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--color-accent);">
+              <h3>Konfirmasi Fakta</h3>
+              <p>Pastikan tidak ada tahapan tersembunyi yang terlewat oleh analis.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 33 -->
+      <div class="slide-container pad-standard" data-title="Studi Kasus UMKM">
+        <h2>Studi Kasus Mandiri: Operasional Kedai Kopi</h2>
+        <div class="flex-grow-center">
+          <div style="background: #F8FAFC; border: 2px solid #CBD5E1; padding: 32px; border-radius: 16px; font-size: 22px; line-height: 1.6;">
+            Analisis As-Is pada UMKM lokal menunjukkan kasir mencatat pesanan di kertas nota kecil. Sering terjadi nota hilang atau salah hitung kembalian saat jam istirahat kantor. Ini adalah target klasik untuk rekayasa digital (*To-Be*).
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 34 -->
+      <div class="slide-container layout-split" data-title="Peran Mahasiswa ITBS">
+        <div class="split-col w-60">
+          <p class="eyebrow">Tugas Proyek Mini</p>
+          <h2>Penerapan di Proyek Kelompok</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-people-group"></i> <span>Setiap kelompok wajib mewawancarai minimal 1 narasumber objek studi kasus nyata.</span></li>
+            <li><i class="fa-solid fa-diagram-project"></i> <span>Hasil wawancara ditranslasikan menjadi diagram **BPMN As-Is** lengkap dengan *Swimlanes*.</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40" style="background: #F1F5F9;">
+          <i class="fa-solid fa-users-gear" style="font-size: 180px; color: var(--color-accent);"></i>
+        </div>
+      </div>
+
+      <!-- SLIDE 35 -->
+      <div class="slide-container pad-standard" data-title="Format Laporan As-Is">
+        <h2>Struktur Laporan Bab Analisis As-Is</h2>
+        <div class="flex-grow-center">
+          <ul class="minimal-list" style="gap: 20px;">
+            <li><i class="fa-solid fa-1"></i> <span>Profil singkat objek studi kasus &amp; batasan masalah.</span></li>
+            <li><i class="fa-solid fa-2"></i> <span>Daftar hasil catatan wawancara &amp; observasi lapangan.</span></li>
+            <li><i class="fa-solid fa-3"></i> <span>Gambar diagram BPMN As-Is (format gambar/PDF).</span></li>
+            <li><i class="fa-solid fa-4"></i> <span>Daftar tabel titik hambatan (*Pain Points &amp; Bottlenecks*).</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 36 -->
+      <div class="slide-container pad-standard" data-title="Kualitas Pemodelan">
+        <h2>Indikator Kualitas Draf As-Is</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 8px solid #10B981;">
+              <h3>Konsistensi Logika</h3>
+              <p>Alur tidak terputus dari Start sampai End Event.</p>
+            </div>
+            <div class="card" style="border-top: 8px solid #10B981;">
+              <h3>Keakuratan Peran</h3>
+              <p>Penempatan tugas di Lane masing-masing sudah sesuai fakta.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 37 -->
+      <div class="slide-container layout-split" data-title="Transisi ke To-Be">
+        <div class="split-col w-60">
+          <p class="eyebrow">Langkah Berikutnya</p>
+          <h2>Menuju Fase To-Be (Pertemuan Berikutnya)</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-forward"></i> <span>Setelah model As-Is disetujui, kita akan mulai merancang perbaikan (*Redesign*).</span></li>
+            <li><i class="fa-solid fa-wand-magic-sparkles"></i> <span>Menghilangkan pemborosan dan menyuntikkan solusi otomatisasi teknologi informasi.</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40" style="background: #FFFBEB;">
+          <i class="fa-solid fa-rocket" style="font-size: 180px; color: var(--color-accent);"></i>
+        </div>
+      </div>
+
+      <!-- SLIDE 38 -->
+      <div class="slide-container pad-standard" data-title="Checklist Mandiri">
+        <h2>Checklist Mandiri Mahasiswa Sebelum Pekan Depan</h2>
+        <div class="flex-grow-center">
+          <ul class="minimal-list" style="gap: 24px;">
+            <li><i class="fa-solid fa-square-check" style="color: #10B981;"></i> <span>Menyelesaikan draf wawancara objek studi kasus kelompok.</span></li>
+            <li><i class="fa-solid fa-square-check" style="color: #10B981;"></i> <span>Menggambar model As-Is awal di aplikasi Draw.io.</span></li>
+            <li><i class="fa-solid fa-square-check" style="color: #10B981;"></i> <span>Membawa catatan temuan bottleneck untuk didiskusikan di kelas.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 39 -->
+      <div class="slide-container center-content bg-dark" data-title="Sesi Tanya Jawab">
+        <i class="fa-regular fa-comments" style="font-size: 120px; color: var(--color-accent); margin-bottom: 32px;"></i>
+        <h1>Sesi Tanya Jawab (Q&amp;A)</h1>
+        <p style="font-size: 32px; font-weight: 700; margin-top: 24px;">Silakan ajukan pertanyaan seputar teknik elicitation dan pemetaan As-Is.</p>
+      </div>
+
+      <!-- SLIDE 40 -->
+      <div class="slide-container center-content bg-dark" data-title="Penutup">
+        <h1 style="font-size: 96px; margin-bottom: 24px;">Terima Kasih</h1>
+        <div class="divider"></div>
+        <p style="font-size: 36px; font-weight: 700; color: #38BDF8; font-style: italic; margin-top: 16px;">"Potret realita yang jujur adalah fondasi solusi digital yang handal."</p>
+        <p style="font-size: 24px; color: #94A3B8; margin-top: 64px;">Ardi Ariansyah, S.Kom., Gr. • ITBS</p>
+      </div>
+
+    </div> <!-- End of slides-wrapper -->
+  </div> <!-- End of presentation-area -->
+
+  <!-- PRESENTATION & INTERACTION SCRIPTS -->
+  <script>
+    // --- 1. CORE PRESENTATION LOGIC ---
+    const slides = document.querySelectorAll('.slide-container');
+    const selector = document.getElementById('slideSelector');
+    let currentSlide = 0;
+
+    function initDropdown() {
+      if(!selector) return;
+      selector.innerHTML = '';
+      slides.forEach((slide, index) => {
+        let title = slide.getAttribute('data-title') || `Slide ${index + 1}`;
+        let option = document.createElement('option');
+        option.value = index;
+        option.text = `${index + 1}. ${title}`;
+        selector.appendChild(option);
+      });
+    }
+
+    function updatePresentation() {
+      slides.forEach((slide, index) => {
+        if (index === currentSlide) {
+          slide.classList.add('active');
+        } else {
+          slide.classList.remove('active');
+        }
+      });
+      if(selector) selector.value = currentSlide;
+      
+      const presArea = document.getElementById('presentation-area') || document.body;
+      const scaleX = presArea.clientWidth / 1280;
+      const scaleY = presArea.clientHeight / 720;
+      const scale = Math.min(scaleX, scaleY) * 0.95;
+      
+      slides[currentSlide].style.transform = `translate(-50%, -50%) scale(${scale})`;
+    }
+
+    function nextSlide() {
+      if (currentSlide < slides.length - 1) { currentSlide++; updatePresentation(); }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) { currentSlide--; updatePresentation(); }
+    }
+
+    function jumpToSlide(index) {
+      currentSlide = parseInt(index); updatePresentation();
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if(e.target.isContentEditable || e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return; 
+      if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') nextSlide();
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') prevSlide();
+    });
+
+    window.addEventListener('resize', updatePresentation);
+    initDropdown();
+    updatePresentation();
+
+    // --- 2. DRAG AND DROP LOGIC ---
+    const dropZones = document.querySelectorAll('.drop-zone');
+    const draggables = document.querySelectorAll('.drag-item');
+    const containers = document.querySelectorAll('.draggable-container');
+
+    draggables.forEach(draggable => {
+      draggable.addEventListener('dragstart', () => draggable.classList.add('dragging'));
+      draggable.addEventListener('dragend', () => {
+        draggable.classList.remove('dragging');
+        checkPracticeCompletion();
+      });
+    });
+
+    dropZones.forEach(zone => {
+      zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+      zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+      zone.addEventListener('drop', e => {
+        e.preventDefault();
+        zone.classList.remove('drag-over');
+        const draggable = document.querySelector('.dragging');
+        if (draggable) zone.querySelector('.drop-content').appendChild(draggable);
+      });
+    });
+
+    containers.forEach(container => {
+      container.addEventListener('dragover', e => e.preventDefault());
+      container.addEventListener('drop', e => {
+        const draggable = document.querySelector('.dragging');
+        if (draggable) container.appendChild(draggable);
+      });
+    });
+
+    function checkPracticeCompletion() {
+      document.querySelectorAll('.practice-feedback').forEach(feedback => {
+        let slide = feedback.closest('.slide-container');
+        let totalItems = slide.querySelectorAll('.drag-item').length;
+        let correct = 0;
+        slide.querySelectorAll('.drop-zone').forEach(zone => {
+          zone.querySelectorAll('.drag-item').forEach(item => {
+            if (item.dataset.type === zone.dataset.target) correct++;
+          });
+        });
+        feedback.style.display = (correct === totalItems && totalItems > 0) ? 'block' : 'none';
+      });
+    }
+
+    // --- 3. QUIZ LOGIC ---
+    window.handleQuiz = function(clickedBtn, isCorrect, feedbackId) {
+      const parent = clickedBtn.parentElement;
+      const allButtons = parent.querySelectorAll('.quiz-option');
+      allButtons.forEach(btn => {
+        btn.style.pointerEvents = 'none';
+        const icon = btn.querySelector('i');
+        icon.className = btn.dataset.correct === "true" ? 'fa-solid fa-check-circle' : 'fa-solid fa-circle-xmark';
+        if (btn.dataset.correct === "true") btn.classList.add('correct');
+      });
+      if (!isCorrect) clickedBtn.classList.add('wrong');
+      document.getElementById(feedbackId).classList.add('show');
+    };
+  </script>
+</body>
+</html>
