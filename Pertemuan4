@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Analisa Proses Bisnis - Pertemuan 4</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Open+Sans:wght@400;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    /* CSS RESET & LAB THEME VARIABLES */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-bg-light: #F8FAFC;
+      --color-text-dark: #0F172A;
+      --color-text-muted: #475569;
+      --color-primary: #4338CA;   /* Indigo / Technical */
+      --color-accent: #06B6D4;    /* Cyan / Digital */
+      --color-orange: #EA580C;
+      --color-white: #FFFFFF;
+      --color-dark-bg: #0F172A;
+      --navbar-height: 60px;
+    }
+    
+    body { 
+      margin: 0; 
+      padding: 0; 
+      background: #0B0F19; 
+      font-family: 'Open Sans', sans-serif; 
+      height: 100vh; 
+      overflow: hidden; 
+      position: relative;
+    }
+
+    /* TOP NAVIGATION BAR */
+    .top-navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: var(--navbar-height);
+      background: #0F172A;
+      border-bottom: 2px solid #1E293B;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 1000;
+      font-family: 'Montserrat', sans-serif;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+    }
+
+    .nav-left, .nav-center, .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-btn {
+      background: #1E293B;
+      border: 1px solid #334155;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+      padding: 8px 16px;
+      border-radius: 6px;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .nav-btn:hover { background: var(--color-primary); border-color: var(--color-primary); }
+
+    /* DROPDOWN MENU SLIDES */
+    .slide-selector {
+      background: #1E293B;
+      color: white;
+      border: 1px solid #334155;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      outline: none;
+      max-width: 360px;
+    }
+    .slide-selector option { background: #0F172A; }
+
+    /* MAIN CONTAINER ADJUSTMENT */
+    #presentation-area {
+      position: absolute;
+      top: var(--navbar-height);
+      left: 0;
+      right: 0;
+      bottom: 0; 
+      overflow: hidden;
+    }
+
+    /* HARD LOCK 16:9 CONTAINER (1280x720px) */
+    .slide-container {
+      width: 1280px !important;
+      height: 720px !important;
+      background: var(--color-bg-light);
+      color: var(--color-text-dark);
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(1);
+      transform-origin: center center;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.35s ease-in-out;
+      pointer-events: none;
+    }
+
+    .slide-container.active {
+      visibility: visible;
+      opacity: 1;
+      z-index: 5;
+      pointer-events: auto;
+    }
+
+    /* TYPOGRAPHY */
+    h1, h2, h3, h4, .eyebrow { font-family: 'Montserrat', sans-serif; }
+    h1 { font-size: 60px; font-weight: 800; line-height: 1.15; margin-bottom: 20px; color: var(--color-text-dark); }
+    h2 { font-size: 42px; font-weight: 700; line-height: 1.25; margin-bottom: 24px; color: var(--color-text-dark); }
+    h3 { font-size: 30px; font-weight: 700; margin-bottom: 14px; color: var(--color-primary); }
+    p, li { font-size: 24px; line-height: 1.5; color: var(--color-text-muted); }
+    .eyebrow { font-size: 18px; font-weight: 700; color: var(--color-accent); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; }
+    .divider { width: 80px; height: 6px; background: var(--color-accent); margin: 20px 0 24px 0; }
+    
+    .bg-dark { background: var(--color-dark-bg) !important; color: var(--color-white) !important; }
+    .bg-dark h1, .bg-dark h2, .bg-dark h3, .bg-dark p, .bg-dark li { color: var(--color-white) !important; }
+    
+    /* LAYOUT: SPLIT SCREEN */
+    .layout-split { display: flex; flex-direction: row; flex: 1 1 100%; width: 100%; height: 100%; }
+    .split-col { display: flex; flex-direction: column; justify-content: center; height: 100%; padding: 40px 80px; }
+    .split-img-col { padding: 0 !important; margin: 0 !important; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #0F172A; }
+    .split-img-col img { width: 100%; height: 100%; object-fit: cover; display: block; margin: 0; padding: 0; }
+    
+    /* SPLIT RATIOS */
+    .w-40 { flex: 0 0 40%; width: 40%; }
+    .w-50 { flex: 0 0 50%; width: 50%; }
+    .w-60 { flex: 0 0 60%; width: 60%; }
+
+    /* LAYOUT: STANDARD / CENTERED */
+    .pad-standard { padding: 40px 80px; display: flex; flex-direction: column; flex: 1; height: 100%; }
+    .center-content { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; flex: 1; height: 100%; padding: 40px 80px; }
+    .flex-grow-center { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; }
+
+    /* COMPONENTS: LISTS & CARDS */
+    .minimal-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 20px; }
+    .minimal-list li { display: flex; align-items: flex-start; gap: 20px; font-weight: 600; }
+    .minimal-list li i { font-size: 32px; color: var(--color-primary); width: 40px; text-align: center; margin-top: 4px; }
+
+    .card-grid { display: flex; gap: 24px; align-items: stretch; width: 100%; justify-content: center; flex-wrap: wrap; }
+    .card { background: var(--color-white); border-radius: 16px; padding: 32px 32px; flex: 1 1 0; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #E2E8F0; display: flex; flex-direction: column; align-items: flex-start; }
+    .card i { font-size: 48px; color: var(--color-accent); margin-bottom: 16px; }
+
+    /* DIAGRAM POOL & LANE PREVIEW */
+    .pool-preview { width: 100%; border: 3px solid #334155; border-radius: 8px; display: flex; overflow: hidden; background: white; margin-top: 20px; }
+    .pool-header { width: 60px; background: #334155; color: white; display: flex; align-items: center; justify-content: center; writing-mode: vertical-rl; transform: rotate(180deg); font-weight: 800; font-size: 18px; letter-spacing: 2px; }
+    .lanes-container { flex: 1; display: flex; flex-direction: column; }
+    .lane-box { display: flex; border-bottom: 2px dashed #CBD5E1; min-height: 100px; }
+    .lane-box:last-child { border-bottom: none; }
+    .lane-title { width: 140px; background: #F1F5F9; border-right: 2px solid #CBD5E1; font-weight: 700; color: #475569; display: flex; align-items: center; justify-content: center; padding: 12px; font-size: 16px; text-align: center; }
+    .lane-content { flex: 1; padding: 16px; display: flex; align-items: center; gap: 16px; }
+
+    /* BPMN ARTIFACT SHAPES */
+    .artifact-doc { width: 80px; height: 100px; border: 2px solid #4338CA; background: #EEF2FF; border-radius: 4px 16px 4px 4px; display: flex; align-items: center; justify-content: center; font-size: 32px; color: #4338CA; position: relative; }
+    .artifact-store { width: 90px; height: 90px; border-radius: 12px; border: 3px solid #06B6D4; background: #ECFEFF; display: flex; align-items: center; justify-content: center; font-size: 36px; color: #06B6D4; }
+    .artifact-note { border-left: 4px solid #64748B; background: #F8FAFC; padding: 12px 18px; font-style: italic; font-size: 18px; border-radius: 0 8px 8px 0; color: #334155; }
+
+    /* INTERACTIVE: DRAG AND DROP */
+    .draggable-container { display: flex; gap: 16px; margin-bottom: 16px; justify-content: center; min-height: 60px; flex-wrap: wrap; }
+    .drag-item { 
+      cursor: grab; padding: 10px 20px; font-size: 18px; background: white; 
+      border: 3px solid #4338CA; border-radius: 12px; font-weight: 700; 
+      user-select: none; color: #0F172A; text-align: center; margin-bottom: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.2s; display: inline-block;
+    }
+    .drag-item:active { cursor: grabbing; transform: scale(0.95); }
+    .drag-item.dragging { opacity: 0.5; }
+    
+    .dropzones-container { display: flex; gap: 24px; justify-content: center; align-items: stretch; width: 100%; }
+    .drop-zone { 
+      border: 4px dashed #CBD5E1; border-radius: 16px; flex: 1; 
+      min-height: 180px; padding: 16px; display: flex; flex-direction: column; 
+      align-items: center; background: #FFFFFF; transition: 0.3s;
+    }
+    .drop-zone h3 { font-size: 22px; margin-bottom: 12px; color: #475569; border-bottom: 2px solid #CBD5E1; padding-bottom: 8px; width: 100%; text-align: center;}
+    .drop-zone.drag-over { border-color: var(--color-primary); background: #EEF2FF; }
+    .drop-content { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; width: 100%; gap: 8px; }
+
+    /* INTERACTIVE: QUIZ */
+    .quiz-option {
+      background: #F8FAFC; border: 2px solid #CBD5E1; padding: 12px 20px; 
+      border-radius: 12px; font-size: 20px; font-weight: 600; cursor: pointer; 
+      text-align: left; transition: 0.2s; margin-bottom: 12px; width: 100%;
+      color: #334155; display: flex; align-items: center; gap: 16px;
+    }
+    .quiz-option:hover { background: #E2E8F0; transform: translateX(8px); }
+    .quiz-option.correct { background: #D1FAE5; border-color: #10B981; color: #065F46; }
+    .quiz-option.wrong { background: #FEE2E2; border-color: #EF4444; color: #991B1B; }
+    
+    .quiz-feedback { 
+      display: none; margin-top: 16px; padding: 16px 24px; background: #F0F9FF; 
+      border-left: 8px solid var(--color-primary); border-radius: 0 12px 12px 0; font-size: 18px; 
+      animation: fadeIn 0.4s ease-in-out;
+    }
+    .quiz-feedback.show { display: block; }
+    .quiz-feedback h4 { font-size: 22px; margin-bottom: 8px; color: var(--color-primary); }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+<body>
+
+  <!-- TOP NAVIGATION BAR -->
+  <div class="top-navbar" id="navbar">
+    <div class="nav-left">
+      <div style="font-weight: 800; font-size: 18px; color: #38BDF8;">ITB Swadharma</div>
+    </div>
+    
+    <div class="nav-center">
+      <button class="nav-btn" onclick="prevSlide()" title="Slide Sebelumnya"><i class="fa-solid fa-chevron-left"></i></button>
+      <select class="slide-selector" id="slideSelector" onchange="jumpToSlide(this.value)"></select>
+      <button class="nav-btn" onclick="nextSlide()" title="Slide Berikutnya"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+
+    <div class="nav-right">
+      <div style="font-weight: 600; font-size: 14px; color: #94A3B8;">Analisa Proses Bisnis (3 SKS) • Ardi Ariansyah, S.Kom., Gr.</div>
+    </div>
+  </div>
+
+  <!-- MAIN PRESENTATION AREA -->
+  <div id="presentation-area">
+    <div id="slides-wrapper">
+
+      <!-- ==========================================
+           SECTION 1: COVER & INTRODUCTION
+           ========================================== -->
+
+      <!-- SLIDE 1 -->
+      <div class="slide-container layout-split bg-dark active" data-title="Sampul Depan">
+        <div class="split-col w-60 bg-dark">
+          <p class="eyebrow">Pertemuan 4 • INF1104</p>
+          <h1>Swimlanes &amp; Artifacts BPMN</h1>
+          <div class="divider"></div>
+          <p style="font-size: 32px; font-weight: 600;">Pemodelan Kolaboratif &amp; Praktik Perangkat Lunak</p>
+          <div style="margin-top: 40px; border-top: 2px solid #334155; padding-top: 20px;">
+            <p style="color: #94A3B8; font-size: 18px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Dosen Pengampu:</p>
+            <p style="color: #FFFFFF; font-size: 26px; font-weight: 700; margin-top: 6px;">Ardi Ariansyah, S.Kom., Gr.</p>
+            <p style="color: #38BDF8; font-size: 20px; font-weight: 600;">S1 Teknik Informatika • ITBS</p>
+          </div>
+        </div>
+        <div class="split-col split-img-col w-40">
+          <img src="https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=800&q=80" alt="Software Lab Architecture">
+        </div>
+      </div>
+
+      <!-- SLIDE 2 -->
+      <div class="slide-container center-content" data-title="Kesiapan Praktikum">
+        <i class="fa-solid fa-laptop-code" style="font-size: 100px; color: var(--color-accent); margin-bottom: 32px;"></i>
+        <h2 style="font-size: 56px;">Kesiapan Praktikum Hari Ini</h2>
+        <p style="font-size: 28px; font-weight: 600; margin-top: 16px;">Pastikan browser Anda siap membuka <strong>app.diagrams.net (Draw.io)</strong>.</p>
+      </div>
+
+      <!-- SLIDE 3 -->
+      <div class="slide-container layout-split" data-title="Review Pertemuan 3">
+        <div class="split-col split-img-col w-40" style="background: #F1F5F9;">
+          <i class="fa-solid fa-backward-step" style="font-size: 180px; color: #94A3B8;"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Kilas Balik Pertemuan 3</p>
+          <h2>Elemen Dasar BPMN 2.0</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-circle-dot"></i> <span>**Events:** Start, Intermediate, End (Status proses).</span></li>
+            <li><i class="fa-solid fa-square-check"></i> <span>**Activities:** Task dengan format [Kata Kerja] + [Kata Benda].</span></li>
+            <li><i class="fa-solid fa-code-branch"></i> <span>**Gateways:** XOR (Eksklusif) vs AND (Paralel).</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 4 -->
+      <div class="slide-container pad-standard" data-title="Target Capaian (CPMK)">
+        <h2>Target Capaian Sub-CPMK 2.2</h2>
+        <div class="flex-grow-center">
+          <div style="background: #EEF2FF; border-left: 12px solid var(--color-primary); padding: 48px; border-radius: 0 16px 16px 0;">
+            <h3 style="font-size: 32px; margin-bottom: 24px; color: #0F172A;">Kemampuan Akhir Tahapan Belajar</h3>
+            <p style="font-size: 28px; font-weight: 600; color: var(--color-primary);">"Mahasiswa mampu memodelkan proses dengan Swimlanes (Pools & Lanes), menyertakan Artifacts (Data Object, Data Store), dan mengoperasikan software pemodelan digital."</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 5 -->
+      <div class="slide-container pad-standard" data-title="Agenda Pembelajaran">
+        <h2>Peta Materi Pertemuan 4</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 8px solid var(--color-primary); text-align: center; align-items: center;">
+              <i class="fa-solid fa-people-line" style="font-size: 56px; color: var(--color-primary);"></i>
+              <h3>1. Swimlanes</h3>
+              <p>Pools &amp; Lanes: Siapa mengerjakan apa?</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--color-accent); text-align: center; align-items: center;">
+              <i class="fa-solid fa-database" style="font-size: 56px; color: var(--color-accent);"></i>
+              <h3>2. Artifacts</h3>
+              <p>Data Object, Data Store, &amp; Annotations.</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--color-orange); text-align: center; align-items: center;">
+              <i class="fa-solid fa-desktop" style="font-size: 56px; color: var(--color-orange);"></i>
+              <h3>3. Praktik Draw.io</h3>
+              <p>Translasi studi kasus naratif ke diagram BPMN.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SECTION 2: KONSEP SWIMLANES (POOLS & LANES)
+           ========================================== -->
+
+      <!-- SLIDE 6 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian I: Swimlanes">
+        <p class="eyebrow">Bagian I</p>
+        <h1 style="font-size: 80px;">Konsep Swimlanes</h1>
+        <div class="divider"></div>
+        <p style="font-size: 32px;">Memisahkan Batas Organisasi dan Peran Aktor.</p>
+      </div>
+
+      <!-- SLIDE 7 -->
+      <div class="slide-container layout-split" data-title="Masalah Diagram Ambigu">
+        <div class="split-col w-60">
+          <p class="eyebrow">Masalah Dunia Nyata</p>
+          <h2>Siapa yang Mengerjakan?</h2>
+          <p style="font-size: 24px; color: #475569; margin-bottom: 24px;">Diagram yang hanya berisi kotak task dan panah akan membingungkan developer.</p>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-circle-question" style="color: var(--color-orange);"></i> <span>Apakah "Validasi Pembayaran" dikerjakan Kasir atau Sistem Bank?</span></li>
+            <li><i class="fa-solid fa-person-circle-exclamation"></i> <span>Tanpa pembagian peran, akuntabilitas SOP menjadi kacau.</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40">
+          <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80" alt="Team Responsibility">
+        </div>
+      </div>
+
+      <!-- SLIDE 8 -->
+      <div class="slide-container pad-standard" data-title="Analogi Kolam Renang">
+        <h2>Analogi Jalur Kolam Renang</h2>
+        <div class="flex-grow-center">
+          <div style="background: #EEF2FF; border-left: 12px solid var(--color-primary); padding: 40px; border-radius: 0 16px 16px 0;">
+            <i class="fa-solid fa-person-swimming" style="font-size: 56px; color: var(--color-primary); margin-bottom: 16px;"></i>
+            <p style="font-size: 28px; font-weight: 600; color: #0F172A; line-height: 1.5;">Istilah **Swimlanes** diambil dari lintasan renang. Tiap perenang memiliki lintasan sendiri agar tidak saling bertubrukan saat mengeksekusi aktivitas.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 9 -->
+      <div class="slide-container pad-standard" data-title="Hierarki Swimlanes">
+        <h2>2 Komponen Swimlanes</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 8px solid #0F172A;">
+              <i class="fa-solid fa-building"></i>
+              <h3>1. Pool (Kolam Utama)</h3>
+              <p>Mewakili <strong>Entitas / Organisasi Mandiri</strong> (misal: PT Toko Online, Bank BCA, Mahasiswa).</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--color-primary);">
+              <i class="fa-solid fa-id-badge"></i>
+              <h3>2. Lane (Lintasan Bagian)</h3>
+              <p>Mewakili <strong>Divisi / Peran Spesifik</strong> di dalam organisasi (misal: Kasir, Staf Gudang, Kurir).</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 10 -->
+      <div class="slide-container layout-split" data-title="Visualisasi Pool & Lane">
+        <div class="split-col w-50">
+          <p class="eyebrow">Struktur Visual</p>
+          <h2>Anatomi Pool &amp; Lane</h2>
+          <p style="font-size: 22px; color: #475569;">Satu Pool besar dapat dibelah menjadi beberapa Lane horizontal atau vertikal sesuai struktur organisasi.</p>
+        </div>
+        <div class="split-col w-50">
+          <div class="pool-preview">
+            <div class="pool-header">ITB SWADHARMA (POOL)</div>
+            <div class="lanes-container">
+              <div class="lane-box">
+                <div class="lane-title">Bagian Keuangan</div>
+                <div class="lane-content"><span style="font-size: 16px; font-weight: 600; color: #64748B;">[Task: Cek Pembayaran SPP]</span></div>
+              </div>
+              <div class="lane-box">
+                <div class="lane-title">Bagian Akademik (BAAK)</div>
+                <div class="lane-content"><span style="font-size: 16px; font-weight: 600; color: #64748B;">[Task: Buka Kunci KRS Online]</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 11 -->
+      <div class="slide-container pad-standard" data-title="Aturan Garis Alur">
+        <h2>Aturan Emas Aliran Panah di Swimlanes</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border: 2px solid #10B981; background: #ECFDF5;">
+              <h3 style="color: #047857;"><i class="fa-solid fa-check"></i> Sequence Flow (Garis Utuh)</h3>
+              <p>HANYA BOLEH menghubungkan aktivitas <strong>di dalam satu Pool yang sama</strong> (boleh menyeberang antar Lane).</p>
+            </div>
+            <div class="card" style="border: 2px solid #0369A1; background: #F0F9FF;">
+              <h3 style="color: #0369A1;"><i class="fa-solid fa-arrow-right-arrow-left"></i> Message Flow (Garis Putus)</h3>
+              <p>DIGUNAKAN saat berkomunikasi <strong>antar Pool yang berbeda</strong> (misal dari Pool Konsumen ke Pool Toko).</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 12 -->
+      <div class="slide-container center-content bg-dark" data-title="Black Box Pool">
+        <i class="fa-solid fa-box" style="font-size: 90px; color: var(--color-accent); margin-bottom: 24px;"></i>
+        <h2>Konsep "Black Box Pool"</h2>
+        <p style="font-size: 26px; max-width: 900px; margin-top: 16px; line-height: 1.5;">
+          Aktor eksternal (seperti Pelanggan atau Vendor Pihak Ketiga) sering kali dimodelkan sebagai <strong>Pool Kosong (Black Box)</strong> tanpa detail lane, karena kita tidak memiliki kendali atas cara internal mereka bekerja.
+        </p>
+      </div>
+
+      <!-- ==========================================
+           SECTION 3: ARTIFACTS & DATA ELEMENTS
+           ========================================== -->
+
+      <!-- SLIDE 13 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian II: Artifacts">
+        <p class="eyebrow">Bagian II</p>
+        <h1 style="font-size: 80px;">Artifacts &amp; Elemen Data</h1>
+        <div class="divider"></div>
+        <p style="font-size: 32px;">Menyertakan Dokumen, Database, dan Keterangan Teknis.</p>
+      </div>
+
+      <!-- SLIDE 14 -->
+      <div class="slide-container layout-split" data-title="Apa itu Artifacts?">
+        <div class="split-col w-60">
+          <p class="eyebrow">Definisi</p>
+          <h2>Apa Fungsi Artifacts?</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-circle-info"></i> <span>Elemen visual pendukung yang <strong>tidak mempengaruhi aliran eksekusi</strong> proses secara langsung.</span></li>
+            <li><i class="fa-solid fa-file-invoice"></i> <span>Menjelaskan data apa yang masuk, dokumen apa yang keluar, dan sistem apa yang menyimpan.</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40">
+          <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&q=80" alt="Server and Data Storage">
+        </div>
+      </div>
+
+      <!-- SLIDE 15 -->
+      <div class="slide-container layout-split" data-title="Data Object">
+        <div class="split-col split-img-col w-40" style="background: #EEF2FF;">
+          <div class="artifact-doc"><i class="fa-regular fa-file-lines"></i></div>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Elemen Data 1</p>
+          <h2>Data Object (Dokumen/File)</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-file"></i> <span>Simbol: Kertas dengan lipatan di sudut kanan atas.</span></li>
+            <li><i class="fa-solid fa-arrow-right"></i> <span>Mewakili data atau berkas nyata (misal: Formulir Pendaftaran, Resi Pembayaran, Invoice PDF).</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 16 -->
+      <div class="slide-container layout-split" data-title="Data Store">
+        <div class="split-col split-img-col w-40" style="background: #ECFEFF;">
+          <div class="artifact-store"><i class="fa-solid fa-database"></i></div>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Elemen Data 2</p>
+          <h2>Data Store (Basis Data)</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-database"></i> <span>Simbol: Tabung silinder database.</span></li>
+            <li><i class="fa-solid fa-server"></i> <span>Mewakili tempat penyimpanan data permanen di server yang bertahan melampaui masa hidup satu proses tunggal.</span></li>
+            <li><i class="fa-solid fa-lightbulb"></i> <span>Contoh: Database Mahasiswa MySQL, Server ERP Kampus.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 17 -->
+      <div class="slide-container layout-split" data-title="Data Association">
+        <div class="split-col w-60">
+          <p class="eyebrow">Garis Penghubung Data</p>
+          <h2>Data Association (Panah Putus)</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-arrow-right-arrow-left"></i> <span>Panah bertitik-titik halus yang mengaitkan Task dengan Data Object atau Data Store.</span></li>
+            <li><i class="fa-solid fa-download"></i> <span>Panah mengarah ke Task = <strong>Read / Input</strong> data.</span></li>
+            <li><i class="fa-solid fa-upload"></i> <span>Panah mengarah ke Database = <strong>Create / Update</strong> data.</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40" style="background: #F8FAFC;">
+          <i class="fa-solid fa-diagram-project" style="font-size: 160px; color: var(--color-primary);"></i>
+        </div>
+      </div>
+
+      <!-- SLIDE 18 -->
+      <div class="slide-container pad-standard" data-title="Group & Annotation">
+        <h2>Group &amp; Text Annotation</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 8px solid #94A3B8;">
+              <i class="fa-regular fa-square"></i>
+              <h3>Group (Garis Kotak Titik)</h3>
+              <p>Mengelompokkan aktivitas untuk keperluan dokumentasi atau analisis tanpa mempengaruhi alur kerja.</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--color-accent);">
+              <i class="fa-solid fa-comment-dots"></i>
+              <h3>Text Annotation</h3>
+              <p>Memberikan catatan kaki penjelasan teknis kepada programmer (contoh: "*SLA respons maksimal 5 menit*").</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SECTION 4: SIMULASI & GAME INTERAKTIF
+           ========================================== -->
+
+      <!-- SLIDE 19 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian III: Game Interaktif">
+        <p class="eyebrow">Bagian III</p>
+        <h1 style="font-size: 80px;">Simulasi Interaktif</h1>
+        <div class="divider"></div>
+        <p style="font-size: 32px;">Uji Refleks Penempatan Objek pada Lintasan BPMN.</p>
+      </div>
+
+      <!-- SLIDE 20: GAME 1 DRAG DROP -->
+      <div class="slide-container pad-standard" style="background: #F8FAFC;" id="drag-drop-1" data-title="Game 1 (Pilah Lane)">
+        <p class="eyebrow">Game 1: Drag &amp; Drop</p>
+        <h2 style="font-size: 36px; margin-bottom: 12px;">Pilah Aktivitas ke Lane yang Tepat!</h2>
+        <p style="margin-bottom: 20px; font-size: 18px;">Studi Kasus: Alur Pembelian Kafe @kopiapatuh</p>
+        
+        <div class="flex-grow-center" style="justify-content: flex-start;">
+          <div class="draggable-container">
+            <div class="drag-item" draggable="true" data-type="kasir">Mencetak Struk Pembayaran</div>
+            <div class="drag-item" draggable="true" data-type="barista">Ekstraksi Espresso Double Shot</div>
+            <div class="drag-item" draggable="true" data-type="kasir">Menerima Pembayaran QRIS</div>
+            <div class="drag-item" draggable="true" data-type="barista">Steam Susu Oat Panas</div>
+          </div>
+
+          <div class="dropzones-container">
+            <div class="drop-zone" data-target="kasir" style="border-color: var(--color-primary); background: #F5F3FF;">
+              <h3 style="color: var(--color-primary);"><i class="fa-solid fa-cash-register"></i> Lane: Kasir</h3>
+              <div class="drop-content"></div>
+            </div>
+            <div class="drop-zone" data-target="barista" style="border-color: var(--color-accent); background: #ECFEFF;">
+              <h3 style="color: #0891B2;"><i class="fa-solid fa-mug-saucer"></i> Lane: Barista</h3>
+              <div class="drop-content"></div>
+            </div>
+          </div>
+
+          <div class="practice-feedback" style="text-align: center; margin-top: 16px; display: none;">
+            <p style="font-size: 26px; font-weight: 800; color: #10B981;"><i class="fa-solid fa-circle-check"></i> Sempurna!</p>
+            <p style="font-size: 18px; color: #475569; margin-top: 4px;">Pemisahan tanggung jawab operasional kasir dan barista telah terpetakan tanpa tumpang tindih.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 21: GAME 2 DRAG DROP ARTIFACTS -->
+      <div class="slide-container pad-standard" style="background: #F8FAFC;" id="drag-drop-2" data-title="Game 2 (Artifacts)">
+        <p class="eyebrow">Game 2: Drag &amp; Drop</p>
+        <h2 style="font-size: 36px; margin-bottom: 12px;">Cocokkan Representasi Data</h2>
+        <p style="margin-bottom: 20px; font-size: 18px;">Seret contoh objek ke wadah BPMN yang tepat!</p>
+        
+        <div class="flex-grow-center" style="justify-content: flex-start;">
+          <div class="draggable-container">
+            <div class="drag-item" draggable="true" data-type="doc">Formulir Pendaftaran (PDF)</div>
+            <div class="drag-item" draggable="true" data-type="db">Tabel Pengguna di Server SQL</div>
+            <div class="drag-item" draggable="true" data-type="doc">Resi Pembayaran Kasir</div>
+          </div>
+
+          <div class="dropzones-container">
+            <div class="drop-zone" data-target="doc" style="border-color: var(--color-primary); background: #EEF2FF;">
+              <h3 style="color: var(--color-primary);"><i class="fa-regular fa-file-lines"></i> Data Object (Dokumen)</h3>
+              <div class="drop-content"></div>
+            </div>
+            <div class="drop-zone" data-target="db" style="border-color: var(--color-accent); background: #ECFEFF;">
+              <h3 style="color: #0891B2;"><i class="fa-solid fa-database"></i> Data Store (Basis Data)</h3>
+              <div class="drop-content"></div>
+            </div>
+          </div>
+
+          <div class="practice-feedback" style="text-align: center; margin-top: 16px; display: none;">
+            <p style="font-size: 26px; font-weight: 800; color: #10B981;"><i class="fa-solid fa-circle-check"></i> Tepat Sekali!</p>
+            <p style="font-size: 18px; color: #475569; margin-top: 4px;">File transaksi fisik/digital adalah Data Object, sedangkan database persisten adalah Data Store.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SECTION 5: PERANGKAT LUNAK PEMODELAN
+           ========================================== -->
+
+      <!-- SLIDE 22 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian IV: Tools">
+        <p class="eyebrow">Bagian IV</p>
+        <h1 style="font-size: 80px;">Perangkat Lunak Pemodelan</h1>
+        <div class="divider"></div>
+        <p style="font-size: 32px;">Draw.io, Bizagi Modeler, dan Camunda.</p>
+      </div>
+
+      <!-- SLIDE 23 -->
+      <div class="slide-container layout-split" data-title="Komparasi Tool">
+        <div class="split-col w-50" style="background: #F1F5F9;">
+          <p class="eyebrow">Berbasis Web (Utama)</p>
+          <h2>Draw.io (diagrams.net)</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-check"></i> <span>100% Gratis &amp; Tanpa Instalasi.</span></li>
+            <li><i class="fa-brands fa-google-drive"></i> <span>Terintegrasi langsung ke Google Drive.</span></li>
+            <li><i class="fa-solid fa-users"></i> <span>Mendukung kolaborasi kelompok daring.</span></li>
+          </ul>
+        </div>
+        <div class="split-col w-50">
+          <p class="eyebrow">Desktop Enterprise</p>
+          <h2>Bizagi Modeler</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-building"></i> <span>Standar korporat global.</span></li>
+            <li><i class="fa-solid fa-check-double"></i> <span>Validasi otomatis terhadap sintaks BPMN.</span></li>
+            <li><i class="fa-solid fa-file-pdf"></i> <span>Ekspor dokumentasi SOP profesional.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 24 -->
+      <div class="slide-container pad-standard" data-title="Aktivasi BPMN Draw.io">
+        <h2>Langkah Aktivasi Stensil BPMN di Draw.io</h2>
+        <div class="flex-grow-center">
+          <ul class="minimal-list" style="gap: 28px;">
+            <li><i class="fa-solid fa-1"></i> <span>Buka browser menuju <strong>app.diagrams.net</strong>.</span></li>
+            <li><i class="fa-solid fa-2"></i> <span>Di panel bilah kiri bawah, klik tombol <strong>"+ More Shapes"</strong>.</span></li>
+            <li><i class="fa-solid fa-3"></i> <span>Centang kotak <strong>"BPMN"</strong> (kategori Business Process) lalu klik <strong>Apply</strong>.</span></li>
+            <li><i class="fa-solid fa-4"></i> <span>Palet simbol standar BPMN 2.0 siap di-drag ke lembar kerja.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SECTION 6: STUDI KASUS TRANSLASI LAB
+           ========================================== -->
+
+      <!-- SLIDE 25 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian V: Studi Kasus">
+        <p class="eyebrow">Bagian V</p>
+        <h1 style="font-size: 80px;">Studi Kasus Naratif ke BPMN</h1>
+        <div class="divider"></div>
+        <p style="font-size: 32px;">Latihan Mandiri Pemodelan Berbantuan Swimlanes.</p>
+      </div>
+
+      <!-- SLIDE 26 -->
+      <div class="slide-container pad-standard" data-title="Kasus: Registrasi Kampus">
+        <h2>Narasi Studi Kasus: Registrasi Semester Mahasiswa</h2>
+        <div class="flex-grow-center">
+          <div style="background: #F8FAFC; border: 2px solid #CBD5E1; padding: 32px; border-radius: 16px; font-size: 22px; line-height: 1.6; color: #1E293B;">
+            "1. Mahasiswa mengunggah bukti bayar SPP ke portal kampus.<br>
+            2. Bagian Keuangan memverifikasi bukti transfer tersebut.<br>
+            3. Jika <strong>TIDAK VALID</strong>, sistem mengirimkan notifikasi penolakan ke Mahasiswa.<br>
+            4. Jika <strong>VALID</strong>, Bagian BAAK membuka status aktif KRS pada database SIAKAD.<br>
+            5. Mahasiswa memilih mata kuliah dan mencetak KSM."
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 27 -->
+      <div class="slide-container layout-split" data-title="Analisis Entitas Kasus">
+        <div class="split-col w-50">
+          <p class="eyebrow">Daftar Pool</p>
+          <h2>Pool yang Diperlukan</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-user-graduate"></i> <span><strong>Pool 1:</strong> Mahasiswa (Klien Eksternal).</span></li>
+            <li><i class="fa-solid fa-university"></i> <span><strong>Pool 2:</strong> Institut Teknologi &amp; Bisnis Swadharma.</span></li>
+          </ul>
+        </div>
+        <div class="split-col w-50" style="background: #F1F5F9;">
+          <p class="eyebrow">Daftar Lane di ITBS</p>
+          <h2>Lane dalam Pool Kampus</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-receipt"></i> <span><strong>Lane 1:</strong> Staf Keuangan.</span></li>
+            <li><i class="fa-solid fa-laptop-file"></i> <span><strong>Lane 2:</strong> BAAK / Sistem SIAKAD.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 28 -->
+      <div class="slide-container pad-standard" data-title="Desain Aliran Data">
+        <h2>Identifikasi Artifacts Kasus</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 8px solid var(--color-primary);">
+              <i class="fa-regular fa-file-pdf"></i>
+              <h3>Data Object</h3>
+              <p>Bukti Transfer Pembayaran (JPG/PDF) dan Kartu Studi Mahasiswa (KSM).</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--color-accent);">
+              <i class="fa-solid fa-server"></i>
+              <h3>Data Store</h3>
+              <p>Tabel Status Keuangan dan Database Akademik SIAKAD.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SECTION 7: KUIS EVALUASI FORMATIF
+           ========================================== -->
+
+      <!-- SLIDE 29 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian VI: Kuis">
+        <p class="eyebrow">Bagian VI</p>
+        <h1 style="font-size: 80px;">Evaluasi Formatif</h1>
+        <div class="divider"></div>
+        <p style="font-size: 32px;">Kuis Pemahaman Swimlanes dan Artifacts.</p>
+      </div>
+
+      <!-- SLIDE 30: SOAL 1 -->
+      <div class="slide-container pad-standard" style="background: #FFFFFF;" id="slide30" data-title="Kuis 1: Pool vs Lane">
+        <p class="eyebrow" style="margin-bottom: 8px;">Kuis Evaluasi • Soal 1/4</p>
+        <h2 style="margin-bottom: 16px;">Manakah pernyataan yang BENAR mengenai Pool dan Lane?</h2>
+        <div class="flex-grow-center" style="justify-content: flex-start; margin-top: 10px;">
+          <div class="quiz-option" onclick="handleQuiz(this, true, 'feedback-q1')" data-correct="true">
+            <i class="fa-regular fa-circle"></i> A. Pool mewakili entitas/organisasi mandiri, sedangkan Lane mewakili divisi di dalamnya.
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q1')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> B. Sequence Flow garis utuh dapat melompat bebas antar dua Pool yang berbeda.
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q1')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> C. Satu Lane dapat memuat banyak Pool di dalamnya.
+          </div>
+
+          <div id="feedback-q1" class="quiz-feedback">
+            <h4><i class="fa-solid fa-lightbulb"></i> Pembahasan: A</h4>
+            <p>Pool adalah batas organisasi otonom tertinggi. Di dalam satu Pool, kita membaginya menjadi beberapa Lane untuk membedakan peran jabatan atau divisi.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 31: SOAL 2 -->
+      <div class="slide-container pad-standard" style="background: #FFFFFF;" id="slide31" data-title="Kuis 2: Hubungan Antar Pool">
+        <p class="eyebrow" style="margin-bottom: 8px;">Kuis Evaluasi • Soal 2/4</p>
+        <h2 style="margin-bottom: 16px;">Garis apakah yang WAJIB digunakan untuk komunikasi antar dua Pool berbeda?</h2>
+        <div class="flex-grow-center" style="justify-content: flex-start;">
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q2')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> A. Sequence Flow (Garis lurus panah hitam utuh)
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, true, 'feedback-q2')" data-correct="true">
+            <i class="fa-regular fa-circle"></i> B. Message Flow (Garis putus-putus dengan panah terbuka)
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q2')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> C. Data Association (Panah titik-titik halus)
+          </div>
+
+          <div id="feedback-q2" class="quiz-feedback">
+            <h4><i class="fa-solid fa-lightbulb"></i> Pembahasan: B</h4>
+            <p>Karena organisasi luar tidak bisa dikontrol alur kerjanya secara internal, interaksi B2B hanya diperbolehkan menggunakan <strong>Message Flow</strong>.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 32: SOAL 3 -->
+      <div class="slide-container pad-standard" style="background: #FFFFFF;" id="slide32" data-title="Kuis 3: Simbol Basis Data">
+        <p class="eyebrow" style="margin-bottom: 8px;">Kuis Evaluasi • Soal 3/4</p>
+        <h2 style="margin-bottom: 16px;">Simbol silinder tabung pada pemodelan proses melambangkan apa?</h2>
+        <div class="flex-grow-center" style="justify-content: flex-start; margin-top: 10px;">
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q3')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> A. Data Object (Berkas sementara)
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, true, 'feedback-q3')" data-correct="true">
+            <i class="fa-regular fa-circle"></i> B. Data Store (Penyimpanan persisten/Database)
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q3')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> C. Intermediate Timer Event
+          </div>
+
+          <div id="feedback-q3" class="quiz-feedback">
+            <h4><i class="fa-solid fa-lightbulb"></i> Pembahasan: B</h4>
+            <p>Silinder tabung adalah <strong>Data Store</strong>, tempat sistem menyimpan dan mengambil data persisten yang tersimpan di server.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 33: SOAL 4 -->
+      <div class="slide-container pad-standard" style="background: #FFFFFF;" id="slide33" data-title="Kuis 4: Kesalahan Umum">
+        <p class="eyebrow" style="margin-bottom: 8px;">Kuis Evaluasi • Soal 4/4</p>
+        <h2 style="margin-bottom: 16px;">Kesalahan pemodelan fatal apa yang paling sering dilakukan pemula pada Swimlanes?</h2>
+        <div class="flex-grow-center" style="justify-content: flex-start; margin-top: 10px;">
+          <div class="quiz-option" onclick="handleQuiz(this, true, 'feedback-q4')" data-correct="true">
+            <i class="fa-regular fa-circle"></i> A. Menarik Sequence Flow garis utuh menyeberangi dinding batas Pool.
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q4')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> B. Memberi nama Task dengan format Kata Kerja + Benda.
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q4')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> C. Menaruh Database di luar Pool organisasi.
+          </div>
+
+          <div id="feedback-q4" class="quiz-feedback">
+            <h4><i class="fa-solid fa-lightbulb"></i> Pembahasan: A</h4>
+            <p>Sequence Flow tidak boleh menyeberangi dinding Pool. Jika ingin berpindah Pool, harus menggunakan Message Flow.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SECTION 8: PRAKTIK MANDIRI & CHECKLIST
+           ========================================== -->
+
+      <!-- SLIDE 34 -->
+      <div class="slide-container pad-standard" data-title="Checklist Sintaks">
+        <h2>Checklist Kerapian Diagram BPMN</h2>
+        <div class="flex-grow-center">
+          <ul class="minimal-list" style="gap: 28px;">
+            <li><i class="fa-solid fa-square-check" style="color: #10B981;"></i> <span>Apakah setiap alur dimulai dari Start Event dan berakhir di End Event?</span></li>
+            <li><i class="fa-solid fa-square-check" style="color: #10B981;"></i> <span>Apakah penamaan task konsisten aktif (misal: "Mengecek Berkas")?</span></li>
+            <li><i class="fa-solid fa-square-check" style="color: #10B981;"></i> <span>Apakah semua cabang Exclusive Gateway diberi label kondisi (Ya / Tidak)?</span></li>
+            <li><i class="fa-solid fa-square-check" style="color: #10B981;"></i> <span>Apakah tidak ada panah Sequence Flow yang menabrak batas Pool?</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 35 -->
+      <div class="slide-container layout-split" data-title="Tips Kolaborasi Draw.io">
+        <div class="split-col w-60">
+          <p class="eyebrow">Tips Praktikum</p>
+          <h2>Kolaborasi Tim di Google Drive</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-brands fa-google-drive"></i> <span>Simpan file berekstensi <strong>.drawio</strong> di shared folder tim.</span></li>
+            <li><i class="fa-solid fa-user-pen"></i> <span>Gunakan fitur multi-editor untuk membagi tugas pembuatan Lane secara serentak.</span></li>
+            <li><i class="fa-solid fa-file-export"></i> <span>Ekspor hasil akhir dalam format <strong>PNG (Transparent)</strong> atau <strong>PDF</strong>.</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40" style="background: #F1F5F9;">
+          <i class="fa-solid fa-users-rectangle" style="font-size: 180px; color: var(--color-primary);"></i>
+        </div>
+      </div>
+
+      <!-- SLIDE 36 -->
+      <div class="slide-container pad-standard" data-title="Ringkasan Materi">
+        <h2>Ringkasan Hari Ini</h2>
+        <div class="flex-grow-center">
+          <div style="background: #F0F9FF; border-left: 12px solid var(--color-primary); padding: 40px; border-radius: 0 16px 16px 0;">
+            <p style="font-size: 26px; line-height: 1.6; color: #0F172A;">
+              Swimlanes (Pools &amp; Lanes) menegaskan batas kepemilikan dan tanggung jawab kerja. Dipadukan dengan Artifacts (Data Object &amp; Data Store), diagram BPMN kini tidak hanya menunjukkan <em>siapa melakukan apa</em>, tetapi juga <em>data apa yang dikelola dan di mana sistem menyimpannya</em>.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 37 -->
+      <div class="slide-container layout-split" data-title="Penugasan Praktik Lab">
+        <div class="split-col w-60">
+          <p class="eyebrow">Tugas Praktik 4</p>
+          <h2>Pemodelan Terpandu</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-pen-ruler"></i> <span>Buka kembali studi kasus UMKM kelompok Anda.</span></li>
+            <li><i class="fa-solid fa-table-columns"></i> <span>Petakan ke dalam minimal 1 Pool Perusahaan dengan 2 Lane peran.</span></li>
+            <li><i class="fa-solid fa-file-arrow-up"></i> <span>Kumpulkan file <code>.drawio</code> dan ekspor PNG di portal e-learning kampus.</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40" style="background: #F8FAFC;">
+          <i class="fa-solid fa-cloud-arrow-up" style="font-size: 180px; color: var(--color-accent);"></i>
+        </div>
+      </div>
+
+      <!-- SLIDE 38 -->
+      <div class="slide-container layout-split" data-title="Persiapan Pertemuan 5">
+        <div class="split-col split-img-col w-40" style="background: #F1F5F9;">
+          <i class="fa-solid fa-map-location" style="font-size: 180px; color: var(--color-primary);"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Aksi Berikutnya</p>
+          <h2>Persiapan Pertemuan 5</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-magnifying-glass-chart"></i> <span>Topik: <strong>Pemodelan Proses As-Is</strong> dari studi kasus nyata.</span></li>
+            <li><i class="fa-solid fa-clipboard-user"></i> <span>Teknik Elicitation (menangkap fakta alur proses dari wawancara).</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 39 -->
+      <div class="slide-container center-content bg-dark" data-title="Sesi Tanya Jawab">
+        <i class="fa-regular fa-comments" style="font-size: 120px; color: var(--color-accent); margin-bottom: 32px;"></i>
+        <h1>Sesi Diskusi &amp; Q&amp;A</h1>
+        <p style="font-size: 32px; font-weight: 700; margin-top: 24px;">Silakan ajukan pertanyaan di kolom chat atau aktifkan mikrofon.</p>
+      </div>
+
+      <!-- SLIDE 40 -->
+      <div class="slide-container center-content bg-dark" data-title="Penutup">
+        <h1 style="font-size: 96px; margin-bottom: 24px;">Terima Kasih</h1>
+        <div class="divider"></div>
+        <p style="font-size: 36px; font-weight: 700; color: #38BDF8; font-style: italic; margin-top: 16px;">"Diagram yang jelas adalah awal dari aplikasi tanpa bug."</p>
+        <p style="font-size: 24px; color: #94A3B8; margin-top: 64px;">Ardi Ariansyah, S.Kom., Gr. • ITBS</p>
+      </div>
+
+    </div> <!-- End of slides-wrapper -->
+  </div> <!-- End of presentation-area -->
+
+  <!-- PRESENTATION & INTERACTION SCRIPTS -->
+  <script>
+    // --- 1. CORE PRESENTATION LOGIC ---
+    const slides = document.querySelectorAll('.slide-container');
+    const selector = document.getElementById('slideSelector');
+    let currentSlide = 0;
+
+    function initDropdown() {
+      if(!selector) return;
+      selector.innerHTML = '';
+      slides.forEach((slide, index) => {
+        let title = slide.getAttribute('data-title') || `Slide ${index + 1}`;
+        let option = document.createElement('option');
+        option.value = index;
+        option.text = `${index + 1}. ${title}`;
+        selector.appendChild(option);
+      });
+    }
+
+    function updatePresentation() {
+      slides.forEach((slide, index) => {
+        if (index === currentSlide) {
+          slide.classList.add('active');
+        } else {
+          slide.classList.remove('active');
+        }
+      });
+      if(selector) selector.value = currentSlide;
+      
+      const presArea = document.getElementById('presentation-area') || document.body;
+      const scaleX = presArea.clientWidth / 1280;
+      const scaleY = presArea.clientHeight / 720;
+      const scale = Math.min(scaleX, scaleY) * 0.95;
+      
+      slides[currentSlide].style.transform = `translate(-50%, -50%) scale(${scale})`;
+    }
+
+    function nextSlide() {
+      if (currentSlide < slides.length - 1) { currentSlide++; updatePresentation(); }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) { currentSlide--; updatePresentation(); }
+    }
+
+    function jumpToSlide(index) {
+      currentSlide = parseInt(index); updatePresentation();
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if(e.target.isContentEditable || e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return; 
+      if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') nextSlide();
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') prevSlide();
+    });
+
+    window.addEventListener('resize', updatePresentation);
+    initDropdown();
+    updatePresentation();
+
+    // --- 2. DRAG AND DROP LOGIC (AUTO-APPLY TO ALL) ---
+    const dropZones = document.querySelectorAll('.drop-zone');
+    const draggables = document.querySelectorAll('.drag-item');
+    const containers = document.querySelectorAll('.draggable-container');
+
+    draggables.forEach(draggable => {
+      draggable.addEventListener('dragstart', () => draggable.classList.add('dragging'));
+      draggable.addEventListener('dragend', () => {
+        draggable.classList.remove('dragging');
+        checkPracticeCompletion();
+      });
+    });
+
+    dropZones.forEach(zone => {
+      zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+      zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+      zone.addEventListener('drop', e => {
+        e.preventDefault();
+        zone.classList.remove('drag-over');
+        const draggable = document.querySelector('.dragging');
+        if (draggable) zone.querySelector('.drop-content').appendChild(draggable);
+      });
+    });
+
+    containers.forEach(container => {
+      container.addEventListener('dragover', e => e.preventDefault());
+      container.addEventListener('drop', e => {
+        const draggable = document.querySelector('.dragging');
+        if (draggable) container.appendChild(draggable);
+      });
+    });
+
+    function checkPracticeCompletion() {
+      document.querySelectorAll('.practice-feedback').forEach(feedback => {
+        let slide = feedback.closest('.slide-container');
+        let totalItems = slide.querySelectorAll('.drag-item').length;
+        let correct = 0;
+        slide.querySelectorAll('.drop-zone').forEach(zone => {
+          zone.querySelectorAll('.drag-item').forEach(item => {
+            if (item.dataset.type === zone.dataset.target) correct++;
+          });
+        });
+        feedback.style.display = (correct === totalItems && totalItems > 0) ? 'block' : 'none';
+      });
+    }
+
+    // --- 3. QUIZ LOGIC ---
+    window.handleQuiz = function(clickedBtn, isCorrect, feedbackId) {
+      const parent = clickedBtn.parentElement;
+      const allButtons = parent.querySelectorAll('.quiz-option');
+      allButtons.forEach(btn => {
+        btn.style.pointerEvents = 'none';
+        const icon = btn.querySelector('i');
+        icon.className = btn.dataset.correct === "true" ? 'fa-solid fa-check-circle' : 'fa-solid fa-circle-xmark';
+        if (btn.dataset.correct === "true") btn.classList.add('correct');
+      });
+      if (!isCorrect) clickedBtn.classList.add('wrong');
+      document.getElementById(feedbackId).classList.add('show');
+    };
+  </script>
+</body>
+</html>
