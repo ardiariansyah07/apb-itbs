@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Analisa Proses Bisnis - Pertemuan 2</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Open+Sans:wght@400;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    /* CSS RESET & CORE VARIABLES */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-bg-light: #F8F9FA;
+      --color-text-dark: #0F172A;
+      --color-text-muted: #475569;
+      --color-blue: #0369A1;
+      --color-orange: #EA580C;
+      --color-white: #FFFFFF;
+      --color-dark-bg: #0F172A;
+      --navbar-height: 60px;
+    }
+    
+    body { 
+      margin: 0; 
+      padding: 0; 
+      background: #111; 
+      font-family: 'Open Sans', sans-serif; 
+      height: 100vh; 
+      overflow: hidden; 
+      position: relative;
+    }
+
+    /* TOP NAVIGATION BAR */
+    .top-navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: var(--navbar-height);
+      background: #0F172A;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 1000;
+      font-family: 'Montserrat', sans-serif;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+
+    .nav-left, .nav-center, .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-btn {
+      background: transparent;
+      border: 1px solid #334155;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+      padding: 8px 16px;
+      border-radius: 6px;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .nav-btn:hover { background: #334155; }
+
+    /* DROPDOWN MENU SLIDES */
+    .slide-selector {
+      background: #1E293B;
+      color: white;
+      border: 1px solid #334155;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      outline: none;
+      max-width: 350px;
+    }
+    .slide-selector option { background: #0F172A; }
+
+    /* MAIN CONTAINER ADJUSTMENT */
+    #presentation-area {
+      position: absolute;
+      top: var(--navbar-height);
+      left: 0;
+      right: 0;
+      bottom: 0; 
+      overflow: hidden;
+    }
+
+    /* HARD LOCK 16:9 CONTAINER (1280x720px) */
+    .slide-container {
+      width: 1280px !important;
+      height: 720px !important;
+      background: var(--color-bg-light);
+      color: var(--color-text-dark);
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(1);
+      transform-origin: center center;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.35s ease-in-out;
+      pointer-events: none;
+    }
+
+    .slide-container.active {
+      visibility: visible;
+      opacity: 1;
+      z-index: 5;
+      pointer-events: auto;
+    }
+
+    /* TYPOGRAPHY */
+    h1, h2, h3, h4, .eyebrow { font-family: 'Montserrat', sans-serif; }
+    h1 { font-size: 64px; font-weight: 800; line-height: 1.1; margin-bottom: 24px; color: var(--color-text-dark); }
+    h2 { font-size: 44px; font-weight: 700; line-height: 1.2; margin-bottom: 24px; color: var(--color-text-dark); }
+    h3 { font-size: 32px; font-weight: 700; margin-bottom: 16px; color: var(--color-blue); }
+    p, li { font-size: 24px; line-height: 1.5; color: var(--color-text-muted); }
+    .eyebrow { font-size: 18px; font-weight: 700; color: var(--color-orange); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; }
+    .divider { width: 80px; height: 6px; background: var(--color-orange); margin: 20px 0 24px 0; }
+    
+    .bg-dark { background: var(--color-dark-bg) !important; color: var(--color-white) !important; }
+    .bg-dark h1, .bg-dark h2, .bg-dark h3, .bg-dark p, .bg-dark li { color: var(--color-white) !important; }
+    
+    /* LAYOUT: SPLIT SCREEN */
+    .layout-split { display: flex; flex-direction: row; flex: 1 1 100%; width: 100%; height: 100%; }
+    .split-col { display: flex; flex-direction: column; justify-content: center; height: 100%; padding: 40px 80px; }
+    .split-img-col { padding: 0 !important; margin: 0 !important; display: flex; background: #0F172A; align-items: center; justify-content: center; overflow: hidden; }
+    .split-img-col img { width: 100%; height: 100%; object-fit: cover; display: block; margin: 0; padding: 0; }
+    
+    /* SPLIT RATIOS */
+    .w-30 { flex: 0 0 30%; width: 30%; }
+    .w-40 { flex: 0 0 40%; width: 40%; }
+    .w-50 { flex: 0 0 50%; width: 50%; }
+    .w-60 { flex: 0 0 60%; width: 60%; }
+
+    /* LAYOUT: STANDARD / CENTERED */
+    .pad-standard { padding: 40px 80px; display: flex; flex-direction: column; flex: 1; height: 100%; }
+    .center-content { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; flex: 1; height: 100%; padding: 40px 80px; }
+    .flex-grow-center { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; }
+
+    /* COMPONENTS: LISTS & CARDS */
+    .minimal-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 20px; }
+    .minimal-list li { display: flex; align-items: flex-start; gap: 20px; font-weight: 600; }
+    .minimal-list li i { font-size: 32px; color: var(--color-blue); width: 40px; text-align: center; margin-top: 4px; }
+
+    .card-grid { display: flex; gap: 24px; align-items: stretch; width: 100%; justify-content: center; }
+    .card { background: var(--color-white); border-radius: 16px; padding: 32px 32px; flex: 1 1 0; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #E2E8F0; display: flex; flex-direction: column; align-items: flex-start; }
+    .card i { font-size: 48px; color: var(--color-orange); margin-bottom: 16px; }
+
+    /* INTERACTIVE: DRAG AND DROP */
+    .draggable-container { display: flex; gap: 16px; margin-bottom: 16px; justify-content: center; min-height: 60px; flex-wrap: wrap; }
+    .drag-item { 
+      cursor: grab; padding: 10px 20px; font-size: 18px; background: white; 
+      border: 3px solid #0369A1; border-radius: 12px; font-weight: 700; 
+      user-select: none; color: #0F172A; text-align: center; margin-bottom: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.2s; display: inline-block;
+    }
+    .drag-item:active { cursor: grabbing; transform: scale(0.95); }
+    .drag-item.dragging { opacity: 0.5; }
+    
+    .dropzones-container { display: flex; gap: 24px; justify-content: center; align-items: stretch; width: 100%; }
+    .drop-zone { 
+      border: 4px dashed #CBD5E1; border-radius: 16px; flex: 1; 
+      min-height: 180px; padding: 16px; display: flex; flex-direction: column; 
+      align-items: center; background: #FFFFFF; transition: 0.3s;
+    }
+    .drop-zone h3 { font-size: 22px; margin-bottom: 12px; color: #475569; border-bottom: 2px solid #CBD5E1; padding-bottom: 8px; width: 100%; text-align: center;}
+    .drop-zone.drag-over { border-color: #EA580C; background: #FFF7ED; }
+    .drop-content { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; width: 100%; gap: 8px; }
+
+    /* INTERACTIVE: QUIZ */
+    .quiz-option {
+      background: #F8FAFC; border: 2px solid #CBD5E1; padding: 12px 20px; 
+      border-radius: 12px; font-size: 20px; font-weight: 600; cursor: pointer; 
+      text-align: left; transition: 0.2s; margin-bottom: 12px; width: 100%;
+      color: #334155; display: flex; align-items: center; gap: 16px;
+    }
+    .quiz-option:hover { background: #E2E8F0; transform: translateX(8px); }
+    .quiz-option.correct { background: #D1FAE5; border-color: #10B981; color: #065F46; }
+    .quiz-option.wrong { background: #FEE2E2; border-color: #EF4444; color: #991B1B; }
+    
+    .quiz-feedback { 
+      display: none; margin-top: 16px; padding: 16px 24px; background: #F0F9FF; 
+      border-left: 8px solid #0369A1; border-radius: 0 12px 12px 0; font-size: 18px; 
+      animation: fadeIn 0.4s ease-in-out;
+    }
+    .quiz-feedback.show { display: block; }
+    .quiz-feedback h4 { font-size: 22px; margin-bottom: 8px; color: #0369A1; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* CUSTOM VALUE CHAIN DIAGRAM */
+    .vc-container { width: 100%; max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 4px; position: relative; }
+    .vc-support { display: flex; flex-direction: column; gap: 4px; }
+    .vc-support-item { background: #E2E8F0; border: 2px solid #94A3B8; padding: 12px; font-weight: 700; color: #0F172A; text-align: center; margin-right: 120px; font-size: 16px; }
+    .vc-primary { display: flex; gap: 4px; margin-right: 120px; margin-top: 8px; }
+    .vc-primary-item { flex: 1; background: #0369A1; border: 2px solid #075985; padding: 24px 8px; color: white; font-weight: 700; text-align: center; font-size: 14px; }
+    .vc-margin { position: absolute; right: 0; top: 0; bottom: 0; width: 110px; background: #10B981; color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 24px; clip-path: polygon(0 0, 100% 50%, 0 100%); padding-left: 15px;}
+  </style>
+</head>
+<body>
+
+  <!-- TOP NAVIGATION BAR -->
+  <div class="top-navbar" id="navbar">
+    <div class="nav-left">
+      <div style="font-weight: 800; font-size: 18px; color: #38BDF8;">ITB Swadharma</div>
+    </div>
+    
+    <div class="nav-center">
+      <button class="nav-btn" onclick="prevSlide()" title="Slide Sebelumnya"><i class="fa-solid fa-chevron-left"></i></button>
+      <select class="slide-selector" id="slideSelector" onchange="jumpToSlide(this.value)"></select>
+      <button class="nav-btn" onclick="nextSlide()" title="Slide Berikutnya"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+
+    <div class="nav-right">
+      <div style="font-weight: 600; font-size: 14px; color: #94A3B8;">Analisa Proses Bisnis (3 SKS) • Ardi Ariansyah, S.Kom., Gr.</div>
+    </div>
+  </div>
+
+  <!-- MAIN PRESENTATION AREA -->
+  <div id="presentation-area">
+    <div id="slides-wrapper">
+
+      <!-- ==========================================
+           SECTION 1: COVER & INTRODUCTION
+           ========================================== -->
+
+      <!-- SLIDE 1 -->
+      <div class="slide-container layout-split bg-dark active" data-title="Sampul Depan">
+        <div class="split-col w-60 bg-dark">
+          <p class="eyebrow">Pertemuan 2 • INF1104</p>
+          <h1>Stakeholders &amp; Value Chain</h1>
+          <div class="divider"></div>
+          <p style="font-size: 32px; font-weight: 600;">Analisis Peran Aktor &amp; Rantai Nilai Bisnis</p>
+          <div style="margin-top: 40px; border-top: 2px solid #334155; padding-top: 20px;">
+            <p style="color: #94A3B8; font-size: 18px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Dosen Pengampu:</p>
+            <p style="color: #FFFFFF; font-size: 26px; font-weight: 700; margin-top: 6px;">Ardi Ariansyah, S.Kom., Gr.</p>
+            <p style="color: #0369A1; font-size: 20px; font-weight: 600;">S1 Teknik Informatika • ITBS</p>
+          </div>
+        </div>
+        <div class="split-col split-img-col w-40">
+          <!-- Menggunakan URL gambar yang stabil dan tanpa tracking parameter -->
+          <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&q=80" alt="Business Meeting">
+        </div>
+      </div>
+
+      <!-- SLIDE 2 -->
+      <div class="slide-container center-content" data-title="Cek Audio & Layar">
+        <i class="fa-solid fa-tower-broadcast" style="font-size: 100px; color: #EA580C; margin-bottom: 32px;"></i>
+        <h2 style="font-size: 56px;">Cek Konektivitas Daring</h2>
+        <p style="font-size: 32px; font-weight: 600; margin-top: 16px;">Tolong konfirmasi di chat: "SUARA &amp; LAYAR AMAN".</p>
+      </div>
+
+      <!-- SLIDE 3 -->
+      <div class="slide-container layout-split" data-title="Review Pertemuan 1">
+        <div class="split-col split-img-col w-40" style="background: #F1F5F9;">
+          <i class="fa-solid fa-backward-step" style="font-size: 200px; color: #94A3B8;"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Kilas Balik Pertemuan 1</p>
+          <h2>Apa Itu Proses Bisnis?</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-check"></i> <span>Urutan langkah logis (*Input &rarr; Proses &rarr; Output*).</span></li>
+            <li><i class="fa-solid fa-check"></i> <span>Tujuannya menciptakan **nilai (value)** bagi pelanggan.</span></li>
+            <li><i class="fa-solid fa-check"></i> <span>Analis TI bertugas menerjemahkan masalah manual ke arsitektur digital.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 4 -->
+      <div class="slide-container pad-standard" data-title="Target Capaian (CPMK)">
+        <h2>Target Capaian Hari Ini (CPMK)</h2>
+        <div class="flex-grow-center">
+          <div style="background: #E0F2FE; border-left: 12px solid #0369A1; padding: 48px; border-radius: 0 16px 16px 0;">
+            <h3 style="font-size: 32px; margin-bottom: 24px; color: #0F172A;">Sub-CPMK 1.2</h3>
+            <p style="font-size: 28px; font-weight: 600; color: #0369A1;">"Mahasiswa mampu mengidentifikasi pemangku kepentingan (Stakeholders), peran, dan Value Chain."</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 5 -->
+      <div class="slide-container pad-standard" data-title="Peta Konsep">
+        <h2>Peta Konsep Hari Ini</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 8px solid #0369A1; text-align: center; align-items: center;">
+              <i class="fa-solid fa-users" style="font-size: 56px; color: #0369A1;"></i>
+              <h3>1. Stakeholders</h3>
+              <p>Siapa saja aktor yang terlibat?</p>
+            </div>
+            <div class="card" style="border-top: 8px solid #EA580C; text-align: center; align-items: center;">
+              <i class="fa-solid fa-sitemap" style="font-size: 56px; color: #EA580C;"></i>
+              <h3>2. Klasifikasi Proses</h3>
+              <p>Core, Support, dan Management.</p>
+            </div>
+            <div class="card" style="border-top: 8px solid #10B981; text-align: center; align-items: center;">
+              <i class="fa-solid fa-link" style="font-size: 56px; color: #10B981;"></i>
+              <h3>3. Value Chain</h3>
+              <p>Menganalisis Rantai Nilai Porter.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SECTION 2: STAKEHOLDERS
+           ========================================== -->
+
+      <!-- SLIDE 6 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian I: Stakeholders">
+        <p class="eyebrow">Bagian I</p>
+        <h1 style="font-size: 80px;">Analisis Stakeholders</h1>
+        <div class="divider"></div>
+        <p style="font-size: 32px;">Mengenali Aktor di Balik Layar Operasional.</p>
+      </div>
+
+      <!-- SLIDE 7 -->
+      <div class="slide-container layout-split" data-title="Definisi Stakeholder">
+        <div class="split-col split-img-col w-40" style="background: #F1F5F9;">
+          <i class="fa-solid fa-address-card" style="font-size: 200px; color: #0F172A;"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Definisi Dasar</p>
+          <h2>Apa itu Stakeholder?</h2>
+          <p style="font-weight: 600; margin-bottom: 24px; color: #0369A1;">"Pemangku Kepentingan"</p>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-user-group"></i> <span>Individu, kelompok, atau organisasi.</span></li>
+            <li><i class="fa-solid fa-magnet"></i> <span>Memiliki kepentingan / terdampak oleh suatu proses bisnis.</span></li>
+            <li><i class="fa-solid fa-desktop"></i> <span>Dalam IT, mereka adalah **User** dari aplikasi yang kita buat.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 8 -->
+      <div class="slide-container pad-standard" data-title="Mengapa Analis Peduli?">
+        <h2>Mengapa Analis IT Harus Peduli?</h2>
+        <div class="flex-grow-center">
+          <div style="background: #FFF7ED; border-left: 12px solid #EA580C; padding: 48px; border-radius: 0 16px 16px 0;">
+            <i class="fa-solid fa-triangle-exclamation" style="font-size: 56px; color: #EA580C; margin-bottom: 24px;"></i>
+            <p style="font-size: 32px; font-weight: 600; color: #9A3412; line-height: 1.4;">"Aplikasi yang dibuat tanpa mendengarkan stakeholder adalah aplikasi yang dijamin tidak akan pernah dipakai secara maksimal oleh penggunanya."</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 9 -->
+      <div class="slide-container pad-standard" data-title="2 Kelompok Utama">
+        <h2>2 Kelompok Utama Stakeholder</h2>
+        <div class="flex-grow-center" style="flex-direction: row; gap: 32px;">
+          <div style="flex: 1; background: #E0F2FE; padding: 40px; border-radius: 16px; border: 2px solid #0369A1; text-align: center;">
+            <i class="fa-solid fa-building-user" style="font-size: 64px; color: #0369A1; margin-bottom: 24px;"></i>
+            <h3 style="font-size: 32px;">Internal</h3>
+            <p style="font-size: 20px;">Berada di **dalam** struktur organisasi/perusahaan penyedia layanan.</p>
+          </div>
+          <div style="flex: 1; background: #F1F5F9; padding: 40px; border-radius: 16px; border: 2px solid #64748B; text-align: center;">
+            <i class="fa-solid fa-street-view" style="font-size: 64px; color: #475569; margin-bottom: 24px;"></i>
+            <h3 style="font-size: 32px; color: #475569;">Eksternal</h3>
+            <p style="font-size: 20px;">Berada di **luar** perusahaan, namun terdampak oleh layanan tersebut.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 10 -->
+      <div class="slide-container layout-split" data-title="Stakeholder Internal">
+        <div class="split-col w-60">
+          <p class="eyebrow">Aktor Penyedia</p>
+          <h2>Stakeholder Internal</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-user-tie"></i> <span>Manajemen / Pemilik Bisnis (Fokus Laba/Rugi).</span></li>
+            <li><i class="fa-solid fa-people-carry-box"></i> <span>Karyawan / Staf Operasional (Fokus SOP kerja harian).</span></li>
+            <li><i class="fa-solid fa-server"></i> <span>Tim IT &amp; Administrator (Fokus kestabilan server & jaringan).</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40">
+          <!-- Menggunakan URL gambar yang stabil dan tanpa tracking parameter -->
+          <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80" alt="Karyawan Internal">
+        </div>
+      </div>
+
+      <!-- SLIDE 11 -->
+      <div class="slide-container layout-split" data-title="Stakeholder Eksternal">
+        <div class="split-col split-img-col w-40">
+          <!-- Menggunakan URL gambar yang stabil dan tanpa tracking parameter -->
+          <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&q=80" alt="Pelanggan">
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Aktor Terdampak</p>
+          <h2>Stakeholder Eksternal</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-cart-shopping"></i> <span>Pelanggan / *Customer* (Fokus kecepatan dan kemudahan UI/UX).</span></li>
+            <li><i class="fa-solid fa-truck"></i> <span>Vendor / Pemasok Ekspedisi (Fokus kejelasan data integrasi API).</span></li>
+            <li><i class="fa-solid fa-building-columns"></i> <span>Pemerintah / Regulator (Fokus kepatuhan hukum perlindungan data).</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 12 -->
+      <div class="slide-container pad-standard" data-title="Contoh Miskomunikasi">
+        <h2>Bahaya Mengabaikan Stakeholder</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 8px solid #EF4444; background: #FEF2F2;">
+              <i class="fa-solid fa-bug" style="color: #EF4444;"></i>
+              <h3 style="color: #B91C1C;">Mengabaikan Eksternal</h3>
+              <p>Membuat form pendaftaran portal akademik yang sangat rapi untuk staf kampus (Internal), tapi proses aktivasinya membingungkan bagi Mahasiswa Baru (Eksternal).</p>
+            </div>
+            <div class="card" style="border-top: 8px solid #EF4444; background: #FEF2F2;">
+              <i class="fa-solid fa-user-injured" style="color: #EF4444;"></i>
+              <h3 style="color: #B91C1C;">Mengabaikan Internal</h3>
+              <p>Aplikasi toko e-commerce terlihat sangat canggih untuk pembeli, tapi Staf Gudang harus mencetak dan mengetik ulang resi secara manual karena tidak terintegrasi.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 13 -->
+      <div class="slide-container pad-standard" style="background: #F8F9FA;" id="drag-drop-1" data-title="Praktik 1 (Stakeholders)">
+        <p class="eyebrow">Praktik Langsung (Drag & Drop)</p>
+        <h2 style="font-size: 36px; margin-bottom: 12px;">Klasifikasi Aktor: Bisnis E-Commerce</h2>
+        <p style="margin-bottom: 24px; font-size: 20px;">Tarik (*Drag*) aktor di bawah ini ke dalam kotak Internal atau Eksternal yang tepat!</p>
+        
+        <div class="flex-grow-center" style="justify-content: flex-start;">
+          <div class="draggable-container">
+            <div class="drag-item" draggable="true" data-type="internal">📦 Staf Gudang Packing</div>
+            <div class="drag-item" draggable="true" data-type="eksternal">🚚 Kurir Logistik Pihak Ketiga</div>
+            <div class="drag-item" draggable="true" data-type="eksternal">👗 Konsumen Pembeli</div>
+            <div class="drag-item" draggable="true" data-type="internal">💻 IT Developer Internal</div>
+          </div>
+
+          <div class="dropzones-container">
+            <div class="drop-zone" data-target="internal" style="border-color: #0369A1; background: #F0F9FF;">
+              <h3 style="color: #0369A1;">Internal</h3>
+              <div class="drop-content"></div>
+            </div>
+            <div class="drop-zone" data-target="eksternal" style="border-color: #475569; background: #F8FAFC;">
+              <h3 style="color: #475569;">Eksternal</h3>
+              <div class="drop-content"></div>
+            </div>
+          </div>
+
+          <div class="practice-feedback" style="text-align: center; margin-top: 24px; display: none;">
+            <p style="font-size: 28px; font-weight: 800; color: #10B981;"><i class="fa-solid fa-circle-check"></i> Luar Biasa!</p>
+            <p style="font-size: 18px; color: #475569; margin-top: 4px;">Anda berhasil memisahkan aktor yang bekerja di dalam operasional dan yang berada di luar batas kepemilikan.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SECTION 3: KLASIFIKASI PROSES BISNIS
+           ========================================== -->
+
+      <!-- SLIDE 14 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian II: Klasifikasi">
+        <p class="eyebrow">Bagian II</p>
+        <h1 style="font-size: 80px;">Klasifikasi Proses Bisnis</h1>
+        <div class="divider"></div>
+        <p style="font-size: 32px;">Membedah Core, Support, dan Management.</p>
+      </div>
+
+      <!-- SLIDE 15 -->
+      <div class="slide-container pad-standard" data-title="3 Lapisan Operasional">
+        <h2>3 Lapisan Operasional Perusahaan</h2>
+        <p style="font-size: 22px; color: #64748B; margin-bottom: 32px;">Tidak semua aktivitas di organisasi/kampus menghasilkan profit secara langsung. Kita membaginya menjadi 3 tingkat:</p>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 8px solid #0369A1;">
+              <h3 style="color: #0369A1;">1. Core Process</h3>
+              <p>Proses Inti (Sumber Profit).</p>
+            </div>
+            <div class="card" style="border-top: 8px solid #94A3B8;">
+              <h3 style="color: #475569;">2. Support Process</h3>
+              <p>Proses Pendukung.</p>
+            </div>
+            <div class="card" style="border-top: 8px solid #EA580C;">
+              <h3 style="color: #EA580C;">3. Management Process</h3>
+              <p>Proses Tata Kelola & Strategi.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 16 -->
+      <div class="slide-container layout-split" data-title="Core Process">
+        <div class="split-col split-img-col w-40" style="background: #E0F2FE;">
+          <i class="fa-solid fa-star" style="font-size: 200px; color: #0369A1;"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Lapisan 1</p>
+          <h2>Core Process (Proses Inti)</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-money-bill-wave"></i> <span>Langsung bersentuhan dengan pelanggan &amp; pemasukan (*revenue*).</span></li>
+            <li><i class="fa-solid fa-heart-pulse"></i> <span>Jantung utama bisnis. Jika berhenti, bisnis lumpuh seketika.</span></li>
+            <li><i class="fa-solid fa-lightbulb"></i> <span>**Contoh:** Dosen mengajar mahasiswa di kelas, atau Kasir memproses pesanan.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 17 -->
+      <div class="slide-container layout-split" data-title="Support Process">
+        <div class="split-col w-60">
+          <p class="eyebrow">Lapisan 2</p>
+          <h2>Support Process (Pendukung)</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-eye-slash"></i> <span>Di belakang layar. Tidak langsung melayani pelanggan eksternal (pembeli).</span></li>
+            <li><i class="fa-solid fa-shield-halved"></i> <span>Tugasnya memastikan Proses Inti (Core) bisa berjalan mulus.</span></li>
+            <li><i class="fa-solid fa-lightbulb"></i> <span>**Contoh:** Tim IT maintenance server jaringan SIAKAD, atau HRD merekrut karyawan baru.</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40" style="background: #F1F5F9;">
+          <i class="fa-solid fa-screwdriver-wrench" style="font-size: 200px; color: #475569;"></i>
+        </div>
+      </div>
+
+      <!-- SLIDE 18 -->
+      <div class="slide-container layout-split" data-title="Management Process">
+        <div class="split-col split-img-col w-40" style="background: #FFF7ED;">
+          <i class="fa-solid fa-chess-knight" style="font-size: 200px; color: #EA580C;"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Lapisan 3</p>
+          <h2>Management Process</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-clipboard-check"></i> <span>Mengatur, mengevaluasi kinerja, dan merencanakan strategi.</span></li>
+            <li><i class="fa-solid fa-gavel"></i> <span>Memastikan kepatuhan terhadap aturan dan visi misi perusahaan.</span></li>
+            <li><i class="fa-solid fa-lightbulb"></i> <span>**Contoh:** Rapat pimpinan Yayasan mengevaluasi target Akreditasi kampus.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 19 -->
+      <div class="slide-container pad-standard" style="background: #F8F9FA;" id="drag-drop-2" data-title="Praktik 2 (Klasifikasi)">
+        <p class="eyebrow">Praktik Langsung (Drag & Drop)</p>
+        <h2 style="font-size: 36px; margin-bottom: 12px;">Klasifikasi Operasional: Rumah Sakit</h2>
+        <p style="margin-bottom: 24px; font-size: 18px;">Tarik aktivitas operasional RS berikut ke klasifikasi lapisan yang tepat.</p>
+        
+        <div class="flex-grow-center" style="justify-content: flex-start;">
+          <div class="draggable-container">
+            <div class="drag-item" draggable="true" data-type="core">🩺 Dokter Membedah Pasien di Ruang OK</div>
+            <div class="drag-item" draggable="true" data-type="support">🔧 Memperbaiki AC Ruang Rawat Inap</div>
+            <div class="drag-item" draggable="true" data-type="management">📊 Rapat Penetapan Target Tahunan RS</div>
+          </div>
+
+          <div class="dropzones-container">
+            <div class="drop-zone" data-target="core" style="border-color: #0369A1; background: #F0F9FF;">
+              <h3 style="color: #0369A1;">Core (Inti)</h3>
+              <div class="drop-content"></div>
+            </div>
+            <div class="drop-zone" data-target="support" style="border-color: #475569; background: #F8FAFC;">
+              <h3 style="color: #475569;">Support (Pendukung)</h3>
+              <div class="drop-content"></div>
+            </div>
+            <div class="drop-zone" data-target="management" style="border-color: #EA580C; background: #FFF7ED;">
+              <h3 style="color: #EA580C;">Management</h3>
+              <div class="drop-content"></div>
+            </div>
+          </div>
+
+          <div class="practice-feedback" style="text-align: center; margin-top: 24px; display: none;">
+            <p style="font-size: 28px; font-weight: 800; color: #10B981;"><i class="fa-solid fa-circle-check"></i> Brilian!</p>
+            <p style="font-size: 18px; color: #475569; margin-top: 4px;">Penyembuhan pasien adalah nyawa RS (Core). Perbaikan fasilitas itu wajib tapi bersifat penunjang (Support).</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SECTION 4: VALUE CHAIN (PORTER)
+           ========================================== -->
+
+      <!-- SLIDE 20 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian III: Value Chain">
+        <p class="eyebrow">Bagian III</p>
+        <h1 style="font-size: 80px;">Rantai Nilai (Value Chain)</h1>
+        <div class="divider"></div>
+        <p style="font-size: 32px;">Konsep Analisis Michael Porter.</p>
+      </div>
+
+      <!-- SLIDE 21 -->
+      <div class="slide-container layout-split" data-title="Pengantar Porter">
+        <div class="split-col w-60">
+          <p class="eyebrow">Pengantar Konsep</p>
+          <h2>Apa itu Value Chain?</h2>
+          <p style="font-size: 22px; color: #64748B; margin-bottom: 24px;">Diperkenalkan oleh Michael Porter (1985).</p>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-link"></i> <span>Sebuah model yang melihat organisasi sebagai **rantai aktivitas**.</span></li>
+            <li><i class="fa-solid fa-plus-circle"></i> <span>Setiap aktivitas di rantai tersebut dirancang untuk **menambah nilai (value)** pada produk.</span></li>
+            <li><i class="fa-solid fa-chart-line"></i> <span>Tujuan akhirnya: Menghasilkan MARGIN (Keuntungan Finansial).</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40">
+          <!-- Menggunakan URL gambar yang stabil dan tanpa tracking parameter -->
+          <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80" alt="Grafik Value Chain">
+        </div>
+      </div>
+
+      <!-- SLIDE 22 -->
+      <div class="slide-container pad-standard" data-title="Anatomi Value Chain">
+        <h2>Anatomi Value Chain Porter</h2>
+        <div class="flex-grow-center">
+          <div class="vc-container">
+            <div class="vc-support">
+              <div class="vc-support-item">Infrastruktur Perusahaan (Hukum, Keuangan, Manajemen)</div>
+              <div class="vc-support-item">Manajemen SDM (Rekrutmen, Pelatihan, Penjadwalan)</div>
+              <div class="vc-support-item" style="background: #E0F2FE; border-color: #0369A1; color: #0369A1;">Pengembangan Teknologi (Infrastruktur TI, R&amp;D)</div>
+              <div class="vc-support-item">Pengadaan / Procurement (Pembelian Mesin/Aset)</div>
+            </div>
+            <div class="vc-primary">
+              <div class="vc-primary-item">Inbound<br>Logistics</div>
+              <div class="vc-primary-item">Operations</div>
+              <div class="vc-primary-item">Outbound<br>Logistics</div>
+              <div class="vc-primary-item">Marketing<br>&amp; Sales</div>
+              <div class="vc-primary-item">Service</div>
+            </div>
+            <div class="vc-margin">MARGIN</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 23 -->
+      <div class="slide-container center-content" style="background: #F1F5F9;" data-title="5 Primary Activities">
+        <p class="eyebrow">Bedah Rantai Nilai</p>
+        <h2 style="font-size: 56px;">5 Aktivitas Utama (Primary)</h2>
+        <div class="divider"></div>
+        <p style="font-size: 26px; max-width: 900px; line-height: 1.6;">Proses inti yang berhubungan langsung dengan logistik, pembuatan fisik, penjualan, dan layanan pelanggannya.</p>
+      </div>
+
+      <!-- SLIDE 24 -->
+      <div class="slide-container layout-split" data-title="Inbound Logistics">
+        <div class="split-col split-img-col w-40" style="background: #E0F2FE;">
+          <i class="fa-solid fa-truck-ramp-box" style="font-size: 160px; color: #0369A1;"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Aktivitas Utama #1</p>
+          <h2>Inbound Logistics</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-boxes-stacked"></i> <span>Menerima, menyimpan, dan menyalurkan bahan baku ke divisi produksi.</span></li>
+            <li><i class="fa-solid fa-clipboard-check"></i> <span>Mencakup *Quality Control* bahan mentah saat diturunkan dari truk supplier.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 25 -->
+      <div class="slide-container layout-split" data-title="Operations">
+        <div class="split-col w-60">
+          <p class="eyebrow">Aktivitas Utama #2</p>
+          <h2>Operations (Operasi)</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-industry"></i> <span>Aktivitas pemrosesan atau manufaktur yang mengubah bahan baku menjadi produk jadi.</span></li>
+            <li><i class="fa-solid fa-gears"></i> <span>Perakitan, pengemasan (*packaging*), dan perawatan mesin produksi.</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40" style="background: #FFF7ED;">
+          <i class="fa-solid fa-gears" style="font-size: 160px; color: #EA580C;"></i>
+        </div>
+      </div>
+
+      <!-- SLIDE 26 -->
+      <div class="slide-container layout-split" data-title="Outbound Logistics">
+        <div class="split-col split-img-col w-40" style="background: #ECFDF5;">
+          <i class="fa-solid fa-truck-fast" style="font-size: 160px; color: #10B981;"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Aktivitas Utama #3</p>
+          <h2>Outbound Logistics</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-dolly"></i> <span>Aktivitas menyimpan produk jadi di gudang penyelesaian.</span></li>
+            <li><i class="fa-solid fa-map-location-dot"></i> <span>Distribusi dan pengiriman fisik barang (ekspedisi) keluar pabrik menuju pelanggan.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 27 -->
+      <div class="slide-container layout-split" data-title="Marketing & Sales">
+        <div class="split-col w-60">
+          <p class="eyebrow">Aktivitas Utama #4</p>
+          <h2>Marketing &amp; Sales</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-bullhorn"></i> <span>Membujuk pelanggan untuk membeli produk tersebut.</span></li>
+            <li><i class="fa-solid fa-tags"></i> <span>Mencakup periklanan, promosi diskon, penetapan harga, dan channel penjualan.</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40" style="background: #F8F9FA;">
+          <i class="fa-solid fa-bullhorn" style="font-size: 160px; color: #475569;"></i>
+        </div>
+      </div>
+
+      <!-- SLIDE 28 -->
+      <div class="slide-container layout-split" data-title="Service">
+        <div class="split-col split-img-col w-40" style="background: #FEF2F2;">
+          <i class="fa-solid fa-headset" style="font-size: 160px; color: #EF4444;"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Aktivitas Utama #5</p>
+          <h2>Service (Layanan)</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-screwdriver-wrench"></i> <span>Menjaga atau meningkatkan nilai produk *setelah* penjualan terjadi (Purna Jual).</span></li>
+            <li><i class="fa-solid fa-user-clock"></i> <span>Instalasi, garansi perbaikan, pusat panggilan keluhan, dan retur barang.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 29 -->
+      <div class="slide-container pad-standard" data-title="Support Activities">
+        <h2>4 Aktivitas Pendukung (Support Activities)</h2>
+        <p style="font-size: 20px; color: #64748B; margin-bottom: 24px;">Menopang seluruh 5 aktivitas utama agar bisa berjalan mulus secara korporat.</p>
+        <div class="flex-grow-center">
+          <div class="card-grid" style="flex-wrap: wrap;">
+            <div class="card" style="flex: 1 1 40%; padding: 24px;">
+              <h3 style="font-size: 22px;">Firm Infrastructure</h3>
+              <p style="font-size: 16px;">Manajemen direksi, akuntansi, dan legalitas izin.</p>
+            </div>
+            <div class="card" style="flex: 1 1 40%; padding: 24px;">
+              <h3 style="font-size: 22px;">Human Resource</h3>
+              <p style="font-size: 16px;">Rekrutmen, penggajian, dan pelatihan karyawan.</p>
+            </div>
+            <div class="card" style="flex: 1 1 40%; padding: 24px; border: 2px solid #0369A1; background: #F0F9FF;">
+              <h3 style="font-size: 22px; color: #0369A1;">Technology Development</h3>
+              <p style="font-size: 16px;">**Ranah Kita:** Perancangan Sistem IT, Jaringan, dan Inovasi Aplikasi.</p>
+            </div>
+            <div class="card" style="flex: 1 1 40%; padding: 24px;">
+              <h3 style="font-size: 22px;">Procurement</h3>
+              <p style="font-size: 16px;">Pembelian aset modal (mesin/gedung), bukan bahan baku harian.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 30 -->
+      <div class="slide-container pad-standard" data-title="Peran IT di Value Chain">
+        <h2>Bagaimana TI Mengubah Rantai Nilai?</h2>
+        <div class="flex-grow-center">
+          <div style="background: #FFF7ED; border-left: 12px solid #EA580C; padding: 40px; border-radius: 0 16px 16px 0;">
+            <p style="font-size: 24px; font-weight: 600; color: #0F172A; line-height: 1.5;">Teknologi Informasi secara teori adalah *Support Activity*, namun integrasinya mampu mengotomatisasi SELURUH rantai utama.</p>
+            <ul class="minimal-list" style="margin-top: 16px; margin-left: 16px; font-size: 20px;">
+              <li><i class="fa-solid fa-arrow-right"></i> <span>TI di **Inbound** &rarr; Sistem Manajemen Gudang (WMS) Otomatis.</span></li>
+              <li><i class="fa-solid fa-arrow-right"></i> <span>TI di **Marketing** &rarr; Digital Ads &amp; Analitik Big Data Konsumen.</span></li>
+              <li><i class="fa-solid fa-arrow-right"></i> <span>TI di **Service** &rarr; Tiketing Bantuan dan Chatbot AI 24 Jam.</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SECTION 4: STUDI KASUS NYATA (@kopiapatuh)
+           ========================================== -->
+
+      <!-- SLIDE 31 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian IV: Studi Kasus">
+        <p class="eyebrow">Bagian IV</p>
+        <h1 style="font-size: 80px;">Studi Kasus Bisnis</h1>
+        <div class="divider"></div>
+        <p style="font-size: 32px;">Membedah Value Chain pada Operasional Usaha @kopiapatuh.</p>
+      </div>
+
+      <!-- SLIDE 32 -->
+      <div class="slide-container layout-split" data-title="Studi Kasus: Inbound">
+        <div class="split-col w-60">
+          <p class="eyebrow">1. Inbound Logistics (@kopiapatuh)</p>
+          <h2>Penerimaan Bahan</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-box-open"></i> <span>Menerima pengiriman pasokan biji kopi (Green Beans) mingguan dari petani lokal.</span></li>
+            <li><i class="fa-solid fa-clipboard-list"></i> <span>Mengecek ketersediaan bahan baku pelengkap harian (susu segar, tepung, gula).</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40" style="background: #E0F2FE;">
+          <i class="fa-solid fa-seedling" style="font-size: 160px; color: #0369A1;"></i>
+        </div>
+      </div>
+
+      <!-- SLIDE 33 -->
+      <div class="slide-container layout-split" data-title="Studi Kasus: Operations">
+        <div class="split-col split-img-col w-40" style="background: #FFF7ED;">
+          <i class="fa-solid fa-fire-burner" style="font-size: 160px; color: #EA580C;"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">2. Operations (@kopiapatuh)</p>
+          <h2>Proses Ekstraksi &amp; Produksi</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-mug-hot"></i> <span>Penggilingan (*Grinding*) dan ekstraksi kopi menggunakan mesin espresso.</span></li>
+            <li><i class="fa-solid fa-utensils"></i> <span>Memproduksi 50 pcs martabak manis mini setiap jam 4 pagi untuk dipajang.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 34 -->
+      <div class="slide-container layout-split" data-title="Studi Kasus: Outbound">
+        <div class="split-col w-60">
+          <p class="eyebrow">3. Outbound Logistics (@kopiapatuh)</p>
+          <h2>Penyajian &amp; Distribusi</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-bell-concierge"></i> <span>Mengantarkan pesanan kopi jadi dan camilan langsung ke meja pelanggan (*Dine-in*).</span></li>
+            <li><i class="fa-solid fa-box"></i> <span>Pengemasan rapi dan serah terima kepada kurir ojek online (*Takeaway*).</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40" style="background: #ECFDF5;">
+          <i class="fa-solid fa-motorcycle" style="font-size: 160px; color: #10B981;"></i>
+        </div>
+      </div>
+
+      <!-- SLIDE 35 -->
+      <div class="slide-container layout-split" data-title="Studi Kasus: Marketing">
+        <div class="split-col split-img-col w-40" style="background: #F8F9FA;">
+          <i class="fa-brands fa-instagram" style="font-size: 160px; color: #475569;"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">4. Marketing &amp; Sales (@kopiapatuh)</p>
+          <h2>Pemasaran &amp; Penjualan</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-hashtag"></i> <span>Pembuatan konten media sosial estetik dan promo mingguan di Instagram.</span></li>
+            <li><i class="fa-solid fa-tags"></i> <span>Strategi *bundling* harga (Kopi + Martabak Mini dengan harga hemat).</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 36 -->
+      <div class="slide-container layout-split" data-title="Studi Kasus: Service">
+        <div class="split-col w-60">
+          <p class="eyebrow">5. Service (@kopiapatuh)</p>
+          <h2>Layanan Pelanggan</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-reply"></i> <span>Menanggapi keluhan jika minuman terasa terlalu manis atau suhu tidak sesuai.</span></li>
+            <li><i class="fa-solid fa-star"></i> <span>Menyediakan program loyalitas (*Stamp Card*) agar pengunjung kedai kembali.</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40" style="background: #FEF2F2;">
+          <i class="fa-solid fa-heart-circle-check" style="font-size: 160px; color: #EF4444;"></i>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SECTION 5: KUIS & EVALUASI
+           ========================================== -->
+
+      <!-- SLIDE 37 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian V: Evaluasi">
+        <p class="eyebrow">Bagian V</p>
+        <h1 style="font-size: 80px;">Evaluasi Interaktif</h1>
+        <div class="divider"></div>
+        <p style="font-size: 32px;">Uji Pemahaman Stakeholder dan Value Chain.</p>
+      </div>
+
+      <!-- SLIDE 38 -->
+      <div class="slide-container pad-standard" style="background: #FFFFFF;" id="slide38" data-title="Kuis 1: Stakeholder">
+        <p class="eyebrow" style="margin-bottom: 8px;">Kuis Evaluasi Interaktif • Soal 1/3</p>
+        <h2 style="margin-bottom: 16px;">Siapakah yang tergolong Stakeholder Eksternal pada layanan Akademik ITBS?</h2>
+        <div class="flex-grow-center" style="justify-content: flex-start; margin-top: 10px;">
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q1')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> A. Dosen Pengajar Mata Kuliah
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, true, 'feedback-q1')" data-correct="true">
+            <i class="fa-regular fa-circle"></i> B. Mahasiswa &amp; Orang Tua Mahasiswa
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q1')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> C. Administrator Database SIAKAD Kampus
+          </div>
+
+          <div id="feedback-q1" class="quiz-feedback">
+            <h4><i class="fa-solid fa-lightbulb"></i> Pembahasan: B</h4>
+            <p>Dosen dan Administrator adalah aktor di dalam struktur (Internal). Mahasiswa dan Orang Tuanya adalah pengguna yang terdampak secara langsung dari luar struktur, sehingga masuk kategori <strong>Eksternal</strong>.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 39 -->
+      <div class="slide-container pad-standard" style="background: #FFFFFF;" id="slide39" data-title="Kuis 2: Klasifikasi">
+        <p class="eyebrow" style="margin-bottom: 8px;">Kuis Evaluasi Interaktif • Soal 2/3</p>
+        <h2 style="margin-bottom: 16px;">Pekerjaan tim *IT Support* memperbaiki jaringan WiFi di kampus tergolong proses bisnis apa?</h2>
+        
+        <div class="flex-grow-center" style="justify-content: flex-start;">
+          <div class="quiz-option" onclick="handleQuiz(this, true, 'feedback-q2')" data-correct="true">
+            <i class="fa-regular fa-circle"></i> A. Support Process (Proses Pendukung)
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q2')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> B. Core Process (Proses Utama)
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q2')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> C. Management Process (Proses Manajemen)
+          </div>
+
+          <div id="feedback-q2" class="quiz-feedback">
+            <h4><i class="fa-solid fa-lightbulb"></i> Pembahasan: A</h4>
+            <p>Tugas IT Support tidak langsung menghasilkan profit, namun sangat krusial sebagai <strong>Support Process</strong> untuk memastikan proses perkuliahan (Core) berjalan lancar.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 40 -->
+      <div class="slide-container pad-standard" style="background: #FFFFFF;" id="slide40" data-title="Kuis 3: Value Chain">
+        <p class="eyebrow" style="margin-bottom: 8px;">Kuis Evaluasi Interaktif • Soal 3/3</p>
+        <h2 style="margin-bottom: 16px;">Dalam Rantai Nilai Porter, aktivitas pengiriman barang jadi ke alamat pembeli disebut?</h2>
+        <div class="flex-grow-center" style="justify-content: flex-start; margin-top: 10px;">
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q3')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> A. Inbound Logistics
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q3')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> B. Marketing &amp; Sales
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, true, 'feedback-q3')" data-correct="true">
+            <i class="fa-regular fa-circle"></i> C. Outbound Logistics
+          </div>
+
+          <div id="feedback-q3" class="quiz-feedback">
+            <h4><i class="fa-solid fa-lightbulb"></i> Pembahasan: C</h4>
+            <p><strong>Outbound Logistics</strong> mencakup penyimpanan produk pasca-produksi dan distribusinya (ekspedisi/pengantaran) keluar batas wilayah menuju pelanggan.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SECTION 6: PENUTUP & TUGAS
+           ========================================== -->
+
+      <!-- SLIDE 41 -->
+      <div class="slide-container pad-standard" data-title="Ringkasan">
+        <h2>Ringkasan Hari Ini</h2>
+        <div class="flex-grow-center">
+          <ul class="minimal-list" style="gap: 32px;">
+            <li><i class="fa-solid fa-check-double" style="color: #10B981;"></i> <span>Kembangkan sistem IT dengan mempertimbangkan suara **Stakeholder Internal** dan **Eksternal** agar tepat sasaran.</span></li>
+            <li><i class="fa-solid fa-check-double" style="color: #10B981;"></i> <span>Pisahkan aktivitas menjadi **Core, Support, dan Management** untuk menentukan prioritas otomasi.</span></li>
+            <li><i class="fa-solid fa-check-double" style="color: #10B981;"></i> <span>Gunakan **Value Chain Porter** untuk melihat aliran nilai yang berujung pada Margin.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 42 -->
+      <div class="slide-container pad-standard" data-title="Tugas Individu (Instruksi)">
+        <h2>Tugas 1: Identifikasi Value Chain</h2>
+        <div class="flex-grow-center">
+          <div style="background: #FFF7ED; border-left: 12px solid #EA580C; padding: 40px; border-radius: 0 16px 16px 0;">
+            <h3 style="color: #EA580C; font-size: 32px; margin-bottom: 16px;">Lembar Kerja Analisis</h3>
+            <p style="font-size: 22px; color: #0F172A; line-height: 1.6;">
+              1. Pilih satu bisnis berskala menengah (UMKM Toko Baju, Kafe, atau E-Commerce).<br>
+              2. Petakan siapa saja Stakeholder Internal &amp; Eksternalnya.<br>
+              3. Tuliskan masing-masing 1 aktivitas konkret untuk ke-5 elemen <em>Primary Activities</em> pada Value Chain bisnis tersebut.<br>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 43 -->
+      <div class="slide-container layout-split" data-title="Pengumpulan Tugas">
+        <div class="split-col w-50">
+          <p class="eyebrow">Format Penyerahan</p>
+          <h2>Batas Waktu Pengumpulan</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-file-pdf"></i> <span>Ketik di MS Word, maksimal 1 halaman penuh (simpan ke PDF).</span></li>
+            <li><i class="fa-solid fa-clock"></i> <span>**Deadline:** H-1 sebelum Pertemuan 3.</span></li>
+            <li><i class="fa-solid fa-cloud-arrow-up"></i> <span>Unggah melalui portal E-Learning ITBS.</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-50" style="background: #F1F5F9;">
+          <i class="fa-solid fa-file-import" style="font-size: 200px; color: #0369A1;"></i>
+        </div>
+      </div>
+
+      <!-- SLIDE 44 -->
+      <div class="slide-container layout-split" data-title="Persiapan Pertemuan 3">
+        <div class="split-col split-img-col w-50" style="background: #F1F5F9;">
+          <i class="fa-solid fa-sitemap" style="font-size: 200px; color: #0369A1;"></i>
+        </div>
+        <div class="split-col w-50">
+          <p class="eyebrow">Aksi Berikutnya</p>
+          <h2>Persiapan Pertemuan 3</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-code-branch"></i> <span>Minggu depan kita belajar **BPMN 2.0**.</span></li>
+            <li><i class="fa-solid fa-shapes"></i> <span>Pelajari simbol: *Events, Activities, Gateways*.</span></li>
+            <li><i class="fa-solid fa-laptop"></i> <span>Pastikan koneksi browser lancar untuk mencoba tool **Draw.io**.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 45 -->
+      <div class="slide-container center-content bg-dark" data-title="Penutup">
+        <h1 style="font-size: 100px; margin-bottom: 24px;">Terima Kasih</h1>
+        <div class="divider"></div>
+        <p style="font-size: 36px; font-weight: 700; color: #0369A1; font-style: italic; margin-top: 16px;">"Sistem terbaik dirancang oleh analis yang memahami penggunanya."</p>
+        <p style="font-size: 24px; color: #94A3B8; margin-top: 64px;">Ardi Ariansyah, S.Kom., Gr. • ITBS</p>
+      </div>
+
+    </div> <!-- End of slides-wrapper -->
+  </div> <!-- End of presentation-area -->
+
+  <!-- PRESENTATION & INTERACTION SCRIPTS -->
+  <script>
+    // --- 1. CORE PRESENTATION LOGIC ---
+    const slides = document.querySelectorAll('.slide-container');
+    const selector = document.getElementById('slideSelector');
+    let currentSlide = 0;
+
+    function initDropdown() {
+      if(!selector) return;
+      selector.innerHTML = '';
+      slides.forEach((slide, index) => {
+        let title = slide.getAttribute('data-title') || `Slide ${index + 1}`;
+        let option = document.createElement('option');
+        option.value = index;
+        option.text = `${index + 1}. ${title}`;
+        selector.appendChild(option);
+      });
+    }
+
+    function updatePresentation() {
+      slides.forEach((slide, index) => {
+        if (index === currentSlide) {
+          slide.classList.add('active');
+        } else {
+          slide.classList.remove('active');
+        }
+      });
+      if(selector) selector.value = currentSlide;
+      
+      const presArea = document.getElementById('presentation-area') || document.body;
+      const scaleX = presArea.clientWidth / 1280;
+      const scaleY = presArea.clientHeight / 720;
+      const scale = Math.min(scaleX, scaleY) * 0.95;
+      
+      slides[currentSlide].style.transform = `translate(-50%, -50%) scale(${scale})`;
+    }
+
+    function nextSlide() {
+      if (currentSlide < slides.length - 1) { currentSlide++; updatePresentation(); }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) { currentSlide--; updatePresentation(); }
+    }
+
+    function jumpToSlide(index) {
+      currentSlide = parseInt(index); updatePresentation();
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if(e.target.isContentEditable || e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return; 
+      if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') nextSlide();
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') prevSlide();
+    });
+
+    window.addEventListener('resize', updatePresentation);
+    initDropdown();
+    updatePresentation();
+
+    // --- 2. DRAG AND DROP LOGIC ---
+    const dropZones = document.querySelectorAll('.drop-zone');
+    const draggables = document.querySelectorAll('.drag-item');
+    const containers = document.querySelectorAll('.draggable-container');
+
+    draggables.forEach(draggable => {
+      draggable.addEventListener('dragstart', () => draggable.classList.add('dragging'));
+      draggable.addEventListener('dragend', () => {
+        draggable.classList.remove('dragging');
+        checkPracticeCompletion();
+      });
+    });
+
+    dropZones.forEach(zone => {
+      zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+      zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+      zone.addEventListener('drop', e => {
+        e.preventDefault();
+        zone.classList.remove('drag-over');
+        const draggable = document.querySelector('.dragging');
+        if (draggable) zone.querySelector('.drop-content').appendChild(draggable);
+      });
+    });
+
+    containers.forEach(container => {
+      container.addEventListener('dragover', e => e.preventDefault());
+      container.addEventListener('drop', e => {
+        const draggable = document.querySelector('.dragging');
+        if (draggable) container.appendChild(draggable);
+      });
+    });
+
+    function checkPracticeCompletion() {
+      document.querySelectorAll('.practice-feedback').forEach(feedback => {
+        let slide = feedback.closest('.slide-container');
+        let totalItems = slide.querySelectorAll('.drag-item').length;
+        let correct = 0;
+        slide.querySelectorAll('.drop-zone').forEach(zone => {
+          zone.querySelectorAll('.drag-item').forEach(item => {
+            if (item.dataset.type === zone.dataset.target) correct++;
+          });
+        });
+        feedback.style.display = (correct === totalItems && totalItems > 0) ? 'block' : 'none';
+      });
+    }
+
+    // --- 3. QUIZ LOGIC ---
+    window.handleQuiz = function(clickedBtn, isCorrect, feedbackId) {
+      const parent = clickedBtn.parentElement;
+      const allButtons = parent.querySelectorAll('.quiz-option');
+      allButtons.forEach(btn => {
+        btn.style.pointerEvents = 'none';
+        const icon = btn.querySelector('i');
+        icon.className = btn.dataset.correct === "true" ? 'fa-solid fa-check-circle' : 'fa-solid fa-circle-xmark';
+        if (btn.dataset.correct === "true") btn.classList.add('correct');
+      });
+      if (!isCorrect) clickedBtn.classList.add('wrong');
+      document.getElementById(feedbackId).classList.add('show');
+    };
+  </script>
+</body>
+</html>
