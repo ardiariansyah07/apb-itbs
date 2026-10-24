@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Security-Aware Process & CIA Triad Simulator - ITB Swadharma</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@700;800;900&family=JetBrains+Mono:wght@400;600;800&display=swap">
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Montserrat', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          },
+          colors: {
+            socDark: '#060A12',
+            socCard: '#0D1424',
+            socBorder: '#1A2942',
+            socRed: '#EF4444',
+            socCyan: '#06B6D4',
+            socEmerald: '#10B981',
+            socAmber: '#F59E0B',
+            socViolet: '#8B5CF6'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #060A12; }
+    ::-webkit-scrollbar-thumb { background: #1A2942; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #06B6D4; }
+
+    .soc-grid {
+      background-size: 32px 32px;
+      background-image: 
+        linear-gradient(to right, rgba(26, 41, 66, 0.4) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(26, 41, 66, 0.4) 1px, transparent 1px);
+    }
+
+    @keyframes threatPulse {
+      0%, 100% { border-color: rgba(239, 68, 68, 0.4); box-shadow: 0 0 20px rgba(239, 68, 68, 0.15); }
+      50% { border-color: rgba(239, 68, 68, 1); box-shadow: 0 0 35px rgba(239, 68, 68, 0.4); }
+    }
+    .threat-active {
+      animation: threatPulse 1.4s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="bg-socDark text-slate-100 min-h-screen flex flex-col font-sans selection:bg-socRed selection:text-white antialiased soc-grid">
+
+  <!-- TOP APP BAR -->
+  <header class="sticky top-0 z-50 bg-socDark/95 backdrop-blur-md border-b border-socBorder h-20 flex items-center">
+    <div class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+      
+      <div class="flex items-center gap-3.5">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-socRed via-amber-500 to-socViolet flex items-center justify-center text-white font-display font-black text-xl shadow-lg shadow-red-500/20">
+          <i class="fa-solid fa-user-shield"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-display font-black text-xl tracking-tight text-white">SOC<span class="text-socRed">.AUDIT</span></span>
+            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-red-950 border border-red-800 text-red-400">P7 Security Lab</span>
+          </div>
+          <p class="text-xs text-slate-400 hidden sm:block">Analisa Proses Bisnis (INF1104) • Security-Aware Process &amp; CIA Triad Simulator</p>
+        </div>
+      </div>
+
+      <!-- Live Operations Metrics -->
+      <div class="flex items-center gap-3">
+        <!-- Security Trust Score -->
+        <div class="hidden sm:flex items-center gap-2.5 bg-slate-900 border border-socBorder px-3.5 py-1.5 rounded-xl shadow-inner">
+          <i class="fa-solid fa-shield-halved text-emerald-400 text-sm"></i>
+          <div>
+            <div class="text-[9px] uppercase tracking-wider text-slate-400 font-bold">Indeks Kepercayaan</div>
+            <div id="trustDisplay" class="font-mono font-bold text-emerald-400 text-xs sm:text-sm leading-none">100%</div>
+          </div>
+        </div>
+
+        <!-- Incident Level -->
+        <div class="flex items-center gap-2.5 bg-slate-900 border border-socBorder px-3.5 py-1.5 rounded-xl shadow-inner">
+          <i class="fa-solid fa-bug text-red-400 text-sm animate-pulse"></i>
+          <div>
+            <div class="text-[9px] uppercase tracking-wider text-slate-400 font-bold">Insiden Aktif</div>
+            <div id="incidentWaveDisplay" class="font-display font-black text-white text-xs sm:text-sm leading-none">Anomali 1 / 4</div>
+          </div>
+        </div>
+
+        <button onclick="resetSimulator()" class="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold border border-slate-700 transition" title="Ulangi Simulasi">
+          <i class="fa-solid fa-rotate-right"></i> Reset
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- MAIN SIMULATOR ARENA -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-5">
+
+    <!-- REAL-TIME SECURITY METRICS (4 GAUGES) -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3.5">
+      
+      <!-- Metric 1: Confidentiality -->
+      <div class="bg-socCard border border-socBorder rounded-2xl p-3.5 shadow-lg flex flex-col justify-between">
+        <div class="flex items-center justify-between text-xs font-semibold">
+          <span class="flex items-center gap-1.5 text-slate-300"><i class="fa-solid fa-user-secret text-red-400"></i> Confidentiality</span>
+          <span id="confVal" class="font-mono font-bold text-red-400">95%</span>
+        </div>
+        <div class="w-full h-2 bg-slate-950 rounded-full overflow-hidden border border-slate-800 mt-2">
+          <div id="confBar" class="h-full bg-gradient-to-r from-rose-600 to-red-500 transition-all duration-300 rounded-full" style="width: 95%;"></div>
+        </div>
+        <div class="flex justify-between items-center text-[10px] text-slate-400 mt-2">
+          <span>Privasi Data Klien</span>
+          <span id="confTag" class="text-emerald-400 font-mono font-bold">SECURE</span>
+        </div>
+      </div>
+
+      <!-- Metric 2: Integrity -->
+      <div class="bg-socCard border border-socBorder rounded-2xl p-3.5 shadow-lg flex flex-col justify-between">
+        <div class="flex items-center justify-between text-xs font-semibold">
+          <span class="flex items-center gap-1.5 text-slate-300"><i class="fa-solid fa-file-shield text-cyan-400"></i> Integrity</span>
+          <span id="intVal" class="font-mono font-bold text-cyan-400">95%</span>
+        </div>
+        <div class="w-full h-2 bg-slate-950 rounded-full overflow-hidden border border-slate-800 mt-2">
+          <div id="intBar" class="h-full bg-gradient-to-r from-sky-500 to-cyan-400 transition-all duration-300 rounded-full" style="width: 95%;"></div>
+        </div>
+        <div class="flex justify-between items-center text-[10px] text-slate-400 mt-2">
+          <span>Keabsahan Transaksi</span>
+          <span id="intTag" class="text-emerald-400 font-mono font-bold">VERIFIED</span>
+        </div>
+      </div>
+
+      <!-- Metric 3: Availability -->
+      <div class="bg-socCard border border-socBorder rounded-2xl p-3.5 shadow-lg flex flex-col justify-between">
+        <div class="flex items-center justify-between text-xs font-semibold">
+          <span class="flex items-center gap-1.5 text-slate-300"><i class="fa-solid fa-server text-emerald-400"></i> Availability</span>
+          <span id="availVal" class="font-mono font-bold text-emerald-400">99.9%</span>
+        </div>
+        <div class="w-full h-2 bg-slate-950 rounded-full overflow-hidden border border-slate-800 mt-2">
+          <div id="availBar" class="h-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-300 rounded-full" style="width: 99.9%;"></div>
+        </div>
+        <div class="flex justify-between items-center text-[10px] text-slate-400 mt-2">
+          <span>Uptime Layanan</span>
+          <span id="availTag" class="text-emerald-400 font-mono font-bold">ONLINE</span>
+        </div>
+      </div>
+
+      <!-- Metric 4: Audit Findings -->
+      <div class="bg-socCard border border-socBorder rounded-2xl p-3.5 shadow-lg flex flex-col justify-between">
+        <div class="flex items-center justify-between text-xs font-semibold">
+          <span class="flex items-center gap-1.5 text-slate-300"><i class="fa-solid fa-triangle-exclamation text-amber-400"></i> Celah Terdeteksi</span>
+          <span id="findingsVal" class="font-mono font-bold text-amber-400">0 Kasus</span>
+        </div>
+        <div class="w-full h-2 bg-slate-950 rounded-full overflow-hidden border border-slate-800 mt-2">
+          <div id="findingsBar" class="h-full bg-gradient-to-r from-amber-500 to-yellow-400 transition-all duration-300 rounded-full" style="width: 0%;"></div>
+        </div>
+        <div class="flex justify-between items-center text-[10px] text-slate-400 mt-2">
+          <span>Audit Selesai</span>
+          <span id="findingsTag" class="text-slate-400 font-mono">0 / 4 Tuntas</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- WORKSPACE SPLIT: LIVE SOC LOG FEED (LEFT 7) VS INCIDENT DESK (RIGHT 5) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+
+      <!-- LEFT: REAL-TIME SOC THREAT FEED & TERMINAL (7 COLS) -->
+      <div class="lg:col-span-7 bg-socCard border border-socBorder rounded-3xl p-5 shadow-2xl relative flex flex-col">
+        
+        <div class="flex items-center justify-between pb-3 border-b border-socBorder mb-3">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
+            <h3 class="font-display font-extrabold text-sm sm:text-base text-white">
+              Pusat Pemantauan Keamanan &amp; Log Operasional (SOC)
+            </h3>
+          </div>
+          <span class="text-[11px] text-slate-400 font-mono">SIEM Live Stream</span>
+        </div>
+
+        <p class="text-xs text-slate-400 mb-3">
+          Sistem mendeteksi anomali perilaku kerja dan celah kerentanan dalam alur proses bisnis kasir &amp; administrasi kampus. Analis wajib menerapkan patch kontrol yang tepat.
+        </p>
+
+        <!-- Terminal Log Box -->
+        <div id="socTerminal" class="w-full h-[400px] bg-slate-950 border-2 border-slate-800 rounded-2xl p-4 overflow-y-auto font-mono text-xs space-y-3 shadow-inner">
+          <div class="text-slate-500">[12:00:01] SOC-SIEM initialized. Monitoring process streams...</div>
+          <div class="text-emerald-400">[12:00:03] Status: Seluruh pilar CIA Triad termonitor stabil. Menunggu anomali insiden berikutnya...</div>
+        </div>
+
+        <!-- Terminal Legends -->
+        <div class="mt-3 grid grid-cols-3 gap-2 text-[10px] text-slate-400">
+          <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-red-500 inline-block"></span> <strong>Confidentiality:</strong> Perlindungan Data</div>
+          <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-cyan-400 inline-block"></span> <strong>Integrity:</strong> Keabsahan Transaksi</div>
+          <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block"></span> <strong>Availability:</strong> Uptime Layanan</div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: INCIDENT RESPONSE & SECURITY PATCH DESK (5 COLS) -->
+      <div id="incidentDeskCard" class="lg:col-span-5 bg-socCard border border-socBorder rounded-3xl p-6 shadow-2xl space-y-4 transition-all duration-300">
+        
+        <!-- Crisis Headline & Scenario -->
+        <div>
+          <div class="flex items-center justify-between text-xs mb-2">
+            <span id="incidentBadge" class="px-2.5 py-1 rounded-full bg-red-950 border border-red-800 text-red-400 font-display font-bold uppercase tracking-wider">
+              <i class="fa-solid fa-triangle-exclamation mr-1"></i> Anomali 1 / 4
+            </span>
+            <span id="countdownTimer" class="font-mono text-amber-400 font-bold text-xs bg-amber-950/80 border border-amber-900 px-2 py-0.5 rounded">
+              Batas Respons: 25s
+            </span>
+          </div>
+          <h2 id="incidentTitle" class="font-display font-extrabold text-base sm:text-lg text-white leading-tight">
+            Kasus Berbagi Password: 5 Kasir Memakai 1 Akun Bersama!
+          </h2>
+          <p id="incidentNarrative" class="text-xs sm:text-sm text-slate-300 mt-2 leading-relaxed">
+            Staf kasir mengeluh prosedur login 2FA OTP terlalu lambat saat antrean panjang. Mereka sepakat menuliskan 1 password admin di kertas pos-it di samping layar komputer agar bisa dipakai bersama.
+          </p>
+        </div>
+
+        <!-- Security Patch Options -->
+        <div class="space-y-2.5 pt-1">
+          <div class="text-[11px] font-display font-bold uppercase tracking-wider text-slate-400">
+            Pilih Patch Mitigasi Keamanan Proses:
+          </div>
+
+          <!-- Option A -->
+          <button onclick="applySecurityPatch('A')" class="w-full text-left p-3 rounded-2xl bg-slate-950 hover:bg-slate-900 border border-slate-800 hover:border-cyan-500/80 transition group relative">
+            <div class="flex items-start justify-between gap-3">
+              <div class="space-y-1">
+                <span class="inline-block text-[10px] font-bold font-display uppercase px-2 py-0.5 rounded bg-cyan-950 border border-cyan-800 text-cyan-400" id="optTagA">
+                  Opsi A: SSO &amp; RBAC Otomatis
+                </span>
+                <h4 class="text-xs sm:text-sm font-bold text-white group-hover:text-cyan-300 transition" id="optTitleA">
+                  Terapkan Single Sign-On (SSO) &amp; Kartu Tap RFID Kasir
+                </h4>
+                <p class="text-[11px] text-slate-400 leading-snug" id="optDescA">
+                  Ganti ketik password manual dengan kartu RFID sekali tap yang otomatis mengenali identitas kasir yang bertugas.
+                </p>
+              </div>
+              <span class="text-xs font-mono font-bold text-emerald-400 shrink-0 px-2 py-1 rounded bg-slate-900 border border-slate-700" id="optCostA">
+                +15% Aman
+              </span>
+            </div>
+          </button>
+
+          <!-- Option B -->
+          <button onclick="applySecurityPatch('B')" class="w-full text-left p-3 rounded-2xl bg-slate-950 hover:bg-slate-900 border border-slate-800 hover:border-red-500/80 transition group relative">
+            <div class="flex items-start justify-between gap-3">
+              <div class="space-y-1">
+                <span class="inline-block text-[10px] font-bold font-display uppercase px-2 py-0.5 rounded bg-red-950 border border-red-800 text-red-400" id="optTagB">
+                  Opsi B: Ancam Teguran Lisan Saja
+                </span>
+                <h4 class="text-xs sm:text-sm font-bold text-white group-hover:text-red-300 transition" id="optTitleB">
+                  Biarkan SOP Tertulis Tanpa Mengubah Sistem Aplikasi
+                </h4>
+                <p class="text-[11px] text-slate-400 leading-snug" id="optDescB">
+                  Mengandalkan kejujuran staf kasir semata dan memberikan surat peringatan jika kedapatan berbagi password lagi.
+                </p>
+              </div>
+              <span class="text-xs font-mono font-bold text-rose-400 shrink-0 px-2 py-1 rounded bg-slate-900 border border-slate-700" id="optCostB">
+                -30% Trust
+              </span>
+            </div>
+          </button>
+
+          <!-- Option C -->
+          <button onclick="applySecurityPatch('C')" class="w-full text-left p-3 rounded-2xl bg-slate-950 hover:bg-slate-900 border border-slate-800 hover:border-violet-500/80 transition group relative">
+            <div class="flex items-start justify-between gap-3">
+              <div class="space-y-1">
+                <span class="inline-block text-[10px] font-bold font-display uppercase px-2 py-0.5 rounded bg-violet-950 border border-violet-800 text-violet-400" id="optTagC">
+                  Opsi C: Batasi Sesi Waktu 2 Menit
+                </span>
+                <h4 class="text-xs sm:text-sm font-bold text-white group-hover:text-violet-300 transition" id="optTitleC">
+                  Otomatis Logout Kasir Setiap 2 Menit Inaktivitas
+                </h4>
+                <p class="text-[11px] text-slate-400 leading-snug" id="optDescC">
+                  Memaksa sistem mengunci layar otomatis, namun sering dikeluhkan staf karena merepotkan saat antrean padat.
+                </p>
+              </div>
+              <span class="text-xs font-mono font-bold text-amber-400 shrink-0 px-2 py-1 rounded bg-slate-900 border border-slate-700" id="optCostC">
+                +5% Aman
+              </span>
+            </div>
+          </button>
+        </div>
+
+        <!-- Security Coaching Box -->
+        <div id="securityCoaching" class="p-3.5 rounded-2xl bg-slate-950/90 border border-socBorder text-xs text-slate-300 flex items-start gap-3">
+          <i class="fa-solid fa-shield-cat text-socCyan text-base mt-0.5"></i>
+          <div>
+            <span class="font-bold text-white block">Analisis Keamanan Proses (CIA):</span>
+            <span id="coachingText">Berbagi password merusak pilar <strong>Confidentiality</strong> dan melumpuhkan akuntabilitas (*Accountability*). Desain SOP yang mengabaikan kenyamanan kerja kasir pasti akan dilanggar di lapangan.</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- MISSION COMPLETE / GAME OVER SUMMARY MODAL -->
+    <div id="summaryModal" class="hidden bg-gradient-to-r from-slate-950 via-socCard to-slate-950 border-2 border-socBorder rounded-3xl p-8 text-center shadow-2xl relative overflow-hidden">
+      <div id="summaryIcon" class="inline-flex p-4 rounded-full text-4xl mb-3"></div>
+      <h3 id="summaryTitle" class="font-display font-black text-2xl sm:text-3xl text-white"></h3>
+      <p id="summaryDesc" class="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto mt-2 leading-relaxed"></p>
+      
+      <div class="mt-6 flex flex-wrap justify-center gap-3">
+        <button onclick="resetSimulator()" class="px-6 py-3 rounded-xl bg-gradient-to-r from-socRed to-amber-500 text-white font-display font-black text-xs uppercase tracking-wider shadow-lg hover:brightness-110 active:scale-95 transition">
+          <i class="fa-solid fa-rotate-right mr-1.5"></i> Ulangi Simulasi SOC
+        </button>
+        <button onclick="window.close()" class="px-6 py-3 rounded-xl bg-slate-900 border border-slate-700 text-slate-300 font-display font-bold text-xs uppercase tracking-wider hover:text-white transition">
+          <i class="fa-solid fa-xmark mr-1.5"></i> Tutup Simulator
+        </button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- JAVASCRIPT SOC ENGINE -->
+  <script>
+    // ==========================================
+    // 1. INCIDENT DATA MASTER (4 WAVES OF THREATS)
+    // ==========================================
+    const THREAT_WAVES = [
+      {
+        wave: 1,
+        title: "Kasus Berbagi Password: 5 Kasir Memakai 1 Akun Bersama!",
+        narrative: "Staf kasir mengeluh prosedur login 2FA OTP terlalu lambat saat antrean panjang. Mereka sepakat menuliskan 1 password admin di kertas pos-it di samping layar komputer agar bisa dipakai bersama.",
+        pillar: "Confidentiality",
+        timeoutSeconds: 25,
+        options: {
+          A: {
+            title: "Terapkan Single Sign-On (SSO) & Kartu Tap RFID Kasir",
+            desc: "Ganti ketik password manual dengan kartu RFID sekali tap yang otomatis mengenali identitas kasir.",
+            trustDelta: +15,
+            confDelta: +10,
+            intDelta: +5,
+            availDelta: 0,
+            feedback: "Sangat baik! Kartu RFID menghadirkan *frictionless security* sehingga kasir tidak lagi terdorong berbagi password.",
+            resolved: true
+          },
+          B: {
+            title: "Biarkan SOP Tertulis Tanpa Mengubah Sistem Aplikasi",
+            desc: "Mengandalkan kejujuran staf kasir semata dan memberikan surat peringatan jika kedapatan berbagi password lagi.",
+            trustDelta: -30,
+            confDelta: -35,
+            intDelta: -20,
+            availDelta: 0,
+            feedback: "Fatal! Mengandalkan teguran tanpa memperbaiki desain sistem membuat praktik berbagi password tetap merajalela.",
+            resolved: false
+          },
+          C: {
+            title: "Otomatis Logout Kasir Setiap 2 Menit Inaktivitas",
+            desc: "Memaksa sistem mengunci layar otomatis, namun sering dikeluhkan staf karena merepotkan saat antrean padat.",
+            trustDelta: -5,
+            confDelta: +5,
+            intDelta: 0,
+            availDelta: -10,
+            feedback: "Proteksi naik tipis, namun memicu frustrasi tinggi di lapangan yang mendorong staf mencari jalan pintas baru.",
+            resolved: true
+          }
+        }
+      },
+      {
+        wave: 2,
+        title: "Pemalsuan Data Laporan: Staf Mengubah Nominal Transaksi Ekspedisi!",
+        narrative: "Audit internal menemukan selisih dana tunai pada nota pengiriman kargo. Staf administrasi terbukti mengubah nominal resi penerimaan di sistem tanpa meninggalkan catatan jejak log.",
+        pillar: "Integrity",
+        timeoutSeconds: 22,
+        options: {
+          A: {
+            title: "Wajibkan Tanda Tangan Digital HMAC & Log Audit Immutabel",
+            desc: "Aktifkan enkripsi tanda tangan pada setiap resi dan aktifkan server log audit yang tidak bisa dihapus siapapun.",
+            trustDelta: +20,
+            confDelta: +5,
+            intDelta: +25,
+            availDelta: 0,
+            feedback: "Tepat sasaran! Log audit yang tidak dapat dihapus dan tanda tangan digital menjamin integritas data secara mutlak.",
+            resolved: true
+          },
+          B: {
+            title: "Hanya Lakukan Pemeriksaan Manual oleh Manajer Sebulan Sekali",
+            desc: "Mengecek bundel kertas manual di akhir bulan tanpa menggunakan sistem verifikasi otomatis.",
+            trustDelta: -25,
+            confDelta: 0,
+            intDelta: -30,
+            availDelta: 0,
+            feedback: "Sangat lemah! Pemeriksaan manual bulanan terlambat mendeteksi manipulasi data yang terjadi setiap hari.",
+            resolved: false
+          },
+          C: {
+            title: "Terapkan Pemisahan Tugas (Segregation of Duties - SoD)",
+            desc: "Pisahkan kewenangan input data resi dan persetujuan keuangan ke dua staf berbeda di Lane terpisah.",
+            trustDelta: +15,
+            confDelta: 0,
+            intDelta: +15,
+            availDelta: -5,
+            feedback: "Penerapan SoD sangat efektif menutup ruang gerak penipuan internal (*fraud*), meski sedikit menambah tahapan kerja.",
+            resolved: true
+          }
+        }
+      },
+      {
+        wave: 3,
+        title: "Serangan Bot & Webhook Palsu: 10.000 Pesanan Fiktif Serentak!",
+        narrative: "Situs web e-commerce diserang bot jahat yang mengirimkan pesanan palsu berstatus 'Paid' tanpa pembayaran nyata, membuat server kehabisan memori dan stok barang terkuras!",
+        pillar: "Availability",
+        timeoutSeconds: 20,
+        options: {
+          A: {
+            title: "Implementasikan Cloudflare WAF, Rate Limiting & Webhook HMAC",
+            desc: "Saring bot jahat di gerbang terdepan dan verifikasi tanda tangan cryptographic pada setiap callback pembayaran bank.",
+            trustDelta: +25,
+            confDelta: +10,
+            intDelta: +20,
+            availDelta: +15,
+            feedback: "Pertahanan siber kelas dunia! WAF dan verifikasi HMAC menepis serangan bot serta menjaga ketersediaan server.",
+            resolved: true
+          },
+          B: {
+            title: "Matikan Sementara Website dan Liburkan Staf",
+            desc: "Mematikan server internet total selama seminggu hingga serangan bot berhenti dengan sendirinya.",
+            trustDelta: -40,
+            confDelta: 0,
+            intDelta: 0,
+            availDelta: -50,
+            feedback: "Bencana bisnis! Mematikan layanan total demi menghindari serangan menghancurkan ketersediaan dan omzet perusahaan.",
+            resolved: false
+          },
+          C: {
+            title: "Gunakan Captcha Sederhana pada Halaman Checkout",
+            desc: "Meminta pembeli mencocokkan gambar lampu lalu lintas sebelum menekan tombol beli.",
+            trustDelta: +5,
+            confDelta: 0,
+            intDelta: +5,
+            availDelta: +5,
+            feedback: "Membantu menahan bot sederhana, namun bot modern saat ini sudah mampu melewati captcha visual biasa.",
+            resolved: true
+          }
+        }
+      },
+      {
+        wave: 4,
+        title: "Kebocoran Data KTP Klien: Arsip Pelanggan Tersebar di Marketplace!",
+        narrative: "Akun cloud penyimpanan dokumen perusahaan mengalami salah konfigurasi hak akses publik, mengakibatkan ribuan foto KTP dan nomor telepon korporat dapat diunduh bebas oleh siapapun di internet!",
+        pillar: "Confidentiality & Compliance",
+        timeoutSeconds: 20,
+        options: {
+          A: {
+            title: "Cabut Akses Publik, Enkripsi AES-256 & Laporkan ke Lembaga PDP",
+            desc: "Tutup celah bucket cloud seketika, enkripsi seluruh data sensitif at-rest, dan jalankan protokol darurat UU PDP.",
+            trustDelta: +30,
+            confDelta: +30,
+            intDelta: +10,
+            availDelta: 0,
+            feedback: "Respons insiden profesional! Menutup akses publik dan mematuhi regulasi UU PDP menyelamatkan reputasi perusahaan dari denda berat.",
+            resolved: true
+          },
+          B: {
+            title: "Diamkan Saja dan Berharap Tidak Ada Jurnalis yang Tahu",
+            desc: "Menutup mata dan membiarkan data pelanggan tetap terbuka di internet tanpa melakukan perbaikan apapun.",
+            trustDelta: -60,
+            confDelta: -50,
+            intDelta: 0,
+            availDelta: 0,
+            feedback: "Sangat menghancurkan! Menyembunyikan kebocoran data melanggar hukum secara telak dan memicu kebangkrutan merek.",
+            resolved: false
+          },
+          C: {
+            title: "Kirim Email Permintaan Maaf Standar Tanpa Enkripsi Baru",
+            desc: "Mengirim email massal menyatakan permohonan maaf atas ketidaknyamanan tanpa menutup celah konfigurasi cloud.",
+            trustDelta: -20,
+            confDelta: -10,
+            intDelta: 0,
+            availDelta: 0,
+            feedback: "Permintaan maaf tanpa perbaikan teknis mendasar adalah langkah kosong yang memicu kemarahan publik lebih besar.",
+            resolved: false
+          }
+        }
+      }
+    ];
+
+    // ==========================================
+    // 2. STATE MANAGEMENT
+    // ==========================================
+    let currentWaveIndex = 0;
+    let trustScore = 100;
+    let confScore = 95;
+    let intScore = 95;
+    let availScore = 99.9;
+    let auditFindingsCount = 0;
+    let waveTimer = 25;
+    let waveIntervalId = null;
+
+    const terminal = document.getElementById('socTerminal');
+
+    function appendTerminalLog(msg, type = 'info') {
+      const timeStr = new Date().toTimeString().split(' ')[0];
+      const div = document.createElement('div');
+      div.className = type === 'error' ? 'text-red-400 font-bold' : (type === 'success' ? 'text-emerald-400 font-bold' : 'text-slate-300');
+      div.innerText = `[${timeStr}] ${msg}`;
+      terminal.appendChild(div);
+      terminal.scrollTop = terminal.scrollHeight;
+    }
+
+    function renderGauges() {
+      trustScore = Math.max(0, Math.min(100, trustScore));
+      confScore = Math.max(0, Math.min(100, confScore));
+      intScore = Math.max(0, Math.min(100, intScore));
+      availScore = Math.max(0, Math.min(100, availScore));
+
+      document.getElementById('trustDisplay').innerText = `${Math.round(trustScore)}%`;
+
+      // Confidentiality
+      document.getElementById('confVal').innerText = `${Math.round(confScore)}%`;
+      document.getElementById('confBar').style.width = `${confScore}%`;
+      const confTag = document.getElementById('confTag');
+      confTag.innerText = confScore >= 80 ? "SECURE" : (confScore >= 50 ? "VULNERABLE" : "BREACHED");
+      confTag.className = confScore >= 80 ? "text-emerald-400 font-mono font-bold" : "text-red-400 font-mono font-bold";
+
+      // Integrity
+      document.getElementById('intVal').innerText = `${Math.round(intScore)}%`;
+      document.getElementById('intBar').style.width = `${intScore}%`;
+      const intTag = document.getElementById('intTag');
+      intTag.innerText = intScore >= 80 ? "VERIFIED" : "TAMPERED";
+      intTag.className = intScore >= 80 ? "text-emerald-400 font-mono font-bold" : "text-amber-400 font-mono font-bold";
+
+      // Availability
+      document.getElementById('availVal').innerText = `${availScore.toFixed(1)}%`;
+      document.getElementById('availBar').style.width = `${availScore}%`;
+
+      // Findings
+      document.getElementById('findingsVal').innerText = `${auditFindingsCount} Kasus`;
+      document.getElementById('findingsBar').style.width = `${(auditFindingsCount / THREAT_WAVES.length) * 100}%`;
+      document.getElementById('findingsTag').innerText = `${auditFindingsCount} / ${THREAT_WAVES.length} Tuntas`;
+
+      document.getElementById('incidentWaveDisplay').innerText = `Anomali ${currentWaveIndex + 1} / ${THREAT_WAVES.length}`;
+      document.getElementById('countdownTimer').innerText = `Batas Respons: ${waveTimer}s`;
+    }
+
+    function renderIncidentDesk() {
+      const cur = THREAT_WAVES[currentWaveIndex];
+      document.getElementById('incidentBadge').innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1"></i> Anomali ${cur.wave} / ${THREAT_WAVES.length} (${cur.pillar})`;
+      document.getElementById('incidentTitle').innerText = cur.title;
+      document.getElementById('incidentNarrative').innerText = cur.narrative;
+
+      document.getElementById('optTitleA').innerText = cur.options.A.title;
+      document.getElementById('optDescA').innerText = cur.options.A.desc;
+
+      document.getElementById('optTitleB').innerText = cur.options.B.title;
+      document.getElementById('optDescB').innerText = cur.options.B.desc;
+
+      document.getElementById('optTitleC').innerText = cur.options.C.title;
+      document.getElementById('optDescC').innerText = cur.options.C.desc;
+
+      const deskCard = document.getElementById('incidentDeskCard');
+      deskCard.classList.add('threat-active');
+
+      appendTerminalLog(`[ALERT] Ancaman terdeteksi pada pilar [${cur.pillar}]: "${cur.title}"`, 'error');
+
+      waveTimer = cur.timeoutSeconds;
+      clearInterval(waveIntervalId);
+      waveIntervalId = setInterval(() => {
+        waveTimer--;
+        if (waveTimer <= 0) {
+          trustScore -= 20;
+          confScore -= 15;
+          appendTerminalLog(`[TIMEOUT] Waktu tanggap habis! Insiden mengeksploitasi sistem.`, 'error');
+          renderGauges();
+          applySecurityPatch('B'); // Default passive failure
+        } else {
+          renderGauges();
+        }
+      }, 1000);
+    }
+
+    function applySecurityPatch(choice) {
+      clearInterval(waveIntervalId);
+      const cur = THREAT_WAVES[currentWaveIndex];
+      const opt = cur.options[choice];
+
+      trustScore += opt.trustDelta;
+      confScore += opt.confDelta;
+      intScore += opt.intDelta;
+      availScore += (opt.availDelta || 0);
+
+      if (opt.resolved) {
+        auditFindingsCount++;
+        appendTerminalLog(`[SUCCESS] Patch keamanan diterapkan: ${opt.title}`, 'success');
+      } else {
+        appendTerminalLog(`[WARNING] Kebijakan lemah diterapkan: ${opt.title}`, 'error');
+      }
+
+      document.getElementById('coachingText').innerText = opt.feedback;
+      document.getElementById('incidentDeskCard').classList.remove('threat-active');
+
+      renderGauges();
+
+      if (trustScore <= 20 || confScore <= 20) {
+        triggerEndSummary(false, "Sistem Diretas & Kepercayaan Runtuh (SOC Breach)", "Organisasi mengalami kegagalan tata kelola keamanan siber fatal akibat mengabaikan pilar CIA Triad dan membiarkan celah operasional tanpa kontrol.");
+        return;
+      }
+
+      currentWaveIndex++;
+      if (currentWaveIndex < THREAT_WAVES.length) {
+        setTimeout(() => {
+          renderIncidentDesk();
+        }, 1000);
+      } else {
+        if (trustScore >= 75 && auditFindingsCount >= 3) {
+          triggerEndSummary(true, "Certified Security-Aware Expert (Grade A+)", `Luar biasa! Sebagai Systems Analyst & SRE, Anda berhasil mengaudit dan memperkuat seluruh proses bisnis dengan Indeks Kepercayaan ${Math.round(trustScore)}%, memastikan perlindungan mutlak pada pilar Confidentiality, Integrity, dan Availability.`);
+        } else {
+          triggerEndSummary(false, "Audit Selesai dengan Catatan Merah (Grade C+)", `Simulasi selesai namun sistem masih menyisakan banyak kerentanan (Skor Trust: ${Math.round(trustScore)}%). Di dunia nyata, budaya 'jalan pintas SOP' harus dibenahi dengan *frictionless security*.`);
+        }
+      }
+    }
+
+    function triggerEndSummary(isWin, title, desc) {
+      clearInterval(waveIntervalId);
+      const modal = document.getElementById('summaryModal');
+      const icon = document.getElementById('summaryIcon');
+      const t = document.getElementById('summaryTitle');
+      const d = document.getElementById('summaryDesc');
+
+      modal.classList.remove('hidden');
+      t.innerText = title;
+      d.innerText = desc;
+
+      if (isWin) {
+        icon.className = "inline-flex p-4 rounded-full text-4xl mb-3 bg-emerald-500/20 text-emerald-400 border border-emerald-500";
+        icon.innerHTML = '<i class="fa-solid fa-shield-check"></i>';
+        t.className = "font-display font-black text-2xl sm:text-3xl text-emerald-400";
+      } else {
+        icon.className = "inline-flex p-4 rounded-full text-4xl mb-3 bg-red-500/20 text-red-400 border border-red-500";
+        icon.innerHTML = '<i class="fa-solid fa-skull-crossbones"></i>';
+        t.className = "font-display font-black text-2xl sm:text-3xl text-red-400";
+      }
+
+      window.scrollTo({ top: modal.offsetTop - 30, behavior: 'smooth' });
+    }
+
+    function resetSimulator() {
+      clearInterval(waveIntervalId);
+      currentWaveIndex = 0;
+      trustScore = 100;
+      confScore = 95;
+      intScore = 95;
+      availScore = 99.9;
+      auditFindingsCount = 0;
+
+      terminal.innerHTML = '';
+      appendTerminalLog("SOC-SIEM re-initialized. All systems normal.", "success");
+
+      document.getElementById('summaryModal').classList.add('hidden');
+      document.getElementById('coachingText').innerText = "Berbagi password merusak pilar Confidentiality dan melumpuhkan akuntabilitas (*Accountability*). Desain SOP yang mengabaikan kenyamanan kerja kasir pasti akan dilanggar di lapangan.";
+
+      renderGauges();
+      renderIncidentDesk();
+    }
+
+    window.onload = function() {
+      renderGauges();
+      renderIncidentDesk();
+    };
+  </script>
+</body>
+</html>

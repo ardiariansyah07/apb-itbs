@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Waste Terminator & Lean Factory - ITB Swadharma</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@700;800;900&family=JetBrains+Mono:wght@400;600;800&display=swap">
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Montserrat', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          },
+          colors: {
+            leanDark: '#040810',
+            leanCard: '#0A1020',
+            leanBorder: '#16233E',
+            leanGreen: '#10B981',
+            leanBlue: '#0284C7',
+            leanAmber: '#F59E0B',
+            leanRose: '#F43F5E',
+            leanViolet: '#8B5CF6'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #040810; }
+    ::-webkit-scrollbar-thumb { background: #16233E; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #10B981; }
+
+    .lean-grid {
+      background-size: 32px 32px;
+      background-image: 
+        linear-gradient(to right, rgba(22, 35, 62, 0.35) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(22, 35, 62, 0.35) 1px, transparent 1px);
+    }
+
+    @keyframes conveyorMove {
+      0% { background-position: 0 0; }
+      100% { background-position: 48px 0; }
+    }
+    .conveyor-belt {
+      background-image: repeating-linear-gradient(90deg, rgba(22, 35, 62, 0.8), rgba(22, 35, 62, 0.8) 24px, rgba(16, 185, 129, 0.2) 24px, rgba(16, 185, 129, 0.2) 48px);
+      background-size: 48px 100%;
+      animation: conveyorMove 2s linear infinite;
+    }
+  </style>
+</head>
+<body class="bg-leanDark text-slate-100 min-h-screen flex flex-col font-sans selection:bg-leanGreen selection:text-leanDark antialiased lean-grid">
+
+  <!-- TOP APP BAR -->
+  <header class="sticky top-0 z-50 bg-leanDark/95 backdrop-blur-md border-b border-leanBorder h-20 flex items-center">
+    <div class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+      
+      <div class="flex items-center gap-3.5">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-leanGreen via-leanBlue to-leanViolet flex items-center justify-center text-white font-display font-black text-xl shadow-lg shadow-emerald-500/20">
+          <i class="fa-solid fa-recycle"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-display font-black text-xl tracking-tight text-white">LEAN<span class="text-leanGreen">.TERMINATOR</span></span>
+            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-950 border border-emerald-800 text-emerald-400">P9 Lean Lab</span>
+          </div>
+          <p class="text-xs text-slate-400 hidden sm:block">Analisa Proses Bisnis (INF1104) • Value-Added Analysis &amp; 7 Wastes Simulator</p>
+        </div>
+      </div>
+
+      <!-- Live Operations Metrics -->
+      <div class="flex items-center gap-3">
+        <!-- PCE Score -->
+        <div class="hidden sm:flex items-center gap-2.5 bg-slate-900 border border-leanBorder px-3.5 py-1.5 rounded-xl shadow-inner">
+          <i class="fa-solid fa-gauge-high text-emerald-400 text-sm"></i>
+          <div>
+            <div class="text-[9px] uppercase tracking-wider text-slate-400 font-bold">Skor PCE (Efisiensi)</div>
+            <div id="pceDisplay" class="font-mono font-bold text-emerald-400 text-xs sm:text-sm leading-none">12%</div>
+          </div>
+        </div>
+
+        <!-- Shift Timer -->
+        <div class="flex items-center gap-2.5 bg-slate-900 border border-leanBorder px-3.5 py-1.5 rounded-xl shadow-inner">
+          <i class="fa-solid fa-stopwatch text-amber-400 text-sm animate-pulse"></i>
+          <div>
+            <div class="text-[9px] uppercase tracking-wider text-slate-400 font-bold">Waktu Shift</div>
+            <div id="shiftTimerDisplay" class="font-mono font-bold text-amber-400 text-xs sm:text-sm leading-none">01:00</div>
+          </div>
+        </div>
+
+        <button onclick="resetLeanSimulator()" class="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold border border-slate-700 transition" title="Ulangi Simulasi">
+          <i class="fa-solid fa-rotate-right"></i> Reset
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- MAIN SIMULATOR ARENA -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-5">
+
+    <!-- REAL-TIME LEAN METRICS (4 GAUGES) -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3.5">
+      
+      <!-- Metric 1: Value-Adding Tasks -->
+      <div class="bg-leanCard border border-leanBorder rounded-2xl p-3.5 shadow-lg flex flex-col justify-between">
+        <div class="flex items-center justify-between text-xs font-semibold">
+          <span class="flex items-center gap-1.5 text-slate-300"><i class="fa-solid fa-star text-emerald-400"></i> Nilai Tambah (VA)</span>
+          <span id="vaCount" class="font-mono font-bold text-emerald-400">0 / 8</span>
+        </div>
+        <div class="w-full h-2 bg-slate-950 rounded-full overflow-hidden border border-slate-800 mt-2">
+          <div id="vaBar" class="h-full bg-gradient-to-r from-emerald-600 to-emerald-400 transition-all duration-300 rounded-full" style="width: 0%;"></div>
+        </div>
+        <div class="flex justify-between items-center text-[10px] text-slate-400 mt-2">
+          <span>Target Dipertahankan</span>
+          <span class="text-emerald-400 font-mono font-bold">PROFIT</span>
+        </div>
+      </div>
+
+      <!-- Metric 2: Business VA -->
+      <div class="bg-leanCard border border-leanBorder rounded-2xl p-3.5 shadow-lg flex flex-col justify-between">
+        <div class="flex items-center justify-between text-xs font-semibold">
+          <span class="flex items-center gap-1.5 text-slate-300"><i class="fa-solid fa-shield-halved text-cyan-400"></i> Bisnis VA (BVA)</span>
+          <span id="bvaCount" class="font-mono font-bold text-cyan-400">0 / 6</span>
+        </div>
+        <div class="w-full h-2 bg-slate-950 rounded-full overflow-hidden border border-slate-800 mt-2">
+          <div id="bvaBar" class="h-full bg-gradient-to-r from-sky-500 to-cyan-400 transition-all duration-300 rounded-full" style="width: 0%;"></div>
+        </div>
+        <div class="flex justify-between items-center text-[10px] text-slate-400 mt-2">
+          <span>Wajib (Otomatisasi)</span>
+          <span class="text-cyan-400 font-mono font-bold">COMPLIANCE</span>
+        </div>
+      </div>
+
+      <!-- Metric 3: Terminated Wastes -->
+      <div class="bg-leanCard border border-leanBorder rounded-2xl p-3.5 shadow-lg flex flex-col justify-between">
+        <div class="flex items-center justify-between text-xs font-semibold">
+          <span class="flex items-center gap-1.5 text-slate-300"><i class="fa-solid fa-trash-can text-rose-400"></i> Pemborosan (NVA)</span>
+          <span id="nvaCount" class="font-mono font-bold text-rose-400">0 Dihapus</span>
+        </div>
+        <div class="w-full h-2 bg-slate-950 rounded-full overflow-hidden border border-slate-800 mt-2">
+          <div id="nvaBar" class="h-full bg-gradient-to-r from-rose-600 to-rose-400 transition-all duration-300 rounded-full" style="width: 0%;"></div>
+        </div>
+        <div class="flex justify-between items-center text-[10px] text-slate-400 mt-2">
+          <span>Sampah Operasional</span>
+          <span class="text-rose-400 font-mono font-bold">ELIMINATE</span>
+        </div>
+      </div>
+
+      <!-- Metric 4: Total Throughput Score -->
+      <div class="bg-leanCard border border-leanBorder rounded-2xl p-3.5 shadow-lg flex flex-col justify-between">
+        <div class="flex items-center justify-between text-xs font-semibold">
+          <span class="flex items-center gap-1.5 text-slate-300"><i class="fa-solid fa-bolt text-amber-400"></i> Skor Produktivitas</span>
+          <span id="scoreVal" class="font-mono font-bold text-amber-400">0 Pts</span>
+        </div>
+        <div class="w-full h-2 bg-slate-950 rounded-full overflow-hidden border border-slate-800 mt-2">
+          <div id="scoreBar" class="h-full bg-gradient-to-r from-amber-500 to-yellow-400 transition-all duration-300 rounded-full" style="width: 0%;"></div>
+        </div>
+        <div class="flex justify-between items-center text-[10px] text-slate-400 mt-2">
+          <span>Target Kelulusan 70%</span>
+          <span id="scoreTag" class="text-slate-400 font-mono">STANDAR</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- WORKSPACE SPLIT: CONVEYOR PIPELINE (LEFT 7) VS LEAN ACTION DESK (RIGHT 5) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+
+      <!-- LEFT: INTERACTIVE CONVEYOR PIPELINE STREAM (7 COLS) -->
+      <div class="lg:col-span-7 bg-leanCard border border-leanBorder rounded-3xl p-5 shadow-2xl relative flex flex-col">
+        
+        <div class="flex items-center justify-between pb-3 border-b border-leanBorder mb-3">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+            <h3 class="font-display font-extrabold text-sm sm:text-base text-white">
+              Saluran Konveyor Operasional (Live Pipeline)
+            </h3>
+          </div>
+          <span class="text-[11px] text-slate-400 font-mono">TIMWOOD Detector Active</span>
+        </div>
+
+        <p class="text-xs text-slate-400 mb-3">
+          Aktivitas kerja mengalir secara beruntun di atas konveyor. Analis wajib mengidentifikasi setiap langkah kerja dan langsung menerapkan aksi: <strong>Pertahankan (VA), Otomatisasi (BVA), atau Hancurkan/Eliminasi (NVA)</strong>.
+        </p>
+
+        <!-- Conveyor Stage Arena -->
+        <div class="w-full h-[380px] bg-slate-950 border-2 border-slate-800 rounded-2xl p-4 flex flex-col justify-between relative overflow-hidden shadow-inner conveyor-belt">
+          
+          <!-- Active Task Card on Conveyor -->
+          <div id="activeTaskCard" class="my-auto bg-slate-900/95 border-2 border-leanBorder rounded-2xl p-6 shadow-2xl text-center relative z-10 transition-all duration-300 max-w-lg mx-auto w-full">
+            <div id="taskCategoryBadge" class="inline-block px-3 py-1 rounded-full text-[10px] font-display font-bold uppercase tracking-wider mb-2 bg-slate-800 text-slate-300 border border-slate-700">
+              Menunggu Tugas Masuk...
+            </div>
+            <h4 id="taskTitle" class="font-display font-bold text-base sm:text-lg text-white">
+              Inisialisasi Sistem Konveyor Lean...
+            </h4>
+            <p id="taskDesc" class="text-xs sm:text-sm text-slate-300 mt-2 leading-relaxed">
+              Tekan tombol "Mulai Shift Lean" di sebelah kanan untuk memulai simulasi pemangkasan pemborosan operasional.
+            </p>
+          </div>
+
+          <!-- Conveyor Status Bar -->
+          <div class="bg-slate-900/90 border border-slate-800 px-3 py-1.5 rounded-xl flex items-center justify-between text-[11px] font-mono text-slate-300 relative z-10">
+            <span id="conveyorStatus"><i class="fa-solid fa-arrows-spin text-emerald-400 mr-1.5"></i>Status: Sistem Siaga</span>
+            <span id="queueCounter" class="text-emerald-400 font-bold">14 Langkah Tersisa</span>
+          </div>
+
+        </div>
+
+        <!-- Task Legends -->
+        <div class="mt-3 grid grid-cols-3 gap-2 text-[10px] text-slate-400">
+          <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span> <strong>VA:</strong> Nilai Tambah Pelanggan</div>
+          <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-cyan-400 inline-block"></span> <strong>BVA:</strong> Regulasi &amp; Kepatuhan</div>
+          <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block"></span> <strong>NVA:</strong> Pemborosan TIMWOOD</div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: LEAN ACTION DESK & TERMINATOR CONTROLS (5 COLS) -->
+      <div id="actionDeskCard" class="lg:col-span-5 bg-leanCard border border-leanBorder rounded-3xl p-6 shadow-2xl space-y-4 transition-all duration-300">
+        
+        <div>
+          <div class="flex items-center justify-between text-xs mb-2">
+            <span class="px-2.5 py-1 rounded-full bg-emerald-950 border border-emerald-800 text-emerald-400 font-display font-bold uppercase tracking-wider">
+              <i class="fa-solid fa-terminal mr-1"></i> Panel Aksi Analis
+            </span>
+            <span id="wasteTypeTag" class="font-mono text-cyan-400 font-bold text-xs bg-cyan-950/80 border border-cyan-900 px-2 py-0.5 rounded">
+              Klasifikasi VAA
+            </span>
+          </div>
+          <h2 class="font-display font-extrabold text-base sm:text-lg text-white leading-tight">
+            Tentukan Keputusan Perbaikan Proses
+          </h2>
+          <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+            Pilih tindakan eliminasi atau otomatisasi yang tepat untuk mengoptimalkan efisiensi siklus PCE perusahaan.
+          </p>
+        </div>
+
+        <!-- Decision Buttons -->
+        <div class="space-y-3 pt-1">
+          
+          <!-- Option VA -->
+          <button onclick="makeLeanDecision('VA')" class="w-full text-left p-3.5 rounded-2xl bg-slate-950 hover:bg-slate-900 border border-slate-800 hover:border-emerald-500/80 transition group relative">
+            <div class="flex items-start justify-between gap-3">
+              <div class="space-y-1">
+                <span class="inline-block text-[10px] font-bold font-display uppercase px-2 py-0.5 rounded bg-emerald-950 border border-emerald-800 text-emerald-400">
+                  Aksi 1: Pertahankan (Value-Adding)
+                </span>
+                <h4 class="text-xs sm:text-sm font-bold text-white group-hover:text-emerald-300 transition">
+                  Aktivitas Esensial bagi Pelanggan
+                </h4>
+                <p class="text-[11px] text-slate-400 leading-snug">
+                  Transformasi nyata produk/jasa yang benar-benar dinilai dan dibayar oleh pembeli.
+                </p>
+              </div>
+              <span class="text-xs font-mono font-bold text-emerald-400 shrink-0 px-2 py-1 rounded bg-slate-900 border border-slate-700">
+                +15 Pts
+              </span>
+            </div>
+          </button>
+
+          <!-- Option BVA -->
+          <button onclick="makeLeanDecision('BVA')" class="w-full text-left p-3.5 rounded-2xl bg-slate-950 hover:bg-slate-900 border border-slate-800 hover:border-cyan-500/80 transition group relative">
+            <div class="flex items-start justify-between gap-3">
+              <div class="space-y-1">
+                <span class="inline-block text-[10px] font-bold font-display uppercase px-2 py-0.5 rounded bg-cyan-950 border border-cyan-800 text-cyan-400">
+                  Aksi 2: Otomatisasi (Business VA)
+                </span>
+                <h4 class="text-xs sm:text-sm font-bold text-white group-hover:text-cyan-300 transition">
+                  Kepatuhan Hukum / Regulasi Wajib
+                </h4>
+                <p class="text-[11px] text-slate-400 leading-snug">
+                  Audit atau pajak yang harus dilakukan, namun perlu diotomatisasi agar tidak memperlambat alur.
+                </p>
+              </div>
+              <span class="text-xs font-mono font-bold text-cyan-400 shrink-0 px-2 py-1 rounded bg-slate-900 border border-slate-700">
+                +10 Pts
+              </span>
+            </div>
+          </button>
+
+          <!-- Option NVA -->
+          <button onclick="makeLeanDecision('NVA')" class="w-full text-left p-3.5 rounded-2xl bg-slate-950 hover:bg-slate-900 border border-slate-800 hover:border-rose-500/80 transition group relative">
+            <div class="flex items-start justify-between gap-3">
+              <div class="space-y-1">
+                <span class="inline-block text-[10px] font-bold font-display uppercase px-2 py-0.5 rounded bg-rose-950 border border-rose-800 text-rose-400">
+                  Aksi 3: Hancurkan / Eliminasi (NVA)
+                </span>
+                <h4 class="text-xs sm:text-sm font-bold text-white group-hover:text-rose-300 transition">
+                  Pemborosan Murni (TIMWOOD)
+                </h4>
+                <p class="text-[11px] text-slate-400 leading-snug">
+                  Menunggu, penumpukan map berkas, pengetikan ulang, atau birokrasi tanpa nilai tambah. Buang tuntas!
+                </p>
+              </div>
+              <span class="text-xs font-mono font-bold text-rose-400 shrink-0 px-2 py-1 rounded bg-slate-900 border border-slate-700">
+                +20 Pts
+              </span>
+            </div>
+          </button>
+        </div>
+
+        <!-- Start Shift / Feedback Box -->
+        <div id="leanFeedbackBox" class="p-3.5 rounded-2xl bg-slate-950/90 border border-leanBorder text-xs text-slate-300 flex items-start gap-3">
+          <i class="fa-solid fa-lightbulb text-leanAmber text-base mt-0.5"></i>
+          <div>
+            <span class="font-bold text-white block">Instruksi Analis Lean:</span>
+            <span id="feedbackText">Tekan tombol di bawah untuk menjalankan mesin konveyor dan memulai eliminasi pemborosan operasional!</span>
+          </div>
+        </div>
+
+        <button id="startShiftBtn" onclick="startLeanShift()" class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-leanGreen to-leanBlue text-white font-display font-black text-xs uppercase tracking-wider shadow-lg hover:brightness-110 active:scale-95 transition">
+          <i class="fa-solid fa-play mr-1.5"></i> Mulai Shift Lean (60s)
+        </button>
+
+      </div>
+
+    </div>
+
+    <!-- MISSION COMPLETE / GAME OVER SUMMARY MODAL -->
+    <div id="summaryModal" class="hidden bg-gradient-to-r from-slate-950 via-leanCard to-slate-950 border-2 border-leanBorder rounded-3xl p-8 text-center shadow-2xl relative overflow-hidden">
+      <div id="summaryIcon" class="inline-flex p-4 rounded-full text-4xl mb-3"></div>
+      <h3 id="summaryTitle" class="font-display font-black text-2xl sm:text-3xl text-white"></h3>
+      <p id="summaryDesc" class="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto mt-2 leading-relaxed"></p>
+      
+      <div class="mt-6 flex flex-wrap justify-center gap-3">
+        <button onclick="resetLeanSimulator()" class="px-6 py-3 rounded-xl bg-gradient-to-r from-leanGreen to-leanBlue text-white font-display font-black text-xs uppercase tracking-wider shadow-lg hover:brightness-110 active:scale-95 transition">
+          <i class="fa-solid fa-rotate-right mr-1.5"></i> Ulangi Shift Lean
+        </button>
+        <button onclick="window.close()" class="px-6 py-3 rounded-xl bg-slate-900 border border-slate-700 text-slate-300 font-display font-bold text-xs uppercase tracking-wider hover:text-white transition">
+          <i class="fa-solid fa-xmark mr-1.5"></i> Tutup Simulator
+        </button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- JAVASCRIPT LEAN SIMULATOR ENGINE -->
+  <script>
+    // ==========================================
+    // 1. LEAN TASKS MASTER DECK (TIMWOOD & VAA)
+    // ==========================================
+    const LEAN_TASKS = [
+      {
+        id: 1,
+        title: "Meracik Espresso & Ekstraksi Kopi Pesanan Pelanggan",
+        desc: "Barista menimbang bubuk kopi segar dan menyeduh espresso sesuai pesanan pembeli di meja kasir.",
+        type: "VA",
+        waste: "None",
+        explanation: "Benar! Ini adalah aktivitas esensial yang langsung mengubah bahan mentah menjadi produk yang dinikmati dan dibayar pembeli."
+      },
+      {
+        id: 2,
+        title: "Menunggu Manajer Menandatangani Kertas Pengajuan Dana",
+        desc: "Berkas pengajuan pembelian susu tertahan di meja manajer yang sedang dinas luar selama 3 hari.",
+        type: "NVA",
+        waste: "Waiting (Menunggu)",
+        explanation: "Tepat! Waktu tunggu persetujuan manual adalah pemborosan waktu (*Waiting*) yang melumpuhkan kelancaran operasional."
+      },
+      {
+        id: 3,
+        title: "Mencetak Faktur Pajak Resmi untuk Laporan Bulanan",
+        desc: "Staf keuangan membuat faktur pajak digital dan melampirkannya ke pembukuan demi audit pemerintah.",
+        type: "BVA",
+        waste: "Compliance",
+        explanation: "Bagus! Aktivitas kepatuhan hukum (*Compliance*) wajib dipertahankan namun perlu diotomatisasi dengan sistem."
+      },
+      {
+        id: 4,
+        title: "Mengetik Ulang Data Pesanan Web ke Rekap Excel Manual",
+        desc: "Staf admin menyalin satu per satu nama pembeli dari aplikasi online ke file Excel pembukuan fisik.",
+        type: "NVA",
+        waste: "Over-processing (Proses Berlebih)",
+        explanation: "Tepat! Mengetik ulang data yang sudah digital adalah pemborosan klerikal (*Over-processing*) yang rawan salah ketik."
+      },
+      {
+        id: 5,
+        title: "Membongkar 10 Kardus Gudang Mencari Stempel Hilang",
+        desc: "Staf berjalan bolak-balik mencarikan stempel cap perusahaan yang terselip di sudut gudang belakang.",
+        type: "NVA",
+        waste: "Motion (Gerakan Sia-Sia)",
+        explanation: "Tepat! Pergerakan fisik mencari barang yang tidak tertata rapi adalah pemborosan gerakan (*Motion*)."
+      },
+      {
+        id: 6,
+        title: "Menyerahkan Kemasan Produk Jadi ke Tangan Pembeli",
+        desc: "Barista memanggil nomor antrean dan menyerahkan pesanan kopi siap saji kepada pelanggan di konter.",
+        type: "VA",
+        waste: "None",
+        explanation: "Benar! Penyerahan produk akhir adalah titik penciptaan nilai tambah (*Value-Adding*) utama bagi kepuasan pelanggan."
+      },
+      {
+        id: 7,
+        title: "Mengirim Arsip Kertas Pengiriman Antar Cabang via Kurir",
+        desc: "Mengirimkan bundel map kertas nota fisik menggunakan jasa kurir motor ke kantor cabang seberang kota.",
+        type: "NVA",
+        waste: "Transportation (Transportasi)",
+        explanation: "Tepat! Memindahkan dokumen fisik antar lokasi adalah pemborosan transportasi (*Transportation*) yang dapat diganti cloud."
+      },
+      {
+        id: 8,
+        title: "Mencetak 200 Formulir Pendaftaran Fisik Berlebih",
+        desc: "Mencetak brosur kertas formulir pendaftaran fisik dalam jumlah besar padahal pendaftar kini online.",
+        type: "NVA",
+        waste: "Over-production (Produksi Berlebih)",
+        explanation: "Tepat! Mencetak materi melebihi permintaan nyata adalah pemborosan produksi berlebih (*Over-production*)."
+      },
+      {
+        id: 9,
+        title: "Audit Stok Biji Kopi dan Laporan Keuangan Harian",
+        desc: "Pemeriksaan kas fisik dan opname stok gudang setiap penutupan shift malam oleh supervisor.",
+        type: "BVA",
+        waste: "Compliance",
+        explanation: "Tepat! Audit stok adalah kontrol internal penting (*Business Value-Adding*) untuk akuntabilitas bisnis."
+      },
+      {
+        id: 10,
+        title: "Memperbaiki Kesalahan Ketik Alamat Pengiriman Pelanggan",
+        desc: "Staf terpaksa menelepon ulang pembeli karena salah mencatat alamat tujuan pada paket kargo.",
+        type: "NVA",
+        waste: "Defects / Rework (Cacat)",
+        explanation: "Tepat! Memperbaiki kesalahan kerja adalah pemborosan pengerjaan ulang (*Rework/Defects*) akibat tiada validasi input."
+      },
+      {
+        id: 11,
+        title: "Menumpuk 500 Map Berkas Kontrak di Lemari Tanpa Dibaca",
+        desc: "Menyimpan dokumen fisik arsip lama berbulan-bulan di sudut ruangan yang memakan tempat.",
+        type: "NVA",
+        waste: "Inventory (Inventori Menumpuk)",
+        explanation: "Tepat! Penumpukan berkas yang tidak terpakai adalah pemborosan inventori gudang (*Inventory*)."
+      },
+      {
+        id: 12,
+        title: "Pengujian Kualitas Rasa Biji Kopi Sangrai (QC)",
+        desc: "Roaster mencicipi hasil seduhan batch sangrai pagi untuk memastikan standar aroma terjaga.",
+        type: "VA",
+        waste: "None",
+        explanation: "Benar! Kontrol kualitas rasa langsung menentukan mutu produk utama yang dirasakan oleh pelanggan."
+      }
+    ];
+
+    // ==========================================
+    // 2. STATE MANAGEMENT
+    // ==========================================
+    let currentTaskIndex = 0;
+    let score = 0;
+    let vaCount = 0;
+    let bvaCount = 0;
+    let nvaCount = 0;
+    let shiftTimer = 60;
+    let timerIntervalId = null;
+    let isShiftActive = false;
+
+    const taskCard = document.getElementById('activeTaskCard');
+    const feedbackBox = document.getElementById('leanFeedbackBox');
+    const feedbackText = document.getElementById('feedbackText');
+
+    function renderMetrics() {
+      const totalTasks = LEAN_TASKS.length;
+      const completed = vaCount + bvaCount + nvaCount;
+      
+      // PCE Calculation: (VA / Total Tasks Handled) * 100
+      let pce = completed > 0 ? Math.round((vaCount / completed) * 100) : 12;
+
+      document.getElementById('pceDisplay').innerText = `${pce}%`;
+      document.getElementById('shiftTimerDisplay').innerText = `00:${String(shiftTimer).padStart(2, '0')}`;
+
+      document.getElementById('vaCount').innerText = `${vaCount} / 8`;
+      document.getElementById('vaBar').style.width = `${(vaCount / 8) * 100}%`;
+
+      document.getElementById('bvaCount').innerText = `${bvaCount} / 4`;
+      document.getElementById('bvaBar').style.width = `${(bvaCount / 4) * 100}%`;
+
+      document.getElementById('nvaCount').innerText = `${nvaCount} Dihapus`;
+      document.getElementById('nvaBar').style.width = `${Math.min(100, (nvaCount / 6) * 100)}%`;
+
+      document.getElementById('scoreVal').innerText = `${score} Pts`;
+      document.getElementById('scoreBar').style.width = `${Math.min(100, (score / 200) * 100)}%`;
+
+      document.getElementById('queueCounter').innerText = `${Math.max(0, LEAN_TASKS.length - currentTaskIndex)} Langkah Tersisa`;
+    }
+
+    function loadCurrentTask() {
+      if (currentTaskIndex >= LEAN_TASKS.length) {
+        endLeanShift(true);
+        return;
+      }
+
+      const cur = LEAN_TASKS[currentTaskIndex];
+      document.getElementById('taskTitle').innerText = cur.title;
+      document.getElementById('taskDesc').innerText = cur.desc;
+      
+      const badge = document.getElementById('taskCategoryBadge');
+      badge.innerText = `Langkah #${currentTaskIndex + 1} dari ${LEAN_TASKS.length}`;
+      badge.className = "inline-block px-3 py-1 rounded-full text-[10px] font-display font-bold uppercase tracking-wider mb-2 bg-indigo-950 border border-indigo-800 text-indigo-400";
+      
+      document.getElementById('wasteTypeTag').innerText = "Analisis VAA Aktif";
+    }
+
+    function startLeanShift() {
+      if (isShiftActive) return;
+      isShiftActive = true;
+      currentTaskIndex = 0;
+      score = 0;
+      vaCount = 0;
+      bvaCount = 0;
+      nvaCount = 0;
+      shiftTimer = 60;
+
+      document.getElementById('startShiftBtn').classList.add('hidden');
+      loadCurrentTask();
+      renderMetrics();
+
+      clearInterval(timerIntervalId);
+      timerIntervalId = setInterval(() => {
+        shiftTimer--;
+        renderMetrics();
+        if (shiftTimer <= 0) {
+          endLeanShift(false);
+        }
+      }, 1000);
+    }
+
+    function makeLeanDecision(choice) {
+      if (!isShiftActive) {
+        feedbackText.innerText = "Tekan tombol 'Mulai Shift Lean' terlebih dahulu untuk menjalankan konveyor!";
+        return;
+      }
+
+      const cur = LEAN_TASKS[currentTaskIndex];
+      let isCorrect = (choice === cur.type);
+
+      if (isCorrect) {
+        score += (choice === 'NVA' ? 20 : 15);
+        if (choice === 'VA') vaCount++;
+        if (choice === 'BVA') bvaCount++;
+        if (choice === 'NVA') nvaCount++;
+
+        feedbackBox.className = "p-3.5 rounded-2xl bg-emerald-950/90 border border-emerald-800 text-xs text-emerald-200 flex items-start gap-3";
+        feedbackText.innerHTML = `<strong>Tepat! (${cur.waste})</strong> ${cur.explanation}`;
+      } else {
+        score = Math.max(0, score - 10);
+        feedbackBox.className = "p-3.5 rounded-2xl bg-rose-950/90 border border-rose-800 text-xs text-rose-200 flex items-start gap-3";
+        feedbackText.innerHTML = `<strong>Kurang Tepat!</strong> Seharusnya langkah ini diklasifikasikan sebagai <strong>${cur.type}</strong>. (${cur.explanation})`;
+      }
+
+      renderMetrics();
+      currentTaskIndex++;
+
+      if (currentTaskIndex < LEAN_TASKS.length) {
+        setTimeout(() => {
+          loadCurrentTask();
+        }, 600);
+      } else {
+        endLeanShift(true);
+      }
+    }
+
+    function endLeanShift(isFinished) {
+      clearInterval(timerIntervalId);
+      isShiftActive = false;
+
+      const modal = document.getElementById('summaryModal');
+      const icon = document.getElementById('summaryIcon');
+      const title = document.getElementById('summaryTitle');
+      const desc = document.getElementById('summaryDesc');
+
+      modal.classList.remove('hidden');
+
+      const totalHandled = vaCount + bvaCount + nvaCount;
+      const finalPce = totalHandled > 0 ? Math.round((vaCount / totalHandled) * 100) : 12;
+
+      if (score >= 120 && finalPce >= 40) {
+        icon.className = "inline-flex p-4 rounded-full text-4xl mb-3 bg-emerald-500/20 text-emerald-400 border border-emerald-500";
+        icon.innerHTML = '<i class="fa-solid fa-trophy"></i>';
+        title.className = "font-display font-black text-2xl sm:text-3xl text-emerald-400";
+        title.innerText = "Certified Lean Six Sigma Expert (Grade A)";
+        desc.innerText = `Luar biasa! Shift Lean sukses besar. Anda berhasil membasmi pemborosan TIMWOOD, mendongkrak skor PCE menjadi ${finalPce}%, dan mengamankan total ${score} Poin Produktivitas.`;
+      } else {
+        icon.className = "inline-flex p-4 rounded-full text-4xl mb-3 bg-amber-500/20 text-amber-400 border border-amber-500";
+        icon.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
+        title.className = "font-display font-black text-2xl sm:text-3xl text-amber-400";
+        title.innerText = "Shift Selesai dengan Catatan Perbaikan (Grade C+)";
+        desc.innerText = `Simulasi selesai dengan skor ${score} Pts dan PCE ${finalPce}%. Di dunia nyata, pastikan aktivitas NVA benar-benar dieliminasi dan BVA diotomatisasi agar efisiensi siklus melesat naik.`;
+      }
+
+      window.scrollTo({ top: modal.offsetTop - 30, behavior: 'smooth' });
+    }
+
+    function resetLeanSimulator() {
+      clearInterval(timerIntervalId);
+      isShiftActive = false;
+      currentTaskIndex = 0;
+      score = 0;
+      vaCount = 0;
+      bvaCount = 0;
+      nvaCount = 0;
+      shiftTimer = 60;
+
+      document.getElementById('summaryModal').classList.add('hidden');
+      document.getElementById('startShiftBtn').classList.remove('hidden');
+      
+      document.getElementById('taskCategoryBadge').innerText = "Menunggu Tugas Masuk...";
+      document.getElementById('taskCategoryBadge').className = "inline-block px-3 py-1 rounded-full text-[10px] font-display font-bold uppercase tracking-wider mb-2 bg-slate-800 text-slate-300 border border-slate-700";
+      document.getElementById('taskTitle').innerText = "Inisialisasi Sistem Konveyor Lean...";
+      document.getElementById('taskDesc').innerText = "Tekan tombol 'Mulai Shift Lean' di sebelah kanan untuk memulai simulasi pemangkasan pemborosan operasional.";
+
+      feedbackBox.className = "p-3.5 rounded-2xl bg-slate-950/90 border border-leanBorder text-xs text-slate-300 flex items-start gap-3";
+      feedbackText.innerText = "Tekan tombol di bawah untuk menjalankan mesin konveyor dan memulai eliminasi pemborosan operasional!";
+
+      renderMetrics();
+    }
+
+    window.onload = function() {
+      renderMetrics();
+    };
+  </script>
+</body>
+</html>

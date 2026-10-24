@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Network Traffic Controller & SPOF Eliminator - ITB Swadharma</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & Montserrat -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@700;800;900&family=JetBrains+Mono:wght@400;600;800&display=swap">
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Montserrat', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          },
+          colors: {
+            infraDark: '#050811',
+            infraCard: '#0C1222',
+            infraBorder: '#18243C',
+            infraBlue: '#0284C7',
+            infraCyan: '#06B6D4',
+            infraEmerald: '#10B981',
+            infraAmber: '#F59E0B',
+            infraRose: '#F43F5E'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #050811; }
+    ::-webkit-scrollbar-thumb { background: #18243C; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #06B6D4; }
+
+    /* Matrix Blueprint Grid Background */
+    .datacenter-grid {
+      background-size: 30px 30px;
+      background-image: 
+        linear-gradient(to right, rgba(24, 36, 60, 0.45) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(24, 36, 60, 0.45) 1px, transparent 1px);
+    }
+
+    /* Screen Glitch / Danger Pulse */
+    @keyframes alertGlow {
+      0%, 100% { border-color: rgba(244, 63, 94, 0.4); box-shadow: 0 0 20px rgba(244, 63, 94, 0.2); }
+      50% { border-color: rgba(244, 63, 94, 1); box-shadow: 0 0 35px rgba(244, 63, 94, 0.5); }
+    }
+    .incident-active {
+      animation: alertGlow 1.2s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="bg-infraDark text-slate-100 min-h-screen flex flex-col font-sans selection:bg-infraCyan selection:text-infraDark antialiased datacenter-grid">
+
+  <!-- TOP APP BAR / OPERATIONS CENTER BAR -->
+  <header class="sticky top-0 z-50 bg-infraDark/95 backdrop-blur-md border-b border-infraBorder h-20 flex items-center">
+    <div class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+      
+      <div class="flex items-center gap-3.5">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-infraCyan via-infraBlue to-indigo-600 flex items-center justify-center text-white font-display font-black text-xl shadow-lg shadow-cyan-500/20">
+          <i class="fa-solid fa-server"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-display font-black text-xl tracking-tight text-white">SPOF<span class="text-infraCyan">.DEFENDER</span></span>
+            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-cyan-950 border border-cyan-800 text-cyan-400">P6 SRE Lab</span>
+          </div>
+          <p class="text-xs text-slate-400 hidden sm:block">Analisa Proses Bisnis (INF1104) • Live Pipeline &amp; Disaster Recovery Simulator</p>
+        </div>
+      </div>
+
+      <!-- Live Operations Metrics -->
+      <div class="flex items-center gap-3">
+        <!-- Budget Health -->
+        <div class="hidden sm:flex items-center gap-2.5 bg-slate-900 border border-infraBorder px-3.5 py-1.5 rounded-xl shadow-inner">
+          <i class="fa-solid fa-wallet text-amber-400 text-sm"></i>
+          <div>
+            <div class="text-[9px] uppercase tracking-wider text-slate-400 font-bold">Dana Tanggap Darurat</div>
+            <div id="budgetDisplay" class="font-mono font-bold text-amber-400 text-xs sm:text-sm leading-none">Rp 50.000.000</div>
+          </div>
+        </div>
+
+        <!-- Incident Level -->
+        <div class="flex items-center gap-2.5 bg-slate-900 border border-infraBorder px-3.5 py-1.5 rounded-xl shadow-inner">
+          <i class="fa-solid fa-radiation text-rose-400 text-sm animate-pulse"></i>
+          <div>
+            <div class="text-[9px] uppercase tracking-wider text-slate-400 font-bold">Level Bencana</div>
+            <div id="incidentWaveDisplay" class="font-display font-black text-white text-xs sm:text-sm leading-none">Wave 1 / 4</div>
+          </div>
+        </div>
+
+        <button onclick="resetSimulator()" class="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold border border-slate-700 transition" title="Ulangi Simulasi">
+          <i class="fa-solid fa-rotate-right"></i> Reset
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- MAIN OPERATIONAL SIMULATOR ARENA -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-5">
+
+    <!-- REAL-TIME TELEMETRY SENSORS (4 DASHBOARD GAUGES) -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3.5">
+      
+      <!-- Sensor 1: SLA Availability Target -->
+      <div class="bg-infraCard border border-infraBorder rounded-2xl p-3.5 shadow-lg flex flex-col justify-between">
+        <div class="flex items-center justify-between text-xs font-semibold">
+          <span class="flex items-center gap-1.5 text-slate-300"><i class="fa-solid fa-award text-cyan-400"></i> SLA Uptime Target</span>
+          <span id="slaVal" class="font-mono font-bold text-cyan-400">99.98%</span>
+        </div>
+        <div class="w-full h-2 bg-slate-950 rounded-full overflow-hidden border border-slate-800 mt-2">
+          <div id="slaBar" class="h-full bg-gradient-to-r from-sky-500 to-cyan-400 transition-all duration-300 rounded-full" style="width: 99.98%;"></div>
+        </div>
+        <div class="flex justify-between items-center text-[10px] text-slate-400 mt-2">
+          <span>Batas Kritis: 99.00%</span>
+          <span id="slaStatusTag" class="text-emerald-400 font-mono font-bold">NORMAL (High SLA)</span>
+        </div>
+      </div>
+
+      <!-- Sensor 2: System Latency (ms) -->
+      <div class="bg-infraCard border border-infraBorder rounded-2xl p-3.5 shadow-lg flex flex-col justify-between">
+        <div class="flex items-center justify-between text-xs font-semibold">
+          <span class="flex items-center gap-1.5 text-slate-300"><i class="fa-solid fa-stopwatch text-emerald-400"></i> Latensi Jaringan</span>
+          <span id="latencyVal" class="font-mono font-bold text-emerald-400">45 ms</span>
+        </div>
+        <div class="w-full h-2 bg-slate-950 rounded-full overflow-hidden border border-slate-800 mt-2">
+          <div id="latencyBar" class="h-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-300 rounded-full" style="width: 15%;"></div>
+        </div>
+        <div class="flex justify-between items-center text-[10px] text-slate-400 mt-2">
+          <span>Toleransi Max: 500 ms</span>
+          <span id="latencyTag" class="text-emerald-400 font-mono font-bold">FAST RESPONSE</span>
+        </div>
+      </div>
+
+      <!-- Sensor 3: Throughput (TPS) -->
+      <div class="bg-infraCard border border-infraBorder rounded-2xl p-3.5 shadow-lg flex flex-col justify-between">
+        <div class="flex items-center justify-between text-xs font-semibold">
+          <span class="flex items-center gap-1.5 text-slate-300"><i class="fa-solid fa-bolt text-amber-400"></i> Throughput Volume</span>
+          <span id="tpsVal" class="font-mono font-bold text-amber-400">120 TPS</span>
+        </div>
+        <div class="w-full h-2 bg-slate-950 rounded-full overflow-hidden border border-slate-800 mt-2">
+          <div id="tpsBar" class="h-full bg-gradient-to-r from-amber-500 to-yellow-400 transition-all duration-300 rounded-full" style="width: 40%;"></div>
+        </div>
+        <div class="flex justify-between items-center text-[10px] text-slate-400 mt-2">
+          <span>Kapasitas: 500 TPS</span>
+          <span id="tpsTag" class="text-amber-400 font-mono font-bold">STABLE LOAD</span>
+        </div>
+      </div>
+
+      <!-- Sensor 4: Accumulated Penalty Loss -->
+      <div class="bg-infraCard border border-infraBorder rounded-2xl p-3.5 shadow-lg flex flex-col justify-between">
+        <div class="flex items-center justify-between text-xs font-semibold">
+          <span class="flex items-center gap-1.5 text-slate-300"><i class="fa-solid fa-hand-holding-dollar text-rose-400"></i> Akumulasi Denda</span>
+          <span id="penaltyVal" class="font-mono font-bold text-rose-400">Rp 0</span>
+        </div>
+        <div class="w-full h-2 bg-slate-950 rounded-full overflow-hidden border border-slate-800 mt-2">
+          <div id="penaltyBar" class="h-full bg-gradient-to-r from-rose-500 to-red-600 transition-all duration-300 rounded-full" style="width: 0%;"></div>
+        </div>
+        <div class="flex justify-between items-center text-[10px] text-slate-400 mt-2">
+          <span>Denda Timeout SLA</span>
+          <span id="penaltyTag" class="text-slate-400 font-mono">Rp 0 / dtk</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- WORKSPACE SPLIT: CANVAS PIPELINE (LEFT 7 COLS) vs SRE INCIDENT DESK (RIGHT 5 COLS) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+
+      <!-- LEFT: INTERACTIVE HTML5 CANVAS PIPELINE (7 COLS) -->
+      <div class="lg:col-span-7 bg-infraCard border border-infraBorder rounded-3xl p-5 shadow-2xl relative flex flex-col">
+        
+        <div class="flex items-center justify-between pb-3 border-b border-infraBorder mb-3">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+            <h3 class="font-display font-extrabold text-sm sm:text-base text-white">
+              Arsitektur Aliran Data Pipeline (End-to-End)
+            </h3>
+          </div>
+          <span class="text-[11px] text-slate-400 font-mono">Canvas 60 FPS • Node Monitor</span>
+        </div>
+
+        <p class="text-xs text-slate-400 mb-3">
+          Paket data transaksi kasir &amp; belanja mengalir dari terminal pembeli ke basis data cloud. Titik merah berkedip menandakan <strong>Single Point of Failure (SPOF)</strong> yang sedang terputus!
+        </p>
+
+        <!-- Canvas Container -->
+        <div class="relative w-full h-[400px] bg-slate-950 border-2 border-slate-800 rounded-2xl overflow-hidden shadow-inner">
+          <canvas id="pipelineCanvas" class="w-full h-full block"></canvas>
+          
+          <!-- Interactive Node Indicator Tooltip -->
+          <div id="canvasNodeStatus" class="absolute bottom-2 left-2 right-2 bg-slate-900/90 border border-slate-800 px-3 py-1.5 rounded-xl flex items-center justify-between text-[11px] font-mono text-slate-300">
+            <span id="hoverNodeLabel"><i class="fa-solid fa-circle-nodes text-cyan-400 mr-1.5"></i>Status Pipeline: Seluruh node beroperasi optimal</span>
+            <span id="packetCounter" class="text-cyan-400 font-bold">120 Paket Aktif</span>
+          </div>
+        </div>
+
+        <!-- Node Legends -->
+        <div class="mt-3 grid grid-cols-2 sm:grid-cols-4 gap-2 text-[10px] text-slate-400">
+          <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-md bg-sky-500 inline-block"></span> <strong>A:</strong> Endpoint POS / Web</div>
+          <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-md bg-indigo-500 inline-block"></span> <strong>B:</strong> Router &amp; Gateway</div>
+          <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-md bg-cyan-400 inline-block"></span> <strong>C:</strong> Application Server</div>
+          <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-md bg-emerald-400 inline-block"></span> <strong>D:</strong> Cloud Database SQL</div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: SRE DISASTER RESPONSE & ARCHITECTURE CONTROLLER (5 COLS) -->
+      <div id="incidentDeskCard" class="lg:col-span-5 bg-infraCard border border-infraBorder rounded-3xl p-6 shadow-2xl space-y-4 transition-all duration-300">
+        
+        <!-- Crisis Headline & Scenario -->
+        <div>
+          <div class="flex items-center justify-between text-xs mb-2">
+            <span id="incidentBadge" class="px-2.5 py-1 rounded-full bg-cyan-950 border border-cyan-800 text-cyan-400 font-display font-bold uppercase tracking-wider">
+              <i class="fa-solid fa-shield-virus mr-1"></i> Bencana 1 / 4
+            </span>
+            <span id="countdownTimer" class="font-mono text-rose-400 font-bold text-xs bg-rose-950/80 border border-rose-900 px-2 py-0.5 rounded">
+              SLA Timeout: 25s
+            </span>
+          </div>
+          <h2 id="incidentTitle" class="font-display font-extrabold text-base sm:text-lg text-white leading-tight">
+            Kabel Fiber Optic Terputus: 28 Truk Tertahan di Gerbang Timbang!
+          </h2>
+          <p id="incidentNarrative" class="text-xs sm:text-sm text-slate-300 mt-2 leading-relaxed">
+            Hujan deras disertai sambaran petir merusak kabel fiber optik utama menuju gerbang jembatan timbang. Router kehilangan koneksi internet dan transaksi POS kasir terhenti total!
+          </p>
+        </div>
+
+        <!-- SRE Action Options -->
+        <div class="space-y-2.5 pt-1">
+          <div class="text-[11px] font-display font-bold uppercase tracking-wider text-slate-400">
+            Pilih Rekomendasi Solusi Redundansi Arsitektur:
+          </div>
+
+          <!-- Option A -->
+          <button onclick="applySreDecision('A')" class="w-full text-left p-3 rounded-2xl bg-slate-950 hover:bg-slate-900 border border-slate-800 hover:border-cyan-500/80 transition group relative">
+            <div class="flex items-start justify-between gap-3">
+              <div class="space-y-1">
+                <span class="inline-block text-[10px] font-bold font-display uppercase px-2 py-0.5 rounded bg-cyan-950 border border-cyan-800 text-cyan-400" id="optTagA">
+                  Opsi A: Failover Dual-WAN
+                </span>
+                <h4 class="text-xs sm:text-sm font-bold text-white group-hover:text-cyan-300 transition" id="optTitleA">
+                  Aktifkan Modem Seluler 4G/5G Failover Otomatis
+                </h4>
+                <p class="text-[11px] text-slate-400 leading-snug" id="optDescA">
+                  Alihkan lalu lintas transaksi seketika ke jaringan seluler cadangan. Menghilangkan titik SPOF fisik.
+                </p>
+              </div>
+              <span class="text-xs font-mono font-bold text-amber-400 shrink-0 px-2 py-1 rounded bg-slate-900 border border-slate-700" id="optCostA">
+                -Rp 5.000.000
+              </span>
+            </div>
+          </button>
+
+          <!-- Option B -->
+          <button onclick="applySreDecision('B')" class="w-full text-left p-3 rounded-2xl bg-slate-950 hover:bg-slate-900 border border-slate-800 hover:border-rose-500/80 transition group relative">
+            <div class="flex items-start justify-between gap-3">
+              <div class="space-y-1">
+                <span class="inline-block text-[10px] font-bold font-display uppercase px-2 py-0.5 rounded bg-rose-950 border border-rose-800 text-rose-400" id="optTagB">
+                  Opsi B: Tunggu Teknisi Fisik
+                </span>
+                <h4 class="text-xs sm:text-sm font-bold text-white group-hover:text-rose-300 transition" id="optTitleB">
+                  Panggil Teknisi Telkom dan Tunggu Penyambungan Kabel
+                </h4>
+                <p class="text-[11px] text-slate-400 leading-snug" id="optDescB">
+                  Tidak mengeluarkan biaya router baru. Membiarkan antrean truk menunggu hingga 3 jam di pintu keluar.
+                </p>
+              </div>
+              <span class="text-xs font-mono font-bold text-emerald-400 shrink-0 px-2 py-1 rounded bg-slate-900 border border-slate-700" id="optCostB">
+                Rp 0 Biaya
+              </span>
+            </div>
+          </button>
+
+          <!-- Option C -->
+          <button onclick="applySreDecision('C')" class="w-full text-left p-3 rounded-2xl bg-slate-950 hover:bg-slate-900 border border-slate-800 hover:border-indigo-500/80 transition group relative">
+            <div class="flex items-start justify-between gap-3">
+              <div class="space-y-1">
+                <span class="inline-block text-[10px] font-bold font-display uppercase px-2 py-0.5 rounded bg-indigo-950 border border-indigo-800 text-indigo-400" id="optTagC">
+                  Opsi C: Fallback Prosedur Offline
+                </span>
+                <h4 class="text-xs sm:text-sm font-bold text-white group-hover:text-indigo-300 transition" id="optTitleC">
+                  Pencatatan Nota Kertas Manual Sementara
+                </h4>
+                <p class="text-[11px] text-slate-400 leading-snug" id="optDescC">
+                  Sopir dicatat manual dengan tanda tangan fisik lalu diketik ulang ke sistem malam harinya.
+                </p>
+              </div>
+              <span class="text-xs font-mono font-bold text-amber-400 shrink-0 px-2 py-1 rounded bg-slate-900 border border-slate-700" id="optCostC">
+                -Rp 1.500.000
+              </span>
+            </div>
+          </button>
+        </div>
+
+        <!-- SRE Architectural Feedback Box -->
+        <div id="architectureFeedback" class="p-3.5 rounded-2xl bg-slate-950/90 border border-infraBorder text-xs text-slate-300 flex items-start gap-3">
+          <i class="fa-solid fa-network-wired text-infraCyan text-base mt-0.5"></i>
+          <div>
+            <span class="font-bold text-white block">Analisis Arsitektur TI:</span>
+            <span id="feedbackText">Kabel tunggal tanpa jalur cadangan adalah contoh nyata <strong>Single Point of Failure (SPOF)</strong>. Menolak failover otomatis akan mengorbankan SLA perusahaan hingga titik terendah.</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- GAME OVER / MISSION SUCCESS SUMMARY MODAL -->
+    <div id="summaryModal" class="hidden bg-gradient-to-r from-slate-950 via-infraCard to-slate-950 border-2 border-infraBorder rounded-3xl p-8 text-center shadow-2xl relative overflow-hidden">
+      <div id="summaryIcon" class="inline-flex p-4 rounded-full text-4xl mb-3"></div>
+      <h3 id="summaryTitle" class="font-display font-black text-2xl sm:text-3xl text-white"></h3>
+      <p id="summaryDesc" class="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto mt-2 leading-relaxed"></p>
+      
+      <div class="mt-6 flex flex-wrap justify-center gap-3">
+        <button onclick="resetSimulator()" class="px-6 py-3 rounded-xl bg-gradient-to-r from-infraCyan to-infraBlue text-infraDark font-display font-black text-xs uppercase tracking-wider shadow-lg hover:brightness-110 active:scale-95 transition">
+          <i class="fa-solid fa-rotate-right mr-1.5"></i> Coba Ulang Simulasi
+        </button>
+        <button onclick="window.close()" class="px-6 py-3 rounded-xl bg-slate-900 border border-slate-700 text-slate-300 font-display font-bold text-xs uppercase tracking-wider hover:text-white transition">
+          <i class="fa-solid fa-xmark mr-1.5"></i> Tutup Simulator
+        </button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- JAVASCRIPT SIMULATOR ENGINE -->
+  <script>
+    // ==========================================
+    // 1. INCIDENT DATA MASTER (4 WAVES OF CRISIS)
+    // ==========================================
+    const INCIDENT_WAVES = [
+      {
+        wave: 1,
+        title: "Kabel Fiber Optic Terputus: 28 Truk Tertahan di Gerbang Timbang!",
+        narrative: "Hujan lebat disertai petir memutus kabel fiber optik utama pos gerbang jembatan timbang PT Swadharma Logistik. Transaksi timbangan POS macet total dan antrean mengular ke jalan protokol!",
+        brokenNode: 'ROUTER', // B is down
+        timeoutSeconds: 25,
+        options: {
+          A: {
+            title: "Aktifkan Dual-WAN Modem 4G/5G Failover Otomatis",
+            desc: "Peralihan otomatis seketika ke jaringan seluler cadangan. Menghilangkan titik SPOF fisik.",
+            cost: 5000000,
+            slaDelta: +0.02,
+            latencyDelta: +25,
+            tpsDelta: +30,
+            penaltyDelta: 0,
+            feedback: "Brilian! Koneksi Dual-WAN Failover otomatis memulihkan transmisi dalam hitungan detik sehingga SLA 99.9% tetap terjaga.",
+            resolved: true
+          },
+          B: {
+            title: "Tunggu Teknisi Telkom Menyambung Kabel Fisik",
+            desc: "Tidak mengeluarkan biaya modal. Membiarkan antrean truk menunggu hingga 3 jam.",
+            cost: 0,
+            slaDelta: -1.25,
+            latencyDelta: +600,
+            tpsDelta: -100,
+            penaltyDelta: 35000000,
+            feedback: "Fatal! Menunggu teknisi fisik selama 3 jam melanggar SLA secara ekstrem dan memicu penalti klaim denda dari klien!",
+            resolved: false
+          },
+          C: {
+            title: "Pencatatan Nota Fisik Manual Sementara",
+            desc: "Sopir dicatat manual dengan tanda tangan lalu diketik ulang ke sistem malam harinya.",
+            cost: 1500000,
+            slaDelta: -0.40,
+            latencyDelta: +250,
+            tpsDelta: -40,
+            penaltyDelta: 8000000,
+            feedback: "Prosedur manual darurat (*workaround*) mencegah kemacetan total, namun menimbulkan pemborosan pengetikan ulang (*over-processing*).",
+            resolved: true
+          }
+        }
+      },
+      {
+        wave: 2,
+        title: "Serbuan Flash Sale: Lonjakan 10.000 Pesanan Serentak!",
+        narrative: "Toko kopi dan e-commerce meluncurkan diskon kilat gajian. Ribuan pengguna mengklik 'Beli Sekarang' serempak. Server aplikasi kehabisan antrean memori CPU!",
+        brokenNode: 'APP_SERVER',
+        timeoutSeconds: 22,
+        options: {
+          A: {
+            title: "Terapkan Message Queue Broker & Auto-Scaling Cluster",
+            desc: "Tampung lonjakan pesanan ke buffer antrean pesan dan hidupkan mesin komputasi cadangan otomatis.",
+            cost: 10000000,
+            slaDelta: +0.03,
+            latencyDelta: -15,
+            tpsDelta: +250,
+            penaltyDelta: 0,
+            feedback: "Keputusan arsitektur kelas dunia! Message Broker mencegah server crash saat menerima lonjakan spike mendadak.",
+            resolved: true
+          },
+          B: {
+            title: "Matikan Sementara Akses Pembeli dari Aplikasi Mobile",
+            desc: "Memblokir 80% pembeli agar beban server berkurang secara instan.",
+            cost: 0,
+            slaDelta: -1.80,
+            latencyDelta: +100,
+            tpsDelta: -110,
+            penaltyDelta: 25000000,
+            feedback: "Sangat buruk! Mematikan akses pembeli saat promo membunuh potensi omzet dan menghancurkan citra bisnis.",
+            resolved: false
+          },
+          C: {
+            title: "Tingkatkan Kapasitas RAM Server Tunggal (Vertical Scale)",
+            desc: "Membeli lisensi penambahan RAM pada server yang sama tanpa membuat sistem cadangan.",
+            cost: 7000000,
+            slaDelta: -0.20,
+            latencyDelta: +50,
+            tpsDelta: +60,
+            penaltyDelta: 5000000,
+            feedback: "Vertical scaling membantu sementara, namun server tunggal tetap menjadi SPOF berbahaya jika terjadi crash memori.",
+            resolved: true
+          }
+        }
+      },
+      {
+        wave: 3,
+        title: "Database Primary Crash: Database Korup Akibat Padam Listrik!",
+        narrative: "Panel listrik ruang server padam 1 detik. Komputer database utama mati mendadak tanpa UPS cadangan, memicu kerusakan integritas tabel transaksi!",
+        brokenNode: 'DATABASE',
+        timeoutSeconds: 20,
+        options: {
+          A: {
+            title: "Failover ke Database Replica Cloud & Pasang Baterai Dual-UPS",
+            desc: "Alihkan pembacaan data ke server replika sekunder dan pasang baterai cadangan tanpa jeda listrik.",
+            cost: 12000000,
+            slaDelta: +0.02,
+            latencyDelta: -20,
+            tpsDelta: +80,
+            penaltyDelta: 0,
+            feedback: "Tepat sasaran! Replikasi basis data dan UPS ganda menjamin ketersediaan tinggi (*High Availability*) tanpa kehilangan data.",
+            resolved: true
+          },
+          B: {
+            title: "Restart Paksa Server Database dan Jalankan Checkdisk",
+            desc: "Menyalakan ulang komputer server fisik dan menunggu pengecekan disk selama 45 menit.",
+            cost: 0,
+            slaDelta: -1.50,
+            latencyDelta: +450,
+            tpsDelta: -90,
+            penaltyDelta: 30000000,
+            feedback: "Berbahaya! Menjalankan checkdisk di jam operasional memicu pemadaman panjang (*downtime*) yang melanggar kontrak SLA.",
+            resolved: false
+          },
+          C: {
+            title: "Gunakan Backup Kemarin Malam (Restore Data Harian)",
+            desc: "Memulihkan data kemarin. Mengorbankan data transaksi yang terjadi hari ini.",
+            cost: 3000000,
+            slaDelta: -0.70,
+            latencyDelta: +150,
+            tpsDelta: -30,
+            penaltyDelta: 15000000,
+            feedback: "Data transaksi seharian hilang karena *Recovery Point Objective (RPO)* yang terlalu longgar (24 jam).",
+            resolved: true
+          }
+        }
+      },
+      {
+        wave: 4,
+        title: "Integrasi API Bank Timeout: Webhook Pembayaran QRIS Macet!",
+        narrative: "Server pembayaran bank mitra mengalami latensi 8 detik. Kasir tidak bisa memverifikasi apakah pembeli sudah membayar atau belum!",
+        brokenNode: 'API_GATEWAY',
+        timeoutSeconds: 20,
+        options: {
+          A: {
+            title: "Implementasikan Circuit Breaker & Asynchronous Polling",
+            desc: "Cegah antrean thread kasir macet dengan mekanisme Circuit Breaker dan verifikasi status latar belakang.",
+            cost: 6000000,
+            slaDelta: +0.04,
+            latencyDelta: -30,
+            tpsDelta: +120,
+            penaltyDelta: 0,
+            feedback: "Pola arsitektur tangguh! *Circuit Breaker* mengisolasi kegagalan pihak ketiga agar tidak merambat ke seluruh alur kasir.",
+            resolved: true
+          },
+          B: {
+            title: "Paksa Pelanggan Bayar Tunai Saja & Tolak QRIS",
+            desc: "Menonaktifkan pembayaran digital dan hanya menerima uang pas tunai.",
+            cost: 0,
+            slaDelta: -0.90,
+            latencyDelta: +200,
+            tpsDelta: -50,
+            penaltyDelta: 10000000,
+            feedback: "Pelanggan tanpa uang tunai membatalkan pesanan. Menolak pembayaran digital menurunkan pendapatan bisnis secara drastis.",
+            resolved: false
+          },
+          C: {
+            title: "Multi-Payment Gateway Failover (Beralih ke Midtrans / Xendit)",
+            desc: "Rute otomatis dialihkan ke gateway sekunder jika gateway utama gagal merespons dalam 3 detik.",
+            cost: 8000000,
+            slaDelta: +0.03,
+            latencyDelta: -10,
+            tpsDelta: +100,
+            penaltyDelta: 0,
+            feedback: "Solusi redundansi mitra sangat baik! Memiliki secondary payment gateway menjamin proses checkout anti-macet.",
+            resolved: true
+          }
+        }
+      }
+    ];
+
+    // ==========================================
+    // 2. STATE MANAGEMENT
+    // ==========================================
+    let currentWaveIndex = 0;
+    let budget = 50000000;
+    let slaUptime = 99.98;
+    let latency = 45;
+    let tps = 120;
+    let accumulatedPenalty = 0;
+    let waveTimer = 25;
+    let waveIntervalId = null;
+
+    // Node Health State on Canvas Pipeline
+    let pipelineNodes = {
+      ENDPOINT:    { id: 'ENDPOINT', name: 'POS & Mobile Apps', x: 70, y: 200, status: 'OK', type: 'terminal' },
+      ROUTER:      { id: 'ROUTER', name: 'Gateway / Dual-WAN', x: 220, y: 200, status: 'OK', type: 'network' },
+      APP_SERVER:  { id: 'APP_SERVER', name: 'Cluster Microservices', x: 390, y: 200, status: 'OK', type: 'server' },
+      DATABASE:    { id: 'DATABASE', name: 'Cloud Database SQL', x: 550, y: 200, status: 'OK', type: 'storage' }
+    };
+
+    let dataPackets = [];
+    const MAX_PACKETS = 45;
+
+    // ==========================================
+    // 3. CANVAS 2D PIPELINE RENDER ENGINE
+    // ==========================================
+    const canvas = document.getElementById('pipelineCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      const container = canvas.parentElement;
+      canvas.width = container.clientWidth;
+      canvas.height = container.clientHeight;
+
+      // Responsive X positions for nodes
+      const w = canvas.width;
+      const h = canvas.height;
+      pipelineNodes.ENDPOINT.x = w * 0.12;
+      pipelineNodes.ENDPOINT.y = h * 0.5;
+      pipelineNodes.ROUTER.x = w * 0.38;
+      pipelineNodes.ROUTER.y = h * 0.5;
+      pipelineNodes.APP_SERVER.x = w * 0.64;
+      pipelineNodes.APP_SERVER.y = h * 0.5;
+      pipelineNodes.DATABASE.x = w * 0.88;
+      pipelineNodes.DATABASE.y = h * 0.5;
+    }
+
+    function initPackets() {
+      dataPackets = [];
+      for (let i = 0; i < MAX_PACKETS; i++) {
+        dataPackets.push({
+          progress: Math.random(),
+          speed: 0.003 + Math.random() * 0.005,
+          color: Math.random() > 0.3 ? '#06B6D4' : '#0284C7'
+        });
+      }
+    }
+
+    function drawPipeline() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const nodes = [pipelineNodes.ENDPOINT, pipelineNodes.ROUTER, pipelineNodes.APP_SERVER, pipelineNodes.DATABASE];
+
+      // Draw Connection Conduit Pipes
+      for (let i = 0; i < nodes.length - 1; i++) {
+        const from = nodes[i];
+        const to = nodes[i + 1];
+
+        const isBroken = to.status === 'ERROR' || from.status === 'ERROR';
+
+        // Outer Pipe
+        ctx.beginPath();
+        ctx.moveTo(from.x, from.y);
+        ctx.lineTo(to.x, to.y);
+        ctx.lineWidth = 10;
+        ctx.strokeStyle = isBroken ? 'rgba(244, 63, 94, 0.3)' : 'rgba(24, 36, 60, 0.9)';
+        ctx.lineCap = 'round';
+        ctx.stroke();
+
+        // Inner Light Rail
+        ctx.beginPath();
+        ctx.moveTo(from.x, from.y);
+        ctx.lineTo(to.x, to.y);
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = isBroken ? '#F43F5E' : (to.status === 'WARN' ? '#F59E0B' : '#0284C7');
+        ctx.setLineDash(isBroken ? [6, 6] : []);
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+
+      // Draw Data Packets
+      dataPackets.forEach(p => {
+        p.progress += p.speed;
+        if (p.progress >= 1) p.progress = 0;
+
+        // Determine which segment packet is in (0 to 1 across 3 segments)
+        const totalSegments = 3;
+        const segmentProgress = p.progress * totalSegments;
+        const segmentIndex = Math.min(2, Math.floor(segmentProgress));
+        const segT = segmentProgress - segmentIndex;
+
+        const fromNode = nodes[segmentIndex];
+        const toNode = nodes[segmentIndex + 1];
+
+        // If path is broken, packets pile up or drop
+        if (toNode.status === 'ERROR') {
+          // Packet stalls near broken node
+          const px = fromNode.x + (toNode.x - fromNode.x) * Math.min(0.85, segT);
+          const py = fromNode.y + (toNode.y - fromNode.y) * Math.min(0.85, segT) + (Math.sin(Date.now() * 0.01 + p.progress * 10) * 3);
+
+          ctx.beginPath();
+          ctx.arc(px, py, 3.5, 0, Math.PI * 2);
+          ctx.fillStyle = '#F43F5E';
+          ctx.shadowColor = '#F43F5E';
+          ctx.shadowBlur = 8;
+          ctx.fill();
+          ctx.shadowBlur = 0;
+        } else {
+          const px = fromNode.x + (toNode.x - fromNode.x) * segT;
+          const py = fromNode.y + (toNode.y - fromNode.y) * segT;
+
+          ctx.beginPath();
+          ctx.arc(px, py, 3, 0, Math.PI * 2);
+          ctx.fillStyle = toNode.status === 'WARN' ? '#F59E0B' : p.color;
+          ctx.shadowColor = p.color;
+          ctx.shadowBlur = 6;
+          ctx.fill();
+          ctx.shadowBlur = 0;
+        }
+      });
+
+      // Draw Hardware Nodes
+      nodes.forEach(n => {
+        const isError = n.status === 'ERROR';
+        const isWarn = n.status === 'WARN';
+
+        // Outer Glow Ring
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, 28, 0, Math.PI * 2);
+        ctx.fillStyle = isError ? 'rgba(244, 63, 94, 0.2)' : (isWarn ? 'rgba(245, 158, 11, 0.2)' : 'rgba(6, 182, 212, 0.15)');
+        ctx.fill();
+
+        // Node Circle
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, 22, 0, Math.PI * 2);
+        ctx.fillStyle = '#0C1222';
+        ctx.strokeStyle = isError ? '#F43F5E' : (isWarn ? '#F59E0B' : '#06B6D4');
+        ctx.lineWidth = 3;
+        ctx.shadowColor = isError ? '#F43F5E' : '#06B6D4';
+        ctx.shadowBlur = isError ? 18 : 6;
+        ctx.stroke();
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        // Center Status Dot
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, 6, 0, Math.PI * 2);
+        ctx.fillStyle = isError ? '#F43F5E' : (isWarn ? '#F59E0B' : '#10B981');
+        ctx.fill();
+
+        // Node Title Text
+        ctx.font = '700 11px Montserrat, sans-serif';
+        ctx.fillStyle = '#F8FAFC';
+        ctx.textAlign = 'center';
+        ctx.fillText(n.name, n.x, n.y + 40);
+
+        // Status Subtitle
+        ctx.font = '600 9px JetBrains Mono, monospace';
+        ctx.fillStyle = isError ? '#F43F5E' : (isWarn ? '#F59E0B' : '#38BDF8');
+        ctx.fillText(isError ? '[SPOF DOWN]' : (isWarn ? '[HIGH LOAD]' : '[ONLINE 99.9%]'), n.x, n.y + 53);
+      });
+
+      requestAnimationFrame(drawPipeline);
+    }
+
+    // ==========================================
+    // 4. TELEMETRY & METRIC UPDATES
+    // ==========================================
+    function formatRupiah(num) {
+      return 'Rp ' + Math.max(0, Math.round(num)).toLocaleString('id-ID');
+    }
+
+    function renderGauges() {
+      // Clamp values
+      slaUptime = Math.max(90, Math.min(100, slaUptime));
+      latency = Math.max(20, Math.min(999, latency));
+      tps = Math.max(0, Math.min(500, tps));
+
+      // SLA
+      document.getElementById('slaVal').innerText = `${slaUptime.toFixed(2)}%`;
+      document.getElementById('slaBar').style.width = `${((slaUptime - 90) / 10) * 100}%`;
+      const slaTag = document.getElementById('slaStatusTag');
+      if (slaUptime >= 99.9) {
+        slaTag.innerText = "NORMAL (High SLA)";
+        slaTag.className = "text-emerald-400 font-mono font-bold";
+      } else if (slaUptime >= 99.0) {
+        slaTag.innerText = "WARNING (SLA Threatened)";
+        slaTag.className = "text-amber-400 font-mono font-bold";
+      } else {
+        slaTag.innerText = "BREACHED (SLA Failed)";
+        slaTag.className = "text-rose-400 font-mono font-bold";
+      }
+
+      // Latency
+      document.getElementById('latencyVal').innerText = `${Math.round(latency)} ms`;
+      document.getElementById('latencyBar').style.width = `${Math.min(100, (latency / 500) * 100)}%`;
+      const latTag = document.getElementById('latencyTag');
+      if (latency <= 80) {
+        latTag.innerText = "FAST RESPONSE";
+        latTag.className = "text-emerald-400 font-mono font-bold";
+      } else if (latency <= 200) {
+        latTag.innerText = "MODERATE LATENCY";
+        latTag.className = "text-amber-400 font-mono font-bold";
+      } else {
+        latTag.innerText = "LAG SPIKE DETECTED";
+        latTag.className = "text-rose-400 font-mono font-bold";
+      }
+
+      // TPS
+      document.getElementById('tpsVal').innerText = `${Math.round(tps)} TPS`;
+      document.getElementById('tpsBar').style.width = `${Math.min(100, (tps / 500) * 100)}%`;
+
+      // Budget & Penalty
+      document.getElementById('budgetDisplay').innerText = formatRupiah(budget);
+      document.getElementById('penaltyVal').innerText = formatRupiah(accumulatedPenalty);
+      document.getElementById('penaltyBar').style.width = `${Math.min(100, (accumulatedPenalty / 60000000) * 100)}%`;
+
+      // Incident display
+      document.getElementById('incidentWaveDisplay').innerText = `Wave ${currentWaveIndex + 1} / ${INCIDENT_WAVES.length}`;
+      document.getElementById('countdownTimer').innerText = `SLA Timeout: ${waveTimer}s`;
+    }
+
+    function renderIncidentDesk() {
+      const cur = INCIDENT_WAVES[currentWaveIndex];
+      document.getElementById('incidentBadge').innerHTML = `<i class="fa-solid fa-radiation mr-1"></i> Bencana ${cur.wave} / ${INCIDENT_WAVES.length}`;
+      document.getElementById('incidentTitle').innerText = cur.title;
+      document.getElementById('incidentNarrative').innerText = cur.narrative;
+
+      // Options
+      document.getElementById('optTitleA').innerText = cur.options.A.title;
+      document.getElementById('optDescA').innerText = cur.options.A.desc;
+      document.getElementById('optCostA').innerText = `-${formatRupiah(cur.options.A.cost)}`;
+
+      document.getElementById('optTitleB').innerText = cur.options.B.title;
+      document.getElementById('optDescB').innerText = cur.options.B.desc;
+      document.getElementById('optCostB').innerText = cur.options.B.cost === 0 ? 'Rp 0 Biaya' : `-${formatRupiah(cur.options.B.cost)}`;
+
+      document.getElementById('optTitleC').innerText = cur.options.C.title;
+      document.getElementById('optDescC').innerText = cur.options.C.desc;
+      document.getElementById('optCostC').innerText = `-${formatRupiah(cur.options.C.cost)}`;
+
+      // Apply broken node status
+      Object.keys(pipelineNodes).forEach(k => pipelineNodes[k].status = 'OK');
+      if (cur.brokenNode === 'ROUTER') pipelineNodes.ROUTER.status = 'ERROR';
+      if (cur.brokenNode === 'APP_SERVER') pipelineNodes.APP_SERVER.status = 'ERROR';
+      if (cur.brokenNode === 'DATABASE') pipelineNodes.DATABASE.status = 'ERROR';
+      if (cur.brokenNode === 'API_GATEWAY') pipelineNodes.ROUTER.status = 'WARN';
+
+      // Highlight incident card
+      const deskCard = document.getElementById('incidentDeskCard');
+      deskCard.classList.add('incident-active');
+
+      // Start countdown timer
+      waveTimer = cur.timeoutSeconds;
+      clearInterval(waveIntervalId);
+      waveIntervalId = setInterval(() => {
+        waveTimer--;
+        if (waveTimer <= 0) {
+          // Timeout SLA Breach penalty
+          accumulatedPenalty += 12000000;
+          slaUptime -= 0.6;
+          latency += 80;
+          document.getElementById('feedbackText').innerText = "Waktu tanggap darurat habis! Sistem mengalami timeout SLA dan denda penalti diterapkan!";
+          renderGauges();
+          applySreDecision('B'); // Default to passive penalty
+        } else {
+          renderGauges();
+        }
+      }, 1000);
+    }
+
+    // ==========================================
+    // 5. DECISION & INCIDENT RESOLUTION
+    // ==========================================
+    function applySreDecision(choice) {
+      clearInterval(waveIntervalId);
+      const cur = INCIDENT_WAVES[currentWaveIndex];
+      const opt = cur.options[choice];
+
+      // Cost & Penalties
+      budget -= opt.cost;
+      accumulatedPenalty += opt.penaltyDelta;
+      slaUptime += opt.slaDelta;
+      latency += opt.latencyDelta;
+      tps += opt.tpsDelta;
+
+      // Update Feedback
+      document.getElementById('feedbackText').innerText = opt.feedback;
+
+      // Resolve Node Status
+      if (opt.resolved) {
+        if (cur.brokenNode === 'ROUTER') pipelineNodes.ROUTER.status = 'OK';
+        if (cur.brokenNode === 'APP_SERVER') pipelineNodes.APP_SERVER.status = 'OK';
+        if (cur.brokenNode === 'DATABASE') pipelineNodes.DATABASE.status = 'OK';
+      }
+
+      const deskCard = document.getElementById('incidentDeskCard');
+      deskCard.classList.remove('incident-active');
+
+      renderGauges();
+
+      // Check Fail Conditions
+      if (slaUptime < 98.0 || budget < 0) {
+        triggerEndSummary(false, "SLA Breached & Anggaran Habis (System Outage)", "Perusahaan mengalami kegagalan operasional fatal akibat pemadaman berulang, hilangnya komitmen SLA, dan denda penalti yang melebihi batas anggaran darurat.");
+        return;
+      }
+
+      // Next Wave
+      currentWaveIndex++;
+      if (currentWaveIndex < INCIDENT_WAVES.length) {
+        setTimeout(() => {
+          renderIncidentDesk();
+        }, 800);
+      } else {
+        // Evaluate Final Performance
+        if (slaUptime >= 99.5 && accumulatedPenalty <= 20000000) {
+          triggerEndSummary(true, "SRE High-Availability Certified (Grade A)", `Luar biasa! Sebagai Systems Analyst & SRE, Anda berhasil menjaga keandalan proses bisnis dengan SLA akhir ${slaUptime.toFixed(2)}%, menumpas seluruh Single Point of Failure (SPOF), dan meminimalkan denda operasional.`);
+        } else {
+          triggerEndSummary(false, "Operasional Bertahan dengan Kompromi (Grade C+)", `Sistem berhasil diselamatkan namun SLA anjlok ke ${slaUptime.toFixed(2)}% dengan denda denda ${formatRupiah(accumulatedPenalty)}. Ke depannya, redundansi otomatis harus dipasang sebelum bencana terjadi.`);
+        }
+      }
+    }
+
+    function triggerEndSummary(isWin, title, desc) {
+      clearInterval(waveIntervalId);
+      const modal = document.getElementById('summaryModal');
+      const icon = document.getElementById('summaryIcon');
+      const t = document.getElementById('summaryTitle');
+      const d = document.getElementById('summaryDesc');
+
+      modal.classList.remove('hidden');
+      t.innerText = title;
+      d.innerText = desc;
+
+      if (isWin) {
+        icon.className = "inline-flex p-4 rounded-full text-4xl mb-3 bg-emerald-500/20 text-emerald-400 border border-emerald-500";
+        icon.innerHTML = '<i class="fa-solid fa-award"></i>';
+        t.className = "font-display font-black text-2xl sm:text-3xl text-emerald-400";
+      } else {
+        icon.className = "inline-flex p-4 rounded-full text-4xl mb-3 bg-rose-500/20 text-rose-400 border border-rose-500";
+        icon.innerHTML = '<i class="fa-solid fa-server"></i>';
+        t.className = "font-display font-black text-2xl sm:text-3xl text-rose-400";
+      }
+
+      window.scrollTo({ top: modal.offsetTop - 30, behavior: 'smooth' });
+    }
+
+    function resetSimulator() {
+      clearInterval(waveIntervalId);
+      currentWaveIndex = 0;
+      budget = 50000000;
+      slaUptime = 99.98;
+      latency = 45;
+      tps = 120;
+      accumulatedPenalty = 0;
+
+      Object.keys(pipelineNodes).forEach(k => pipelineNodes[k].status = 'OK');
+
+      document.getElementById('summaryModal').classList.add('hidden');
+      document.getElementById('feedbackText').innerText = "Kabel tunggal tanpa jalur cadangan adalah contoh nyata Single Point of Failure (SPOF). Menolak failover otomatis akan mengorbankan SLA perusahaan hingga titik terendah.";
+
+      renderGauges();
+      renderIncidentDesk();
+    }
+
+    // ==========================================
+    // INITIALIZATION
+    // ==========================================
+    window.onload = function() {
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+      initPackets();
+      drawPipeline();
+      renderGauges();
+      renderIncidentDesk();
+    };
+  </script>
+</body>
+</html>

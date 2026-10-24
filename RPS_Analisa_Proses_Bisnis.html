@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rencana Pembelajaran Semester (RPS) - Analisa Proses Bisnis (INF1104) - ITB Swadharma</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@700;800;900&family=JetBrains+Mono:wght@400;600&display=swap">
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Montserrat', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          },
+          colors: {
+            rpsDark: '#040810',
+            rpsCard: '#0A1020',
+            rpsBorder: '#16233E',
+            rpsCyan: '#06B6D4',
+            rpsBlue: '#0284C7',
+            rpsEmerald: '#10B981',
+            rpsAmber: '#F59E0B',
+            rpsViolet: '#8B5CF6'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #040810; }
+    ::-webkit-scrollbar-thumb { background: #16233E; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #06B6D4; }
+
+    .rps-grid {
+      background-size: 32px 32px;
+      background-image: 
+        linear-gradient(to right, rgba(22, 35, 62, 0.35) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(22, 35, 62, 0.35) 1px, transparent 1px);
+    }
+    
+    @media print {
+      body { background: white !important; color: black !important; }
+      header, footer, .no-print { display: none !important; }
+      .print-box { border: 1px solid #ccc !important; background: white !important; color: black !important; box-shadow: none !important; }
+    }
+  </style>
+</head>
+<body class="bg-rpsDark text-slate-100 min-h-screen flex flex-col font-sans selection:bg-rpsCyan selection:text-rpsDark antialiased rps-grid">
+
+  <!-- TOP APP BAR -->
+  <header class="sticky top-0 z-50 bg-rpsDark/95 backdrop-blur-md border-b border-rpsBorder h-20 flex items-center no-print">
+    <div class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+      
+      <div class="flex items-center gap-3.5">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-rpsCyan via-rpsBlue to-rpsViolet flex items-center justify-center text-white font-display font-black text-xl shadow-lg shadow-cyan-500/20">
+          <i class="fa-solid fa-scroll"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-display font-black text-xl tracking-tight text-white">RPS<span class="text-rpsCyan">.INF1104</span></span>
+            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-cyan-950 border border-cyan-800 text-cyan-400">Kurikulum Resmi</span>
+          </div>
+          <p class="text-xs text-slate-400 hidden sm:block">Institut Teknologi dan Bisnis Swadharma (ITBS) • S1 Teknik Informatika</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button onclick="window.print()" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition">
+          <i class="fa-solid fa-print"></i> Cetak / Simpan PDF
+        </button>
+        <a href="index.html" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-rpsCyan to-rpsBlue text-rpsDark text-xs font-display font-extrabold shadow-lg hover:brightness-110 transition">
+          <i class="fa-solid fa-house"></i> Kembali ke Portal
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- MAIN DOCUMENT CONTAINER -->
+  <main class="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+
+    <!-- DOCUMENT HEADER -->
+    <div class="bg-rpsCard border-2 border-rpsBorder rounded-3xl p-8 shadow-2xl text-center space-y-4 relative overflow-hidden">
+      <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-rpsCyan via-rpsViolet to-emerald-500"></div>
+      
+      <div class="text-xs font-display font-bold uppercase tracking-widest text-rpsCyan">
+        Yayasan Pendidikan Swadharma • Fakultas Ilmu Komputer &amp; Desain
+      </div>
+      <h1 class="font-display font-black text-2xl sm:text-4xl text-white tracking-tight">
+        RENCANA PEMBELAJARAN SEMESTER (RPS)
+      </h1>
+      <p class="text-base sm:text-lg font-semibold text-slate-300">
+        Mata Kuliah: Analisa Proses Bisnis (*Business Process Analysis*) • Kode: INF1104 • Bobot: 3 SKS
+      </p>
+
+      <!-- COURSE IDENTITY TABLE -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-left pt-4 text-xs">
+        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+          <span class="text-slate-400 block font-medium">Program Studi</span>
+          <strong class="text-white">S1 Teknik Informatika</strong>
+        </div>
+        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+          <span class="text-slate-400 block font-medium">Semester / Sifat</span>
+          <strong class="text-white">Ganjil / Wajib</strong>
+        </div>
+        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+          <span class="text-slate-400 block font-medium">Dosen Pengampu</span>
+          <strong class="text-white">Ardi Ariansyah, S.Kom., Gr.</strong>
+        </div>
+        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+          <span class="text-slate-400 block font-medium">Otorisasi / Kaprodi</span>
+          <strong class="text-white">Tim Kurikulum ITBS</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 1: DESKRIPSI & CAPAIAN PEMBELAJARAN -->
+    <div class="bg-rpsCard border border-rpsBorder rounded-3xl p-6 sm:p-8 shadow-xl space-y-6">
+      <h2 class="font-display font-extrabold text-xl text-white flex items-center gap-2.5 pb-3 border-b border-rpsBorder">
+        <i class="fa-solid fa-bullseye text-rpsCyan"></i> 1. Deskripsi &amp; Capaian Pembelajaran Lulusan (CPL)
+      </h2>
+
+      <div class="space-y-4 text-sm text-slate-300 leading-relaxed">
+        <div>
+          <strong class="text-white block mb-1">Deskripsi Singkat Mata Kuliah:</strong>
+          Mata kuliah Analisa Proses Bisnis (INF1104) membekali mahasiswa dengan kemampuan memahami, memetakan, mendiagnosa, dan merancang ulang proses operasional organisasi agar terintegrasi secara mulus dengan arsitektur teknologi informasi modern. Mahasiswa mempelajari pemodelan terstandar internasional OMG BPMN 2.0, audit kualitatif nilai tambah (VAA &amp; Lean Wastes), penelusuran akar masalah (RCA &amp; Fishbone), prinsip *Business Process Reengineering* (BPR), manajemen infrastruktur TI (SPOF &amp; SLA), tata kelola keamanan siber (CIA Triad), hingga evaluasi kelayakan finansial dan operasional (TELOS).
+        </div>
+
+        <div>
+          <strong class="text-white block mb-1">Capaian Pembelajaran Mata Kuliah (CPMK):</strong>
+          <ul class="list-disc list-inside space-y-1.5 pl-2 text-slate-300">
+            <li><strong>CPMK 1:</strong> Mampu menganalisis ekosistem bisnis, mengidentifikasi pemangku kepentingan (*Mendelow Grid*), dan mendeteksi rantai nilai (*Value Chain Porter*).</li>
+            <li><strong>CPMK 2:</strong> Mampu memodelkan proses bisnis berjalan (*As-Is*) dan masa depan (*To-Be*) menggunakan notasi OMG BPMN 2.0 yang patuh standar (*Pools, Lanes, Gateways, Events, &amp; Artifacts*).</li>
+            <li><strong>CPMK 3:</strong> Mampu melakukan audit kualitatif (*Value-Added Analysis, 7 Lean Wastes, Root Cause Analysis, 5 Whys, SPOF, &amp; CIA Security*).</li>
+            <li><strong>CPMK 4:</strong> Mampu merancang ulang proses (*BPR*), mengevaluasi kelayakan ekonomi-teknis (*TELOS*), serta mempertahankan usulan solusi di hadapan manajemen (*Pitching*).</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 2: MATRIKS RENCANA PEMBELAJARAN MINGGUAN (P1 - P16) -->
+    <div class="bg-rpsCard border border-rpsBorder rounded-3xl p-6 sm:p-8 shadow-xl space-y-6">
+      <h2 class="font-display font-extrabold text-xl text-white flex items-center gap-2.5 pb-3 border-b border-rpsBorder">
+        <i class="fa-solid fa-calendar-days text-rpsAmber"></i> 2. Rencana Pembelajaran Mingguan (RPS 16 Sesi)
+      </h2>
+
+      <!-- RESPONSIVE TABLE CONTAINER -->
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs sm:text-sm border-collapse">
+          <thead>
+            <tr class="bg-slate-950 text-slate-300 border-b border-slate-800 font-display">
+              <th class="p-3">Pekan</th>
+              <th class="p-3">Kemampuan Akhir (Sub-CPMK)</th>
+              <th class="p-3">Materi Pembelajaran / Pokok Bahasan</th>
+              <th class="p-3">Bentuk &amp; Pengalaman Belajar</th>
+              <th class="p-3">Evaluasi / Luaran</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-800/80 text-slate-300">
+            
+            <!-- P1 -->
+            <tr class="hover:bg-slate-900/40 transition">
+              <td class="p-3 font-mono font-bold text-cyan-400">P1</td>
+              <td class="p-3">Memahami konsep dasar sistem, 3 pilar proses, dan peran Systems Analyst.</td>
+              <td class="p-3">Pengantar Sistem &amp; Alur Operasional (Input-Proses-Output, BPM Lifecycle).</td>
+              <td class="p-3">Kuliah interaktif, pemutaran slide 16:9, diskusi kasus kantin kampus.</td>
+              <td class="p-3 text-slate-400">Tugas Analisis Kasus 1</td>
+            </tr>
+
+            <!-- P2 -->
+            <tr class="hover:bg-slate-900/40 transition">
+              <td class="p-3 font-mono font-bold text-cyan-400">P2</td>
+              <td class="p-3">Menganalisis pemangku kepentingan dan rantai nilai Porter.</td>
+              <td class="p-3">Stakeholder (Mendelow Grid) &amp; Value Chain Porter.</td>
+              <td class="p-3">Kuliah &amp; Simulasi Game 1: <em>Mendelow Crisis Simulator</em>.</td>
+              <td class="p-3 text-slate-400">Tugas Individu 2</td>
+            </tr>
+
+            <!-- P3 -->
+            <tr class="hover:bg-slate-900/40 transition">
+              <td class="p-3 font-mono font-bold text-cyan-400">P3</td>
+              <td class="p-3">Menguasai sintaks dasar notasi pemodelan OMG BPMN 2.0.</td>
+              <td class="p-3">Pemetaan Proses &amp; Standar BPMN 2.0 (Events, Tasks, Gateways).</td>
+              <td class="p-3">Praktik stensil di Draw.io &amp; Game 1 (Matching Simbol BPMN).</td>
+              <td class="p-3 text-slate-400">Kuis Formatif 1</td>
+            </tr>
+
+            <!-- P4 -->
+            <tr class="hover:bg-slate-900/40 transition">
+              <td class="p-3 font-mono font-bold text-cyan-400">P4</td>
+              <td class="p-3">Memodelkan batasan organisasi dan aliran pesan lintas tenant.</td>
+              <td class="p-3">Swimlanes (Pools &amp; Lanes), Artifacts, &amp; Praktik Lanjutan Draw.io.</td>
+              <td class="p-3">Praktik Studio Lab &amp; Game 2 (BPMN Swimlanes Builder).</td>
+              <td class="p-3 text-slate-400">Praktik Mandiri</td>
+            </tr>
+
+            <!-- P5 -->
+            <tr class="hover:bg-slate-900/40 transition">
+              <td class="p-3 font-mono font-bold text-cyan-400">P5</td>
+              <td class="p-3">Memotret proses berjalan (*As-Is*) dan teknik wawancara lapangan.</td>
+              <td class="p-3">Pemodelan As-Is &amp; Teknik Elicitation (*Gemba Walk*).</td>
+              <td class="p-3">Studi kasus penulisan narasi wawancara mitra UMKM.</td>
+              <td class="p-3 text-slate-400">Draf Proyek Tahap 1</td>
+            </tr>
+
+            <!-- P6 -->
+            <tr class="hover:bg-slate-900/40 transition">
+              <td class="p-3 font-mono font-bold text-cyan-400">P6</td>
+              <td class="p-3">Mengevaluasi infrastruktur TI, aliran data, dan Service Level Agreement.</td>
+              <td class="p-3">Infrastruktur TI, SPOF, Latensi, &amp; Kontrak SLA.</td>
+              <td class="p-3">Kuliah &amp; Game SRE Lab: <em>Network Traffic &amp; SPOF Eliminator</em>.</td>
+              <td class="p-3 text-slate-400">Simulasi Jaringan</td>
+            </tr>
+
+            <!-- P7 -->
+            <tr class="hover:bg-slate-900/40 transition">
+              <td class="p-3 font-mono font-bold text-cyan-400">P7</td>
+              <td class="p-3">Mengintegrasikan prinsip keamanan siber ke dalam alur proses bisnis.</td>
+              <td class="p-3">Security-Aware Process &amp; CIA Triad (Confidentiality, Integrity, Availability).</td>
+              <td class="p-3">Analisis celah *Human Error* &amp; Game SOC: <em>Security Audit Simulator</em>.</td>
+              <td class="p-3 text-slate-400">Review Pra-UTS</td>
+            </tr>
+
+            <!-- P8: UTS -->
+            <tr class="bg-slate-900/80 font-bold text-amber-400">
+              <td class="p-3 font-mono">P8</td>
+              <td class="p-3" colspan="2">UJIAN TENGAH SEMESTER (UTS) • Studi Kasus Komprehensif PT Swadharma Logistik Sejahtera</td>
+              <td class="p-3">Ujian Mandiri (Teori &amp; Praktik Draw.io As-Is)</td>
+              <td class="p-3">Bobot 30%</td>
+            </tr>
+
+            <!-- P9 -->
+            <tr class="hover:bg-slate-900/40 transition">
+              <td class="p-3 font-mono font-bold text-emerald-400">P9</td>
+              <td class="p-3">Menganalisis nilai tambah aktivitas dan memetakan pemborosan Lean.</td>
+              <td class="p-3">Value-Added Analysis (VAA), PCE, &amp; 7 Lean Wastes (TIMWOOD).</td>
+              <td class="p-3">Kalkulasi PCE &amp; Game Lean: <em>The Waste Terminator</em>.</td>
+              <td class="p-3 text-slate-400">Tugas Mandiri 2</td>
+            </tr>
+
+            <!-- P10 -->
+            <tr class="hover:bg-slate-900/40 transition">
+              <td class="p-3 font-mono font-bold text-emerald-400">P10</td>
+              <td class="p-3">Mendiagnosa akar penyebab masalah menggunakan Ishikawa dan 5 Whys.</td>
+              <td class="p-3">Root Cause Analysis (RCA), Fishbone Diagram (6M/4P), &amp; 5 Whys.</td>
+              <td class="p-3">Investigasi kasus &amp; Game RCA: <em>5 Whys Detective</em>.</td>
+              <td class="p-3 text-slate-400">Draf Proyek Tahap 2</td>
+            </tr>
+
+            <!-- P11 -->
+            <tr class="hover:bg-slate-900/40 transition">
+              <td class="p-3 font-mono font-bold text-emerald-400">P11</td>
+              <td class="p-3">Merumuskan strategi perancangan ulang proses bisnis (BPR &amp; Heuristik).</td>
+              <td class="p-3">Process Redesign, BPR (Michael Hammer), &amp; Devil's Quadrangle.</td>
+              <td class="p-3">Kuliah &amp; Game Tycoon: <em>Devil's Quadrangle Equilibrium</em>.</td>
+              <td class="p-3 text-slate-400">Diskusi Heuristik</td>
+            </tr>
+
+            <!-- P12 -->
+            <tr class="hover:bg-slate-900/40 transition">
+              <td class="p-3 font-mono font-bold text-emerald-400">P12</td>
+              <td class="p-3">Mengonstruksi diagram To-Be dan memetakan Matriks Gap Analysis.</td>
+              <td class="p-3">Pemodelan Proses To-Be, Gap Analysis, &amp; Enabler TI (Service Task).</td>
+              <td class="p-3">Praktik Studio To-Be Draw.io &amp; Sinkronisasi Software Enabler.</td>
+              <td class="p-3 text-slate-400">Draft Bab 4</td>
+            </tr>
+
+            <!-- P13 -->
+            <tr class="hover:bg-slate-900/40 transition">
+              <td class="p-3 font-mono font-bold text-emerald-400">P13</td>
+              <td class="p-3">Mengevaluasi kelayakan investasi dan merancang manajemen perubahan SDM.</td>
+              <td class="p-3">Kelayakan TELOS, Analisis TCO &amp; ROI, Change Management, &amp; CIA To-Be.</td>
+              <td class="p-3">Simulasi &amp; Game TELOS: <em>The Venture Pitch Allocator</em>.</td>
+              <td class="p-3 text-slate-400">Draft Bab 5</td>
+            </tr>
+
+            <!-- P14 -->
+            <tr class="hover:bg-slate-900/40 transition">
+              <td class="p-3 font-mono font-bold text-emerald-400">P14</td>
+              <td class="p-3">Menyusun laporan akhir utuh dan melakukan audit kualitas notasi.</td>
+              <td class="p-3">Finalisasi Laporan Proyek Mini (Bab 1 s/d 5) &amp; Quality Gate Audit.</td>
+              <td class="p-3">Sesi Asistensi Meja Dosen &amp; Pengecekan Sintaks BPMN.</td>
+              <td class="p-3 text-slate-400">Review Final</td>
+            </tr>
+
+            <!-- P15 -->
+            <tr class="hover:bg-slate-900/40 transition">
+              <td class="p-3 font-mono font-bold text-emerald-400">P15</td>
+              <td class="p-3">Mengomunikasikan usulan solusi di hadapan manajemen eksekutif.</td>
+              <td class="p-3">Teknik Presentasi, Executive Deck (Minto Pyramid), &amp; Pitching Defense.</td>
+              <td class="p-3">Simulasi Pitching Kelas Terbuka &amp; Q&amp;A Defense Penguji.</td>
+              <td class="p-3 text-slate-400">Bobot 15%</td>
+            </tr>
+
+            <!-- P16: UAS -->
+            <tr class="bg-slate-900/80 font-bold text-emerald-400">
+              <td class="p-3 font-mono">P16</td>
+              <td class="p-3" colspan="2">UJIAN AKHIR SEMESTER (UAS) • Pengumpulan Bundel Capstone Proyek Mini (.zip) &amp; Penilaian Akhir</td>
+              <td class="p-3">Pengunggahan Arsip Laporan Final PDF &amp; .drawio</td>
+              <td class="p-3">Bobot 25%</td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SECTION 3: KOMPOSISI PENILAIAN AKHIR 100% -->
+    <div class="bg-rpsCard border border-rpsBorder rounded-3xl p-6 sm:p-8 shadow-xl space-y-6">
+      <h2 class="font-display font-extrabold text-xl text-white flex items-center gap-2.5 pb-3 border-b border-rpsBorder">
+        <i class="fa-solid fa-scale-balanced text-emerald-400"></i> 3. Komposisi Penilaian &amp; Rubrik Kelulusan
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-3 text-center">
+        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800">
+          <div class="text-xs text-slate-400 font-medium mb-1">Tugas &amp; Kuis</div>
+          <div class="text-2xl font-display font-black text-cyan-400">20%</div>
+        </div>
+        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800">
+          <div class="text-xs text-slate-400 font-medium mb-1">Ujian Tengah Semester</div>
+          <div class="text-2xl font-display font-black text-amber-400">30%</div>
+        </div>
+        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800">
+          <div class="text-xs text-slate-400 font-medium mb-1">Pitching &amp; Defense</div>
+          <div class="text-2xl font-display font-black text-rpsViolet">15%</div>
+        </div>
+        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800">
+          <div class="text-xs text-slate-400 font-medium mb-1">Laporan Proyek Final</div>
+          <div class="text-2xl font-display font-black text-emerald-400">25%</div>
+        </div>
+        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800">
+          <div class="text-xs text-slate-400 font-medium mb-1">Kehadiran / Presensi</div>
+          <div class="text-2xl font-display font-black text-slate-300">10%</div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="mt-auto border-t border-rpsBorder bg-rpsDark py-8 no-print">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-2">
+      <p class="text-xs text-slate-400">
+        Rencana Pembelajaran Semester (RPS) • Analisa Proses Bisnis (INF1104) • S1 Teknik Informatika<br>
+        <strong>Institut Teknologi dan Bisnis Swadharma (ITBS)</strong> Jakarta
+      </p>
+    </div>
+  </footer>
+
+</body>
+</html>

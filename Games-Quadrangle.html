@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Devil's Quadrangle Equilibrium & Process Tycoon - ITB Swadharma</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@700;800;900&family=JetBrains+Mono:wght@400;600;800&display=swap">
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Montserrat', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          },
+          colors: {
+            tycoonDark: '#040810',
+            tycoonCard: '#0A1020',
+            tycoonBorder: '#16233E',
+            tycoonViolet: '#8B5CF6',
+            tycoonCyan: '#06B6D4',
+            tycoonEmerald: '#10B981',
+            tycoonAmber: '#F59E0B',
+            tycoonRose: '#F43F5E'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #040810; }
+    ::-webkit-scrollbar-thumb { background: #16233E; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #8B5CF6; }
+
+    .tycoon-grid {
+      background-size: 32px 32px;
+      background-image: 
+        linear-gradient(to right, rgba(22, 35, 62, 0.35) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(22, 35, 62, 0.35) 1px, transparent 1px);
+    }
+  </style>
+</head>
+<body class="bg-tycoonDark text-slate-100 min-h-screen flex flex-col font-sans selection:bg-tycoonViolet selection:text-white antialiased tycoon-grid">
+
+  <!-- TOP APP BAR -->
+  <header class="sticky top-0 z-50 bg-tycoonDark/95 backdrop-blur-md border-b border-tycoonBorder h-20 flex items-center">
+    <div class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+      
+      <div class="flex items-center gap-3.5">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-tycoonViolet via-tycoonCyan to-emerald-500 flex items-center justify-center text-white font-display font-black text-xl shadow-lg shadow-violet-500/20">
+          <i class="fa-solid fa-diamond"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-display font-black text-xl tracking-tight text-white">BPR<span class="text-tycoonViolet">.TYCOON</span></span>
+            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-violet-950 border border-violet-800 text-violet-400">P11 BPR Lab</span>
+          </div>
+          <p class="text-xs text-slate-400 hidden sm:block">Analisa Proses Bisnis (INF1104) • Devil's Quadrangle Equilibrium &amp; Redesign Tycoon</p>
+        </div>
+      </div>
+
+      <!-- Live Operations Metrics -->
+      <div class="flex items-center gap-3">
+        <!-- Budget Reserve -->
+        <div class="hidden sm:flex items-center gap-2.5 bg-slate-900 border border-tycoonBorder px-3.5 py-1.5 rounded-xl shadow-inner">
+          <i class="fa-solid fa-wallet text-emerald-400 text-sm"></i>
+          <div>
+            <div class="text-[9px] uppercase tracking-wider text-slate-400 font-bold">Cadangan Kas Proyek</div>
+            <div id="budgetDisplay" class="font-mono font-bold text-emerald-400 text-xs sm:text-sm leading-none">Rp 100 Juta</div>
+          </div>
+        </div>
+
+        <!-- Milestone Round -->
+        <div class="flex items-center gap-2.5 bg-slate-900 border border-tycoonBorder px-3.5 py-1.5 rounded-xl shadow-inner">
+          <i class="fa-solid fa-flag text-amber-400 text-sm"></i>
+          <div>
+            <div class="text-[9px] uppercase tracking-wider text-slate-400 font-bold">Fase Redesign</div>
+            <div id="phaseDisplay" class="font-display font-black text-amber-400 text-xs sm:text-sm leading-none">Fase 1 / 4</div>
+          </div>
+        </div>
+
+        <button onclick="resetTycoonSimulator()" class="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold border border-slate-700 transition" title="Ulangi Simulasi">
+          <i class="fa-solid fa-rotate-right"></i> Reset
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- MAIN SIMULATOR ARENA -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-5">
+
+    <!-- REAL-TIME DEVIL'S QUADRANGLE EQUILIBRIUM (4 CORNERS METRICS) -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3.5">
+      
+      <!-- Metric 1: Time Efficiency (Waktu Siklus) -->
+      <div class="bg-tycoonCard border border-tycoonBorder rounded-2xl p-3.5 shadow-lg flex flex-col justify-between">
+        <div class="flex items-center justify-between text-xs font-semibold">
+          <span class="flex items-center gap-1.5 text-slate-300"><i class="fa-solid fa-clock text-cyan-400"></i> Kecepatan Waktu</span>
+          <span id="timeVal" class="font-mono font-bold text-cyan-400">25% (Lambat)</span>
+        </div>
+        <div class="w-full h-2 bg-slate-950 rounded-full overflow-hidden border border-slate-800 mt-2">
+          <div id="timeBar" class="h-full bg-gradient-to-r from-cyan-600 to-cyan-400 transition-all duration-300 rounded-full" style="width: 25%;"></div>
+        </div>
+        <div class="flex justify-between items-center text-[10px] text-slate-400 mt-2">
+          <span>Target Direksi</span>
+          <span class="text-cyan-400 font-mono font-bold">&gt; 80% KILAT</span>
+        </div>
+      </div>
+
+      <!-- Metric 2: Operating Cost (Biaya) -->
+      <div class="bg-tycoonCard border border-tycoonBorder rounded-2xl p-3.5 shadow-lg flex flex-col justify-between">
+        <div class="flex items-center justify-between text-xs font-semibold">
+          <span class="flex items-center gap-1.5 text-slate-300"><i class="fa-solid fa-coins text-emerald-400"></i> Efisiensi Biaya</span>
+          <span id="costVal" class="font-mono font-bold text-emerald-400">30% (Boros)</span>
+        </div>
+        <div class="w-full h-2 bg-slate-950 rounded-full overflow-hidden border border-slate-800 mt-2">
+          <div id="costBar" class="h-full bg-gradient-to-r from-emerald-600 to-emerald-400 transition-all duration-300 rounded-full" style="width: 30%;"></div>
+        </div>
+        <div class="flex justify-between items-center text-[10px] text-slate-400 mt-2">
+          <span>Target Direksi</span>
+          <span class="text-emerald-400 font-mono font-bold">&gt; 75% HEMAT</span>
+        </div>
+      </div>
+
+      <!-- Metric 3: Quality Score (Kualitas & Akurasi) -->
+      <div class="bg-tycoonCard border border-tycoonBorder rounded-2xl p-3.5 shadow-lg flex flex-col justify-between">
+        <div class="flex items-center justify-between text-xs font-semibold">
+          <span class="flex items-center gap-1.5 text-slate-300"><i class="fa-solid fa-award text-amber-400"></i> Kualitas Layanan</span>
+          <span id="qualityVal" class="font-mono font-bold text-amber-400">40% (Banyak Cacat)</span>
+        </div>
+        <div class="w-full h-2 bg-slate-950 rounded-full overflow-hidden border border-slate-800 mt-2">
+          <div id="qualityBar" class="h-full bg-gradient-to-r from-amber-600 to-amber-400 transition-all duration-300 rounded-full" style="width: 40%;"></div>
+        </div>
+        <div class="flex justify-between items-center text-[10px] text-slate-400 mt-2">
+          <span>Target Direksi</span>
+          <span class="text-amber-400 font-mono font-bold">&gt; 85% PRESISI</span>
+        </div>
+      </div>
+
+      <!-- Metric 4: Flexibility (Adaptasi Pasar) -->
+      <div class="bg-tycoonCard border border-tycoonBorder rounded-2xl p-3.5 shadow-lg flex flex-col justify-between">
+        <div class="flex items-center justify-between text-xs font-semibold">
+          <span class="flex items-center gap-1.5 text-slate-300"><i class="fa-solid fa-arrows-spin text-violet-400"></i> Fleksibilitas Sistem</span>
+          <span id="flexVal" class="font-mono font-bold text-violet-400">35% (Kaku)</span>
+        </div>
+        <div class="w-full h-2 bg-slate-950 rounded-full overflow-hidden border border-slate-800 mt-2">
+          <div id="flexBar" class="h-full bg-gradient-to-r from-violet-600 to-violet-400 transition-all duration-300 rounded-full" style="width: 35%;"></div>
+        </div>
+        <div class="flex justify-between items-center text-[10px] text-slate-400 mt-2">
+          <span>Target Direksi</span>
+          <span class="text-violet-400 font-mono font-bold">&gt; 70% ADAPTIF</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- WORKSPACE SPLIT: QUADRANGLE RADAR (7 COLS) VS HEURISTIC STRATEGY DESK (5 COLS) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+
+      <!-- LEFT: VISUAL DEVIL'S QUADRANGLE RADAR & ENTERPRISE BLUEPRINT (7 COLS) -->
+      <div class="lg:col-span-7 bg-tycoonCard border border-tycoonBorder rounded-3xl p-5 shadow-2xl relative flex flex-col">
+        
+        <div class="flex items-center justify-between pb-3 border-b border-tycoonBorder mb-3">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-violet-400 animate-ping"></span>
+            <h3 class="font-display font-extrabold text-sm sm:text-base text-white">
+              Peta Keseimbangan Devil's Quadrangle (Trade-off Matrix)
+            </h3>
+          </div>
+          <span class="text-[11px] text-slate-400 font-mono">BPR Equilibrium Active</span>
+        </div>
+
+        <p class="text-xs text-slate-400 mb-3">
+          Setiap keputusan heuristik perombakan proses yang Anda ambil akan saling tarik-menarik. Perhatikan keseimbangan antara Kecepatan, Biaya, Kualitas, dan Fleksibilitas perusahaan.
+        </p>
+
+        <!-- Canvas / SVG Radar Area -->
+        <div class="w-full h-[380px] bg-slate-950 border-2 border-slate-800 rounded-2xl p-4 flex flex-col justify-between relative overflow-hidden shadow-inner">
+          
+          <svg class="w-full h-full" viewBox="0 0 800 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Center Cross Axis -->
+            <line x1="400" y1="20" x2="400" y2="320" stroke="#1E293B" stroke-dasharray="4 4" stroke-width="2"/>
+            <line x1="100" y1="170" x2="700" y2="170" stroke="#1E293B" stroke-dasharray="4 4" stroke-width="2"/>
+
+            <!-- Quadrant Background Zones -->
+            <text x="250" y="90" fill="#38BDF8" font-family="Montserrat" font-size="12" font-weight="700" text-anchor="middle">1. WAKTU (CYCLE TIME)</text>
+            <text x="550" y="90" fill="#10B981" font-family="Montserrat" font-size="12" font-weight="700" text-anchor="middle">2. BIAYA (COST EFFICIENCY)</text>
+            <text x="250" y="270" fill="#F59E0B" font-family="Montserrat" font-size="12" font-weight="700" text-anchor="middle">3. KUALITAS (ERROR-FREE)</text>
+            <text x="550" y="270" fill="#8B5CF6" font-family="Montserrat" font-size="12" font-weight="700" text-anchor="middle">4. FLEKSIBILITAS (AGILE)</text>
+
+            <!-- Dynamic Equilibrium Polygon / Indicator -->
+            <polygon id="radarPolygon" points="400,170 400,170 400,170 400,170" fill="rgba(139, 92, 246, 0.2)" stroke="#8B5CF6" stroke-width="3"/>
+            
+            <!-- Nodes for 4 Corners -->
+            <circle id="nodeTime" cx="400" cy="170" r="8" fill="#06B6D4"/>
+            <circle id="nodeCost" cx="400" cy="170" r="8" fill="#10B981"/>
+            <circle id="nodeQuality" cx="400" cy="170" r="8" fill="#F59E0B"/>
+            <circle id="nodeFlex" cx="400" cy="170" r="8" fill="#8B5CF6"/>
+          </svg>
+
+        </div>
+
+        <!-- Quadrangle Status Bar -->
+        <div class="mt-3 flex items-center justify-between text-[11px] font-mono text-slate-400 bg-slate-950 px-3 py-2 rounded-xl border border-slate-800">
+          <span id="quadrangleStatusSummary"><i class="fa-solid fa-scale-balanced text-violet-400 mr-1.5"></i>Status: Menunggu Keputusan Intervensi Redesign Pertama</span>
+          <span class="text-violet-400 font-bold">Tycoon Engine Active</span>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: HEURISTIC STRATEGY DESK (5 COLS) -->
+      <div id="strategyDeskCard" class="lg:col-span-5 bg-tycoonCard border border-tycoonBorder rounded-3xl p-6 shadow-2xl space-y-4 transition-all duration-300">
+        
+        <div>
+          <div class="flex items-center justify-between text-xs mb-2">
+            <span id="phaseBadge" class="px-2.5 py-1 rounded-full bg-violet-950 border border-violet-800 text-violet-400 font-display font-bold uppercase tracking-wider">
+              <i class="fa-solid fa-chess-board mr-1"></i> Fase Keputusan 1 / 4
+            </span>
+            <span id="heuristicTag" class="font-mono text-amber-400 font-bold text-xs bg-amber-950/80 border border-amber-900 px-2 py-0.5 rounded">
+              Redesign Heuristic
+            </span>
+          </div>
+          <h2 id="crisisTitle" class="font-display font-extrabold text-base sm:text-lg text-white leading-tight">
+            Krisis Birokrasi Pengadaan: 14 Tahap Tanda Tangan Manual!
+          </h2>
+          <p id="crisisDesc" class="text-xs sm:text-sm text-slate-300 mt-2 leading-relaxed">
+            Setiap pengadaan barang kantor harus melalui paraf 5 direktur fisik yang memakan waktu 14 hari. Pilih strategi intervensi redesign BPR yang tepat untuk memecah kebuntuan ini.
+          </p>
+        </div>
+
+        <!-- Strategy Intervention Options (Populated by JS) -->
+        <div id="optionsContainer" class="space-y-2.5 pt-1">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- Consultant Coaching Feedback Box -->
+        <div id="tycoonFeedbackBox" class="p-3.5 rounded-2xl bg-slate-950/90 border border-tycoonBorder text-xs text-slate-300 flex items-start gap-3">
+          <i class="fa-solid fa-user-tie text-tycoonViolet text-base mt-0.5"></i>
+          <div>
+            <span class="font-bold text-white block">Catatan Konsultan Senior BPR:</span>
+            <span id="feedbackText">Dalam hukum Devil's Quadrangle, menghilangkan birokrasi manual akan menaikkan Kecepatan dan Kualitas secara drastis, namun membutuhkan investasi software.</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- MISSION COMPLETE / GAME OVER SUMMARY MODAL -->
+    <div id="summaryModal" class="hidden bg-gradient-to-r from-slate-950 via-tycoonCard to-slate-950 border-2 border-tycoonBorder rounded-3xl p-8 text-center shadow-2xl relative overflow-hidden">
+      <div id="summaryIcon" class="inline-flex p-4 rounded-full text-4xl mb-3"></div>
+      <h3 id="summaryTitle" class="font-display font-black text-2xl sm:text-3xl text-white"></h3>
+      <p id="summaryDesc" class="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto mt-2 leading-relaxed"></p>
+      
+      <div class="mt-6 flex flex-wrap justify-center gap-3">
+        <button onclick="resetTycoonSimulator()" class="px-6 py-3 rounded-xl bg-gradient-to-r from-tycoonViolet to-emerald-500 text-white font-display font-black text-xs uppercase tracking-wider shadow-lg hover:brightness-110 active:scale-95 transition">
+          <i class="fa-solid fa-rotate-right mr-1.5"></i> Ulangi Simulasi BPR Tycoon
+        </button>
+        <button onclick="window.close()" class="px-6 py-3 rounded-xl bg-slate-900 border border-slate-700 text-slate-300 font-display font-bold text-xs uppercase tracking-wider hover:text-white transition">
+          <i class="fa-solid fa-xmark mr-1.5"></i> Tutup Simulator
+        </button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- JAVASCRIPT BPR TYCOON ENGINE -->
+  <script>
+    // ==========================================
+    // 1. TYCOON PHASES & DECISIONS MASTER DATA
+    // ==========================================
+    const TYCOON_PHASES = [
+      {
+        phase: 1,
+        title: "Krisis Birokrasi Pengadaan: 14 Tahap Tanda Tangan Manual!",
+        desc: "Setiap pengadaan barang kantor harus melalui paraf 5 direktur fisik yang memakan waktu 14 hari. Pilih strategi intervensi redesign BPR yang tepat untuk memecah kebuntuan ini.",
+        options: [
+          {
+            text: "Terapkan Heuristik 'Task Elimination' + 'Business Rule Engine' Otomatis (< Rp 5 Juta).",
+            cost: 20000000,
+            timeDelta: +35,
+            costDelta: +25,
+            qualityDelta: +30,
+            flexDelta: +20,
+            feedback: "Brilian! Menghapus persetujuan berjenjang dan menggantinya dengan aturan otomatis (*Business Rules*) melesatkan kecepatan dan menghemat biaya operasional."
+          },
+          {
+            text: "Tambahkan 3 orang staf sekretaris baru untuk membantu mengejar tanda tangan direktur.",
+            cost: 30000000,
+            timeDelta: +5,
+            costDelta: -15,
+            qualityDelta: +5,
+            flexDelta: 0,
+            feedback: "Keliru! Menambah staf manual di atas proses yang cacat (*Paving the Cow Paths*) hanya menambah beban biaya tanpa memangkas waktu secara signifikan."
+          },
+          {
+            text: "Biarkan SOP apa adanya agar direksi tetap merasa memegang kendali penuh.",
+            cost: 0,
+            timeDelta: -10,
+            costDelta: -10,
+            qualityDelta: 0,
+            flexDelta: -10,
+            feedback: "Stagnan! Mempertahankan birokrasi kaku membuat perusahaan tertinggal jauh dari kecepatan kompetitor."
+          }
+        ]
+      },
+      {
+        phase: 2,
+        title: "Krisis Gudang & Kasir: Antrean Rekonsiliasi Lambat!",
+        desc: "Kasir dan gudang sering selisih data stok karena mencatat di lembar terpisah. Bagaimana solusi heuristik BPR Anda?",
+        options: [
+          {
+            text: "Terapkan Heuristik 'Single Data Source' + 'Task Automation' (Webhook POS & Cloud SQL).",
+            cost: 25000000,
+            timeDelta: +30,
+            costDelta: +30,
+            qualityDelta: +35,
+            flexDelta: +25,
+            feedback: "Luar biasa! Integrasi database tunggal menghilangkan selisih stok dan menghadirkan akurasi data (*Quality & Time* meningkat pesat)."
+          },
+          {
+            text: "Wajibkan kasir dan staf gudang melakukan rapat koordinasi pencocokan buku setiap pukul 17.00 WIB.",
+            cost: 10000000,
+            timeDelta: -15,
+            costDelta: -20,
+            qualityDelta: +10,
+            flexDelta: -10,
+            feedback: "Kurang efektif! Menambah rapat koordinasi manual menambah beban lembur staf (*Cost & Time* tergerus)."
+          }
+        ]
+      },
+      {
+        phase: 3,
+        title: "Krisis Lonjakan Musiman: Proses Sekuensial Macet Total!",
+        desc: "Saat promo bulanan, pesanan menumpuk karena bagian packing baru bekerja setelah faktur keuangan selesai dicetak (berurutan).",
+        options: [
+          {
+            text: "Terapkan Heuristik 'Parallelism' (Parallel Gateway AND: Packing & Faktur Serentak).",
+            cost: 15000000,
+            timeDelta: +35,
+            costDelta: +20,
+            qualityDelta: +20,
+            flexDelta: +30,
+            feedback: "Tepat! Mengeksekusi pengemasan barang dan pencetakan faktur secara serentak memangkas waktu tunggu secara dramatis."
+          },
+          {
+            text: "Perintahkan staf bekerja dua kali lebih cepat secara manual tanpa mengubah urutan.",
+            cost: 5000000,
+            timeDelta: +5,
+            costDelta: -10,
+            qualityDelta: -15,
+            flexDelta: 0,
+            feedback: "Kelelahan kerja! Memaksa staf bekerja lebih cepat tanpa mengubah alur justru memicu kesalahan ketik (*Defects* naik)."
+          }
+        ]
+      },
+      {
+        phase: 4,
+        title: "Ujian Akhir Direksi: Fleksibilitas Menghadapi Regulasi Pasar Baru!",
+        desc: "Pemerintah menerbitkan aturan pajak dan metode pembayaran digital baru yang wajib diadopsi sistem perusahaan dalam 7 hari.",
+        options: [
+          {
+            text: "Terapkan Heuristik 'Case Triage' & Arsitektur Microservices API Modular.",
+            cost: 20000000,
+            timeDelta: +20,
+            costDelta: +20,
+            qualityDelta: +25,
+            flexDelta: +35,
+            feedback: "Sempurna! Arsitektur modular dan pemilahan kasus fleksibel membuat perusahaan sangat tangkas (*Agile*) beradaptasi dengan regulasi."
+          },
+          {
+            text: "Rombak ulang seluruh sistem dari nol menggunakan bahasa pemrograman baru selama 1 tahun.",
+            cost: 60000000,
+            timeDelta: -30,
+            costDelta: -40,
+            qualityDelta: +10,
+            flexDelta: +10,
+            feedback: "Terlalu lama dan mahal! Membangun ulang dari nol menghabiskan kas proyek dan melewati tenggat waktu pasar."
+          }
+        ]
+      }
+    ];
+
+    // ==========================================
+    // 2. STATE MANAGEMENT
+    // ==========================================
+    let currentPhaseIndex = 0;
+    let budgetReserve = 100000000;
+    let metrics = {
+      time: 25,
+      cost: 30,
+      quality: 40,
+      flex: 35
+    };
+
+    function renderMetrics() {
+      // Clamp 0 - 100
+      Object.keys(metrics).forEach(k => {
+        metrics[k] = Math.max(0, Math.min(100, metrics[k]));
+      });
+
+      document.getElementById('budgetDisplay').innerText = 'Rp ' + Math.max(0, Math.round(budgetReserve / 1000000)) + ' Juta';
+      document.getElementById('phaseDisplay').innerText = `Fase ${currentPhaseIndex + 1} / ${TYCOON_PHASES.length}`;
+
+      // Time
+      document.getElementById('timeVal').innerText = `${metrics.time}% (${metrics.time > 75 ? 'Kilat' : (metrics.time > 50 ? 'Sedang' : 'Lambat')})`;
+      document.getElementById('timeBar').style.width = `${metrics.time}%`;
+
+      // Cost
+      document.getElementById('costVal').innerText = `${metrics.cost}% (${metrics.cost > 75 ? 'Sangat Hemat' : (metrics.cost > 50 ? 'Efisien' : 'Boros')})`;
+      document.getElementById('costBar').style.width = `${metrics.cost}%`;
+
+      // Quality
+      document.getElementById('qualityVal').innerText = `${metrics.quality}% (${metrics.quality > 75 ? 'Presisi' : (metrics.quality > 50 ? 'Standar' : 'Banyak Cacat')})`;
+      document.getElementById('qualityBar').style.width = `${metrics.quality}%`;
+
+      // Flexibility
+      document.getElementById('flexVal').innerText = `${metrics.flex}% (${metrics.flex > 75 ? 'Sangat Adaptif' : (metrics.flex > 50 ? 'Cukup' : 'Kaku')})`;
+      document.getElementById('flexBar').style.width = `${metrics.flex}%`;
+
+      updateRadarPolygon();
+    }
+
+    function updateRadarPolygon() {
+      // Map 0-100 metrics to SVG coordinates in 800x340 box centered at (400, 170)
+      // Top: Time (400, 170 - t*1.3)
+      // Right: Cost (400 + c*2.5, 170)
+      // Bottom: Quality (400, 170 + q*1.3)
+      // Left: Flex (400 - f*2.5, 170)
+      const tY = 170 - (metrics.time * 1.3);
+      const cX = 400 + (metrics.cost * 2.5);
+      const qY = 170 + (metrics.quality * 1.3);
+      const fX = 400 - (metrics.flex * 2.5);
+
+      const poly = document.getElementById('radarPolygon');
+      poly.setAttribute('points', `400,${tY} ${cX},170 400,${qY} ${fX},170`);
+
+      document.getElementById('nodeTime').setAttribute('cy', tY);
+      document.getElementById('nodeCost').setAttribute('cx', cX);
+      document.getElementById('nodeQuality').setAttribute('cy', qY);
+      document.getElementById('nodeFlex').setAttribute('cx', fX);
+    }
+
+    function renderStrategyDesk() {
+      const cur = TYCOON_PHASES[currentPhaseIndex];
+      document.getElementById('phaseBadge').innerHTML = `<i class="fa-solid fa-chess-board mr-1"></i> Fase Keputusan ${cur.phase} / ${TYCOON_PHASES.length}`;
+      document.getElementById('crisisTitle').innerText = cur.title;
+      document.getElementById('crisisDesc').innerText = cur.desc;
+
+      const container = document.getElementById('optionsContainer');
+      container.innerHTML = '';
+
+      cur.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = "w-full text-left p-3.5 rounded-2xl bg-slate-950 hover:bg-slate-900 border border-slate-800 hover:border-violet-500/80 transition group relative";
+        btn.innerHTML = `
+          <div class="flex items-start justify-between gap-3">
+            <div class="space-y-1">
+              <span class="inline-block text-[10px] font-bold font-display uppercase px-2 py-0.5 rounded bg-violet-950 border border-violet-800 text-violet-400">
+                Opsi Tindakan ${String.fromCharCode(65 + idx)}
+              </span>
+              <h4 class="text-xs sm:text-sm font-bold text-white group-hover:text-violet-300 transition">
+                ${opt.text}
+              </h4>
+            </div>
+            <span class="text-xs font-mono font-bold text-emerald-400 shrink-0 px-2 py-1 rounded bg-slate-900 border border-slate-700">
+              ${opt.cost === 0 ? 'Rp 0' : '-Rp ' + Math.round(opt.cost/1000000) + ' Juta'}
+            </span>
+          </div>
+        `;
+        btn.onclick = () => makeTycoonDecision(opt);
+        container.appendChild(btn);
+      });
+    }
+
+    function makeTycoonDecision(opt) {
+      budgetReserve -= opt.cost;
+      metrics.time += opt.timeDelta;
+      metrics.cost += opt.costDelta;
+      metrics.quality += opt.qualityDelta;
+      metrics.flex += opt.flexDelta;
+
+      const feedbackBox = document.getElementById('tycoonFeedbackBox');
+      const feedbackText = document.getElementById('feedbackText');
+
+      feedbackBox.className = "p-3.5 rounded-2xl bg-violet-950/90 border border-violet-800 text-xs text-violet-200 flex items-start gap-3";
+      feedbackText.innerHTML = `<strong>Analisis Pengaruh Heuristik:</strong> ${opt.feedback}`;
+
+      renderMetrics();
+
+      if (budgetReserve < 0 || metrics.time < 10 || metrics.quality < 10) {
+        triggerEndSummary(false, "Kebangkrutan Proyek Redesign (Game Over)", "Anggaran kas cadangan habis atau parameter kualitas dan kecepatan anjlok drastis akibat salah strategi intervensi BPR.");
+        return;
+      }
+
+      currentPhaseIndex++;
+      if (currentPhaseIndex < TYCOON_PHASES.length) {
+        setTimeout(() => {
+          renderStrategyDesk();
+        }, 800);
+      } else {
+        const avgScore = Math.round((metrics.time + metrics.cost + metrics.quality + metrics.flex) / 4);
+        if (avgScore >= 65) {
+          triggerEndSummary(true, "Certified BPR Master & Tycoon Expert (Grade A+)", `Luar biasa! Anda berhasil menyeimbangkan Devil's Quadrangle dengan skor keseimbangan rata-rata ${avgScore}%. Perusahaan bertransformasi menjadi entitas yang cepat, hemat, presisi, dan sangat fleksibel.`);
+        } else {
+          triggerEndSummary(false, "Proyek Selesai dengan Kompromi Berat (Grade C+)", `Simulasi BPR selesai namun keseimbangan Quadrangle belum optimal (Skor rata-rata: ${avgScore}%). Di dunia nyata, pastikan otomatisasi heuristik tidak mengorbankan kualitas layanan.`);
+        }
+      }
+    }
+
+    function triggerEndSummary(isWin, title, desc) {
+      const modal = document.getElementById('summaryModal');
+      const icon = document.getElementById('summaryIcon');
+      const t = document.getElementById('summaryTitle');
+      const d = document.getElementById('summaryDesc');
+
+      modal.classList.remove('hidden');
+      t.innerText = title;
+      d.innerText = desc;
+
+      if (isWin) {
+        icon.className = "inline-flex p-4 rounded-full text-4xl mb-3 bg-emerald-500/20 text-emerald-400 border border-emerald-500";
+        icon.innerHTML = '<i class="fa-solid fa-trophy"></i>';
+        t.className = "font-display font-black text-2xl sm:text-3xl text-emerald-400";
+      } else {
+        icon.className = "inline-flex p-4 rounded-full text-4xl mb-3 bg-rose-500/20 text-rose-400 border border-rose-500";
+        icon.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
+        t.className = "font-display font-black text-2xl sm:text-3xl text-rose-400";
+      }
+
+      window.scrollTo({ top: modal.offsetTop - 30, behavior: 'smooth' });
+    }
+
+    function resetTycoonSimulator() {
+      currentPhaseIndex = 0;
+      budgetReserve = 100000000;
+      metrics = { time: 25, cost: 30, quality: 40, flex: 35 };
+
+      document.getElementById('summaryModal').classList.add('hidden');
+      document.getElementById('tycoonFeedbackBox').className = "p-3.5 rounded-2xl bg-tycoonCard border border-tycoonBorder text-xs text-slate-300 flex items-start gap-3";
+      document.getElementById('feedbackText').innerText = "Dalam hukum Devil's Quadrangle, menghilangkan birokrasi manual akan menaikkan Kecepatan dan Kualitas secara drastis, namun membutuhkan investasi software.";
+
+      renderMetrics();
+      renderStrategyDesk();
+    }
+
+    window.onload = function() {
+      renderMetrics();
+      renderStrategyDesk();
+    };
+  </script>
+</body>
+</html>
