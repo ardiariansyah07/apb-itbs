@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Analisa Proses Bisnis - Pertemuan 13</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Open+Sans:wght@400;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    /* CSS RESET & FEASIBILITY/SECURITY THEME VARIABLES */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-bg-light: #F8FAFC;
+      --color-text-dark: #0F172A;
+      --color-text-muted: #475569;
+      --color-primary: #0F172A;   /* Deep Slate */
+      --color-amber: #D97706;     /* Feasibility Assessment Amber */
+      --color-cyan: #06B6D4;      /* System Architecture Cyan */
+      --color-emerald: #10B981;   /* ROI & Economic Emerald */
+      --color-rose: #E11D48;      /* Risk & Vulnerability Rose */
+      --color-violet: #8B5CF6;    /* Organizational Change Violet */
+      --color-white: #FFFFFF;
+      --color-dark-bg: #0A0F1D;
+      --navbar-height: 60px;
+    }
+    
+    body { 
+      margin: 0; 
+      padding: 0; 
+      background: #060913; 
+      font-family: 'Open Sans', sans-serif; 
+      height: 100vh; 
+      overflow: hidden; 
+      position: relative;
+    }
+
+    /* TOP NAVIGATION BAR */
+    .top-navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: var(--navbar-height);
+      background: #0F172A;
+      border-bottom: 2px solid #1E293B;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 1000;
+      font-family: 'Montserrat', sans-serif;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.5);
+    }
+
+    .nav-left, .nav-center, .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-btn {
+      background: #1E293B;
+      border: 1px solid #334155;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+      padding: 8px 16px;
+      border-radius: 6px;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .nav-btn:hover { background: var(--color-amber); border-color: var(--color-amber); color: #0F172A; }
+
+    /* DROPDOWN MENU SLIDES */
+    .slide-selector {
+      background: #1E293B;
+      color: white;
+      border: 1px solid #334155;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      outline: none;
+      max-width: 380px;
+    }
+    .slide-selector option { background: #0F172A; }
+
+    /* MAIN CONTAINER ADJUSTMENT */
+    #presentation-area {
+      position: absolute;
+      top: var(--navbar-height);
+      left: 0;
+      right: 0;
+      bottom: 0; 
+      overflow: hidden;
+    }
+
+    /* HARD LOCK 16:9 CONTAINER (1280x720px) */
+    .slide-container {
+      width: 1280px !important;
+      height: 720px !important;
+      background: var(--color-bg-light);
+      color: var(--color-text-dark);
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(1);
+      transform-origin: center center;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.35s ease-in-out;
+      pointer-events: none;
+    }
+
+    .slide-container.active {
+      visibility: visible;
+      opacity: 1;
+      z-index: 5;
+      pointer-events: auto;
+    }
+
+    /* TYPOGRAPHY */
+    h1, h2, h3, h4, .eyebrow { font-family: 'Montserrat', sans-serif; }
+    h1 { font-size: 56px; font-weight: 800; line-height: 1.15; margin-bottom: 20px; color: var(--color-text-dark); }
+    h2 { font-size: 40px; font-weight: 700; line-height: 1.25; margin-bottom: 22px; color: var(--color-text-dark); }
+    h3 { font-size: 28px; font-weight: 700; margin-bottom: 14px; color: var(--color-amber); }
+    p, li { font-size: 23px; line-height: 1.5; color: var(--color-text-muted); }
+    .eyebrow { font-size: 18px; font-weight: 700; color: var(--color-amber); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; }
+    .divider { width: 80px; height: 6px; background: var(--color-amber); margin: 18px 0 22px 0; }
+    
+    .bg-dark { background: var(--color-dark-bg) !important; color: var(--color-white) !important; }
+    .bg-dark h1, .bg-dark h2, .bg-dark h3, .bg-dark p, .bg-dark li { color: var(--color-white) !important; }
+    
+    /* LAYOUT: SPLIT SCREEN */
+    .layout-split { display: flex; flex-direction: row; flex: 1 1 100%; width: 100%; height: 100%; }
+    .split-col { display: flex; flex-direction: column; justify-content: center; height: 100%; padding: 40px 80px; }
+    .split-img-col { padding: 0 !important; margin: 0 !important; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #0F172A; }
+    .split-img-col img { width: 100%; height: 100%; object-fit: cover; display: block; margin: 0; padding: 0; }
+    
+    /* SPLIT RATIOS */
+    .w-40 { flex: 0 0 40%; width: 40%; }
+    .w-50 { flex: 0 0 50%; width: 50%; }
+    .w-60 { flex: 0 0 60%; width: 60%; }
+
+    /* LAYOUT: STANDARD / CENTERED */
+    .pad-standard { padding: 40px 80px; display: flex; flex-direction: column; flex: 1; height: 100%; }
+    .center-content { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; flex: 1; height: 100%; padding: 40px 80px; }
+    .flex-grow-center { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; }
+
+    /* COMPONENTS: LISTS & CARDS */
+    .minimal-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 18px; }
+    .minimal-list li { display: flex; align-items: flex-start; gap: 18px; font-weight: 600; }
+    .minimal-list li i { font-size: 28px; color: var(--color-amber); width: 36px; text-align: center; margin-top: 4px; }
+
+    .card-grid { display: flex; gap: 22px; align-items: stretch; width: 100%; justify-content: center; flex-wrap: wrap; }
+    .card { background: var(--color-white); border-radius: 16px; padding: 28px 28px; flex: 1 1 0; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #E2E8F0; display: flex; flex-direction: column; align-items: flex-start; }
+    .card i { font-size: 44px; color: var(--color-amber); margin-bottom: 14px; }
+
+    /* INTERACTIVE: DRAG AND DROP */
+    .draggable-container { display: flex; gap: 14px; margin-bottom: 14px; justify-content: center; min-height: 56px; flex-wrap: wrap; }
+    .drag-item { 
+      cursor: grab; padding: 10px 18px; font-size: 17px; background: white; 
+      border: 3px solid var(--color-amber); border-radius: 12px; font-weight: 700; 
+      user-select: none; color: #0F172A; text-align: center; margin-bottom: 6px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.2s; display: inline-block;
+    }
+    .drag-item:active { cursor: grabbing; transform: scale(0.95); }
+    .drag-item.dragging { opacity: 0.5; }
+    
+    .dropzones-container { display: flex; gap: 20px; justify-content: center; align-items: stretch; width: 100%; }
+    .drop-zone { 
+      border: 4px dashed #CBD5E1; border-radius: 16px; flex: 1; 
+      min-height: 170px; padding: 16px; display: flex; flex-direction: column; 
+      align-items: center; background: #FFFFFF; transition: 0.3s;
+    }
+    .drop-zone h3 { font-size: 20px; margin-bottom: 10px; color: #475569; border-bottom: 2px solid #CBD5E1; padding-bottom: 6px; width: 100%; text-align: center;}
+    .drop-zone.drag-over { border-color: var(--color-amber); background: #FFFBEB; }
+    .drop-content { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; width: 100%; gap: 6px; }
+
+    /* INTERACTIVE: QUIZ */
+    .quiz-option {
+      background: #F8FAFC; border: 2px solid #CBD5E1; padding: 12px 20px; 
+      border-radius: 12px; font-size: 19px; font-weight: 600; cursor: pointer; 
+      text-align: left; transition: 0.2s; margin-bottom: 10px; width: 100%;
+      color: #334155; display: flex; align-items: center; gap: 16px;
+    }
+    .quiz-option:hover { background: #E2E8F0; transform: translateX(6px); }
+    .quiz-option.correct { background: #D1FAE5; border-color: #10B981; color: #065F46; }
+    .quiz-option.wrong { background: #FEE2E2; border-color: #EF4444; color: #991B1B; }
+    
+    .quiz-feedback { 
+      display: none; margin-top: 14px; padding: 14px 22px; background: #FFFBEB; 
+      border-left: 8px solid var(--color-amber); border-radius: 0 12px 12px 0; font-size: 17px; 
+      animation: fadeIn 0.4s ease-in-out;
+    }
+    .quiz-feedback.show { display: block; }
+    .quiz-feedback h4 { font-size: 20px; margin-bottom: 6px; color: var(--color-amber); }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* BADGES */
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(217, 119, 6, 0.15);
+      border: 1px solid var(--color-amber);
+      color: #FBBF24;
+      padding: 6px 16px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP NAVIGATION BAR -->
+  <div class="top-navbar" id="navbar">
+    <div class="nav-left">
+      <div style="font-weight: 800; font-size: 18px; color: #38BDF8;">ITB Swadharma</div>
+    </div>
+    
+    <div class="nav-center">
+      <button class="nav-btn" onclick="prevSlide()" title="Slide Sebelumnya"><i class="fa-solid fa-chevron-left"></i></button>
+      <select class="slide-selector" id="slideSelector" onchange="jumpToSlide(this.value)"></select>
+      <button class="nav-btn" onclick="nextSlide()" title="Slide Berikutnya"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+
+    <div class="nav-right">
+      <div style="font-weight: 600; font-size: 14px; color: #94A3B8;">Analisa Proses Bisnis (3 SKS) • Ardi Ariansyah, S.Kom., Gr.</div>
+    </div>
+  </div>
+
+  <!-- MAIN PRESENTATION AREA -->
+  <div id="presentation-area">
+    <div id="slides-wrapper">
+
+      <!-- ==========================================
+           SECTION 1: COVER & PENDAHULUAN (SLIDES 1-5)
+           ========================================== -->
+
+      <!-- SLIDE 1 -->
+      <div class="slide-container layout-split bg-dark active" data-title="Sampul Depan">
+        <div class="split-col w-60 bg-dark">
+          <div class="badge-pill"><i class="fa-solid fa-scale-balanced"></i> Evaluasi Solusi &amp; Tata Kelola Risiko</div>
+          <p class="eyebrow">Pertemuan 13 • INF1104</p>
+          <h1>Evaluasi Kelayakan &amp; Dampak Keamanan</h1>
+          <div class="divider"></div>
+          <p style="font-size: 28px; font-weight: 600;">Feasibility Analysis, Manajemen Perubahan SDM, &amp; Security Requirements Model To-Be</p>
+          <div style="margin-top: 36px; border-top: 2px solid #334155; padding-top: 18px;">
+            <p style="color: #94A3B8; font-size: 16px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Dosen Pengampu:</p>
+            <p style="color: #FFFFFF; font-size: 24px; font-weight: 700; margin-top: 4px;">Ardi Ariansyah, S.Kom., Gr.</p>
+            <p style="color: #38BDF8; font-size: 18px; font-weight: 600;">S1 Teknik Informatika • ITB Swadharma</p>
+          </div>
+        </div>
+        <div class="split-col split-img-col w-40">
+          <img src="https://images.unsplash.com/photo-1450133064473-71024230f91b?w=800&q=80" alt="Feasibility Assessment Contract">
+        </div>
+      </div>
+
+      <!-- SLIDE 2 -->
+      <div class="slide-container center-content" data-title="Dari Desain ke Uji Nyata">
+        <i class="fa-solid fa-shield-halved" style="font-size: 96px; color: var(--color-amber); margin-bottom: 24px;"></i>
+        <h2 style="font-size: 52px;">Cetak Biru Saja Belum Cukup!</h2>
+        <p style="font-size: 26px; font-weight: 600; margin-top: 14px; max-width: 900px;">
+          Di Pertemuan 12 kita telah menggambar diagram BPMN To-Be yang canggih. Namun, sebelum diserahkan ke manajemen untuk dibangun: <strong>Apakah solusinya terjangkau secara finansial, sanggup dijalankan karyawan, dan tidak membuka lubang kebocoran data baru?</strong>
+        </p>
+      </div>
+
+      <!-- SLIDE 3 -->
+      <div class="slide-container layout-split" data-title="Kilas Balik Pertemuan 12">
+        <div class="split-col split-img-col w-40" style="background: #F1F5F9;">
+          <i class="fa-solid fa-arrows-split-up-and-left" style="font-size: 160px; color: var(--color-cyan);"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Kilas Balik Pertemuan 12</p>
+          <h2>Pijakan Menuju Kelayakan</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-check"></i> <span>**Model To-Be:** Diagram masa depan bebas dari bottleneck dan task NVA.</span></li>
+            <li><i class="fa-solid fa-check"></i> <span>**Gap Analysis:** Memetakan kesenjangan teknologi, proses, dan kompetensi SDM.</span></li>
+            <li><i class="fa-solid fa-forward" style="color: var(--color-amber);"></i> <span>**P13 (Hari Ini):** Menilai kelayakan investasi (TELOS), resistensi budaya, dan audit keamanan sistem baru.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 4 -->
+      <div class="slide-container pad-standard" data-title="Target Capaian Sub-CPMK 4.3">
+        <h2>Target Capaian Pembelajaran (Sub-CPMK 4.3)</h2>
+        <div class="flex-grow-center">
+          <div style="background: #FFFBEB; border-left: 12px solid var(--color-amber); padding: 48px; border-radius: 0 16px 16px 0;">
+            <h3 style="font-size: 30px; margin-bottom: 20px; color: #B45309;">Kemampuan Akhir Pembelajaran</h3>
+            <p style="font-size: 26px; font-weight: 600; color: #92400E; line-height: 1.5;">
+              "Mahasiswa mampu mengevaluasi dampak usulan perbaikan proses bisnis (To-Be) terhadap aspek kelayakan operasional, finansial, dan kesiapan SDM, serta merumuskan spesifikasi kebutuhan keamanan informasi (Security Requirements) guna memitigasi risiko implementasi sistem baru."
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 5 -->
+      <div class="slide-container pad-standard" data-title="Peta Materi Pertemuan 13">
+        <h2>Peta Materi Pertemuan 13</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 8px solid var(--color-amber);">
+              <i class="fa-solid fa-chart-pie"></i>
+              <h3>1. Kerangka Feasibility (TELOS)</h3>
+              <p>Evaluasi kelayakan Teknis, Ekonomis, Legal, Operasional, dan Jadwal.</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--color-violet);">
+              <i class="fa-solid fa-users-gear" style="color: var(--color-violet);"></i>
+              <h3>2. Manajemen Perubahan SDM</h3>
+              <p>Mengatasi resistensi karyawan terhadap digitalisasi (Kotter &amp; Lewin).</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--color-rose);">
+              <i class="fa-solid fa-user-shield" style="color: var(--color-rose);"></i>
+              <h3>3. Security Requirements To-Be</h3>
+              <p>Memitigasi celah baru: API vulnerability, hak akses RBAC, dan audit trail.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SECTION 2: FEASIBILITY ANALYSIS / TELOS (SLIDES 6-15)
+           ========================================== -->
+
+      <!-- SLIDE 6 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian I: Kerangka TELOS">
+        <p class="eyebrow">Bagian I</p>
+        <h1 style="font-size: 72px;">Analisis Kelayakan (Feasibility)</h1>
+        <div class="divider"></div>
+        <p style="font-size: 30px;">Menguji Realitas Usulan Sistem Melalui Kerangka 5 Dimensi TELOS.</p>
+      </div>
+
+      <!-- SLIDE 7 -->
+      <div class="slide-container layout-split" data-title="Mengapa Perlu Feasibility?">
+        <div class="split-col w-60">
+          <p class="eyebrow">Penyelamat Anggaran</p>
+          <h2>Kenapa Analis Wajib Menghitung Feasibility?</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-bomb" style="color: var(--color-rose);"></i> <span>Lebih dari 60% proyek transformasi TI korporat dinyatakan gagal memenuhi ekspektasi atau over-budget!</span></li>
+            <li><i class="fa-solid fa-coins" style="color: var(--color-emerald);"></i> <span>Manajemen eksekutif tidak peduli seberapa indah diagram BPMN Anda; mereka peduli: <em>Berapa biayanya? Kapan modal kembali? Apakah karyawan bisa memakainya?</em></span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40">
+          <img src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=800&q=80" alt="Financial Calculation">
+        </div>
+      </div>
+
+      <!-- SLIDE 8 -->
+      <div class="slide-container pad-standard" data-title="Kerangka Kerja TELOS">
+        <h2>5 Pilar Kerangka Kelayakan TELOS</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 6px solid var(--color-cyan); padding: 18px;">
+              <h4 style="color: #0891B2;">T - Technical</h4>
+              <p style="font-size: 14px;">Apakah teknologi yang dibutuhkan tersedia, stabil, dan dikuasai tim?</p>
+            </div>
+            <div class="card" style="border-top: 6px solid var(--color-emerald); padding: 18px;">
+              <h4 style="color: var(--color-emerald);">E - Economic</h4>
+              <p style="font-size: 14px;">Apakah manfaat finansial lebih besar daripada biaya pengadaan (ROI &gt; Biaya)?</p>
+            </div>
+            <div class="card" style="border-top: 6px solid var(--color-rose); padding: 18px;">
+              <h4 style="color: var(--color-rose);">L - Legal</h4>
+              <p style="font-size: 14px;">Apakah sistem baru mematuhi UU PDP, perbankan BI/OJK, dan hak cipta?</p>
+            </div>
+            <div class="card" style="border-top: 6px solid var(--color-violet); padding: 18px;">
+              <h4 style="color: var(--color-violet);">O - Operational</h4>
+              <p style="font-size: 14px;">Apakah staf dan pelanggan bersedia mengadopsi cara kerja baru ini?</p>
+            </div>
+            <div class="card" style="border-top: 6px solid var(--color-amber); padding: 18px;">
+              <h4 style="color: var(--color-amber);">S - Schedule</h4>
+              <p style="font-size: 14px;">Dapatkah proyek selesai tepat waktu sebelum momentum bisnis hilang?</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 9 -->
+      <div class="slide-container layout-split" data-title="Dimensi T: Technical Feasibility">
+        <div class="split-col split-img-col w-40" style="background: #ECFEFF;">
+          <i class="fa-solid fa-microchip" style="font-size: 160px; color: var(--color-cyan);"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Pilar 1: Kelayakan Teknis</p>
+          <h2>Technical Feasibility</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-server"></i> <span>**Infrastruktur:** Apakah bandwidth internet dan server cloud mampu menangani throughput beban transaksi?</span></li>
+            <li><i class="fa-solid fa-code"></i> <span>**Keahlian Teknis:** Apakah tim internal memiliki developer yang menguasai integrasi API dan webhook pihak ketiga?</span></li>
+            <li><i class="fa-solid fa-plug"></i> <span>**Kompatibilitas:** Apakah hardware lama (misal printer struk kasir) masih dapat terhubung ke aplikasi baru?</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 10 -->
+      <div class="slide-container pad-standard" data-title="Dimensi E: Economic Feasibility">
+        <h2>Economic Feasibility: Cost vs Benefit Analysis</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 8px solid var(--color-rose);">
+              <h3 style="color: var(--color-rose);"><i class="fa-solid fa-wallet"></i> Total Cost of Ownership (TCO)</h3>
+              <p style="font-size: 17px;">
+                - <strong>Capex (Biaya Awal):</strong> Lisensi software, pengadaan server/tablet, biaya jasa konsultan IT.<br>
+                - <strong>Opex (Biaya Rutin):</strong> Langganan cloud AWS, biaya pemeliharaan, gaji admin sistem, biaya pelatihan tahunan.
+              </p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--color-emerald);">
+              <h3 style="color: var(--color-emerald);"><i class="fa-solid fa-money-bill-trend-up"></i> Projected Benefits (Keuntungan)</h3>
+              <p style="font-size: 17px;">
+                - <strong>Tangible (Terukur Uang):</strong> Hemat kertas Rp 15 jt/thn, pangkas lembur staf Rp 40 jt/thn, hindari denda salah kirim.<br>
+                - <strong>Intangible (Kualitas):</strong> Kepuasan pelanggan naik, citra brand modern, data laporan real-time bagi direktur.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 11 -->
+      <div class="slide-container layout-split" data-title="Rumus ROI & Payback Period">
+        <div class="split-col w-60">
+          <p class="eyebrow">Kuantifikasi Investasi</p>
+          <h2>Menghitung ROI &amp; Payback Period</h2>
+          <p style="font-size: 20px; color: #475569; margin-bottom: 14px;">Dua indikator finansial wajib dalam proposal proyek IT:</p>
+          <div style="background: #F1F5F9; border-left: 8px solid var(--color-emerald); padding: 16px; border-radius: 8px; margin-bottom: 14px;">
+            <p style="font-family: monospace; font-size: 19px; color: #065F46; font-weight: bold;">
+              ROI = ((Total Penghematan - Total Investasi) / Total Investasi) x 100%
+            </p>
+          </div>
+          <div style="background: #F1F5F9; border-left: 8px solid var(--color-cyan); padding: 16px; border-radius: 8px;">
+            <p style="font-family: monospace; font-size: 19px; color: #0E7490; font-weight: bold;">
+              Payback Period = Total Biaya Awal / Penghematan Kas Bersih per Bulan
+            </p>
+          </div>
+        </div>
+        <div class="split-col split-img-col w-40">
+          <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80" alt="ROI Analytics Chart">
+        </div>
+      </div>
+
+      <!-- SLIDE 12 -->
+      <div class="slide-container pad-standard" data-title="Dimensi L: Legal & Compliance">
+        <h2>Legal Feasibility: Kepatuhan Regulasi &amp; Hukum</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 6px solid var(--color-rose);">
+              <i class="fa-solid fa-gavel" style="color: var(--color-rose);"></i>
+              <h4>UU Pelindungan Data Pribadi (UU PDP)</h4>
+              <p style="font-size: 16px;">Sistem baru wajib mengenkripsi NIK, email, dan nomor HP nasabah. Dilarang membocorkan data tanpa consent tertulis!</p>
+            </div>
+            <div class="card" style="border-top: 6px solid var(--color-amber);">
+              <i class="fa-solid fa-building-columns" style="color: var(--color-amber);"></i>
+              <h4>Regulasi BI &amp; OJK</h4>
+              <p style="font-size: 16px;">Penggunaan modul QRIS atau transfer uang wajib menggunakan payment gateway berizin resmi (PJP Kategori 1/2).</p>
+            </div>
+            <div class="card" style="border-top: 6px solid var(--color-cyan);">
+              <i class="fa-solid fa-file-contract" style="color: var(--color-cyan);"></i>
+              <h4>Service Level Agreement (SLA)</h4>
+              <p style="font-size: 16px;">Vendor hosting cloud luar negeri wajib menyepakati klausul ganti rugi jika server padam melebihi batas toleransi.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 13 -->
+      <div class="slide-container layout-split" data-title="Dimensi O & S: Operasional & Jadwal">
+        <div class="split-col split-img-col w-40" style="background: #F5F3FF;">
+          <i class="fa-solid fa-calendar-days" style="font-size: 160px; color: var(--color-violet);"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Pilar 4 &amp; 5: Operasi &amp; Waktu</p>
+          <h2>Operational &amp; Schedule Feasibility</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-users"></i> <span>**Operational:** Apakah staf lapangan yang berusia senior mampu mengoperasikan aplikasi berbasis sentuh tanpa stres?</span></li>
+            <li><i class="fa-solid fa-stopwatch"></i> <span>**Schedule:** Apakah sistem registrasi baru siap diluncurkan sebelum musim pendaftaran mahasiswa baru dibuka bulan depan?</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 14 -->
+      <div class="slide-container center-content bg-dark" data-title="Kutipan Peter Drucker">
+        <i class="fa-solid fa-quote-left" style="font-size: 70px; color: #334155; margin-bottom: 20px;"></i>
+        <h2 style="font-size: 38px; font-weight: 700; max-width: 900px; line-height: 1.4;">
+          "Efisiensi adalah melakukan sesuatu dengan benar. Efektivitas adalah melakukan hal yang benar. Analisis kelayakan memastikan kita tidak memboroskan sumber daya untuk hal yang salah."
+        </h2>
+        <p style="font-size: 20px; color: var(--color-amber); margin-top: 16px; font-weight: 600;">— Peter F. Drucker</p>
+      </div>
+
+      <!-- SLIDE 15 -->
+      <div class="slide-container pad-standard" data-title="Matriks Evaluasi TELOS">
+        <h2>Contoh Lembar Evaluasi Kelayakan TELOS</h2>
+        <div class="flex-grow-center">
+          <table style="width: 100%; border-collapse: collapse; font-size: 17px; text-align: left; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+            <thead style="background: #0F172A; color: white;">
+              <tr>
+                <th style="padding: 10px;">Dimensi</th>
+                <th style="padding: 10px;">Parameter Uji</th>
+                <th style="padding: 10px;">Hasil Evaluasi Kasus</th>
+                <th style="padding: 10px;">Status Kelayakan</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid #E2E8F0;">
+                <td style="padding: 8px; font-weight: bold;">Technical</td>
+                <td style="padding: 8px;">Koneksi API Midtrans &amp; Server PostgreSQL</td>
+                <td style="padding: 8px;">Koneksi stabil, dokumentasi SDK lengkap</td>
+                <td style="padding: 8px; color: var(--color-emerald); font-weight: bold;">FEASIBLE (Layak)</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #E2E8F0;">
+                <td style="padding: 8px; font-weight: bold;">Economic</td>
+                <td style="padding: 8px;">Biaya server Rp 18 jt vs hemat kertas Rp 35 jt</td>
+                <td style="padding: 8px;">ROI positif 94% dalam waktu 7 bulan</td>
+                <td style="padding: 8px; color: var(--color-emerald); font-weight: bold;">FEASIBLE (Layak)</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #E2E8F0;">
+                <td style="padding: 8px; font-weight: bold;">Legal</td>
+                <td style="padding: 8px;">Penyimpanan data KTP di server cloud luar negeri</td>
+                <td style="padding: 8px; color: var(--color-rose);">Rentan pelanggaran UU PDP jika tanpa enkripsi</td>
+                <td style="padding: 8px; color: var(--color-amber); font-weight: bold;">CONDITIONAL (Syarat Enkripsi)</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #E2E8F0;">
+                <td style="padding: 8px; font-weight: bold;">Operational</td>
+                <td style="padding: 8px;">Kesiapan kasir beralih 100% tanpa struk cetak</td>
+                <td style="padding: 8px; color: var(--color-rose);">Staf menolak karena takut disalahkan jika selisih</td>
+                <td style="padding: 8px; color: var(--color-amber); font-weight: bold;">BUTUH PELATIHAN (Change Mgmt)</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px; font-weight: bold;">Schedule</td>
+                <td style="padding: 8px;">Target go-live 8 pekan kerja</td>
+                <td style="padding: 8px;">Dapat diselesaikan dengan sprint Agile 2 mingguan</td>
+                <td style="padding: 8px; color: var(--color-emerald); font-weight: bold;">FEASIBLE (Layak)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SECTION 3: MANAJEMEN PERUBAHAN & BUDAYA SDM (SLIDES 16-24)
+           ========================================== -->
+
+      <!-- SLIDE 16 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian II: Change Management">
+        <p class="eyebrow">Bagian II</p>
+        <h1 style="font-size: 72px;">Manajemen Perubahan (SDM)</h1>
+        <div class="divider"></div>
+        <p style="font-size: 30px;">Mengelola Faktor Budaya Manusia Agar Sistem Baru Tidak Diboikot.</p>
+      </div>
+
+      <!-- SLIDE 17 -->
+      <div class="slide-container layout-split" data-title="Resistensi Perubahan">
+        <div class="split-col w-60">
+          <p class="eyebrow">Realitas Psikologi Organisasi</p>
+          <h2>Mengapa Karyawan Menolak Sistem Baru?</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-triangle-exclamation" style="color: var(--color-amber);"></i> <span>**Ketakutan Kehilangan Pekerjaan:** Karyawan takut otomatisasi software akan berujung pada PHK massal.</span></li>
+            <li><i class="fa-solid fa-brain" style="color: var(--color-violet);"></i> <span>**Zona Nyaman (Comfort Zone):** Cara lama manual sudah dilakukan belasan tahun; mempelajari aplikasi baru dianggap menambah beban pikiran.</span></li>
+            <li><i class="fa-solid fa-user-xmark" style="color: var(--color-rose);"></i> <span>**Kurangnya Keterlibatan:** Staf merasa sistem baru dipaksakan oleh manajemen tanpa pernah meminta masukan mereka.</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40">
+          <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80" alt="Team Discussion Change">
+        </div>
+      </div>
+
+      <!-- SLIDE 18 -->
+      <div class="slide-container pad-standard" data-title="Model 3 Tahap Kurt Lewin">
+        <h2>Model Transisi Perubahan Kurt Lewin</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 6px solid var(--color-cyan); padding: 22px;">
+              <h4 style="color: #0891B2;"><i class="fa-solid fa-snowflake"></i> 1. Unfreeze (Mencairkan)</h4>
+              <p style="font-size: 15px;">Membangun kesadaran: jelaskan dengan data mengapa sistem manual lama merugikan perusahaan dan tidak bisa dipertahankan lagi.</p>
+            </div>
+            <div class="card" style="border-top: 6px solid var(--color-amber); padding: 22px;">
+              <h4 style="color: var(--color-amber);"><i class="fa-solid fa-arrows-spin"></i> 2. Change (Beralih)</h4>
+              <p style="font-size: 15px;">Proses migrasi: lakukan pelatihan intensif, pendampingan harian, dan jalankan masa transisi paralel (sistem lama &amp; baru berdampingan).</p>
+            </div>
+            <div class="card" style="border-top: 6px solid var(--color-emerald); padding: 22px;">
+              <h4 style="color: var(--color-emerald);"><i class="fa-solid fa-cube"></i> 3. Refreeze (Membekukan)</h4>
+              <p style="font-size: 15px;">Standarisasi permanen: tetapkan SOP baru resmi, hapus formulir lama, dan berikan reward bagi divisi yang paling cepat beradaptasi.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 19 -->
+      <div class="slide-container layout-split" data-title="Strategi Komunikasi Perubahan">
+        <div class="split-col split-img-col w-40" style="background: #F5F3FF;">
+          <i class="fa-solid fa-bullhorn" style="font-size: 160px; color: var(--color-violet);"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Prinsip Komunikasi</p>
+          <h2>Membeli Komitmen, Bukan Kepatuhan Kaku</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-comments"></i> <span>Terapkan prinsip *WIIFM (What's In It For Me?)* kepada karyawan: tunjukkan bahwa software To-Be membebaskan mereka dari jam lembur yang melelahkan.</span></li>
+            <li><i class="fa-solid fa-crown" style="color: var(--color-amber);"></i> <span>Bentuk **Change Champions**: pilih staf muda yang berpengaruh untuk menjadi duta percontohan bagi rekan-rekannya.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 20 -->
+      <div class="slide-container pad-standard" data-title="Strategi Cut-over Sistem">
+        <h2>4 Pendekatan Peluncuran Sistem Baru (Cut-over)</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 6px solid var(--color-rose); padding: 18px;">
+              <h4 style="color: var(--color-rose);">Direct Cut-over (Big Bang)</h4>
+              <p style="font-size: 14px;">Sistem lama langsung dimatikan seketika pada hari H. Risiko sangat tinggi jika sistem baru crash!</p>
+            </div>
+            <div class="card" style="border-top: 6px solid var(--color-emerald); padding: 18px;">
+              <h4 style="color: var(--color-emerald);">Parallel Running (Paling Aman)</h4>
+              <p style="font-size: 14px;">Kedua sistem jalan bersamaan selama 1 bulan hingga data terbukti 100% identik dan staf terbiasa.</p>
+            </div>
+            <div class="card" style="border-top: 6px solid var(--color-cyan); padding: 18px;">
+              <h4 style="color: #0891B2;">Pilot Study (Uji Coba Cabang)</h4>
+              <p style="font-size: 14px;">Diterapkan di 1 gerai cabang dulu. Setelah stabil, baru diluncurkan ke seluruh 20 cabang lainnya.</p>
+            </div>
+            <div class="card" style="border-top: 6px solid var(--color-violet); padding: 18px;">
+              <h4 style="color: var(--color-violet);">Phased Rollout (Bertahap)</h4>
+              <p style="font-size: 14px;">Modul pendaftaran diluncurkan bulan ini, modul pembayaran bulan depan, modul inventori bulan depannya lagi.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 21 -->
+      <div class="slide-container center-content bg-dark" data-title="Insight Budaya vs Teknologi">
+        <i class="fa-solid fa-people-arrows" style="font-size: 80px; color: var(--color-violet); margin-bottom: 24px;"></i>
+        <h2>Budaya Mengalahkan Teknologi</h2>
+        <p style="font-size: 26px; max-width: 900px; margin-top: 16px; line-height: 1.5;">
+          "Culture eats technology for breakfast." Sistem secanggih AI apa pun akan terbengkalai menjadi 'proyek mangkrak' jika Anda gagal memenangkan hati orang-orang yang menjalankannya.
+        </p>
+      </div>
+
+      <!-- SLIDE 22 -->
+      <div class="slide-container pad-standard" data-title="Pencegahan Shadow IT">
+        <h2>Mencegah Bahaya Fenomena "Shadow IT"</h2>
+        <div class="flex-grow-center">
+          <div style="background: #FEF2F2; border-left: 12px solid var(--color-rose); padding: 40px; border-radius: 0 16px 16px 0;">
+            <h3 style="color: var(--color-rose); margin-bottom: 12px;">Celah Keamanan Akibat Aplikasi yang Ribet</h3>
+            <p style="font-size: 22px; color: #991B1B; line-height: 1.6; font-weight: 600;">
+              Jika aplikasi To-Be yang baru dibuat memiliki form pengisian yang berbelit-belit dan lambat, staf kasir diam-diam akan kembali mencatat transaksi di buku saku fisik atau grup WhatsApp pribadi mereka (*Shadow IT*). Akibatnya, seluruh sistem keamanan data bocor dari dalam!
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 23 -->
+      <div class="slide-container layout-split" data-title="Penyusunan SOP Baru">
+        <div class="split-col w-60">
+          <p class="eyebrow">Dokumentasi Standar</p>
+          <h2>Transisi SOP Baru Bersama BPMN</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-file-contract"></i> <span>Diagram BPMN To-Be wajib dilampirkan sebagai lampiran resmi buku pedoman kerja (*Standard Operating Procedure*).</span></li>
+            <li><i class="fa-solid fa-chalkboard-user"></i> <span>Buku panduan harus dilengkapi dengan *screenshot* antarmuka aplikasi dan petunjuk langkah-demi-langkah yang ramah pengguna.</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40">
+          <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&q=80" alt="SOP Documentation">
+        </div>
+      </div>
+
+      <!-- SLIDE 24 -->
+      <div class="slide-container pad-standard" data-title="Kesiapan Helpdesk Transisi">
+        <h2>Mendirikan Support Helpdesk Masa Transisi</h2>
+        <div class="flex-grow-center">
+          <ul class="minimal-list" style="gap: 22px;">
+            <li><i class="fa-solid fa-1"></i> <span><strong>Dedicated Hotline:</strong> Sediakan saluran WhatsApp khusus darurat bagi staf toko selama 14 hari pertama go-live.</span></li>
+            <li><i class="fa-solid fa-2"></i> <span><strong>Super-User Siaga:</strong> Tempatkan 1 orang analis sistem di lokasi toko untuk mendampingi staf saat jam sibuk.</span></li>
+            <li><i class="fa-solid fa-3"></i> <span><strong>Daily Retrospective:</strong> Evaluasi kendala yang terjadi setiap sore pukul 17.00 WIB untuk langsung diperbaiki malam harinya.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SECTION 4: SPESIFIKASI KEAMANAN MODEL TO-BE (SLIDES 25-33)
+           ========================================== -->
+
+      <!-- SLIDE 25 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian III: Security Requirements">
+        <p class="eyebrow">Bagian III</p>
+        <h1 style="font-size: 72px;">Security Requirements To-Be</h1>
+        <div class="divider"></div>
+        <p style="font-size: 30px;">Merumuskan Kontrol Proteksi Data pada Arsitektur Sistem Baru.</p>
+      </div>
+
+      <!-- SLIDE 26 -->
+      <div class="slide-container layout-split" data-title="Ancaman Baru Sistem To-Be">
+        <div class="split-col split-img-col w-40" style="background: #FFF1F2;">
+          <i class="fa-solid fa-shield-virus" style="font-size: 160px; color: var(--color-rose);"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Paradoks Digitalisasi</p>
+          <h2>Otomatisasi Membawa Celah Baru</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-bug" style="color: var(--color-rose);"></i> <span>Pada model As-Is, pencurian data dibatasi oleh tumpukan kertas fisik.</span></li>
+            <li><i class="fa-solid fa-network-wired" style="color: var(--color-cyan);"></i> <span>Pada model To-Be, seluruh data terpusat di server cloud dan terbuka via internet melalui API. Sekali celah dieksploitasi, jutaan data nasabah bisa terunduh dalam detik!</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 27 -->
+      <div class="slide-container pad-standard" data-title="Matriks Security Requirements">
+        <h2>Anatomi Spesifikasi Keamanan Model To-Be</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 6px solid var(--color-cyan); padding: 20px;">
+              <h4>1. Authentication &amp; SSO</h4>
+              <p style="font-size: 15px;">Wajib Multi-Factor Authentication (MFA) dan token JWT dengan masa kedaluwarsa pendek.</p>
+            </div>
+            <div class="card" style="border-top: 6px solid var(--color-emerald); padding: 20px;">
+              <h4>2. RBAC (Role-Based Access)</h4>
+              <p style="font-size: 15px;">Pemisahan wewenang menu: Kasir hanya bisa CREATE pesanan, Manajer yang bisa VOID/HAPUS transaksi.</p>
+            </div>
+            <div class="card" style="border-top: 6px solid var(--color-amber); padding: 20px;">
+              <h4>3. Data Protection (Kripto)</h4>
+              <p style="font-size: 15px;">Enkripsi data in-transit (TLS 1.3) dan data at-rest (AES-256) untuk seluruh nomor rekening nasabah.</p>
+            </div>
+            <div class="card" style="border-top: 6px solid var(--color-rose); padding: 20px;">
+              <h4>4. Immutable Audit Trail</h4>
+              <p style="font-size: 15px;">Setiap aktivitas klik kritis otomatis dicatat dalam log server yang tidak bisa dihapus atau diedit siapapun.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 28 -->
+      <div class="slide-container layout-split" data-title="Penerapan RBAC di BPMN">
+        <div class="split-col w-60">
+          <p class="eyebrow">Kontrol Akses Peran</p>
+          <h2>Role-Based Access Control (RBAC)</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-id-card-clip" style="color: var(--color-cyan);"></i> <span>Setiap Lane pada diagram To-Be mencerminkan satu Role RBAC di dalam database aplikasi.</span></li>
+            <li><i class="fa-solid fa-lock" style="color: var(--color-rose);"></i> <span>Prinsip Hak Akses Terkecil (*Least Privilege*): Staf hanya diberi akses ke tombol yang mutlak dibutuhkan untuk mengerjakan task-nya.</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40" style="background: #ECFEFF;">
+          <i class="fa-solid fa-user-lock" style="font-size: 160px; color: var(--color-cyan);"></i>
+        </div>
+      </div>
+
+      <!-- SLIDE 29 -->
+      <div class="slide-container pad-standard" data-title="Keamanan API & Webhook">
+        <h2>Mengamankan Jalur API &amp; Webhook To-Be</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-left: 8px solid var(--color-rose);">
+              <h4 style="color: var(--color-rose);">Ancaman Webhook Palsu</h4>
+              <p style="font-size: 16px;">Hacker mengirimkan payload palsu seolah-olah dari Midtrans bertuliskan "Status: Paid" agar toko mengirim barang gratis!</p>
+            </div>
+            <div class="card" style="border-left: 8px solid var(--color-emerald);">
+              <h4 style="color: var(--color-emerald);">Solusi: Signature Verification</h4>
+              <p style="font-size: 16px;">Server backend To-Be memverifikasi tanda tangan digital (*HMAC-SHA512 Signature Hash*) sebelum menyetujui transaksi pembayaran.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 30 -->
+      <div class="slide-container layout-split" data-title="Klausul Pemulihan Bencana">
+        <div class="split-col split-img-col w-40" style="background: #FFFBEB;">
+          <i class="fa-solid fa-database" style="font-size: 160px; color: var(--color-amber);"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Ketahanan Sistem</p>
+          <h2>Disaster Recovery &amp; RPO/RTO</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-clock-rotate-left"></i> <span>**RPO (Recovery Point Objective):** Maksimal 1 jam data yang boleh hilang jika server utama meledak (Backup otomatis berkala).</span></li>
+            <li><i class="fa-solid fa-stopwatch"></i> <span>**RTO (Recovery Time Objective):** Maksimal 30 menit sistem harus hidup kembali di cloud cadangan (*Failover Cluster*).</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 31 -->
+      <div class="slide-container pad-standard" data-title="Kebijakan Privasi Data (Data Privacy)">
+        <h2>Kepatuhan Regulasi Data Privacy (UU PDP)</h2>
+        <div class="flex-grow-center">
+          <ul class="minimal-list" style="gap: 22px;">
+            <li><i class="fa-solid fa-shield"></i> <span><strong>Prinsip Data Minimization:</strong> Form To-Be dilarang meminta data yang tidak relevan (contoh: toko baju dilarang meminta scan KTP ibu kandung).</span></li>
+            <li><i class="fa-solid fa-eye-slash"></i> <span><strong>Data Masking di Layar:</strong> Nomor telepon dan nomor rekening wajib disensor bintang (misal: 0812-****-5678) di layar kasir.</span></li>
+            <li><i class="fa-solid fa-trash-can"></i> <span><strong>Hak untuk Dihapus (*Right to be Forgotten*):</strong> Pelanggan berhak meminta riwayat akunnya dimusnahkan secara permanen.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 32 -->
+      <div class="slide-container center-content bg-dark" data-title="Kutipan Bruce Schneier">
+        <i class="fa-solid fa-quote-left" style="font-size: 70px; color: #334155; margin-bottom: 20px;"></i>
+        <h2 style="font-size: 38px; font-weight: 700; max-width: 900px; line-height: 1.4;">
+          "Keamanan bukanlah produk jadi yang bisa Anda beli di toko, melainkan proses operasional yang hidup dan harus dirawat setiap hari."
+        </h2>
+        <p style="font-size: 20px; color: var(--color-rose); margin-top: 16px; font-weight: 600;">— Bruce Schneier</p>
+      </div>
+
+      <!-- SLIDE 33 -->
+      <div class="slide-container pad-standard" data-title="Tabel Rekomendasi Kebijakan">
+        <h2>Format Draf Kebijakan Teknis Laporan Proyek</h2>
+        <div class="flex-grow-center">
+          <table style="width: 100%; border-collapse: collapse; font-size: 17px; text-align: left; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+            <thead style="background: #0F172A; color: white;">
+              <tr>
+                <th style="padding: 10px;">Komponen Sistem To-Be</th>
+                <th style="padding: 10px;">Potensi Ancaman Siber</th>
+                <th style="padding: 10px;">Spesifikasi Kontrol Keamanan</th>
+                <th style="padding: 10px;">Pilar CIA</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid #E2E8F0;">
+                <td style="padding: 8px; font-weight: bold;">Portal Web Checkout</td>
+                <td style="padding: 8px; color: var(--color-rose);">Serangan brute-force kata sandi</td>
+                <td style="padding: 8px;">Rate limiting (maks 5x percobaan) + Google reCAPTCHA</td>
+                <td style="padding: 8px; color: var(--color-cyan); font-weight: 600;">Confidentiality</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #E2E8F0;">
+                <td style="padding: 8px; font-weight: bold;">Callback Webhook Bank</td>
+                <td style="padding: 8px; color: var(--color-rose);">Man-in-the-Middle (MITM) tampering</td>
+                <td style="padding: 8px;">Verifikasi HMAC-SHA512 + SSL Pinning</td>
+                <td style="padding: 8px; color: var(--color-emerald); font-weight: 600;">Integrity</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px; font-weight: bold;">Cloud Server PostgreSQL</td>
+                <td style="padding: 8px; color: var(--color-rose);">Crash saat panen promo serentak</td>
+                <td style="padding: 8px;">Auto-scaling cluster + Redis cache queue buffer</td>
+                <td style="padding: 8px; color: var(--color-amber); font-weight: 600;">Availability</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SECTION 5: SIMULASI & GAME INTERAKTIF (SLIDES 34-36)
+           ========================================== -->
+
+      <!-- SLIDE 34 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian IV: Simulasi Praktik">
+        <p class="eyebrow">Bagian IV</p>
+        <h1 style="font-size: 72px;">Simulasi Audit Kelayakan</h1>
+        <div class="divider"></div>
+        <p style="font-size: 28px;">Uji Refleks Mengidentifikasi Dimensi TELOS dan Mitigasi Keamanan.</p>
+      </div>
+
+      <!-- SLIDE 35: GAME 1 TELOS MATCHING -->
+      <div class="slide-container pad-standard" style="background: #F8FAFC;" id="drag-drop-1" data-title="Game 1 (Pencocokan TELOS)">
+        <p class="eyebrow">Game 1: Drag &amp; Drop TELOS</p>
+        <h2 style="font-size: 34px; margin-bottom: 10px;">Petakan Pertanyaan Uji ke Dimensi TELOS yang Sesuai!</h2>
+        <p style="margin-bottom: 16px; font-size: 18px;">Seret pertanyaan evaluasi sistem ke pilar TELOS yang tepat.</p>
+        
+        <div class="flex-grow-center" style="justify-content: flex-start;">
+          <div class="draggable-container">
+            <div class="drag-item" draggable="true" data-type="econ">Apakah penghematan biaya lembur Rp 50 jt melampaui biaya server cloud?</div>
+            <div class="drag-item" draggable="true" data-type="tech">Apakah modem 4G cadangan siap bekerja jika kabel optik terputus?</div>
+            <div class="drag-item" draggable="true" data-type="oper">Apakah staf kasir menolak memakai tablet karena takut dituduh korupsi?</div>
+          </div>
+
+          <div class="dropzones-container">
+            <div class="drop-zone" data-target="econ" style="border-color: var(--color-emerald); background: #ECFDF5;">
+              <h3 style="color: #047857;"><i class="fa-solid fa-coins"></i> Economic Feasibility</h3>
+              <div class="drop-content"></div>
+            </div>
+            <div class="drop-zone" data-target="tech" style="border-color: var(--color-cyan); background: #ECFEFF;">
+              <h3 style="color: #0891B2;"><i class="fa-solid fa-server"></i> Technical Feasibility</h3>
+              <div class="drop-content"></div>
+            </div>
+            <div class="drop-zone" data-target="oper" style="border-color: var(--color-violet); background: #F5F3FF;">
+              <h3 style="color: var(--color-violet);"><i class="fa-solid fa-users-gear"></i> Operational Feasibility</h3>
+              <div class="drop-content"></div>
+            </div>
+          </div>
+
+          <div class="practice-feedback" style="text-align: center; margin-top: 14px; display: none;">
+            <p style="font-size: 24px; font-weight: 800; color: #10B981;"><i class="fa-solid fa-circle-check"></i> Pemetaan TELOS Akurat!</p>
+            <p style="font-size: 16px; color: #475569; margin-top: 2px;">Anda berhasil membedakan analisis finansial, ketersediaan perangkat, dan kesiapan budaya manusia.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 36: GAME 2 SECURITY CONTROLS -->
+      <div class="slide-container pad-standard" style="background: #F8FAFC;" id="drag-drop-2" data-title="Game 2 (Mitigasi Celah To-Be)">
+        <p class="eyebrow">Game 2: Drag &amp; Drop Security</p>
+        <h2 style="font-size: 34px; margin-bottom: 10px;">Pasangkan Risiko Sistem Baru dengan Kontrol Keamanannya!</h2>
+        <p style="margin-bottom: 16px; font-size: 18px;">Seret kontrol pengamanan ke celah kerentanan yang terjadi.</p>
+        
+        <div class="flex-grow-center" style="justify-content: flex-start;">
+          <div class="draggable-container">
+            <div class="drag-item" draggable="true" data-type="rbac">Pemisahan wewenang role kasir vs supervisor (Role-Based Access)</div>
+            <div class="drag-item" draggable="true" data-type="backup">Otomatisasi replikasi basis data ke cloud cadangan tiap jam</div>
+            <div class="drag-item" draggable="true" data-type="hmac">Verifikasi tanda tangan digital HMAC-SHA512 pada webhook transaksi</div>
+          </div>
+
+          <div class="dropzones-container">
+            <div class="drop-zone" data-target="rbac" style="border-color: var(--color-rose); background: #FFF1F2;">
+              <h3 style="color: var(--color-rose);">Celah: Kasir menghapus riwayat penjualan diam-diam</h3>
+              <div class="drop-content"></div>
+            </div>
+            <div class="drop-zone" data-target="backup" style="border-color: var(--color-amber); background: #FFFBEB;">
+              <h3 style="color: var(--color-amber);">Celah: Ransomware mengunci database server toko</h3>
+              <div class="drop-content"></div>
+            </div>
+            <div class="drop-zone" data-target="hmac" style="border-color: var(--color-cyan); background: #ECFEFF;">
+              <h3 style="color: #0891B2;">Celah: Hacker memalsukan status pembayaran berhasil</h3>
+              <div class="drop-content"></div>
+            </div>
+          </div>
+
+          <div class="practice-feedback" style="text-align: center; margin-top: 14px; display: none;">
+            <p style="font-size: 24px; font-weight: 800; color: #10B981;"><i class="fa-solid fa-circle-check"></i> Kontrol Keamanan Tepat Sasaran!</p>
+            <p style="font-size: 16px; color: #475569; margin-top: 2px;">Spesifikasi ini yang melindungi organisasi dari tuntutan hukum dan kerugian siber.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SECTION 6: EVALUASI KUIS FORMATIF (SLIDES 37-41)
+           ========================================== -->
+
+      <!-- SLIDE 37 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian V: Kuis Formatif">
+        <p class="eyebrow">Bagian V</p>
+        <h1 style="font-size: 72px;">Kuis Formatif Pertemuan 13</h1>
+        <div class="divider"></div>
+        <p style="font-size: 30px;">Uji Penguasaan Feasibility Analysis &amp; Security Governance.</p>
+      </div>
+
+      <!-- SLIDE 38 -->
+      <div class="slide-container pad-standard" style="background: #FFFFFF;" id="slide38" data-title="Kuis 1: Esensi TELOS">
+        <p class="eyebrow" style="margin-bottom: 6px;">Kuis Evaluasi • Soal 1/4</p>
+        <h2 style="margin-bottom: 14px;">Dimensi manakah dalam kerangka TELOS yang mengevaluasi apakah karyawan mau dan sanggup memakai sistem baru?</h2>
+        <div class="flex-grow-center" style="justify-content: flex-start; margin-top: 8px;">
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q1')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> A. Technical Feasibility
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, true, 'feedback-q1')" data-correct="true">
+            <i class="fa-regular fa-circle"></i> B. Operational Feasibility
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q1')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> C. Legal Feasibility
+          </div>
+
+          <div id="feedback-q1" class="quiz-feedback">
+            <h4><i class="fa-solid fa-lightbulb"></i> Pembahasan: B</h4>
+            <p><strong>Operational Feasibility</strong> mengkaji kesiapan budaya organisasi, resistensi karyawan, dan dampak perubahan alur kerja harian terhadap manusia yang menjalankannya.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 39 -->
+      <div class="slide-container pad-standard" style="background: #FFFFFF;" id="slide39" data-title="Kuis 2: Metode Cut-over">
+        <p class="eyebrow" style="margin-bottom: 6px;">Kuis Evaluasi • Soal 2/4</p>
+        <h2 style="margin-bottom: 14px;">Metode peluncuran sistem di mana sistem lama dan sistem baru dijalankan bersamaan selama 1 bulan disebut?</h2>
+        <div class="flex-grow-center" style="justify-content: flex-start; margin-top: 8px;">
+          <div class="quiz-option" onclick="handleQuiz(this, true, 'feedback-q2')" data-correct="true">
+            <i class="fa-regular fa-circle"></i> A. Parallel Running (Paling aman untuk proses kritis)
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q2')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> B. Big Bang Cut-over (Langsung matikan seketika)
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q2')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> C. Phased Abolition
+          </div>
+
+          <div id="feedback-q2" class="quiz-feedback">
+            <h4><i class="fa-solid fa-lightbulb"></i> Pembahasan: A</h4>
+            <p><strong>Parallel Running</strong> memberikan jaring pengaman: jika software baru mengalami crash atau bug di lapangan, operasional perusahaan tetap terselamatkan oleh sistem lama.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 40 -->
+      <div class="slide-container pad-standard" style="background: #FFFFFF;" id="slide40" data-title="Kuis 3: Bahaya Shadow IT">
+        <p class="eyebrow" style="margin-bottom: 6px;">Kuis Evaluasi • Soal 3/4</p>
+        <h2 style="margin-bottom: 14px;">Mengapa fenomena "Shadow IT" (karyawan mencatat data di WhatsApp pribadi) sangat berbahaya bagi perusahaan?</h2>
+        <div class="flex-grow-center" style="justify-content: flex-start; margin-top: 8px;">
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q3')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> A. Karena membuat kuota internet kantor cepat habis.
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, true, 'feedback-q3')" data-correct="true">
+            <i class="fa-regular fa-circle"></i> B. Karena data nasabah disimpan di luar kendali enkripsi dan audit perusahaan, rentan bocor dan melanggar UU PDP.
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q3')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> C. Karena WhatsApp tidak bisa menampilkan flowchart.
+          </div>
+
+          <div id="feedback-q3" class="quiz-feedback">
+            <h4><i class="fa-solid fa-lightbulb"></i> Pembahasan: B</h4>
+            <p>Shadow IT menghilangkan asas kepatuhan dan audit trail. Ketika ponsel karyawan hilang atau diretas, data pelanggan korporat langsung terekspos tanpa perlindungan sistem keamanan resmi.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 41 -->
+      <div class="slide-container pad-standard" style="background: #FFFFFF;" id="slide41" data-title="Kuis 4: Kontrol RBAC">
+        <p class="eyebrow" style="margin-bottom: 6px;">Kuis Evaluasi • Soal 4/4</p>
+        <h2 style="margin-bottom: 14px;">Memastikan staf kasir tidak bisa melihat laporan laba bersih pemilik toko menerapkan prinsip apa?</h2>
+        <div class="flex-grow-center" style="justify-content: flex-start; margin-top: 8px;">
+          <div class="quiz-option" onclick="handleQuiz(this, true, 'feedback-q4')" data-correct="true">
+            <i class="fa-regular fa-circle"></i> A. Role-Based Access Control (RBAC) & Prinsip Hak Akses Terkecil (Least Privilege).
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q4')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> B. Boundary Message Event.
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q4')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> C. Heuristic Resequencing.
+          </div>
+
+          <div id="feedback-q4" class="quiz-feedback">
+            <h4><i class="fa-solid fa-lightbulb"></i> Pembahasan: A</h4>
+            <p><strong>RBAC</strong> membatasi visibilitas dan aksi pengguna berdasarkan jabatannya, menjaga pilar *Confidentiality* data internal perusahaan.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SECTION 7: INTEGRASI FINALISASI PROYEK (SLIDES 42-45)
+           ========================================== -->
+
+      <!-- SLIDE 42 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian VI: Persiapan Laporan Akhir">
+        <p class="eyebrow">Bagian VI</p>
+        <h1 style="font-size: 72px;">Finalisasi Bab 4 &amp; 5 Laporan</h1>
+        <div class="divider"></div>
+        <p style="font-size: 30px;">Menuju Pengumpulan Laporan Proyek Mini di Pertemuan 14.</p>
+      </div>
+
+      <!-- SLIDE 43 -->
+      <div class="slide-container pad-standard" data-title="Checklist Bab 5 Laporan">
+        <h2>Konten Bab 5 Laporan Akhir: Evaluasi &amp; Rekomendasi</h2>
+        <div class="flex-grow-center">
+          <div style="background: #F8FAFC; border: 2px solid #CBD5E1; padding: 36px; border-radius: 16px;">
+            <p style="font-size: 24px; font-weight: 700; color: #0F172A; margin-bottom: 12px;">
+              Sub-Bab yang Wajib Dituliskan Kelompok Anda:
+            </p>
+            <ol style="font-size: 20px; line-height: 1.8; color: #334155; margin-left: 24px;">
+              <li><strong>5.1 Analisis Kelayakan TELOS:</strong> Uraikan tabel kelayakan teknis, perkiraan biaya vs penghematan, kepatuhan hukum, dan waktu jadwal.</li>
+              <li><strong>5.2 Rencana Manajemen Perubahan SDM:</strong> Strategi pelatihan operator, pendekatan cut-over peluncuran, dan mitigasi resistensi staf.</li>
+              <li><strong>5.3 Spesifikasi Keamanan Informasi (Security Requirements):</strong> Aturan RBAC, enkripsi data rahasia, dan mitigasi celah API/jaringan.</li>
+              <li><strong>5.4 Rekomendasi Kebijakan (Executive Summary):</strong> Ringkasan proposal aksi yang siap ditandatangani oleh pimpinan organisasi objek.</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 44 -->
+      <div class="slide-container pad-standard" data-title="Rubrik Penilaian Bab Feasibility">
+        <h2>Standar Capaian Unggul (Grade A) Bab Feasibility</h2>
+        <div class="flex-grow-center">
+          <table style="width: 100%; border-collapse: collapse; font-size: 18px; text-align: left; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+            <thead style="background: #0F172A; color: white;">
+              <tr>
+                <th style="padding: 12px;">Aspek Evaluasi</th>
+                <th style="padding: 12px;">Kriteria Unggul (Grade A: 85-100)</th>
+                <th style="padding: 12px;">Kriteria Kurang (Grade &lt; 70)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid #E2E8F0;">
+                <td style="padding: 10px; font-weight: 600;">Kuantifikasi Finansial</td>
+                <td style="padding: 10px;">Estimasi biaya software/cloud realistis, ada perhitungan Payback Period</td>
+                <td style="padding: 10px; color: var(--color-rose);">Hanya menyebut "sistem ini hemat uang" tanpa angka</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #E2E8F0;">
+                <td style="padding: 10px; font-weight: 600;">Kesiapan Budaya SDM</td>
+                <td style="padding: 10px;">Menyertakan strategi pelatihan dan penanganan ketakutan staf</td>
+                <td style="padding: 10px; color: var(--color-rose);">Mengabaikan faktor manusia, menganggap staf otomatis menurut</td>
+              </tr>
+              <tr>
+                <td style="padding: 10px; font-weight: 600;">Kekokohan Keamanan</td>
+                <td style="padding: 10px;">Memetakan kontrol RBAC dan enkripsi selaras prinsip CIA Triad</td>
+                <td style="padding: 10px; color: var(--color-rose);">Tidak membahas celah kebocoran data sama sekali</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SLIDE 45 -->
+      <div class="slide-container layout-split" data-title="Transisi Menuju Pertemuan 14">
+        <div class="split-col w-60">
+          <p class="eyebrow">Peta Jalan RPS</p>
+          <h2>Menghubungkan P13 ke Pertemuan 14 &amp; 15</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-check" style="color: var(--color-emerald);"></i> <span>**P13 (Hari ini):** Menyusun studi kelayakan dan keamanan To-Be.</span></li>
+            <li><i class="fa-solid fa-forward" style="color: var(--color-cyan);"></i> <span>**P14 (Pekan Depan):** Finalisasi Laporan Utuh Proyek Mini (Bab 1 s/d 5) &amp; Sesi Asistensi Akhir Dosen.</span></li>
+            <li><i class="fa-solid fa-microphone" style="color: var(--color-amber);"></i> <span>**P15:** Presentasi Pitching Solusi di Hadapan Manajemen Eksekutif.</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40">
+          <img src="https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=800&q=80" alt="Executive Pitching Roadmap">
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SECTION 8: DISKUSI & PENUTUP (SLIDES 46-50)
+           ========================================== -->
+
+      <!-- SLIDE 46 -->
+      <div class="slide-container pad-standard" data-title="Tanya Jawab Analis 1">
+        <h2>Tanya Jawab Analis 1</h2>
+        <div class="flex-grow-center">
+          <div style="background: #F8FAFC; border-left: 10px solid var(--color-amber); padding: 36px; border-radius: 8px;">
+            <p style="font-size: 22px; font-weight: 700; color: #0F172A; margin-bottom: 10px;">
+              "Pak, apakah estimasi biaya pada analisis kelayakan ekonomi harus 100% presisi hingga rupiah terkecil?"
+            </p>
+            <p style="font-size: 20px; color: #475569; line-height: 1.5;">
+              Tidak harus hingga rupiah terkecil. Di mata kuliah ini yang dinilai adalah <strong>kelogisan metodologi estimasi Anda</strong>: Anda tahu bahwa menyewa cloud AWS ada biaya bulanan (~Rp 300rb-500rb/bln), biaya modem seluler failover (~Rp 100rb/bln), dan biaya lisensi tablet kasir. Angka perkiraan kasar yang rasional sudah sangat memadai untuk level *Feasibility Study*.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 47 -->
+      <div class="slide-container pad-standard" data-title="Tanya Jawab Analis 2">
+        <h2>Tanya Jawab Analis 2</h2>
+        <div class="flex-grow-center">
+          <div style="background: #F8FAFC; border-left: 10px solid var(--color-cyan); padding: 36px; border-radius: 8px;">
+            <p style="font-size: 22px; font-weight: 700; color: #0F172A; margin-bottom: 10px;">
+              "Bagaimana jika objek UMKM yang kami observasi menolak menerapkan sistem baru karena merasa omzetnya masih kecil?"
+            </p>
+            <p style="font-size: 20px; color: #475569; line-height: 1.5;">
+              Di situlah letak peran analisis kelayakan Anda! Tugas kelompok Anda adalah membuktikan: <em>"Pak, dengan sistem gratis seperti Google Form + WhatsApp Webhook berbiaya Rp 0, toko Bapak bisa menghemat 2 jam waktu pembukuan per hari."</em> Solusi TI terbaik bukanlah yang paling mahal, melainkan yang paling pas menyelesaikan masalah klien.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 48 -->
+      <div class="slide-container center-content" data-title="Sesi Tanya Jawab">
+        <i class="fa-regular fa-comments" style="font-size: 110px; color: var(--color-amber); margin-bottom: 28px;"></i>
+        <h1 style="font-size: 54px;">Sesi Diskusi &amp; Asistensi Proyek</h1>
+        <p style="font-size: 26px; font-weight: 600; margin-top: 18px;">
+          Silakan ajukan pertanyaan seputar analisis kelayakan dan bab keamanan kelompok Anda di kolom chat Google Meet atau gunakan mikrofon.
+        </p>
+      </div>
+
+      <!-- SLIDE 49 -->
+      <div class="slide-container center-content bg-dark" data-title="Ringkasan Akhir Pertemuan 13">
+        <i class="fa-solid fa-flag-checkered" style="font-size: 70px; color: var(--color-amber); margin-bottom: 20px;"></i>
+        <h2>Ringkasan Akhir Pertemuan 13</h2>
+        <p style="font-size: 24px; max-width: 900px; margin-top: 14px; line-height: 1.5;">
+          Perancangan proses To-Be yang hebat adalah perancangan yang <strong>layak diimplementasikan secara teknis dan finansial</strong>, <strong>diterima dengan hangat oleh para karyawan</strong>, serta <strong>terkunci rapat dari celah kejahatan siber</strong>.
+        </p>
+      </div>
+
+      <!-- SLIDE 50 -->
+      <div class="slide-container center-content bg-dark" data-title="Penutup Kuliah">
+        <h1 style="font-size: 76px; margin-bottom: 20px;">Terima Kasih!</h1>
+        <div class="divider"></div>
+        <p style="font-size: 30px; font-weight: 700; color: #FBBF24; font-style: italic; margin-top: 14px;">
+          "Sampai jumpa di Pertemuan 14: Finalisasi Laporan Utuh Proyek Mini (Bab 1 s/d 5)!"
+        </p>
+        <p style="font-size: 20px; color: #94A3B8; margin-top: 50px;">
+          Ardi Ariansyah, S.Kom., Gr. • Program Studi S1 Teknik Informatika • ITB Swadharma
+        </p>
+      </div>
+
+    </div> <!-- End of slides-wrapper -->
+  </div> <!-- End of presentation-area -->
+
+  <!-- PRESENTATION & INTERACTION SCRIPTS -->
+  <script>
+    // --- 1. CORE PRESENTATION LOGIC ---
+    const slides = document.querySelectorAll('.slide-container');
+    const selector = document.getElementById('slideSelector');
+    let currentSlide = 0;
+
+    function initDropdown() {
+      if(!selector) return;
+      selector.innerHTML = '';
+      slides.forEach((slide, index) => {
+        let title = slide.getAttribute('data-title') || `Slide ${index + 1}`;
+        let option = document.createElement('option');
+        option.value = index;
+        option.text = `${index + 1}. ${title}`;
+        selector.appendChild(option);
+      });
+    }
+
+    function updatePresentation() {
+      slides.forEach((slide, index) => {
+        if (index === currentSlide) {
+          slide.classList.add('active');
+        } else {
+          slide.classList.remove('active');
+        }
+      });
+      if(selector) selector.value = currentSlide;
+      
+      const presArea = document.getElementById('presentation-area') || document.body;
+      const scaleX = presArea.clientWidth / 1280;
+      const scaleY = presArea.clientHeight / 720;
+      const scale = Math.min(scaleX, scaleY) * 0.95;
+      
+      slides[currentSlide].style.transform = `translate(-50%, -50%) scale(${scale})`;
+    }
+
+    function nextSlide() {
+      if (currentSlide < slides.length - 1) { currentSlide++; updatePresentation(); }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) { currentSlide--; updatePresentation(); }
+    }
+
+    function jumpToSlide(index) {
+      currentSlide = parseInt(index); updatePresentation();
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if(e.target.isContentEditable || e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return; 
+      if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') nextSlide();
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') prevSlide();
+    });
+
+    window.addEventListener('resize', updatePresentation);
+    initDropdown();
+    updatePresentation();
+
+    // --- 2. DRAG AND DROP LOGIC (AUTO-APPLY) ---
+    const dropZones = document.querySelectorAll('.drop-zone');
+    const draggables = document.querySelectorAll('.drag-item');
+    const containers = document.querySelectorAll('.draggable-container');
+
+    draggables.forEach(draggable => {
+      draggable.addEventListener('dragstart', () => draggable.classList.add('dragging'));
+      draggable.addEventListener('dragend', () => {
+        draggable.classList.remove('dragging');
+        checkPracticeCompletion();
+      });
+    });
+
+    dropZones.forEach(zone => {
+      zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+      zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+      zone.addEventListener('drop', e => {
+        e.preventDefault();
+        zone.classList.remove('drag-over');
+        const draggable = document.querySelector('.dragging');
+        if (draggable) zone.querySelector('.drop-content').appendChild(draggable);
+      });
+    });
+
+    containers.forEach(container => {
+      container.addEventListener('dragover', e => e.preventDefault());
+      container.addEventListener('drop', e => {
+        const draggable = document.querySelector('.dragging');
+        if (draggable) container.appendChild(draggable);
+      });
+    });
+
+    function checkPracticeCompletion() {
+      document.querySelectorAll('.practice-feedback').forEach(feedback => {
+        let slide = feedback.closest('.slide-container');
+        let totalItems = slide.querySelectorAll('.drag-item').length;
+        let correct = 0;
+        slide.querySelectorAll('.drop-zone').forEach(zone => {
+          zone.querySelectorAll('.drag-item').forEach(item => {
+            if (item.dataset.type === zone.dataset.target) correct++;
+          });
+        });
+        feedback.style.display = (correct === totalItems && totalItems > 0) ? 'block' : 'none';
+      });
+    }
+
+    // --- 3. QUIZ LOGIC ---
+    window.handleQuiz = function(clickedBtn, isCorrect, feedbackId) {
+      const parent = clickedBtn.parentElement;
+      const allButtons = parent.querySelectorAll('.quiz-option');
+      allButtons.forEach(btn => {
+        btn.style.pointerEvents = 'none';
+        const icon = btn.querySelector('i');
+        icon.className = btn.dataset.correct === "true" ? 'fa-solid fa-check-circle' : 'fa-solid fa-circle-xmark';
+        if (btn.dataset.correct === "true") btn.classList.add('correct');
+      });
+      if (!isCorrect) clickedBtn.classList.add('wrong');
+      document.getElementById(feedbackId).classList.add('show');
+    };
+  </script>
+</body>
+</html>

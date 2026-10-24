@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mendelow Stakeholder Battlefield - ITB Swadharma</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & Montserrat -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@700;800;900&display=swap">
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Montserrat', 'sans-serif']
+          },
+          colors: {
+            brandDark: '#080C16',
+            brandSlate: '#0D1527',
+            brandCard: '#111C33',
+            brandBorder: '#1E2F4D',
+            brandCyan: '#06B6D4',
+            brandBlue: '#0284C7',
+            brandViolet: '#8B5CF6',
+            brandAmber: '#F59E0B',
+            brandEmerald: '#10B981',
+            brandRose: '#F43F5E'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #080C16; }
+    ::-webkit-scrollbar-thumb { background: #1E2F4D; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #06B6D4; }
+
+    /* Animated Radar Grid */
+    .radar-grid {
+      background-size: 28px 28px;
+      background-image: 
+        linear-gradient(to right, rgba(30, 47, 77, 0.45) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(30, 47, 77, 0.45) 1px, transparent 1px);
+    }
+
+    /* Glow Pulse */
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.05); }
+    }
+    .ambient-glow {
+      animation: pulseGlow 6s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body class="bg-brandDark text-slate-100 min-h-screen flex flex-col font-sans selection:bg-brandCyan selection:text-brandDark antialiased radar-grid">
+
+  <!-- TOP APP BAR -->
+  <header class="sticky top-0 z-50 bg-brandDark/95 backdrop-blur-md border-b border-brandBorder h-20 flex items-center">
+    <div class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+      
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-brandRose via-brandAmber to-brandCyan flex items-center justify-center text-white font-display font-black text-xl shadow-lg shadow-rose-500/20">
+          <i class="fa-solid fa-chess-knight"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-display font-black text-xl tracking-tight text-white">MENDELOW<span class="text-brandRose">.SIM</span></span>
+            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-rose-950/80 border border-rose-800 text-rose-400">P2 Lab Game</span>
+          </div>
+          <p class="text-xs text-slate-400 hidden sm:block">Analisa Proses Bisnis (INF1104) • Crisis &amp; Stakeholder Simulator</p>
+        </div>
+      </div>
+
+      <!-- Live Resource Trackers -->
+      <div class="flex items-center gap-3">
+        <!-- Influence Points (IP) -->
+        <div class="flex items-center gap-2.5 bg-slate-900 border border-brandBorder px-3.5 py-1.5 rounded-xl shadow-inner">
+          <i class="fa-solid fa-bolt-lightning text-amber-400 text-sm"></i>
+          <div>
+            <div class="text-[9px] uppercase tracking-wider text-slate-400 font-bold">Influence Points</div>
+            <div id="ipCounter" class="font-display font-black text-amber-400 text-sm leading-none">60 IP</div>
+          </div>
+        </div>
+
+        <!-- Turn / Round -->
+        <div class="flex items-center gap-2.5 bg-slate-900 border border-brandBorder px-3.5 py-1.5 rounded-xl shadow-inner">
+          <i class="fa-solid fa-hourglass-half text-brandCyan text-sm"></i>
+          <div>
+            <div class="text-[9px] uppercase tracking-wider text-slate-400 font-bold">Babak Krisis</div>
+            <div id="roundCounter" class="font-display font-black text-white text-sm leading-none">1 / 4</div>
+          </div>
+        </div>
+
+        <button onclick="resetGame()" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold border border-slate-700 transition" title="Ulangi Simulasi">
+          <i class="fa-solid fa-rotate-right"></i> Reset
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- MAIN SIMULATOR ARENA -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+
+    <!-- PROJECT STATUS DASHBOARD (3 VITAL GAUGES) -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      
+      <!-- Meter 1: Project Feasibility -->
+      <div class="bg-brandCard border border-brandBorder rounded-2xl p-4 shadow-lg flex flex-col justify-between">
+        <div class="flex items-center justify-between text-xs font-semibold mb-2">
+          <span class="flex items-center gap-2 text-slate-300"><i class="fa-solid fa-rocket text-cyan-400"></i> Kelayakan Proyek</span>
+          <span id="feasibilityVal" class="font-mono font-bold text-cyan-400">75%</span>
+        </div>
+        <div class="w-full h-2.5 bg-slate-900 rounded-full overflow-hidden border border-slate-800">
+          <div id="feasibilityBar" class="h-full bg-gradient-to-r from-sky-500 to-cyan-400 transition-all duration-500 rounded-full" style="width: 75%;"></div>
+        </div>
+        <p class="text-[10px] text-slate-400 mt-2">Dukungan teknis dan kelancaran transformasi digital.</p>
+      </div>
+
+      <!-- Meter 2: Compliance & Legal Trust -->
+      <div class="bg-brandCard border border-brandBorder rounded-2xl p-4 shadow-lg flex flex-col justify-between">
+        <div class="flex items-center justify-between text-xs font-semibold mb-2">
+          <span class="flex items-center gap-2 text-slate-300"><i class="fa-solid fa-shield-halved text-emerald-400"></i> Kepatuhan &amp; Legalitas</span>
+          <span id="complianceVal" class="font-mono font-bold text-emerald-400">70%</span>
+        </div>
+        <div class="w-full h-2.5 bg-slate-900 rounded-full overflow-hidden border border-slate-800">
+          <div id="complianceBar" class="h-full bg-gradient-to-r from-teal-500 to-emerald-400 transition-all duration-500 rounded-full" style="width: 70%;"></div>
+        </div>
+        <p class="text-[10px] text-slate-400 mt-2">Kepatuhan izin regulator, serikat buruh, dan masyarakat.</p>
+      </div>
+
+      <!-- Meter 3: Budget Health -->
+      <div class="bg-brandCard border border-brandBorder rounded-2xl p-4 shadow-lg flex flex-col justify-between">
+        <div class="flex items-center justify-between text-xs font-semibold mb-2">
+          <span class="flex items-center gap-2 text-slate-300"><i class="fa-solid fa-coins text-amber-400"></i> Kesehatan Anggaran</span>
+          <span id="budgetVal" class="font-mono font-bold text-amber-400">80%</span>
+        </div>
+        <div class="w-full h-2.5 bg-slate-900 rounded-full overflow-hidden border border-slate-800">
+          <div id="budgetBar" class="h-full bg-gradient-to-r from-amber-500 to-yellow-400 transition-all duration-500 rounded-full" style="width: 80%;"></div>
+        </div>
+        <p class="text-[10px] text-slate-400 mt-2">Kepuasan investor utama dan efisiensi belanja operasional.</p>
+      </div>
+
+    </div>
+
+    <!-- WORKSPACE SPLIT: RADAR MENDELOW (LEFT) vs CRISIS NEGOTIATION DESK (RIGHT) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+      <!-- LEFT: VISUAL 4-QUADRANT RADAR MENDELOW (7 COLS) -->
+      <div class="lg:col-span-7 bg-brandCard border border-brandBorder rounded-3xl p-5 shadow-2xl relative flex flex-col">
+        
+        <div class="flex items-center justify-between pb-3 border-b border-brandBorder mb-3">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-rose-500 animate-ping"></span>
+            <h3 class="font-display font-extrabold text-sm sm:text-base text-white">
+              Radar Matriks Mendelow (Power vs Interest)
+            </h3>
+          </div>
+          <span class="text-[11px] text-slate-400 font-mono">Real-Time Coordinate</span>
+        </div>
+
+        <p class="text-xs text-slate-400 mb-4">
+          Posisi pin aktor bergeser otomatis berdasarkan respons krisis yang Anda ambil. Jangan biarkan aktor ber-<strong>Power Tinggi</strong> merasa diabaikan!
+        </p>
+
+        <!-- Dynamic 2x2 Matrix Container -->
+        <div class="relative w-full h-[460px] bg-slate-950 border-2 border-slate-800 rounded-2xl overflow-hidden p-3 shadow-inner select-none">
+          
+          <!-- Axis Labels -->
+          <div class="absolute top-2 left-1/2 -translate-x-1/2 text-[10px] font-display font-black text-rose-400 tracking-wider uppercase z-10 bg-slate-900/90 px-2 py-0.5 rounded border border-rose-900/60">
+            ▲ KEKUATAN TINGGI (HIGH POWER)
+          </div>
+          <div class="absolute bottom-2 left-1/2 -translate-x-1/2 text-[10px] font-display font-black text-slate-400 tracking-wider uppercase z-10 bg-slate-900/90 px-2 py-0.5 rounded border border-slate-800">
+            ▼ KEKUATAN RENDAH (LOW POWER)
+          </div>
+          <div class="absolute top-1/2 left-2 -translate-y-1/2 -rotate-90 origin-left text-[9px] font-display font-black text-slate-400 tracking-wider uppercase z-10 bg-slate-900/90 px-2 py-0.5 rounded border border-slate-800">
+            ◄ LOW INTEREST
+          </div>
+          <div class="absolute top-1/2 right-2 -translate-y-1/2 rotate-90 origin-right text-[9px] font-display font-black text-cyan-400 tracking-wider uppercase z-10 bg-slate-900/90 px-2 py-0.5 rounded border border-cyan-900/60">
+            HIGH INTEREST ►
+          </div>
+
+          <!-- Cross Axis Lines -->
+          <div class="absolute top-0 bottom-0 left-1/2 w-0.5 bg-slate-800/90 -translate-x-1/2 border-r border-dashed border-slate-700"></div>
+          <div class="absolute left-0 right-0 top-1/2 h-0.5 bg-slate-800/90 -translate-y-1/2 border-b border-dashed border-slate-700"></div>
+
+          <!-- Quadrant Background Tints & Strategy Badges -->
+          <!-- Top Left: High Power, Low Interest (Keep Satisfied) -->
+          <div class="absolute top-0 left-0 w-1/2 h-1/2 bg-amber-950/10 p-3 pointer-events-none">
+            <span class="inline-block px-2 py-1 rounded bg-amber-950/80 border border-amber-800/80 text-[10px] font-display font-extrabold text-amber-300 uppercase">
+              Kuadran II: Keep Satisfied
+            </span>
+            <p class="text-[9px] text-slate-400 mt-1">Puaskan mereka tanpa membebani teknis berbelit.</p>
+          </div>
+
+          <!-- Top Right: High Power, High Interest (Manage Closely) -->
+          <div class="absolute top-0 right-0 w-1/2 h-1/2 bg-rose-950/15 p-3 pointer-events-none text-right">
+            <span class="inline-block px-2 py-1 rounded bg-rose-950/80 border border-rose-800/80 text-[10px] font-display font-extrabold text-rose-300 uppercase">
+              Kuadran I: Manage Closely
+            </span>
+            <p class="text-[9px] text-slate-400 mt-1">Mitra kunci! Wajib dilibatkan intensif dalam setiap fase.</p>
+          </div>
+
+          <!-- Bottom Left: Low Power, Low Interest (Monitor) -->
+          <div class="absolute bottom-0 left-0 w-1/2 h-1/2 bg-slate-900/20 p-3 pointer-events-none flex flex-col justify-end">
+            <span class="inline-block px-2 py-1 rounded bg-slate-900 border border-slate-700 text-[10px] font-display font-extrabold text-slate-400 uppercase w-fit">
+              Kuadran IV: Monitor
+            </span>
+            <p class="text-[9px] text-slate-400 mt-1">Pantau pasif dengan buletin dan biaya komunikasi minimal.</p>
+          </div>
+
+          <!-- Bottom Right: Low Power, High Interest (Keep Informed) -->
+          <div class="absolute bottom-0 right-0 w-1/2 h-1/2 bg-cyan-950/15 p-3 pointer-events-none flex flex-col justify-end text-right items-end">
+            <span class="inline-block px-2 py-1 rounded bg-cyan-950/80 border border-cyan-800/80 text-[10px] font-display font-extrabold text-cyan-300 uppercase w-fit">
+              Kuadran III: Keep Informed
+            </span>
+            <p class="text-[9px] text-slate-400 mt-1">Beri edukasi transparan agar tidak terjadi kepanikan.</p>
+          </div>
+
+          <!-- DYNAMIC STAKEHOLDER PINS (Injected via JS) -->
+          <div id="pinsLayer" class="relative w-full h-full pointer-events-auto">
+            <!-- Pins will render here -->
+          </div>
+
+        </div>
+
+        <!-- Radar Legend -->
+        <div class="mt-3 grid grid-cols-2 sm:grid-cols-4 gap-2 text-[10px] text-slate-400">
+          <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-rose-500 inline-block"></span> <strong>INV:</strong> Investor Utama</div>
+          <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-amber-400 inline-block"></span> <strong>REG:</strong> Dinas Lingkungan</div>
+          <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-cyan-400 inline-block"></span> <strong>BUR:</strong> Serikat Buruh/Kasir</div>
+          <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-emerald-400 inline-block"></span> <strong>PLG:</strong> Pelanggan Kampus</div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: CRISIS NEGOTIATION DESK (5 COLS) -->
+      <div class="lg:col-span-5 bg-brandCard border border-brandBorder rounded-3xl p-6 shadow-2xl space-y-5">
+        
+        <!-- Crisis Headline & Scenario -->
+        <div>
+          <div class="flex items-center justify-between text-xs mb-2">
+            <span id="crisisBadge" class="px-2.5 py-1 rounded-full bg-rose-950 border border-rose-800 text-rose-400 font-display font-bold uppercase tracking-wider">
+              <i class="fa-solid fa-triangle-exclamation mr-1"></i> Krisis 1 / 4
+            </span>
+            <span id="crisisActorTag" class="text-slate-400 font-mono text-[11px]">Fokus: Dinas Lingkungan &amp; Warga</span>
+          </div>
+          <h2 id="crisisTitle" class="font-display font-extrabold text-lg sm:text-xl text-white leading-tight">
+            Ancaman Penutupan Pabrik: Surat Somasi Baku Mutu Asap!
+          </h2>
+          <p id="crisisNarrative" class="text-xs sm:text-sm text-slate-300 mt-2 leading-relaxed">
+            Dinas Lingkungan Hidup mengirimkan surat peringatan keras setelah warga sekitar pabrik memprotes kepulan asap mesin sangrai dan kebocoran limbah cair. Jika tidak ditanggapi dalam 24 jam, izin usaha akan dibekukan!
+          </p>
+        </div>
+
+        <!-- Consultation Decision Options -->
+        <div class="space-y-3 pt-2">
+          <div class="text-[11px] font-display font-bold uppercase tracking-wider text-slate-400">
+            Pilih Opsi Negosiasi &amp; Alokasi Strategi:
+          </div>
+
+          <!-- Option A -->
+          <button onclick="takeAction('A')" class="w-full text-left p-3.5 rounded-2xl bg-slate-950 hover:bg-slate-900 border border-slate-800 hover:border-cyan-500/80 transition group relative overflow-hidden">
+            <div class="flex items-start justify-between gap-3">
+              <div class="space-y-1">
+                <span class="inline-block text-[10px] font-bold font-display uppercase px-2 py-0.5 rounded bg-cyan-950 border border-cyan-800 text-cyan-400">Opsi A: Dialog Terbuka &amp; Audit Filter</span>
+                <h4 class="text-xs sm:text-sm font-bold text-white group-hover:text-cyan-300 transition" id="optTitleA">
+                  Undang Regulator &amp; Pasang Sensor IoT Emisi
+                </h4>
+                <p class="text-[11px] text-slate-400 leading-snug" id="optDescA">
+                  Alokasikan anggaran pengadaan sensor filter asap otomatis dan transparan ke dinas lingkungan (Treat as High Power - Keep Satisfied).
+                </p>
+              </div>
+              <span class="text-xs font-mono font-bold text-amber-400 shrink-0 px-2 py-1 rounded bg-slate-900 border border-slate-700" id="optCostA">
+                -20 IP
+              </span>
+            </div>
+          </button>
+
+          <!-- Option B -->
+          <button onclick="takeAction('B')" class="w-full text-left p-3.5 rounded-2xl bg-slate-950 hover:bg-slate-900 border border-slate-800 hover:border-rose-500/80 transition group relative overflow-hidden">
+            <div class="flex items-start justify-between gap-3">
+              <div class="space-y-1">
+                <span class="inline-block text-[10px] font-bold font-display uppercase px-2 py-0.5 rounded bg-rose-950 border border-rose-800 text-rose-400">Opsi B: Tanggapi Dingin &amp; Lempar Surat Hukum</span>
+                <h4 class="text-xs sm:text-sm font-bold text-white group-hover:text-rose-300 transition" id="optTitleB">
+                  Kirim Pengacara &amp; Abaikan Warga Sekitar
+                </h4>
+                <p class="text-[11px] text-slate-400 leading-snug" id="optDescB">
+                  Menganggap dinas hanya mencari masalah kecil. Tolak negosiasi dan fokus mengejar target produksi harian tanpa belanja filter baru.
+                </p>
+              </div>
+              <span class="text-xs font-mono font-bold text-amber-400 shrink-0 px-2 py-1 rounded bg-slate-900 border border-slate-700" id="optCostB">
+                -5 IP
+              </span>
+            </div>
+          </button>
+
+          <!-- Option C -->
+          <button onclick="takeAction('C')" class="w-full text-left p-3.5 rounded-2xl bg-slate-950 hover:bg-slate-900 border border-slate-800 hover:border-emerald-500/80 transition group relative overflow-hidden">
+            <div class="flex items-start justify-between gap-3">
+              <div class="space-y-1">
+                <span class="inline-block text-[10px] font-bold font-display uppercase px-2 py-0.5 rounded bg-emerald-950 border border-emerald-800 text-emerald-400">Opsi C: Mediasi Warga &amp; Program CSR</span>
+                <h4 class="text-xs sm:text-sm font-bold text-white group-hover:text-emerald-300 transition" id="optTitleC">
+                  Sosialisasi Warga &amp; Pindahkan Cerobong Buangan
+                </h4>
+                <p class="text-[11px] text-slate-400 leading-snug" id="optDescC">
+                  Pindahkan cerobong asap menjauhi pemukiman dan beri beasiswa produk/kompensasi bagi warga terdampak (Keep Informed).
+                </p>
+              </div>
+              <span class="text-xs font-mono font-bold text-amber-400 shrink-0 px-2 py-1 rounded bg-slate-900 border border-slate-700" id="optCostC">
+                -15 IP
+              </span>
+            </div>
+          </button>
+        </div>
+
+        <!-- Strategy Coaching Note -->
+        <div id="coachingBox" class="p-3.5 rounded-2xl bg-slate-950/80 border border-brandBorder text-xs text-slate-300 flex items-start gap-3">
+          <i class="fa-solid fa-graduation-cap text-brandCyan text-base mt-0.5"></i>
+          <div>
+            <span class="font-bold text-white block">Catatan Analis:</span>
+            <span id="coachingText">Dinas Lingkungan memiliki <strong>Power Tinggi</strong> karena memiliki wewenang mencabut izin operasional. Meremehkan mereka ke Kuadran Monitor adalah kesalahan fatal!</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- OUTCOME / SUMMARY MODAL BANNER -->
+    <div id="endGameModal" class="hidden bg-gradient-to-r from-slate-950 via-brandCard to-slate-950 border-2 border-brandBorder rounded-3xl p-8 text-center shadow-2xl relative overflow-hidden">
+      <div id="endGameIcon" class="inline-flex p-4 rounded-full text-4xl mb-3"></div>
+      <h3 id="endGameTitle" class="font-display font-black text-2xl sm:text-3xl text-white"></h3>
+      <p id="endGameDesc" class="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto mt-2 leading-relaxed"></p>
+      
+      <div class="mt-6 flex flex-wrap justify-center gap-3">
+        <button onclick="resetGame()" class="px-6 py-3 rounded-xl bg-gradient-to-r from-brandRose to-brandAmber text-white font-display font-black text-xs uppercase tracking-wider shadow-lg hover:brightness-110 active:scale-95 transition">
+          <i class="fa-solid fa-rotate-right mr-1.5"></i> Coba Ulang Simulasi
+        </button>
+        <a href="index.html" class="px-6 py-3 rounded-xl bg-slate-900 border border-slate-700 text-slate-300 font-display font-bold text-xs uppercase tracking-wider hover:text-white transition">
+          <i class="fa-solid fa-arrow-left mr-1.5"></i> Kembali ke Portal Modul
+        </a>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- JAVASCRIPT GAME LOGIC -->
+  <script>
+    // ==========================================
+    // 1. GAME MASTER DATA: 4 CRISIS ROUNDS
+    // ==========================================
+    const CRISIS_DATA = [
+      {
+        round: 1,
+        title: "Ancaman Penutupan: Surat Somasi Izin Baku Mutu!",
+        actorTag: "Fokus: Dinas Lingkungan & Warga",
+        narrative: "Dinas Lingkungan Hidup mengirim somasi setelah warga memprotes kepulan asap mesin sangrai dan aroma limbah. Jika tidak ada komitmen mitigasi dalam 24 jam, izin usaha akan dibekukan!",
+        options: {
+          A: {
+            title: "Undang Regulator & Pasang Sensor IoT Filter Emisi",
+            desc: "Alokasikan dana pengadaan filter asap modern dan undang dinas verifikasi langsung (Treat as High Power - Keep Satisfied).",
+            cost: 20,
+            impactFeasibility: +10,
+            impactCompliance: +25,
+            impactBudget: -15,
+            pinMove: { actor: 'REG', x: 25, y: 30 }, // High Power, Low-to-Mid Interest satisfied
+            coaching: "Tepat! Dinas Lingkungan memiliki Power regulasi tinggi. Menjaga kepatuhan (Keep Satisfied) mengamankan izin operasional jangka panjang."
+          },
+          B: {
+            title: "Kirim Pengacara & Tolak Akses Masuk Dinas",
+            desc: "Menuduh dinas mengada-ada dan fokus mengejar target kuota produksi harian tanpa belanja filter baru.",
+            cost: 5,
+            impactFeasibility: -25,
+            impactCompliance: -40,
+            impactBudget: -5,
+            pinMove: { actor: 'REG', x: 75, y: 15 }, // Becomes Furious (High Power, High Interest Hostile)
+            coaching: "Fatal! Melawan regulator yang memegang izin hukum memicu audit investigasi paksa dan pembekuan izin!"
+          },
+          C: {
+            title: "Mediasi Warga & Geser Cerobong Buangan",
+            desc: "Pindahkan cerobong menjauhi pemukiman warga dan beri kompensasi produk kepada warga sekitar (Keep Informed).",
+            cost: 15,
+            impactFeasibility: +5,
+            impactCompliance: +10,
+            impactBudget: -10,
+            pinMove: { actor: 'REG', x: 40, y: 35 },
+            coaching: "Cukup baik meredam warga, namun Anda tetap memerlukan sertifikat uji lab resmi dari dinas terkait."
+          }
+        }
+      },
+      {
+        round: 2,
+        title: "Pemberontakan Serikat: Mogok Kerja Kasir & Barista!",
+        actorTag: "Fokus: Serikat Karyawan & Operator",
+        narrative: "Staf kasir dan barista mengancam *walk-out* mogok kerja serentak karena sistem POS baru dinilai lambat dan jam lembur rekonsiliasi manual tidak dihitung perusahaan.",
+        options: {
+          A: {
+            title: "Ancam PHK & Rekrut Pekerja Harian Baru",
+            desc: "Menganggap staf kasir berdaya tawar rendah (Low Power) dan mudah digantikan dalam hitungan hari.",
+            cost: 10,
+            impactFeasibility: -35,
+            impactCompliance: -15,
+            impactBudget: -10,
+            pinMove: { actor: 'BUR', x: 85, y: 25 }, // High Interest, Gains Disruptive Power
+            coaching: "Keliru! Staf operasional memang berkuasa formal rendah, namun mogok massal melumpuhkan transaksi harian secara instan!"
+          },
+          B: {
+            title: "Bentuk Focus Group & Optimasi Fitur Kasir",
+            desc: "Libatkan perwakilan barista merancang ulang tombol UI kasir dan bayar kompensasi lembur (Treat as Low Power, High Interest - Keep Informed).",
+            cost: 15,
+            impactFeasibility: +20,
+            impactCompliance: +15,
+            impactBudget: -10,
+            pinMove: { actor: 'BUR', x: 75, y: 70 },
+            coaching: "Langkah brilian! Mendidik dan mendengarkan operator harian (Keep Informed) mengubah penolakan menjadi adopsi sistem yang solid."
+          },
+          C: {
+            title: "Berikan Bonus Tunai Tanpa Mengubah Sistem",
+            desc: "Bungkam keluhan dengan uang insentif satu kali tanpa menyederhanakan alur kerja sistem yang lambat.",
+            cost: 25,
+            impactFeasibility: -5,
+            impactCompliance: +5,
+            impactBudget: -25,
+            pinMove: { actor: 'BUR', x: 60, y: 65 },
+            coaching: "Uang hanya menunda krisis. Sistem yang rumit akan tetap memicu kelelahan staf di bulan berikutnya."
+          }
+        }
+      },
+      {
+        round: 3,
+        title: "Tekanan Pemegang Saham: Tuntutan Dividen & Pangkas R&D!",
+        actorTag: "Fokus: Investor Utama & Dewan Komisaris",
+        narrative: "Investor utama memprotes pengeluaran server cloud dan menuntut dividen dipercepat. Mereka mengancam akan menarik modal kerja proyek rekayasa proses bisnis!",
+        options: {
+          A: {
+            title: "Penyusunan Executive Deck ROI & Efisiensi PCE",
+            desc: "Presentasikan data konkret: pemotongan waktu siklus 75% akan menghemat Rp 120 Juta per tahun (Manage Closely).",
+            cost: 15,
+            impactFeasibility: +15,
+            impactCompliance: +10,
+            impactBudget: +15,
+            pinMove: { actor: 'INV', x: 80, y: 20 }, // High Power, High Interest Managed
+            coaching: "Tepat sasaran! Investor adalah aktor High Power - High Interest. Mereka hanya dapat diyakinkan dengan angka pengembalian modal (ROI & PCE)."
+          },
+          B: {
+            title: "Turuti Tuntutan: Hapus Langganan Backup Cloud",
+            desc: "Memangkas anggaran server secara drastis demi menyajikan angka laba semu yang manis bagi investor.",
+            cost: 5,
+            impactFeasibility: -30,
+            impactCompliance: -25,
+            impactBudget: +20,
+            pinMove: { actor: 'INV', x: 45, y: 35 },
+            coaching: "Sangat berbahaya! Mematikan backup cloud demi profit jangka pendek memicu bencana Single Point of Failure (SPOF)."
+          },
+          C: {
+            title: "Abaikan Pertemuan Dewan & Hindari Panggilan",
+            desc: "Fokus bekerja sendiri di laboratorium tanpa memberikan laporan transparansi keuangan kepada pemilik modal.",
+            cost: 0,
+            impactFeasibility: -25,
+            impactCompliance: -20,
+            impactBudget: -35,
+            pinMove: { actor: 'INV', x: 90, y: 10 },
+            coaching: "Fatal! Mengabaikan aktor pemegang kuasa tertinggi otomatis memicu pencopotan Anda sebagai analis proyek!"
+          }
+        }
+      },
+      {
+        round: 4,
+        title: "Badai Media Sosial: Komplain Antrean & Kebocoran Menu!",
+        actorTag: "Fokus: Pelanggan Mahasiswa & Netizen",
+        narrative: "Sebuah video viral di TikTok memperlihatkan antrean mahasiswa mengular hingga 40 menit akibat sistem error. Netizen mulai menyerbu rating bintang 1 di Google Maps!",
+        options: {
+          A: {
+            title: "Hapus Komentar Kritis & Blokir Akun Pengunggah",
+            desc: "Mencoba menutupi keluhan dan menyalahkan pelanggan yang datang berkerumun pada jam makan siang.",
+            cost: 5,
+            impactFeasibility: -15,
+            impactCompliance: -35,
+            impactBudget: -20,
+            pinMove: { actor: 'PLG', x: 95, y: 40 },
+            coaching: "Menghapus kritik memicu efek bola salju kemarahan publik (*Streisand Effect*) dan menghancurkan reputasi bisnis!"
+          },
+          B: {
+            title: "Luncurkan Fitur Pra-Pesan & Kompensasi Diskon",
+            desc: "Rilis fitur mobile pre-order untuk memecah jam sibuk dan umumkan permohonan maaf terbuka dengan voucher diskon (Keep Informed).",
+            cost: 15,
+            impactFeasibility: +20,
+            impactCompliance: +25,
+            impactBudget: -10,
+            pinMove: { actor: 'PLG', x: 70, y: 75 },
+            coaching: "Keputusan tepat! Mengedukasi pelanggan dan memberikan solusi antrean digital membalikkan krisis menjadi loyalitas."
+          },
+          C: {
+            title: "Sewa Buzzer Akun Palsu untuk Menaikkan Rating",
+            desc: "Membeli ratusan ulasan bintang 5 palsu tanpa memperbaiki alur kasir dan kapasitas dapur.",
+            cost: 15,
+            impactFeasibility: -20,
+            impactCompliance: -25,
+            impactBudget: -15,
+            pinMove: { actor: 'PLG', x: 80, y: 55 },
+            coaching: "Manipulasi data melanggar etika profesional dan tidak menyelesaikan masalah antrean di dapur nyata."
+          }
+        }
+      }
+    ];
+
+    // ==========================================
+    // 2. STATE MANAGEMENT
+    // ==========================================
+    let currentRoundIndex = 0;
+    let influencePoints = 60;
+    let feasibility = 75;
+    let compliance = 70;
+    let budget = 80;
+
+    // Stakeholder Coordinates on 100x100 Matrix (X: Interest, Y: Power [from top 0 to bottom 100])
+    // Top-Left (High Power, Low Int): X < 50, Y < 50
+    // Top-Right (High Power, High Int): X >= 50, Y < 50
+    // Bottom-Left (Low Power, Low Int): X < 50, Y >= 50
+    // Bottom-Right (Low Power, High Int): X >= 50, Y >= 50
+    let stakeholderPins = {
+      INV: { label: 'INV', name: 'Investor Utama', color: 'bg-rose-500', x: 75, y: 25 },
+      REG: { label: 'REG', name: 'Dinas Lingkungan', color: 'bg-amber-400', x: 30, y: 20 },
+      BUR: { label: 'BUR', name: 'Serikat Buruh', color: 'bg-cyan-400', x: 65, y: 65 },
+      PLG: { label: 'PLG', name: 'Pelanggan Kampus', color: 'bg-emerald-400', x: 60, y: 80 }
+    };
+
+    // ==========================================
+    // 3. RENDER ENGINE
+    // ==========================================
+    function renderStatusBars() {
+      // Clamping 0 - 100
+      feasibility = Math.max(0, Math.min(100, feasibility));
+      compliance = Math.max(0, Math.min(100, compliance));
+      budget = Math.max(0, Math.min(100, budget));
+
+      document.getElementById('feasibilityVal').innerText = `${feasibility}%`;
+      document.getElementById('feasibilityBar').style.width = `${feasibility}%`;
+
+      document.getElementById('complianceVal').innerText = `${compliance}%`;
+      document.getElementById('complianceBar').style.width = `${compliance}%`;
+
+      document.getElementById('budgetVal').innerText = `${budget}%`;
+      document.getElementById('budgetBar').style.width = `${budget}%`;
+
+      document.getElementById('ipCounter').innerText = `${influencePoints} IP`;
+      document.getElementById('roundCounter').innerText = `${currentRoundIndex + 1} / ${CRISIS_DATA.length}`;
+    }
+
+    function renderPins() {
+      const container = document.getElementById('pinsLayer');
+      container.innerHTML = '';
+
+      Object.keys(stakeholderPins).forEach(key => {
+        const actor = stakeholderPins[key];
+        const pinEl = document.createElement('div');
+        pinEl.className = `absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center group cursor-pointer transition-all duration-700 z-20`;
+        pinEl.style.left = `${actor.x}%`;
+        pinEl.style.top = `${actor.y}%`;
+
+        pinEl.innerHTML = `
+          <div class="w-8 h-8 rounded-full ${actor.color} text-brandDark font-display font-black text-[11px] flex items-center justify-center shadow-lg border-2 border-white ring-2 ring-black/40 group-hover:scale-125 transition">
+            ${actor.label}
+          </div>
+          <span class="text-[9px] font-bold tracking-tight text-white bg-slate-900/90 border border-slate-700 px-1.5 py-0.5 rounded shadow mt-1 whitespace-nowrap pointer-events-none">
+            ${actor.name}
+          </span>
+        `;
+        container.appendChild(pinEl);
+      });
+    }
+
+    function renderCrisisCard() {
+      const crisis = CRISIS_DATA[currentRoundIndex];
+      document.getElementById('crisisBadge').innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1"></i> Krisis ${crisis.round} / ${CRISIS_DATA.length}`;
+      document.getElementById('crisisActorTag').innerText = crisis.actorTag;
+      document.getElementById('crisisTitle').innerText = crisis.title;
+      document.getElementById('crisisNarrative').innerText = crisis.narrative;
+
+      // Options
+      document.getElementById('optTitleA').innerText = crisis.options.A.title;
+      document.getElementById('optDescA').innerText = crisis.options.A.desc;
+      document.getElementById('optCostA').innerText = `-${crisis.options.A.cost} IP`;
+
+      document.getElementById('optTitleB').innerText = crisis.options.B.title;
+      document.getElementById('optDescB').innerText = crisis.options.B.desc;
+      document.getElementById('optCostB').innerText = `-${crisis.options.B.cost} IP`;
+
+      document.getElementById('optTitleC').innerText = crisis.options.C.title;
+      document.getElementById('optDescC').innerText = crisis.options.C.desc;
+      document.getElementById('optCostC').innerText = `-${crisis.options.C.cost} IP`;
+    }
+
+    // ==========================================
+    // 4. GAME ACTIONS & RESOLUTION
+    // ==========================================
+    function takeAction(choice) {
+      const currentCrisis = CRISIS_DATA[currentRoundIndex];
+      const opt = currentCrisis.options[choice];
+
+      // Deduct IP
+      influencePoints = Math.max(0, influencePoints - opt.cost);
+      feasibility += opt.impactFeasibility;
+      compliance += opt.impactCompliance;
+      budget += opt.impactBudget;
+
+      // Move Pin
+      if (opt.pinMove && stakeholderPins[opt.pinMove.actor]) {
+        stakeholderPins[opt.pinMove.actor].x = opt.pinMove.x;
+        stakeholderPins[opt.pinMove.actor].y = opt.pinMove.y;
+      }
+
+      // Update Coaching
+      document.getElementById('coachingText').innerText = opt.coaching;
+
+      renderStatusBars();
+      renderPins();
+
+      // Check Fail Conditions
+      if (feasibility <= 15 || compliance <= 15 || budget <= 15) {
+        triggerEndGame(false, "Proyek Dibatalkan Secara Paksa (Game Over)", "Salah satu pilar vital proyek Anda anjlok hingga titik kritis akibat salah memprioritaskan pemangku kepentingan kunci.");
+        return;
+      }
+
+      // Advance Round
+      currentRoundIndex++;
+      if (currentRoundIndex < CRISIS_DATA.length) {
+        setTimeout(() => {
+          renderCrisisCard();
+        }, 600);
+      } else {
+        // Evaluate Victory
+        const finalScore = Math.round((feasibility + compliance + budget) / 3);
+        if (finalScore >= 60) {
+          triggerEndGame(true, "Proyek Berhasil Diselamatkan (Sertifikat Grade A Unggul)", `Luar biasa! Sebagai Systems Analyst, Anda berhasil menyeimbangkan 4 Kuadran Mendelow dengan skor rata-rata kesehatan proyek ${finalScore}%. Transformasi digital berjalan mulus dan didukung seluruh aktor kunci!`);
+        } else {
+          triggerEndGame(false, "Proyek Selesai dengan Banyak Kompromi (Grade C+)", `Proyek berhasil selesai namun mengalami friksi berat (Skor akhir: ${finalScore}%). Di dunia nyata, hubungan yang tegang dengan regulator dan serikat staf akan menjadi bom waktu di kemudian hari.`);
+        }
+      }
+    }
+
+    function triggerEndGame(isSuccess, title, desc) {
+      const modal = document.getElementById('endGameModal');
+      const icon = document.getElementById('endGameIcon');
+      const t = document.getElementById('endGameTitle');
+      const d = document.getElementById('endGameDesc');
+
+      modal.classList.remove('hidden');
+      t.innerText = title;
+      d.innerText = desc;
+
+      if (isSuccess) {
+        icon.className = "inline-flex p-4 rounded-full text-4xl mb-3 bg-emerald-500/20 text-emerald-400 border border-emerald-500";
+        icon.innerHTML = '<i class="fa-solid fa-trophy"></i>';
+        t.className = "font-display font-black text-2xl sm:text-3xl text-emerald-400";
+      } else {
+        icon.className = "inline-flex p-4 rounded-full text-4xl mb-3 bg-rose-500/20 text-rose-400 border border-rose-500";
+        icon.innerHTML = '<i class="fa-solid fa-skull-crossbones"></i>';
+        t.className = "font-display font-black text-2xl sm:text-3xl text-rose-400";
+      }
+
+      window.scrollTo({ top: modal.offsetTop - 40, behavior: 'smooth' });
+    }
+
+    function resetGame() {
+      currentRoundIndex = 0;
+      influencePoints = 60;
+      feasibility = 75;
+      compliance = 70;
+      budget = 80;
+
+      stakeholderPins = {
+        INV: { label: 'INV', name: 'Investor Utama', color: 'bg-rose-500', x: 75, y: 25 },
+        REG: { label: 'REG', name: 'Dinas Lingkungan', color: 'bg-amber-400', x: 30, y: 20 },
+        BUR: { label: 'BUR', name: 'Serikat Buruh', color: 'bg-cyan-400', x: 65, y: 65 },
+        PLG: { label: 'PLG', name: 'Pelanggan Kampus', color: 'bg-emerald-400', x: 60, y: 80 }
+      };
+
+      document.getElementById('endGameModal').classList.add('hidden');
+      document.getElementById('coachingText').innerText = "Dinas Lingkungan memiliki Power Tinggi karena berhak membekukan izin. Meremehkan mereka ke Kuadran Monitor adalah kesalahan fatal!";
+
+      renderStatusBars();
+      renderPins();
+      renderCrisisCard();
+    }
+
+    // ==========================================
+    // INITIALIZATION
+    // ==========================================
+    window.onload = function() {
+      renderStatusBars();
+      renderPins();
+      renderCrisisCard();
+    };
+  </script>
+</body>
+</html>

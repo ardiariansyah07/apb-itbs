@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Analisa Proses Bisnis - Pertemuan 15</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Open+Sans:wght@400;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    /* CSS RESET & EXECUTIVE PITCHING THEME VARIABLES */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-bg-light: #F8FAFC;
+      --color-text-dark: #0F172A;
+      --color-text-muted: #475569;
+      --color-primary: #0F172A;   /* Deep Executive Slate */
+      --color-sky: #0284C7;       /* Persuasive Tech Sky */
+      --color-emerald: #10B981;   /* Business Value Emerald */
+      --color-amber: #F59E0B;     /* Spotlight Golden Amber */
+      --color-rose: #EF4444;      /* Critical Defense Rose */
+      --color-violet: #8B5CF6;    /* Storytelling Violet */
+      --color-white: #FFFFFF;
+      --color-dark-bg: #070B16;
+      --navbar-height: 60px;
+    }
+    
+    body { 
+      margin: 0; 
+      padding: 0; 
+      background: #040711; 
+      font-family: 'Open Sans', sans-serif; 
+      height: 100vh; 
+      overflow: hidden; 
+      position: relative;
+    }
+
+    /* TOP NAVIGATION BAR */
+    .top-navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: var(--navbar-height);
+      background: #0F172A;
+      border-bottom: 2px solid #1E293B;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 1000;
+      font-family: 'Montserrat', sans-serif;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.5);
+    }
+
+    .nav-left, .nav-center, .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-btn {
+      background: #1E293B;
+      border: 1px solid #334155;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+      padding: 8px 16px;
+      border-radius: 6px;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .nav-btn:hover { background: var(--color-sky); border-color: var(--color-sky); color: #0F172A; }
+
+    /* DROPDOWN MENU SLIDES */
+    .slide-selector {
+      background: #1E293B;
+      color: white;
+      border: 1px solid #334155;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      outline: none;
+      max-width: 380px;
+    }
+    .slide-selector option { background: #0F172A; }
+
+    /* MAIN CONTAINER ADJUSTMENT */
+    #presentation-area {
+      position: absolute;
+      top: var(--navbar-height);
+      left: 0;
+      right: 0;
+      bottom: 0; 
+      overflow: hidden;
+    }
+
+    /* HARD LOCK 16:9 CONTAINER (1280x720px) */
+    .slide-container {
+      width: 1280px !important;
+      height: 720px !important;
+      background: var(--color-bg-light);
+      color: var(--color-text-dark);
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(1);
+      transform-origin: center center;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.35s ease-in-out;
+      pointer-events: none;
+    }
+
+    .slide-container.active {
+      visibility: visible;
+      opacity: 1;
+      z-index: 5;
+      pointer-events: auto;
+    }
+
+    /* TYPOGRAPHY */
+    h1, h2, h3, h4, .eyebrow { font-family: 'Montserrat', sans-serif; }
+    h1 { font-size: 54px; font-weight: 800; line-height: 1.15; margin-bottom: 20px; color: var(--color-text-dark); }
+    h2 { font-size: 40px; font-weight: 700; line-height: 1.25; margin-bottom: 22px; color: var(--color-text-dark); }
+    h3 { font-size: 28px; font-weight: 700; margin-bottom: 14px; color: var(--color-sky); }
+    p, li { font-size: 23px; line-height: 1.5; color: var(--color-text-muted); }
+    .eyebrow { font-size: 18px; font-weight: 700; color: var(--color-sky); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; }
+    .divider { width: 80px; height: 6px; background: var(--color-sky); margin: 18px 0 22px 0; }
+    
+    .bg-dark { background: var(--color-dark-bg) !important; color: var(--color-white) !important; }
+    .bg-dark h1, .bg-dark h2, .bg-dark h3, .bg-dark p, .bg-dark li { color: var(--color-white) !important; }
+    
+    /* LAYOUT: SPLIT SCREEN */
+    .layout-split { display: flex; flex-direction: row; flex: 1 1 100%; width: 100%; height: 100%; }
+    .split-col { display: flex; flex-direction: column; justify-content: center; height: 100%; padding: 40px 80px; }
+    .split-img-col { padding: 0 !important; margin: 0 !important; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #0F172A; }
+    .split-img-col img { width: 100%; height: 100%; object-fit: cover; display: block; margin: 0; padding: 0; }
+    
+    /* SPLIT RATIOS */
+    .w-40 { flex: 0 0 40%; width: 40%; }
+    .w-50 { flex: 0 0 50%; width: 50%; }
+    .w-60 { flex: 0 0 60%; width: 60%; }
+
+    /* LAYOUT: STANDARD / CENTERED */
+    .pad-standard { padding: 40px 80px; display: flex; flex-direction: column; flex: 1; height: 100%; }
+    .center-content { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; flex: 1; height: 100%; padding: 40px 80px; }
+    .flex-grow-center { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; }
+
+    /* COMPONENTS: LISTS & CARDS */
+    .minimal-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 18px; }
+    .minimal-list li { display: flex; align-items: flex-start; gap: 18px; font-weight: 600; }
+    .minimal-list li i { font-size: 28px; color: var(--color-sky); width: 36px; text-align: center; margin-top: 4px; }
+
+    .card-grid { display: flex; gap: 22px; align-items: stretch; width: 100%; justify-content: center; flex-wrap: wrap; }
+    .card { background: var(--color-white); border-radius: 16px; padding: 28px 28px; flex: 1 1 0; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #E2E8F0; display: flex; flex-direction: column; align-items: flex-start; }
+    .card i { font-size: 44px; color: var(--color-sky); margin-bottom: 14px; }
+
+    /* INTERACTIVE: DRAG AND DROP */
+    .draggable-container { display: flex; gap: 14px; margin-bottom: 14px; justify-content: center; min-height: 56px; flex-wrap: wrap; }
+    .drag-item { 
+      cursor: grab; padding: 10px 18px; font-size: 17px; background: white; 
+      border: 3px solid var(--color-sky); border-radius: 12px; font-weight: 700; 
+      user-select: none; color: #0F172A; text-align: center; margin-bottom: 6px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.2s; display: inline-block;
+    }
+    .drag-item:active { cursor: grabbing; transform: scale(0.95); }
+    .drag-item.dragging { opacity: 0.5; }
+    
+    .dropzones-container { display: flex; gap: 20px; justify-content: center; align-items: stretch; width: 100%; }
+    .drop-zone { 
+      border: 4px dashed #CBD5E1; border-radius: 16px; flex: 1; 
+      min-height: 170px; padding: 16px; display: flex; flex-direction: column; 
+      align-items: center; background: #FFFFFF; transition: 0.3s;
+    }
+    .drop-zone h3 { font-size: 20px; margin-bottom: 10px; color: #475569; border-bottom: 2px solid #CBD5E1; padding-bottom: 6px; width: 100%; text-align: center;}
+    .drop-zone.drag-over { border-color: var(--color-sky); background: #F0F9FF; }
+    .drop-content { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; width: 100%; gap: 6px; }
+
+    /* INTERACTIVE: QUIZ */
+    .quiz-option {
+      background: #F8FAFC; border: 2px solid #CBD5E1; padding: 12px 20px; 
+      border-radius: 12px; font-size: 19px; font-weight: 600; cursor: pointer; 
+      text-align: left; transition: 0.2s; margin-bottom: 10px; width: 100%;
+      color: #334155; display: flex; align-items: center; gap: 16px;
+    }
+    .quiz-option:hover { background: #E2E8F0; transform: translateX(6px); }
+    .quiz-option.correct { background: #D1FAE5; border-color: #10B981; color: #065F46; }
+    .quiz-option.wrong { background: #FEE2E2; border-color: #EF4444; color: #991B1B; }
+    
+    .quiz-feedback { 
+      display: none; margin-top: 14px; padding: 14px 22px; background: #F0F9FF; 
+      border-left: 8px solid var(--color-sky); border-radius: 0 12px 12px 0; font-size: 17px; 
+      animation: fadeIn 0.4s ease-in-out;
+    }
+    .quiz-feedback.show { display: block; }
+    .quiz-feedback h4 { font-size: 20px; margin-bottom: 6px; color: var(--color-sky); }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* BADGES */
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(2, 132, 199, 0.15);
+      border: 1px solid var(--color-sky);
+      color: #38BDF8;
+      padding: 6px 16px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP NAVIGATION BAR -->
+  <div class="top-navbar" id="navbar">
+    <div class="nav-left">
+      <div style="font-weight: 800; font-size: 18px; color: #38BDF8;">ITB Swadharma</div>
+    </div>
+    
+    <div class="nav-center">
+      <button class="nav-btn" onclick="prevSlide()" title="Slide Sebelumnya"><i class="fa-solid fa-chevron-left"></i></button>
+      <select class="slide-selector" id="slideSelector" onchange="jumpToSlide(this.value)"></select>
+      <button class="nav-btn" onclick="nextSlide()" title="Slide Berikutnya"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+
+    <div class="nav-right">
+      <div style="font-weight: 600; font-size: 14px; color: #94A3B8;">Analisa Proses Bisnis (3 SKS) • Ardi Ariansyah, S.Kom., Gr.</div>
+    </div>
+  </div>
+
+  <!-- MAIN PRESENTATION AREA -->
+  <div id="presentation-area">
+    <div id="slides-wrapper">
+
+      <!-- ==========================================
+           SECTION 1: COVER & PENDAHULUAN (SLIDES 1-5)
+           ========================================== -->
+
+      <!-- SLIDE 1 -->
+      <div class="slide-container layout-split bg-dark active" data-title="Sampul Depan">
+        <div class="split-col w-60 bg-dark">
+          <div class="badge-pill"><i class="fa-solid fa-microphone-lines"></i> Executive Pitching &amp; Defense</div>
+          <p class="eyebrow">Pertemuan 15 • INF1104</p>
+          <h1>Teknik Presentasi &amp; Pitching Solusi Bisnis</h1>
+          <div class="divider"></div>
+          <p style="font-size: 28px; font-weight: 600;">Mempertahankan Usulan Rekayasa Proses di Hadapan Pimpinan Manajemen</p>
+          <div style="margin-top: 36px; border-top: 2px solid #334155; padding-top: 18px;">
+            <p style="color: #94A3B8; font-size: 16px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Dosen Pengampu:</p>
+            <p style="color: #FFFFFF; font-size: 24px; font-weight: 700; margin-top: 4px;">Ardi Ariansyah, S.Kom., Gr.</p>
+            <p style="color: #38BDF8; font-size: 18px; font-weight: 600;">S1 Teknik Informatika • ITB Swadharma</p>
+          </div>
+        </div>
+        <div class="split-col split-img-col w-40">
+          <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80" alt="Executive Pitching Presentation">
+        </div>
+      </div>
+
+      <!-- SLIDE 2 -->
+      <div class="slide-container center-content" data-title="Puncak Perjalanan Proyek">
+        <i class="fa-solid fa-trophy" style="font-size: 96px; color: var(--color-amber); margin-bottom: 24px;"></i>
+        <h2 style="font-size: 52px;">Panggung Uji Integritas Analis Sistem</h2>
+        <p style="font-size: 26px; font-weight: 600; margin-top: 14px; max-width: 900px;">
+          Solusi rekayasa sehebat apa pun akan berakhir di tempat sampah jika Anda gagal meyakinkan dewan direksi dan pemilik modal. <strong>Hari ini kita melatih seni membujuk, menjual nilai, dan mempertahankan argumen teknologi!</strong>
+        </p>
+      </div>
+
+      <!-- SLIDE 3 -->
+      <div class="slide-container layout-split" data-title="Review Hasil Asistensi P14">
+        <div class="split-col split-img-col w-40" style="background: #F1F5F9;">
+          <i class="fa-solid fa-stamp" style="font-size: 160px; color: var(--color-emerald);"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Kilas Balik Pertemuan 14</p>
+          <h2>Modal Dokumen yang Sudah Matang</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-check" style="color: var(--color-emerald);"></i> <span>**Bab 1-5 Terkonsolidasi:** Benang merah masalah hingga solusi sudah diverifikasi.</span></li>
+            <li><i class="fa-solid fa-check" style="color: var(--color-emerald);"></i> <span>**Audit Kepatuhan Lolos:** Tidak ada panah menyeberang dinding Pool &amp; stensil To-Be presisi.</span></li>
+            <li><i class="fa-solid fa-forward" style="color: var(--color-sky);"></i> <span>**P15 (Hari Ini):** Merangkum ratusan lembar analisis menjadi **10 Menit Presentasi Eksekutif yang Menggugah!**</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 4 -->
+      <div class="slide-container pad-standard" data-title="Target Capaian Sub-CPMK 4.5">
+        <h2>Target Capaian Pembelajaran (Sub-CPMK 4.5)</h2>
+        <div class="flex-grow-center">
+          <div style="background: #F0F9FF; border-left: 12px solid var(--color-sky); padding: 48px; border-radius: 0 16px 16px 0;">
+            <h3 style="font-size: 30px; margin-bottom: 20px; color: #0369A1;">Kemampuan Akhir Pembelajaran</h3>
+            <p style="font-size: 26px; font-weight: 600; color: #0284C7; line-height: 1.5;">
+              "Mahasiswa mampu mengomunikasikan dan mempertahankan hasil analisis serta perancangan ulang proses bisnis secara meyakinkan di hadapan pemangku kepentingan, menyampaikan business case kuantitatif (ROI, Cycle Time, PCE), mendemonstrasikan prototipe arsitektur TI, serta merespons pertanyaan kritis penguji secara profesional dan berintegritas."
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 5 -->
+      <div class="slide-container pad-standard" data-title="Peta Materi Pertemuan 15">
+        <h2>Peta Materi Pertemuan 15</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 8px solid var(--color-sky);">
+              <i class="fa-solid fa-person-chalkboard"></i>
+              <h3>1. Anatomi Executive Deck</h3>
+              <p>Struktur piramida 10-12 slide ringkas, bebas jargon rumit, dan berorientasi profit.</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--color-emerald);">
+              <i class="fa-solid fa-chart-column" style="color: var(--color-emerald);"></i>
+              <h3>2. Data Storytelling</h3>
+              <p>Mengubah tabel angka menjadi cerita urgensi pemborosan vs keuntungan otomatisasi.</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--color-rose);">
+              <i class="fa-solid fa-shield-halved" style="color: var(--color-rose);"></i>
+              <h3>3. Simulasi Defense Ujian</h3>
+              <p>Strategi merespons sanggahan dewan penguji, trik demo diagram, dan rubrik 15% UAS.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SECTION 2: PSIKOLOGI AUDIENS EKSEKUTIF (SLIDES 6-13)
+           ========================================== -->
+
+      <!-- SLIDE 6 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian I: Psikologi Dewan Direksi">
+        <p class="eyebrow">Bagian I</p>
+        <h1 style="font-size: 72px;">Psikologi Audiens Eksekutif</h1>
+        <div class="divider"></div>
+        <p style="font-size: 30px;">Memahami Cara Berpikir Pemilik Modal, Klien, dan Penguji.</p>
+      </div>
+
+      <!-- SLIDE 7 -->
+      <div class="slide-container layout-split" data-title="Perbedaan Mindset IT vs Bisnis">
+        <div class="split-col w-60">
+          <p class="eyebrow">The Communication Gap</p>
+          <h2>Dua Bahasa yang Sering Bentrok</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-laptop-code" style="color: var(--color-sky);"></i> <span>**Bahasa Mahasiswa IT:** <em>"Sistem kami menggunakan PostgreSQL cluster, webhook asinkron, dan docker container microservices!"</em></span></li>
+            <li><i class="fa-solid fa-user-tie" style="color: var(--color-emerald);"></i> <span>**Bahasa Direksi Bisnis:** <em>"Berapa hari antrean dipangkas? Berapa juta rupiah kita hemat per bulan? Kapan modal investasi kami kembali?"</em></span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40">
+          <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=800&q=80" alt="Executive Discussion in Boardroom">
+        </div>
+      </div>
+
+      <!-- SLIDE 8 -->
+      <div class="slide-container pad-standard" data-title="Rentang Perhatian 3 Menit">
+        <h2>Hukum "The 3-Minute Hook"</h2>
+        <div class="flex-grow-center">
+          <div style="background: #FFFBEB; border-left: 12px solid var(--color-amber); padding: 40px; border-radius: 0 16px 16px 0;">
+            <h3 style="color: #B45309; margin-bottom: 12px;"><i class="fa-solid fa-stopwatch"></i> Rentang Perhatian Eksekutif Sangat Sempit</h3>
+            <p style="font-size: 24px; color: #78350F; line-height: 1.6; font-weight: 600;">
+              Jika dalam **3 menit pertama** Anda belum menyebutkan masalah nyata yang dialami mitra dan berapa kerugiannya, perhatian dewan direksi/penguji akan hilang. Mereka akan mulai membuka ponsel atau merasa bosan mendengarkan slide Anda!
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 9 -->
+      <div class="slide-container layout-split" data-title="Prinsip Piramida Minto">
+        <div class="split-col split-img-col w-40" style="background: #F8FAFC;">
+          <i class="fa-solid fa-shapes" style="font-size: 160px; color: var(--color-sky);"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Struktur Komunikasi Konsultan</p>
+          <h2>The Minto Pyramid Principle</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-arrow-down-short-wide" style="color: var(--color-sky);"></i> <span>**Bottom-Line Upfront (BLUF):** Sebutkan kesimpulan dan rekomendasi utama Anda di awal, bukan disembunyikan di slide terakhir!</span></li>
+            <li><i class="fa-solid fa-layer-group"></i> <span>Gunakan alur: **Kondisi Utama &rarr; Komplikasi/Penyakit &rarr; Solusi Terobosan &rarr; Justifikasi Angka Finansial**.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 10 -->
+      <div class="slide-container pad-standard" data-title="3 Pertanyaan Kunci Penguji">
+        <h2>3 Pertanyaan yang Wajib Terjawab di Slide Anda</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 8px solid var(--color-rose);">
+              <h3 style="color: var(--color-rose);"><i class="fa-solid fa-triangle-exclamation"></i> 1. Why Care?</h3>
+              <p style="font-size: 16px;">Mengapa inefisiensi di UMKM tersebut mendesak untuk diselesaikan sekarang? Apa risiko jika dibiarkan manual?</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--color-sky);">
+              <h3 style="color: var(--color-sky);"><i class="fa-solid fa-wand-magic-sparkles"></i> 2. Why This?</h3>
+              <p style="font-size: 16px;">Mengapa solusi To-Be yang kelompok Anda usulkan adalah pilihan terbaik dibanding alternatif software lainnya?</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--color-emerald);">
+              <h3 style="color: var(--color-emerald);"><i class="fa-solid fa-hand-holding-dollar"></i> 3. Why Now?</h3>
+              <p style="font-size: 16px;">Apakah investasi sistem baru ini layak (TELOS) dan berapa lama waktu yang dibutuhkan hingga balik modal?</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 11 -->
+      <div class="slide-container layout-split" data-title="Bahaya Death by PowerPoint">
+        <div class="split-col w-60">
+          <p class="eyebrow">Kesalahan Presenter Pemula</p>
+          <h2>Menghindari "Death by PowerPoint"</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-ban" style="color: var(--color-rose);"></i> <span>**Dilarang Menjiplak Paragraf Laporan:** Jangan memindahkan satu bab utuh Word ke dalam slide presentasi!</span></li>
+            <li><i class="fa-solid fa-eye" style="color: var(--color-sky);"></i> <span>**Satu Ide per Slide:** Buatlah slide yang bersih (*clean*), minimalkan bullet points panjang, dan tonjolkan grafik visual atau diagram.</span></li>
+            <li><i class="fa-solid fa-circle-check" style="color: var(--color-emerald);"></i> <span>Slide adalah alat bantu visual bagi audiens, bukan contekan bacaan bagi Anda.</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40" style="background: #FEF2F2;">
+          <i class="fa-solid fa-file-excel" style="font-size: 160px; color: var(--color-rose);"></i>
+        </div>
+      </div>
+
+      <!-- SLIDE 12 -->
+      <div class="slide-container center-content bg-dark" data-title="Kutipan Guy Kawasaki">
+        <i class="fa-solid fa-quote-left" style="font-size: 70px; color: #334155; margin-bottom: 20px;"></i>
+        <h2 style="font-size: 38px; font-weight: 700; max-width: 900px; line-height: 1.4;">
+          "Jika Anda tidak dapat menjelaskan ide inovasi proses bisnis Anda dalam 10 menit dengan kata-kata sederhana, berarti Anda sendiri belum benar-benar memahaminya."
+        </h2>
+        <p style="font-size: 20px; color: var(--color-sky); margin-top: 16px; font-weight: 600;">— Guy Kawasaki</p>
+      </div>
+
+      <!-- SLIDE 13 -->
+      <div class="slide-container pad-standard" data-title="Matriks Audiens Presentasi">
+        <h2>Matriks Penyesuaian Pesan Berdasarkan Audiens</h2>
+        <div class="flex-grow-center">
+          <table style="width: 100%; border-collapse: collapse; font-size: 17px; text-align: left; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+            <thead style="background: #0F172A; color: white;">
+              <tr>
+                <th style="padding: 10px;">Profil Audiens</th>
+                <th style="padding: 10px;">Fokus Utama yang Dicari</th>
+                <th style="padding: 10px;">Bahasa / Metrik Kunci yang Tepat</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid #E2E8F0;">
+                <td style="padding: 8px; font-weight: bold;">Pemilik UMKM / Klien</td>
+                <td style="padding: 8px;">Keringanan beban staf &amp; omzet bisnis</td>
+                <td style="padding: 8px; color: var(--color-emerald); font-weight: 600;">Kemudahan input kasir, hemat kertas, antrean hilang</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #E2E8F0;">
+                <td style="padding: 8px; font-weight: bold;">Dosen Penguji Mata Kuliah</td>
+                <td style="padding: 8px;">Ketepatan metodologi &amp; sintaks OMG BPMN</td>
+                <td style="padding: 8px; color: var(--color-sky); font-weight: 600;">Benang merah Bab 1-5, rumus PCE, ketiadaan cacat diagram</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px; font-weight: bold;">Tim Software Engineer</td>
+                <td style="padding: 8px;">Kelayakan implementasi &amp; arsitektur API</td>
+                <td style="padding: 8px; color: var(--color-amber); font-weight: 600;">Service Task, webhook payload, struktur Data Store, failover</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SECTION 3: STRUKTUR PITCHING 10-12 SLIDE (SLIDES 14-23)
+           ========================================== -->
+
+      <!-- SLIDE 14 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian II: Struktur Pitching Deck">
+        <p class="eyebrow">Bagian II</p>
+        <h1 style="font-size: 72px;">Anatomi Pitching Deck</h1>
+        <div class="divider"></div>
+        <p style="font-size: 30px;">Format Standar 10-12 Slide untuk Alokasi Waktu 10 Menit.</p>
+      </div>
+
+      <!-- SLIDE 15 -->
+      <div class="slide-container pad-standard" data-title="Peta Alokasi 10 Menit">
+        <h2>Manajemen Waktu Presentasi Kelompok (Total 10 Menit)</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 6px solid var(--color-sky); padding: 18px;">
+              <h4 style="color: var(--color-sky);">Menit 00:00 - 02:00</h4>
+              <p style="font-size: 15px;"><strong>The Hook &amp; Problem:</strong> Profil mitra, fenomena empiris keluhan, dan batas proses.</p>
+            </div>
+            <div class="card" style="border-top: 6px solid var(--color-rose); padding: 18px;">
+              <h4 style="color: var(--color-rose);">Menit 02:00 - 04:00</h4>
+              <p style="font-size: 15px;"><strong>Diagnosis Penyakit:</strong> Bukti pemborosan VAA, skor PCE As-Is, dan akar masalah Fishbone.</p>
+            </div>
+            <div class="card" style="border-top: 6px solid var(--color-emerald); padding: 18px;">
+              <h4 style="color: var(--color-emerald);">Menit 04:00 - 07:00</h4>
+              <p style="font-size: 15px;"><strong>The Solution (To-Be):</strong> Showcase diagram To-Be, software enabler, dan hilangnya NVA.</p>
+            </div>
+            <div class="card" style="border-top: 6px solid var(--color-amber); padding: 18px;">
+              <h4 style="color: var(--color-amber);">Menit 07:00 - 10:00</h4>
+              <p style="font-size: 15px;"><strong>Business Case:</strong> Angka kelayakan TELOS, rencana transisi SDM, mitigasi CIA, &amp; closing.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 16 -->
+      <div class="slide-container layout-split" data-title="Slide 1-3: Hook & Diagnosis">
+        <div class="split-col split-img-col w-40" style="background: #F1F5F9;">
+          <i class="fa-solid fa-magnifying-glass-chart" style="font-size: 160px; color: var(--color-sky);"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Struktur Babak Awal</p>
+          <h2>Slide 1 s/d 3: Membangun Urgensi</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-1"></i> <span>**Slide Judul &amp; Tim:** Nama mitra UMKM dan pembagian peran anggota kelompok.</span></li>
+            <li><i class="fa-solid fa-2"></i> <span>**The Pain Point:** Tampilkan foto riil kondisi antrean atau tumpukan kuitansi manual mitra.</span></li>
+            <li><i class="fa-solid fa-3"></i> <span>**Cuplikan As-Is BPMN:** Tunjukkan bagian bottleneck utama diagram kondisi saat ini.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 17 -->
+      <div class="slide-container layout-split" data-title="Slide 4-5: Pembuktian Ilmiah">
+        <div class="split-col w-60">
+          <p class="eyebrow">Struktur Babak Diagnosa</p>
+          <h2>Slide 4 &amp; 5: Pembuktian Akar Masalah</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-4"></i> <span>**Matriks VAA &amp; PCE:** Tunjukkan bahwa efisiensi siklus As-Is hanya berkisar 5-10% akibat pemborosan waktu tunggu.</span></li>
+            <li><i class="fa-solid fa-5"></i> <span>**Pohon Fishbone &amp; 5 Whys:** Tunjukkan interogasi tajam yang membuktikan ketiadaan sistem TI terpusat sebagai akar sejati.</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40" style="background: #FFF1F2;">
+          <i class="fa-solid fa-code-fork" style="font-size: 160px; color: var(--color-rose);"></i>
+        </div>
+      </div>
+
+      <!-- SLIDE 18 -->
+      <div class="slide-container pad-standard" data-title="Slide 6-8: Showcase Solusi To-Be">
+        <h2>Slide 6 s/d 8: Panggung Bintang (Showcase Model To-Be)</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 6px solid var(--color-emerald);">
+              <h4 style="color: var(--color-emerald);"><i class="fa-solid fa-table-cells-large"></i> Slide 6: Matriks Gap</h4>
+              <p style="font-size: 15px;">Tabel perbandingan ringkas As-Is vs To-Be dan pola heuristik terpilih (Elimination &amp; Automation).</p>
+            </div>
+            <div class="card" style="border-top: 6px solid var(--color-sky);">
+              <h4 style="color: var(--color-sky);"><i class="fa-solid fa-diagram-project"></i> Slide 7: Diagram To-Be</h4>
+              <p style="font-size: 15px;">Tampilan resolusi tinggi diagram BPMN baru lengkap dengan Service Task dan Central Database.</p>
+            </div>
+            <div class="card" style="border-top: 6px solid var(--color-violet);">
+              <h4 style="color: var(--color-violet);"><i class="fa-solid fa-mobile-screen"></i> Slide 8: Demo TI</h4>
+              <p style="font-size: 15px;">Cuplikan mockup antarmuka aplikasi atau alur kerja webhook yang menyederhanakan tugas staf.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 19 -->
+      <div class="slide-container layout-split" data-title="Slide 9-11: Justifikasi Bisnis">
+        <div class="split-col split-img-col w-40" style="background: #ECFDF5;">
+          <i class="fa-solid fa-scale-balanced" style="font-size: 160px; color: var(--color-emerald);"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Struktur Babak Keputusan</p>
+          <h2>Slide 9 s/d 11: Business Case &amp; Risiko</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-9"></i> <span>**Kelayakan Finansial TELOS:** Estimasi TCO pengadaan server vs penghematan biaya lembur (Payback Period).</span></li>
+            <li><i class="fa-solid fa-1"></i> <span>**Manajemen Perubahan SDM:** Rencana pelatihan operator, pencegahan Shadow IT, dan metode *parallel running*.</span></li>
+            <li><i class="fa-solid fa-1"></i> <span>**Keamanan Informasi (CIA):** Kontrol hak akses RBAC, enkripsi data, dan kepatuhan UU PDP.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 20 -->
+      <div class="slide-container center-content bg-dark" data-title="Slide 12: The Call to Action">
+        <i class="fa-solid fa-flag-checkered" style="font-size: 80px; color: var(--color-emerald); margin-bottom: 24px;"></i>
+        <p class="eyebrow">Slide Terakhir (Slide 12)</p>
+        <h2>The Grand Recommendation &amp; Next Step</h2>
+        <p style="font-size: 26px; max-width: 900px; margin-top: 16px; line-height: 1.5;">
+          Akhiri dengan kalimat tegas: <em>"Berdasarkan analisis kami, investasi sistem ini akan menghemat Rp 35 Juta per tahun dan memangkas waktu layanan pelanggan sebesar 80%. Kami siap memulai fase implementasi pilot project pekan depan."</em>
+        </p>
+      </div>
+
+      <!-- SLIDE 21 -->
+      <div class="slide-container pad-standard" data-title="Tips Visualisasi Slide">
+        <h2>Prinsip Desain Visual Slide Kelas Konsultan</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-left: 8px solid var(--color-sky);">
+              <h4>Kontras Tipografi Tinggi</h4>
+              <p style="font-size: 15px;">Gunakan font sans-serif tebal (Montserrat/Inter). Judul minimal ukuran 36 pt dan isi teks minimal 18 pt agar terbaca jelas oleh dosen dari jarak 5 meter.</p>
+            </div>
+            <div class="card" style="border-left: 8px solid var(--color-emerald);">
+              <h4>Sorotan Angka Kunci (Big Numbers)</h4>
+              <p style="font-size: 15px;">Tampilkan metrik keberhasilan dengan ukuran font raksasa (contoh: <strong>"85% Lebih Cepat"</strong> atau <strong>"ROI 140%"</strong>) di tengah slide.</p>
+            </div>
+            <div class="card" style="border-left: 8px solid var(--color-amber);">
+              <h4>Zoom-in Potongan Diagram</h4>
+              <p style="font-size: 15px;">Jangan tempelkan diagram BPMN utuh yang sangat panjang dalam satu slide kecil! Buat slide terpisah yang men-zoom bagian gateway kritis yang dirombak.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 22 -->
+      <div class="slide-container layout-split" data-title="Bahasa Tubuh & Artikulasi">
+        <div class="split-col w-60">
+          <p class="eyebrow">Delivery & Stage Presence</p>
+          <h2>Bahasa Tubuh &amp; Artikulasi Suara</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-eye" style="color: var(--color-sky);"></i> <span>**Kontak Mata Terbagi:** Tatap mata dosen penguji dan audiens kelas secara bergantian, jangan menatap lantai atau layar proyektor terus-menerus.</span></li>
+            <li><i class="fa-solid fa-volume-high" style="color: var(--color-emerald);"></i> <span>**Variasi Intonasi:** Gunakan nada tegas saat menyebutkan angka penghematan dan nada prihatin saat menceritakan inefisiensi manual.</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40">
+          <img src="https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=800&q=80" alt="Professional Speaker Giving Pitch">
+        </div>
+      </div>
+
+      <!-- SLIDE 23 -->
+      <div class="slide-container pad-standard" data-title="Kekompakan Tim Presenter">
+        <h2>Aturan Pembagian Peran Presentasi Tim</h2>
+        <div class="flex-grow-center">
+          <div style="background: #F8FAFC; border: 2px solid #CBD5E1; padding: 36px; border-radius: 16px;">
+            <p style="font-size: 22px; font-weight: 700; color: #0F172A; margin-bottom: 14px;">
+              Kriteria Penilaian Kekompakan Kelompok (3-4 Anggota):
+            </p>
+            <ul class="minimal-list" style="gap: 14px; font-size: 19px;">
+              <li><i class="fa-solid fa-circle-check" style="color: var(--color-emerald);"></i> <span>Seluruh anggota kelompok **wajib berbicara** dengan porsi waktu yang relatif seimbang (masing-masing ~2.5 menit).</span></li>
+              <li><i class="fa-solid fa-circle-check" style="color: var(--color-emerald);"></i> <span>Gunakan kalimat serah terima yang mulus (misal: <em>"Selanjutnya, rekan saya Budi akan membedah diagram To-Be dan integrasi API yang kami rancang..."</em>).</span></li>
+              <li><i class="fa-solid fa-circle-xmark" style="color: var(--color-rose);"></i> <span>Dilarang keras memotong pembicaraan rekan sekelompok saat mereka sedang memaparkan gilirannya!</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SECTION 4: STRATEGI DEFENSE & TANYA JAWAB (SLIDES 24-33)
+           ========================================== -->
+
+      <!-- SLIDE 24 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian III: Strategi Defense & Sanggahan">
+        <p class="eyebrow">Bagian III</p>
+        <h1 style="font-size: 72px;">Strategi Defense Penguji</h1>
+        <div class="divider"></div>
+        <p style="font-size: 30px;">Menghadapi 10 Menit Sesi Interogasi &amp; Tanya Jawab Kritis.</p>
+      </div>
+
+      <!-- SLIDE 25 -->
+      <div class="slide-container layout-split" data-title="Tipe-Tipe Pertanyaan Penguji">
+        <div class="split-col split-img-col w-40" style="background: #FEF2F2;">
+          <i class="fa-solid fa-comments-question-check" style="font-size: 160px; color: var(--color-rose);"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Pola Pertanyaan Penguji</p>
+          <h2>3 Arah Serangan Pertanyaan Dosen</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-diagram-project" style="color: var(--color-sky);"></i> <span>**Uji Sintaks BPMN:** <em>"Mengapa di slide 7 panah ini menembus Pool? Apakah ini Sequence Flow atau Message Flow?"</em></span></li>
+            <li><i class="fa-solid fa-coins" style="color: var(--color-emerald);"></i> <span>**Uji Kelayakan Angka:** <em>"Dari mana kelompok Anda mendapatkan asumsi biaya server cloud Rp 300 ribu per bulan?"</em></span></li>
+            <li><i class="fa-solid fa-shield-virus" style="color: var(--color-rose);"></i> <span>**Uji Celah Keamanan:** <em>"Bagaimana jika kasir bersekongkol menghapus transaksi? Apa kontrol di To-Be Anda?"</em></span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 26 -->
+      <div class="slide-container pad-standard" data-title="Teknik Merespons 4L">
+        <h2>Metode 4 Langkah Merespons Sanggahan (Listen-Pause-Answer-Confirm)</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 6px solid var(--color-sky);">
+              <h4>1. Listen (Dengarkan Tuntas)</h4>
+              <p style="font-size: 15px;">Dengarkan pertanyaan dosen hingga selesai tanpa memotong. Catat poin kata kunci yang ditanyakan.</p>
+            </div>
+            <div class="card" style="border-top: 6px solid var(--color-amber);">
+              <h4>2. Pause (Jeda 2 Detik)</h4>
+              <p style="font-size: 15px;">Tarik napas dan susun argumen logis di kepala. Jeda menunjukkan ketenangan emosi dan kedewasaan berpikir.</p>
+            </div>
+            <div class="card" style="border-top: 6px solid var(--color-emerald);">
+              <h4>3. Answer with Evidence</h4>
+              <p style="font-size: 15px;">Jawab langsung ke inti pertanyaan (*direct answer*) dengan mengutip data Bab 1-5 atau menunjuk slide terkait.</p>
+            </div>
+            <div class="card" style="border-top: 6px solid var(--color-violet);">
+              <h4>4. Confirm (Konfirmasi)</h4>
+              <p style="font-size: 15px;">Akhiri dengan santun: <em>"Apakah penjelasan data kami sudah menjawab pertanyaan Bapak/Ibu dosen?"</em></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 27 -->
+      <div class="slide-container layout-split" data-title="Menghadapi Pertanyaan yang Tidak Tahu">
+        <div class="split-col w-60">
+          <p class="eyebrow">Etika Intelektual</p>
+          <h2>Jika Benar-Benar Tidak Tahu Jawabannya?</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-ban" style="color: var(--color-rose);"></i> <span>**Dilarang Mengarang Jawaban Fiktif:** Dosen penguji langsung mengetahui jika Anda berbohong, dan nilai integritas akan dipotong drastis!</span></li>
+            <li><i class="fa-solid fa-hand-holding-heart" style="color: var(--color-emerald);"></i> <span>**Cara Merespons yang Terhormat:** <em>"Terima kasih atas pertanyaannya, Pak. Saat observasi empiris kami belum mendalami aspek enkripsi SSL tersebut. Ini menjadi catatan revisi penting yang akan kami masukkan pada laporan final Bab 5 kami."</em></span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40" style="background: #F8FAFC;">
+          <i class="fa-solid fa-graduation-cap" style="font-size: 160px; color: var(--color-sky);"></i>
+        </div>
+      </div>
+
+      <!-- SLIDE 28 -->
+      <div class="slide-container pad-standard" data-title="Demontrasi Langsung File Draw.io">
+        <h2>Live Demonstration: Membuka Berkas Asli Draw.io</h2>
+        <div class="flex-grow-center">
+          <div style="background: #ECFEFF; border-left: 12px solid var(--color-sky); padding: 40px; border-radius: 0 16px 16px 0;">
+            <h3 style="color: #0369A1; margin-bottom: 12px;"><i class="fa-solid fa-desktop"></i> Siapkan Tab Browser Draw.io di Latar Belakang</h3>
+            <p style="font-size: 22px; color: #0F172A; line-height: 1.6; font-weight: 600;">
+              Sering kali penguji meminta: <em>"Coba buka file asli Draw.io Anda, saya ingin melihat detail koneksi gateway di lane kasir."</em> Pastikan laptop kelompok Anda telah membuka tab Draw.io aktif berisi diagram As-Is dan To-Be sebelum giliran presentasi dimulai agar tidak membuang waktu mencari-cari file!
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 29 -->
+      <div class="slide-container layout-split" data-title="Kesiapan Teknis Presenter">
+        <div class="split-col split-img-col w-40" style="background: #FFFBEB;">
+          <i class="fa-solid fa-plug-circle-bolt" style="font-size: 160px; color: var(--color-amber);"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Manajemen Risiko Presentasi</p>
+          <h2>Checklist Kesiapan Alat Tempur</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-laptop" style="color: var(--color-sky);"></i> <span>Baterai laptop terisi 100% dan charger siap dicolok.</span></li>
+            <li><i class="fa-solid fa-file-pdf" style="color: var(--color-emerald);"></i> <span>Simpan salinan cadangan slide dalam format PDF di flashdisk untuk antisipasi proyektor macet.</span></li>
+            <li><i class="fa-solid fa-wifi" style="color: var(--color-rose);"></i> <span>Siapkan tethering seluler jika koneksi Wi-Fi kampus mengalami penurunan kecepatan.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 30 -->
+      <div class="slide-container pad-standard" data-title="Rubrik Penilaian Pitching 15%">
+        <h2>Rubrik Evaluasi Presentasi Pitching P15 (Bobot 15% UAS)</h2>
+        <div class="flex-grow-center">
+          <table style="width: 100%; border-collapse: collapse; font-size: 16px; text-align: left; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+            <thead style="background: #0F172A; color: white;">
+              <tr>
+                <th style="padding: 10px;">Kriteria Evaluasi</th>
+                <th style="padding: 10px;">Bobot</th>
+                <th style="padding: 10px;">Standar Capaian Unggul (Grade A)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid #E2E8F0;">
+                <td style="padding: 8px; font-weight: bold;">Struktur &amp; Estetika Slide</td>
+                <td style="padding: 8px; color: var(--color-sky); font-weight: bold;">20%</td>
+                <td style="padding: 8px;">Slide bersih, visual diagram terbaca tajam, alur Minto Pyramid rapi, tuntas dalam 10 menit.</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #E2E8F0;">
+                <td style="padding: 8px; font-weight: bold;">Penguasaan Masalah &amp; To-Be</td>
+                <td style="padding: 8px; color: var(--color-sky); font-weight: bold;">30%</td>
+                <td style="padding: 8px;">Mampu membuktikan pemborosan As-Is (VAA) dan mendemonstrasikan keunggulan To-Be secara presisi.</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #E2E8F0;">
+                <td style="padding: 8px; font-weight: bold;">Ketajaman Argumen Finansial</td>
+                <td style="padding: 8px; color: var(--color-sky); font-weight: bold;">25%</td>
+                <td style="padding: 8px;">Kalkulasi angka TELOS (ROI/Payback) masuk akal dan didukung estimasi efisiensi PCE yang terukur.</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px; font-weight: bold;">Kekompakan &amp; Respons Defense</td>
+                <td style="padding: 8px; color: var(--color-sky); font-weight: bold;">25%</td>
+                <td style="padding: 8px;">Seluruh anggota berbicara aktif, saling mendukung saat menjawab, dan responsif terhadap kritik dosen.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SLIDE 31 -->
+      <div class="slide-container layout-split" data-title="Tata Cara Berpakaian">
+        <div class="split-col w-60">
+          <p class="eyebrow">Etika & Dress Code</p>
+          <h2>Standar Penampilan Profesional</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-user-tie" style="color: var(--color-sky);"></i> <span>Pakaian kemeja formal rapi (Kemeja Putih / Batik Resmi) dan bersepatu tertutup.</span></li>
+            <li><i class="fa-solid fa-id-badge" style="color: var(--color-emerald);"></i> <span>Gunakan almamater kampus ITB Swadharma sebagai identitas akademik resmi.</span></li>
+            <li><i class="fa-solid fa-handshake"></i> <span>Kerapian penampilan mencerminkan keseriusan Anda sebagai konsultan sistem terpercaya di mata klien.</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40">
+          <img src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&q=80" alt="Professional Formal Business Attire">
+        </div>
+      </div>
+
+      <!-- SLIDE 32 -->
+      <div class="slide-container center-content bg-dark" data-title="Kutipan Persuasi Steve Jobs">
+        <i class="fa-solid fa-quote-left" style="font-size: 70px; color: #334155; margin-bottom: 20px;"></i>
+        <h2 style="font-size: 38px; font-weight: 700; max-width: 900px; line-height: 1.4;">
+          "Orang yang tahu apa yang mereka bicarakan tidak membutuhkan 50 lembar slide. Mereka hanya butuh keyakinan, data yang akurat, dan cerita yang menggetarkan logika audiens."
+        </h2>
+        <p style="font-size: 20px; color: var(--color-emerald); margin-top: 16px; font-weight: 600;">— Steve Jobs</p>
+      </div>
+
+      <!-- SLIDE 33 -->
+      <div class="slide-container pad-standard" data-title="Protokol Penilaian Penguji">
+        <h2>Urutan Sesi Uji Kelompok di Kelas (Total 20 Menit)</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-left: 8px solid var(--color-sky);">
+              <h4>1. Sesi Pemaparan (10 Menit)</h4>
+              <p style="font-size: 15px;">Kelompok menyajikan 10-12 slide deck tanpa interupsi. Timer layar berjalan otomatis menghitung mundur.</p>
+            </div>
+            <div class="card" style="border-left: 8px solid var(--color-rose);">
+              <h4>2. Bedah Diagram &amp; Q&amp;A (8 Menit)</h4>
+              <p style="font-size: 15px;">Dosen penguji menguji integritas model To-Be, meminta pembuktian rumus PCE, dan menanyakan mitigasi risiko.</p>
+            </div>
+            <div class="card" style="border-left: 8px solid var(--color-emerald);">
+              <h4>3. Umpan Balik &amp; Scoring (2 Menit)</h4>
+              <p style="font-size: 15px;">Penguji memberikan catatan revisi akhir sebelum pengumpulan berkas laporan resmi di Pertemuan 16 (UAS).</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SECTION 5: SIMULASI & GAME INTERAKTIF (SLIDES 34-36)
+           ========================================== -->
+
+      <!-- SLIDE 34 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian IV: Simulasi Pitching">
+        <p class="eyebrow">Bagian IV</p>
+        <h1 style="font-size: 72px;">Simulasi Pitching</h1>
+        <div class="divider"></div>
+        <p style="font-size: 28px;">Uji Refleks Menyusun Narasi Persuasif &amp; Mengatasi Sanggahan Penguji.</p>
+      </div>
+
+      <!-- SLIDE 35: GAME 1 STRUKTUR SLIDE MATCHING -->
+      <div class="slide-container pad-standard" style="background: #F8FAFC;" id="drag-drop-1" data-title="Game 1 (Alur Struktur Slide Pitching)">
+        <p class="eyebrow">Game 1: Drag &amp; Drop Pitching Structure</p>
+        <h2 style="font-size: 34px; margin-bottom: 10px;">Petakan Konten Presentasi ke Babak Waktu yang Tepat!</h2>
+        <p style="margin-bottom: 16px; font-size: 18px;">Seret cuplikan narasi ke babak penyampaian 10 menit presentasi.</p>
+        
+        <div class="flex-grow-center" style="justify-content: flex-start;">
+          <div class="draggable-container">
+            <div class="drag-item" draggable="true" data-type="babak1">Foto tumpukan nota manual &amp; keluhan pesanan salah 15%</div>
+            <div class="drag-item" draggable="true" data-type="babak2">Showcase diagram To-Be terintegrasi Service Task &amp; Webhook Bank</div>
+            <div class="drag-item" draggable="true" data-type="babak3">Tabel Payback Period 6 bulan &amp; mitigasi privasi data UU PDP</div>
+          </div>
+
+          <div class="dropzones-container">
+            <div class="drop-zone" data-target="babak1" style="border-color: var(--color-sky); background: #F0F9FF;">
+              <h3 style="color: #0284C7;"><i class="fa-solid fa-bullhorn"></i> Babak 1 (Menit 0-3): Hook &amp; Problem</h3>
+              <div class="drop-content"></div>
+            </div>
+            <div class="drop-zone" data-target="babak2" style="border-color: var(--color-emerald); background: #ECFDF5;">
+              <h3 style="color: #047857;"><i class="fa-solid fa-wand-magic-sparkles"></i> Babak 2 (Menit 4-7): The Solution</h3>
+              <div class="drop-content"></div>
+            </div>
+            <div class="drop-zone" data-target="babak3" style="border-color: var(--color-amber); background: #FFFBEB;">
+              <h3 style="color: var(--color-amber);"><i class="fa-solid fa-scale-balanced"></i> Babak 3 (Menit 8-10): Business Case</h3>
+              <div class="drop-content"></div>
+            </div>
+          </div>
+
+          <div class="practice-feedback" style="text-align: center; margin-top: 14px; display: none;">
+            <p style="font-size: 24px; font-weight: 800; color: #10B981;"><i class="fa-solid fa-circle-check"></i> Alur Cerita Sangat Logis!</p>
+            <p style="font-size: 16px; color: #475569; margin-top: 2px;">Struktur piramida ini menjamin dewan direksi terpikat sejak menit pertama hingga akhir presentasi.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 36: GAME 2 MERESPONS SANGGAHAN PENGUJI -->
+      <div class="slide-container pad-standard" style="background: #F8FAFC;" id="drag-drop-2" data-title="Game 2 (Strategi Respons Sanggahan)">
+        <p class="eyebrow">Game 2: Drag &amp; Drop Defense Tactic</p>
+        <h2 style="font-size: 34px; margin-bottom: 10px;">Pasangkan Pertanyaan Kritis Penguji dengan Respon Terbaik!</h2>
+        <p style="margin-bottom: 16px; font-size: 18px;">Seret kalimat tanggapan presenter ke jenis pertanyaan yang dilontarkan penguji.</p>
+        
+        <div class="flex-grow-center" style="justify-content: flex-start;">
+          <div class="draggable-container">
+            <div class="drag-item" draggable="true" data-type="bpmn">"Garis ini adalah Message Flow putus-putus, karena menghubungkan Pool Pelanggan ke Pool Toko."</div>
+            <div class="drag-item" draggable="true" data-type="uang">"Asumsi biaya server kami ambil dari paket cloud AWS Lightsail $5/bln yang mencukupi load transaksi harian."</div>
+            <div class="drag-item" draggable="true" data-type="aman">"Kami menerapkan kontrol RBAC di mana kasir tidak memiliki izin mengakses tombol hapus riwayat transaksi."</div>
+          </div>
+
+          <div class="dropzones-container">
+            <div class="drop-zone" data-target="bpmn" style="border-color: var(--color-sky); background: #F0F9FF;">
+              <h3 style="color: #0284C7;"><i class="fa-solid fa-diagram-project"></i> Sanggahan Notasi: "Kenapa garis panah ini menembus Pool?"</h3>
+              <div class="drop-content"></div>
+            </div>
+            <div class="drop-zone" data-target="uang" style="border-color: var(--color-emerald); background: #ECFDF5;">
+              <h3 style="color: #047857;"><i class="fa-solid fa-coins"></i> Sanggahan Biaya: "Dari mana asal estimasi biaya cloud Rp 100rb?"</h3>
+              <div class="drop-content"></div>
+            </div>
+            <div class="drop-zone" data-target="aman" style="border-color: var(--color-rose); background: #FFF1F2;">
+              <h3 style="color: var(--color-rose);"><i class="fa-solid fa-shield-virus"></i> Sanggahan Keamanan: "Bagaimana jika kasir berbuat curang?"</h3>
+              <div class="drop-content"></div>
+            </div>
+          </div>
+
+          <div class="practice-feedback" style="text-align: center; margin-top: 14px; display: none;">
+            <p style="font-size: 24px; font-weight: 800; color: #10B981;"><i class="fa-solid fa-circle-check"></i> Respons Tangkas &amp; Akurat!</p>
+            <p style="font-size: 16px; color: #475569; margin-top: 2px;">Menjawab dengan fakta empiris dan rujukan teknis melipatgandakan nilai defense kelompok Anda.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SECTION 6: EVALUASI KUIS FORMATIF (SLIDES 37-41)
+           ========================================== -->
+
+      <!-- SLIDE 37 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian V: Kuis Formatif">
+        <p class="eyebrow">Bagian V</p>
+        <h1 style="font-size: 72px;">Kuis Formatif Pertemuan 15</h1>
+        <div class="divider"></div>
+        <p style="font-size: 30px;">Uji Kesiapan Taktik Presentasi &amp; Defense Bisnis.</p>
+      </div>
+
+      <!-- SLIDE 38 -->
+      <div class="slide-container pad-standard" style="background: #FFFFFF;" id="slide38" data-title="Kuis 1: Prinsip BLUF">
+        <p class="eyebrow" style="margin-bottom: 6px;">Kuis Evaluasi • Soal 1/4</p>
+        <h2 style="margin-bottom: 14px;">Apakah kepanjangan dan makna dari prinsip komunikasi eksekutif BLUF?</h2>
+        <div class="flex-grow-center" style="justify-content: flex-start; margin-top: 8px;">
+          <div class="quiz-option" onclick="handleQuiz(this, true, 'feedback-q1')" data-correct="true">
+            <i class="fa-regular fa-circle"></i> A. Bottom-Line Upfront: Menyampaikan kesimpulan dan rekomendasi utama di awal presentasi sebelum menjelaskan rincian teknisnya.
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q1')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> B. Business Logistics Under Frequency: Menghitung jumlah pengiriman armada logistik.
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q1')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> C. Blue Line User Framework: Memilih warna biru untuk garis panah BPMN.
+          </div>
+
+          <div id="feedback-q1" class="quiz-feedback">
+            <h4><i class="fa-solid fa-lightbulb"></i> Pembahasan: A</h4>
+            <p>Eksekutif tidak memiliki banyak waktu untuk menunggu hingga slide terakhir. Menyampaikan hasil utama di awal (BLUF) langsung mengunci perhatian mereka.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 39 -->
+      <div class="slide-container pad-standard" style="background: #FFFFFF;" id="slide39" data-title="Kuis 2: Penyajian Diagram BPMN">
+        <p class="eyebrow" style="margin-bottom: 6px;">Kuis Evaluasi • Soal 2/4</p>
+        <h2 style="margin-bottom: 14px;">Bagaimana cara terbaik menampilkan diagram BPMN yang sangat lebar pada slide presentasi 16:9?</h2>
+        <div class="flex-grow-center" style="justify-content: flex-start; margin-top: 8px;">
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q2')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> A. Memaksa mengecilkan seluruh diagram ke satu slide sehingga teks task berukuran 4 pt dan tidak terbaca.
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, true, 'feedback-q2')" data-correct="true">
+            <i class="fa-regular fa-circle"></i> B. Menampilkan bird-eye view ikhtisar alur, lalu membuat slide potongan zoom-in pada bagian aktivitas kunci/gateway yang mengalami rekayasa ulang.
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q2')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> C. Menghapus diagram dari slide dan hanya berbicara tanpa visual.
+          </div>
+
+          <div id="feedback-q2" class="quiz-feedback">
+            <h4><i class="fa-solid fa-lightbulb"></i> Pembahasan: B</h4>
+            <p>Teknik zoom-in memungkinkan audiens membaca label task dan gateway secara jelas pada bagian alur yang menjadi fokus solusi perbaikan Anda.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 40 -->
+      <div class="slide-container pad-standard" style="background: #FFFFFF;" id="slide40" data-title="Kuis 3: Sikap Saat Tidak Tahu">
+        <p class="eyebrow" style="margin-bottom: 6px;">Kuis Evaluasi • Soal 3/4</p>
+        <h2 style="margin-bottom: 14px;">Jika dosen penguji menanyakan aspek teknis yang belum diteliti kelompok Anda, tindakan paling tepat adalah?</h2>
+        <div class="flex-grow-center" style="justify-content: flex-start; margin-top: 8px;">
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q3')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> A. Mengarang jawaban fiktif dan membantah dosen agar terlihat serba tahu.
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, true, 'feedback-q3')" data-correct="true">
+            <i class="fa-regular fa-circle"></i> B. Mengakui secara jujur dan profesional bahwa aspek tersebut belum diobservasi secara mendalam, serta menjadikannya poin revisi Bab 5.
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q3')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> C. Menyalahkan anggota kelompok lain yang tidak hadir.
+          </div>
+
+          <div id="feedback-q3" class="quiz-feedback">
+            <h4><i class="fa-solid fa-lightbulb"></i> Pembahasan: B</h4>
+            <p>Integritas intelektual adalah nomor satu bagi analis sistem. Kejujuran profesional yang disertai komitmen revisi jauh lebih dihargai daripada kebohongan data.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 41 -->
+      <div class="slide-container pad-standard" style="background: #FFFFFF;" id="slide41" data-title="Kuis 4: Alokasi Waktu Pitching">
+        <p class="eyebrow" style="margin-bottom: 6px;">Kuis Evaluasi • Soal 4/4</p>
+        <h2 style="margin-bottom: 14px;">Berapa total durasi alokasi waktu yang diberikan kepada masing-masing kelompok pada sesi evaluasi Pertemuan 15?</h2>
+        <div class="flex-grow-center" style="justify-content: flex-start; margin-top: 8px;">
+          <div class="quiz-option" onclick="handleQuiz(this, true, 'feedback-q4')" data-correct="true">
+            <i class="fa-regular fa-circle"></i> A. Total 20 Menit (10 Menit pemaparan slide deck + 10 Menit defense tanya jawab dan bedah diagram).
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q4')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> B. Bebas hingga 2 jam per kelompok.
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q4')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> C. Hanya 1 menit per kelompok.
+          </div>
+
+          <div id="feedback-q4" class="quiz-feedback">
+            <h4><i class="fa-solid fa-lightbulb"></i> Pembahasan: A</h4>
+            <p>Disiplin waktu 20 menit per kelompok melatih efisiensi komunikasi profesional layaknya pitching proposal di hadapan jajaran eksekutif korporat.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SECTION 7: SIMULASI LANGSUNG KELAS & FEEDBACK (SLIDES 42-45)
+           ========================================== -->
+
+      <!-- SLIDE 42 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian VI: Sesi Simulasi Pitching Kelas">
+        <p class="eyebrow">Bagian VI</p>
+        <h1 style="font-size: 72px;">Simulasi Pitching Dimulai!</h1>
+        <div class="divider"></div>
+        <p style="font-size: 30px;">Giliran Kelompok Menampilkan Karya Proyek Mini di Hadapan Kelas.</p>
+      </div>
+
+      <!-- SLIDE 43 -->
+      <div class="slide-container pad-standard" data-title="Daftar Urutan Tampil Kelompok">
+        <h2>Jadwal Giliran Simulasi Presentasi Hari Ini</h2>
+        <div class="flex-grow-center">
+          <table style="width: 100%; border-collapse: collapse; font-size: 16px; text-align: left; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+            <thead style="background: #0F172A; color: white;">
+              <tr>
+                <th style="padding: 10px;">Urutan</th>
+                <th style="padding: 10px;">Nama Kelompok &amp; Anggota</th>
+                <th style="padding: 10px;">Objek Observasi Nyata</th>
+                <th style="padding: 10px;">Fokus Solusi TI To-Be</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid #E2E8F0;">
+                <td style="padding: 8px; font-weight: bold;">Kelompok 1</td>
+                <td style="padding: 8px;">Tim Alpha Systems</td>
+                <td style="padding: 8px;">Kantin / Warung Makan Kampus</td>
+                <td style="padding: 8px; color: var(--color-sky); font-weight: 600;">Kitchen Display System &amp; QRIS POS</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #E2E8F0;">
+                <td style="padding: 8px; font-weight: bold;">Kelompok 2</td>
+                <td style="padding: 8px;">Tim Beta Analytics</td>
+                <td style="padding: 8px;">Layanan Fotokopi &amp; Percetakan</td>
+                <td style="padding: 8px; color: var(--color-emerald); font-weight: 600;">Web Upload Antrean Cetak Otomatis</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #E2E8F0;">
+                <td style="padding: 8px; font-weight: bold;">Kelompok 3</td>
+                <td style="padding: 8px;">Tim Gamma Logistics</td>
+                <td style="padding: 8px;">Jasa Ekspedisi / Kurir Lokal</td>
+                <td style="padding: 8px; color: var(--color-amber); font-weight: 600;">Auto-Weighing &amp; Barcode Label API</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px; font-weight: bold;">Kelompok 4 dst</td>
+                <td style="padding: 8px;">Tim Delta dst</td>
+                <td style="padding: 8px;">UMKM Ritel / Laundry Kiloan</td>
+                <td style="padding: 8px; color: var(--color-violet); font-weight: 600;">WhatsApp Webhook Tracking Status</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SLIDE 44 -->
+      <div class="slide-container layout-split" data-title="Checklist Penguji Saat Menilai">
+        <div class="split-col w-60">
+          <p class="eyebrow">Sudut Pandang Dosen Penguji</p>
+          <h2>Apa yang Dosen Coret di Lembar Penilaian?</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-pen-nib" style="color: var(--color-sky);"></i> <span>Apakah durasi presentasi melebihi batas 10 menit? (Penalti -5 poin).</span></li>
+            <li><i class="fa-solid fa-pen-nib" style="color: var(--color-emerald);"></i> <span>Apakah kelompok menguasai angka penghematan uang dan waktu siklus?</span></li>
+            <li><i class="fa-solid fa-pen-nib" style="color: var(--color-rose);"></i> <span>Apakah ada anggota kelompok yang pasif dan tidak menjawab pertanyaan?</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40">
+          <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&q=80" alt="Lecturer Evaluating Score Sheet">
+        </div>
+      </div>
+
+      <!-- SLIDE 45 -->
+      <div class="slide-container pad-standard" data-title="Transisi Menuju UAS Resmi P16">
+        <h2>Roadmap Final: Dari Pitching P15 Menuju UAS P16</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-left: 8px solid var(--color-sky);">
+              <h4 style="color: var(--color-sky);">Pertemuan 15 (Hari Ini)</h4>
+              <p style="font-size: 16px;">Simulasi Pitching Solusi &amp; Defense Ide Perbaikan di hadapan Dosen Pengampu (Bobot Nilai 15%).</p>
+            </div>
+            <div class="card" style="border-left: 8px solid var(--color-amber);">
+              <h4 style="color: var(--color-amber);">H-3 Sebelum UAS</h4>
+              <p style="font-size: 16px;">Perbaikan draf laporan Bab 1 s/d 5 berdasarkan catatan koreksi penguji dari sesi pitching hari ini.</p>
+            </div>
+            <div class="card" style="border-left: 8px solid var(--color-emerald);">
+              <h4 style="color: var(--color-emerald);">Pertemuan 16 (UAS Resmi)</h4>
+              <p style="font-size: 16px;">Pengumpulan bundel Laporan Akhir Final (.pdf) + Berkas Asli Draw.io (.drawio) di portal E-Learning (Bobot 25%).</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SECTION 8: DISKUSI & PENUTUP (SLIDES 46-50)
+           ========================================== -->
+
+      <!-- SLIDE 46 -->
+      <div class="slide-container pad-standard" data-title="Tanya Jawab Pitching 1">
+        <h2>Tanya Jawab Pitching 1</h2>
+        <div class="flex-grow-center">
+          <div style="background: #F8FAFC; border-left: 10px solid var(--color-sky); padding: 36px; border-radius: 8px;">
+            <p style="font-size: 22px; font-weight: 700; color: #0F172A; margin-bottom: 10px;">
+              "Pak, apakah pada slide pitching kami wajib menampilkan prototipe aplikasi yang sudah jalan (coding)?"
+            </p>
+            <p style="font-size: 20px; color: #475569; line-height: 1.5;">
+              Tidak wajib coding penuh! Yang dinilai di mata kuliah Analisa Proses Bisnis adalah **kejelasan rancangan arsitektur dan diagram BPMN To-Be-nya**. Mockup layar antarmuka (Figma/Canva) sudah sangat cukup untuk menunjukkan bagaimana operator berinteraksi dengan sistem baru yang diusulkan.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 47 -->
+      <div class="slide-container pad-standard" data-title="Tanya Jawab Pitching 2">
+        <h2>Tanya Jawab Pitching 2</h2>
+        <div class="flex-grow-center">
+          <div style="background: #F8FAFC; border-left: 10px solid var(--color-emerald); padding: 36px; border-radius: 8px;">
+            <p style="font-size: 22px; font-weight: 700; color: #0F172A; margin-bottom: 10px;">
+              "Bagaimana jika ada anggota kelompok kami yang tiba-tiba berhalangan hadir saat giliran presentasi?"
+            </p>
+            <p style="font-size: 20px; color: #475569; line-height: 1.5;">
+              Segera konfirmasikan ke dosen pengampu sebelum sesi dimulai dengan surat keterangan resmi. Rekan kelompok yang hadir wajib mengambil alih bagian slide anggota tersebut. Mahasiswa yang tidak hadir tanpa keterangan sah otomatis kehilangan komponen nilai pitching (0/15 poin).
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 48 -->
+      <div class="slide-container center-content" data-title="Panggung Dibuka">
+        <i class="fa-solid fa-microphone" style="font-size: 110px; color: var(--color-sky); margin-bottom: 28px;"></i>
+        <h1 style="font-size: 54px;">Kelompok 1 Silakan Menuju Mimbar!</h1>
+        <p style="font-size: 26px; font-weight: 600; margin-top: 18px;">
+          Persiapkan pointer presentasi, pasang slide di layar proyektor, dan mari kita mulai sesi pitching profesional ini.
+        </p>
+      </div>
+
+      <!-- SLIDE 49 -->
+      <div class="slide-container center-content bg-dark" data-title="Ringkasan Akhir Pertemuan 15">
+        <i class="fa-solid fa-flag-checkered" style="font-size: 70px; color: var(--color-emerald); margin-bottom: 20px;"></i>
+        <h2>Ringkasan Akhir Pertemuan 15</h2>
+        <p style="font-size: 24px; max-width: 900px; margin-top: 14px; line-height: 1.5;">
+          Seorang Systems Analyst unggul adalah perpaduan antara <strong>ketelitian teknis pemodelan logika</strong> dan <strong>kemampuan persuasi bisnis tingkat tinggi</strong> yang sanggup meyakinkan siapa pun bahwa perubahan teknologi layak untuk diwujudkan.
+        </p>
+      </div>
+
+      <!-- SLIDE 50 -->
+      <div class="slide-container center-content bg-dark" data-title="Penutup Kuliah">
+        <h1 style="font-size: 76px; margin-bottom: 20px;">Sukses untuk Presentasi Anda!</h1>
+        <div class="divider"></div>
+        <p style="font-size: 30px; font-weight: 700; color: #38BDF8; font-style: italic; margin-top: 14px;">
+          "Sampai jumpa di Pertemuan 16: Pengumpulan Final Bundel Laporan UAS Analisa Proses Bisnis!"
+        </p>
+        <p style="font-size: 20px; color: #94A3B8; margin-top: 50px;">
+          Ardi Ariansyah, S.Kom., Gr. • Program Studi S1 Teknik Informatika • ITB Swadharma
+        </p>
+      </div>
+
+    </div> <!-- End of slides-wrapper -->
+  </div> <!-- End of presentation-area -->
+
+  <!-- PRESENTATION & INTERACTION SCRIPTS -->
+  <script>
+    // --- 1. CORE PRESENTATION LOGIC ---
+    const slides = document.querySelectorAll('.slide-container');
+    const selector = document.getElementById('slideSelector');
+    let currentSlide = 0;
+
+    function initDropdown() {
+      if(!selector) return;
+      selector.innerHTML = '';
+      slides.forEach((slide, index) => {
+        let title = slide.getAttribute('data-title') || `Slide ${index + 1}`;
+        let option = document.createElement('option');
+        option.value = index;
+        option.text = `${index + 1}. ${title}`;
+        selector.appendChild(option);
+      });
+    }
+
+    function updatePresentation() {
+      slides.forEach((slide, index) => {
+        if (index === currentSlide) {
+          slide.classList.add('active');
+        } else {
+          slide.classList.remove('active');
+        }
+      });
+      if(selector) selector.value = currentSlide;
+      
+      const presArea = document.getElementById('presentation-area') || document.body;
+      const scaleX = presArea.clientWidth / 1280;
+      const scaleY = presArea.clientHeight / 720;
+      const scale = Math.min(scaleX, scaleY) * 0.95;
+      
+      slides[currentSlide].style.transform = `translate(-50%, -50%) scale(${scale})`;
+    }
+
+    function nextSlide() {
+      if (currentSlide < slides.length - 1) { currentSlide++; updatePresentation(); }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) { currentSlide--; updatePresentation(); }
+    }
+
+    function jumpToSlide(index) {
+      currentSlide = parseInt(index); updatePresentation();
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if(e.target.isContentEditable || e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return; 
+      if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') nextSlide();
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') prevSlide();
+    });
+
+    window.addEventListener('resize', updatePresentation);
+    initDropdown();
+    updatePresentation();
+
+    // --- 2. DRAG AND DROP LOGIC (AUTO-APPLY) ---
+    const dropZones = document.querySelectorAll('.drop-zone');
+    const draggables = document.querySelectorAll('.drag-item');
+    const containers = document.querySelectorAll('.draggable-container');
+
+    draggables.forEach(draggable => {
+      draggable.addEventListener('dragstart', () => draggable.classList.add('dragging'));
+      draggable.addEventListener('dragend', () => {
+        draggable.classList.remove('dragging');
+        checkPracticeCompletion();
+      });
+    });
+
+    dropZones.forEach(zone => {
+      zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+      zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+      zone.addEventListener('drop', e => {
+        e.preventDefault();
+        zone.classList.remove('drag-over');
+        const draggable = document.querySelector('.dragging');
+        if (draggable) zone.querySelector('.drop-content').appendChild(draggable);
+      });
+    });
+
+    containers.forEach(container => {
+      container.addEventListener('dragover', e => e.preventDefault());
+      container.addEventListener('drop', e => {
+        const draggable = document.querySelector('.dragging');
+        if (draggable) container.appendChild(draggable);
+      });
+    });
+
+    function checkPracticeCompletion() {
+      document.querySelectorAll('.practice-feedback').forEach(feedback => {
+        let slide = feedback.closest('.slide-container');
+        let totalItems = slide.querySelectorAll('.drag-item').length;
+        let correct = 0;
+        slide.querySelectorAll('.drop-zone').forEach(zone => {
+          zone.querySelectorAll('.drag-item').forEach(item => {
+            if (item.dataset.type === zone.dataset.target) correct++;
+          });
+        });
+        feedback.style.display = (correct === totalItems && totalItems > 0) ? 'block' : 'none';
+      });
+    }
+
+    // --- 3. QUIZ LOGIC ---
+    window.handleQuiz = function(clickedBtn, isCorrect, feedbackId) {
+      const parent = clickedBtn.parentElement;
+      const allButtons = parent.querySelectorAll('.quiz-option');
+      allButtons.forEach(btn => {
+        btn.style.pointerEvents = 'none';
+        const icon = btn.querySelector('i');
+        icon.className = btn.dataset.correct === "true" ? 'fa-solid fa-check-circle' : 'fa-solid fa-circle-xmark';
+        if (btn.dataset.correct === "true") btn.classList.add('correct');
+      });
+      if (!isCorrect) clickedBtn.classList.add('wrong');
+      document.getElementById(feedbackId).classList.add('show');
+    };
+  </script>
+</body>
+</html>
