@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BPMN 2.0 Interactive Game & Studio Lab - ITB Swadharma</title>
+  <!-- Tailwind CSS & Google Fonts -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Open+Sans:wght@400;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brandDark: '#0B0F19',
+            brandSlate: '#0F172A',
+            brandBlue: '#0284C7',
+            brandCyan: '#06B6D4',
+            brandAmber: '#D97706',
+            brandGreen: '#10B981',
+            brandRed: '#DC2626'
+          },
+          fontFamily: {
+            montserrat: ['Montserrat', 'sans-serif'],
+            sans: ['Open Sans', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbar & Canvas Grid */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0F172A; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #0284C7; }
+
+    .canvas-grid {
+      background-size: 24px 24px;
+      background-image: 
+        linear-gradient(to right, rgba(203, 213, 225, 0.4) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(203, 213, 225, 0.4) 1px, transparent 1px);
+    }
+
+    .node-selected {
+      outline: 3px solid #0284C7 !important;
+      outline-offset: 3px;
+    }
+  </style>
+</head>
+<body class="bg-brandDark text-slate-100 font-sans min-h-screen flex flex-col">
+
+  <!-- TOP HEADER -->
+  <header class="bg-brandSlate border-b border-slate-800 px-6 py-4 flex flex-wrap items-center justify-between shadow-xl sticky top-0 z-50">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brandBlue to-brandCyan flex items-center justify-center text-white font-montserrat font-bold text-xl shadow-lg shadow-cyan-500/20">
+        B
+      </div>
+      <div>
+        <h1 class="font-montserrat font-extrabold text-lg sm:text-xl text-white tracking-tight flex items-center gap-2">
+          BPMN 2.0 Studio Lab &amp; Game
+          <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-cyan-950 text-cyan-400 border border-cyan-800">ITB Swadharma</span>
+        </h1>
+        <p class="text-xs text-slate-400">Analisa Proses Bisnis (INF1104) • Pengampu: Ardi Ariansyah, S.Kom., Gr.</p>
+      </div>
+    </div>
+
+    <!-- TABS NAVIGATION -->
+    <div class="flex items-center gap-2 mt-3 sm:mt-0 bg-slate-900/80 p-1.5 rounded-xl border border-slate-800">
+      <button id="tabBtn1" onclick="switchTab('gameTab')" class="px-4 py-2 rounded-lg text-sm font-montserrat font-bold transition-all bg-brandBlue text-white shadow-md">
+        <i class="fa-solid fa-gamepad mr-2"></i>Game 1: Cocok Simbol
+      </button>
+      <button id="tabBtn2" onclick="switchTab('builderTab')" class="px-4 py-2 rounded-lg text-sm font-montserrat font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition-all">
+        <i class="fa-solid fa-draw-polygon mr-2"></i>Game 2: Studio Diagram Mandiri
+      </button>
+    </div>
+  </header>
+
+  <!-- ========================================================
+       TAB 1: GAME MENCOCOKKAN SIMBOL & FUNGSI (MATCHING GAME)
+       ======================================================== -->
+  <main id="gameTab" class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 flex flex-col gap-6">
+    <!-- Intro Card -->
+    <div class="bg-gradient-to-r from-slate-900 to-slate-800 border border-slate-700/80 rounded-2xl p-6 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="space-y-2">
+        <div class="inline-flex items-center gap-2 text-xs font-bold font-montserrat text-amber-400 uppercase tracking-widest bg-amber-950/60 border border-amber-800/80 px-3 py-1 rounded-full">
+          <i class="fa-solid fa-trophy"></i> Tantangan Pemahaman Simbol
+        </div>
+        <h2 class="font-montserrat font-bold text-2xl sm:text-3xl text-white">Match &amp; Master BPMN 2.0</h2>
+        <p class="text-slate-300 text-sm max-w-2xl leading-relaxed">
+          Tarik (<span class="text-cyan-400 font-semibold">Drag</span>) kartu simbol di kolom kiri atau klik kartu nama di kolom kanan untuk memasangkan <strong class="text-white">Simbol Visual, Nama Resmi, dan Fungsinya</strong> secara tepat. Selesaikan sebelum waktu habis!
+        </p>
+      </div>
+      <div class="flex items-center gap-4 bg-slate-950/70 border border-slate-800 p-4 rounded-xl">
+        <div class="text-center px-3 border-r border-slate-800">
+          <div class="text-xs text-slate-400 font-montserrat font-semibold">SKOR</div>
+          <div id="gameScore" class="font-montserrat font-extrabold text-2xl text-emerald-400">0</div>
+        </div>
+        <div class="text-center px-3 border-r border-slate-800">
+          <div class="text-xs text-slate-400 font-montserrat font-semibold">TERSELESAIKAN</div>
+          <div id="gameMatches" class="font-montserrat font-extrabold text-2xl text-cyan-400">0/6</div>
+        </div>
+        <div class="text-center px-3">
+          <div class="text-xs text-slate-400 font-montserrat font-semibold">WAKTU</div>
+          <div id="gameTimer" class="font-montserrat font-extrabold text-2xl text-amber-400">00:00</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Game Arena -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      
+      <!-- Left Column: Visual BPMN Symbols -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-4">
+          <h3 class="font-montserrat font-bold text-base text-slate-200 flex items-center gap-2">
+            <i class="fa-solid fa-shapes text-cyan-400"></i> Simbol Grafis BPMN 2.0
+          </h3>
+          <span class="text-xs text-slate-400">Pilih salah satu kartu untuk dicocokkan</span>
+        </div>
+        <div id="symbolsDeck" class="grid grid-cols-2 sm:grid-cols-3 gap-3.5 flex-1">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+
+      <!-- Right Column: Target Definitions & Names -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-4">
+          <h3 class="font-montserrat font-bold text-base text-slate-200 flex items-center gap-2">
+            <i class="fa-solid fa-bullseye text-amber-400"></i> Nama &amp; Fungsi Operasional
+          </h3>
+          <button onclick="resetMatchingGame()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 font-montserrat font-semibold px-3 py-1.5 rounded-lg border border-slate-700 transition">
+            <i class="fa-solid fa-rotate-right mr-1"></i> Acak Ulang
+          </button>
+        </div>
+        <div id="targetsDeck" class="flex flex-col gap-3 flex-1 justify-center">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Game Completion Banner -->
+    <div id="gameWinModal" class="hidden bg-emerald-950/80 border-2 border-emerald-500 rounded-2xl p-6 text-center shadow-2xl animate-fade">
+      <div class="inline-flex p-4 rounded-full bg-emerald-500/20 text-emerald-400 text-3xl mb-3">
+        <i class="fa-solid fa-champagne-glasses"></i>
+      </div>
+      <h3 class="font-montserrat font-extrabold text-2xl text-emerald-300">Selamat! Penguasaan Simbol BPMN Anda Sempurna!</h3>
+      <p id="winMessage" class="text-slate-300 text-sm max-w-xl mx-auto mt-2 leading-relaxed">
+        Anda telah mengenali seluruh notasi fundamental BPMN 2.0 beserta fungsinya. Sekarang, uji kemampuan Anda merakit diagram alur dari studi kasus nyata di Studio Diagram Mandiri!
+      </p>
+      <div class="mt-5 flex justify-center gap-3">
+        <button onclick="switchTab('builderTab')" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-brandBlue to-brandCyan text-white font-montserrat font-bold text-sm shadow-lg hover:shadow-cyan-500/20 transition">
+          Lanjut ke Game 2: Studio Diagram Mandiri <i class="fa-solid fa-arrow-right ml-2"></i>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- ========================================================
+       TAB 2: STUDIO DIAGRAM MANDIRI (IN-BROWSER BPMN BUILDER)
+       ======================================================== -->
+  <main id="builderTab" class="hidden flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 flex flex-col gap-5">
+    
+    <!-- Top Action Bar & Case Selector -->
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col lg:flex-row items-center justify-between gap-4 shadow-xl">
+      <div class="flex items-center gap-3 w-full lg:w-auto">
+        <div class="p-2.5 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/30">
+          <i class="fa-solid fa-book-open-reader text-lg"></i>
+        </div>
+        <div>
+          <label class="block text-xs font-montserrat font-bold text-slate-400 uppercase">Pilih Studi Kasus Soal Praktek:</label>
+          <select id="caseSelector" onchange="loadCaseStudy(this.value)" class="mt-1 bg-slate-950 border border-slate-700 text-white rounded-lg px-3 py-1.5 text-sm font-semibold focus:outline-none focus:border-cyan-500 cursor-pointer">
+            <option value="case1">Studi Kasus 1: Pemesanan Kopi Online (@kopiapatuh)</option>
+            <option value="case2">Studi Kasus 2: Pengajuan Cuti Sakit Karyawan</option>
+            <option value="case3">Studi Kasus 3: Validasi Pembayaran Toko Online</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Control Toolbar -->
+      <div class="flex flex-wrap items-center gap-2 justify-end w-full lg:w-auto">
+        <button onclick="clearCanvas()" class="px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-montserrat text-xs font-semibold border border-slate-700 transition" title="Kosongkan Kanvas">
+          <i class="fa-solid fa-trash-can mr-1.5"></i> Bersihkan Kanvas
+        </button>
+        <button onclick="loadTemplateSolution()" class="px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-400 font-montserrat text-xs font-semibold border border-cyan-800/60 transition" title="Lihat Petunjuk Kunci Jawaban">
+          <i class="fa-solid fa-lightbulb mr-1.5"></i> Bantuan Kunci Alur
+        </button>
+        <button onclick="validateDiagram()" class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-montserrat text-xs font-bold shadow-lg shadow-emerald-700/20 transition">
+          <i class="fa-solid fa-circle-check mr-1.5"></i> Cek &amp; Validasi Jawaban
+        </button>
+      </div>
+    </div>
+
+    <!-- Case Study Narrative Box -->
+    <div class="bg-gradient-to-r from-slate-900 via-slate-900/90 to-slate-950 border-l-4 border-amber-500 border border-slate-800 rounded-xl p-4 shadow-md">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <h4 id="caseTitle" class="font-montserrat font-bold text-base text-amber-400 flex items-center gap-2">
+            <i class="fa-solid fa-file-lines"></i> Studi Kasus 1: Pemesanan Kopi Online (@kopiapatuh)
+          </h4>
+          <p id="caseDescription" class="text-sm text-slate-300 mt-1 leading-relaxed">
+            "Notifikasi pesanan GoFood berbunyi. Kasir <strong>memeriksa stok bahan</strong>. Jika stok <em>Kosong</em>, kasir langsung <strong>membatalkan pesanan</strong> lalu alur selesai. Jika stok <em>Ada</em>, barista segera <strong>membuat kopi</strong>, kemudian kasir <strong>menyerahkan pesanan</strong> kepada kurir. Proses selesai."
+          </p>
+        </div>
+        <div class="hidden sm:block text-right shrink-0">
+          <span class="text-xs px-2.5 py-1 rounded bg-slate-800 text-slate-400 font-mono">Tugas Praktik Mandiri</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN BUILDER WORKSPACE -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 flex-1 min-h-[580px]">
+      
+      <!-- Palette Toolbar (Left Panel) -->
+      <div class="lg:col-span-3 bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col shadow-xl">
+        <h3 class="font-montserrat font-bold text-sm text-slate-200 pb-3 border-b border-slate-800 flex items-center justify-between">
+          <span><i class="fa-solid fa-toolbox text-brandCyan mr-2"></i>Palet Simbol BPMN</span>
+          <span class="text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded">Klik / Drag</span>
+        </h3>
+
+        <div class="flex-1 overflow-y-auto space-y-3 py-3 pr-1 text-xs">
+          <p class="text-[11px] font-semibold uppercase text-slate-500 tracking-wider">1. Flow Objects</p>
+          
+          <!-- Start Event Tool -->
+          <div onclick="spawnNode('start')" class="cursor-pointer bg-slate-950 hover:bg-slate-800/90 border border-emerald-600/50 hover:border-emerald-500 rounded-xl p-2.5 flex items-center gap-3 transition group">
+            <div class="w-9 h-9 rounded-full bg-emerald-500/10 border-2 border-emerald-500 flex items-center justify-center shrink-0">
+              <div class="w-3.5 h-3.5 rounded-full bg-emerald-500"></div>
+            </div>
+            <div>
+              <div class="font-montserrat font-bold text-slate-200 group-hover:text-emerald-400 transition">Start Event</div>
+              <div class="text-[11px] text-slate-400">Pemicu awal proses</div>
+            </div>
+          </div>
+
+          <!-- Task / Activity Tool -->
+          <div onclick="spawnNode('task')" class="cursor-pointer bg-slate-950 hover:bg-slate-800/90 border border-cyan-600/50 hover:border-cyan-500 rounded-xl p-2.5 flex items-center gap-3 transition group">
+            <div class="w-11 h-8 rounded-lg bg-cyan-500/10 border-2 border-cyan-500 flex items-center justify-center shrink-0 text-cyan-400 font-bold text-[10px]">
+              Task
+            </div>
+            <div>
+              <div class="font-montserrat font-bold text-slate-200 group-hover:text-cyan-400 transition">Aktivitas (Task)</div>
+              <div class="text-[11px] text-slate-400">[Kata Kerja] + [Objek]</div>
+            </div>
+          </div>
+
+          <!-- Exclusive Gateway (XOR) Tool -->
+          <div onclick="spawnNode('gateway-xor')" class="cursor-pointer bg-slate-950 hover:bg-slate-800/90 border border-amber-600/50 hover:border-amber-500 rounded-xl p-2.5 flex items-center gap-3 transition group">
+            <div class="w-8 h-8 rotate-45 bg-amber-500/10 border-2 border-amber-500 flex items-center justify-center shrink-0">
+              <span class="-rotate-45 text-amber-400 font-bold text-xs">✕</span>
+            </div>
+            <div>
+              <div class="font-montserrat font-bold text-slate-200 group-hover:text-amber-400 transition">Exclusive Gateway (XOR)</div>
+              <div class="text-[11px] text-slate-400">Percabangan kondisi YA / TIDAK</div>
+            </div>
+          </div>
+
+          <!-- Parallel Gateway (AND) Tool -->
+          <div onclick="spawnNode('gateway-and')" class="cursor-pointer bg-slate-950 hover:bg-slate-800/90 border border-amber-600/50 hover:border-amber-500 rounded-xl p-2.5 flex items-center gap-3 transition group">
+            <div class="w-8 h-8 rotate-45 bg-amber-500/10 border-2 border-amber-500 flex items-center justify-center shrink-0">
+              <span class="-rotate-45 text-amber-400 font-bold text-xs">＋</span>
+            </div>
+            <div>
+              <div class="font-montserrat font-bold text-slate-200 group-hover:text-amber-400 transition">Parallel Gateway (AND)</div>
+              <div class="text-[11px] text-slate-400">Jalur paralel serentak</div>
+            </div>
+          </div>
+
+          <!-- End Event Tool -->
+          <div onclick="spawnNode('end')" class="cursor-pointer bg-slate-950 hover:bg-slate-800/90 border border-red-600/50 hover:border-red-500 rounded-xl p-2.5 flex items-center gap-3 transition group">
+            <div class="w-9 h-9 rounded-full bg-red-500/10 border-4 border-red-500 flex items-center justify-center shrink-0">
+              <div class="w-3.5 h-3.5 rounded-full bg-red-500"></div>
+            </div>
+            <div>
+              <div class="font-montserrat font-bold text-slate-200 group-hover:text-red-400 transition">End Event</div>
+              <div class="text-[11px] text-slate-400">Status proses selesai</div>
+            </div>
+          </div>
+
+          <p class="text-[11px] font-semibold uppercase text-slate-500 tracking-wider pt-2">2. Petunjuk Menghubungkan</p>
+          <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-[11px] text-slate-400 space-y-1.5 leading-relaxed">
+            <p><i class="fa-solid fa-hand-pointer text-cyan-400 mr-1"></i> Klik sebuah simbol, lalu klik tombol <strong class="text-white">+ Hubungkan</strong> untuk membuat panah alur ke simbol berikutnya.</p>
+            <p><i class="fa-solid fa-pen-to-square text-amber-400 mr-1"></i> Klik 2x pada teks simbol untuk mengubah judul tugas/peran.</p>
+          </div>
+        </div>
+
+        <!-- Node Inspector / Active Element Properties -->
+        <div id="inspectorPanel" class="mt-auto pt-3 border-t border-slate-800 text-xs">
+          <div class="text-[11px] font-bold text-slate-400 uppercase mb-1.5 flex items-center justify-between">
+            <span>Elemen Terpilih:</span>
+            <span id="selectedNodeTypeBadge" class="text-cyan-400 font-mono">Belum ada</span>
+          </div>
+          <div class="flex gap-2">
+            <button id="connectBtn" disabled onclick="startConnecting()" class="flex-1 py-1.5 rounded-lg bg-brandBlue hover:bg-cyan-600 disabled:opacity-40 disabled:pointer-events-none text-white font-montserrat font-bold text-xs transition">
+              <i class="fa-solid fa-arrow-right mr-1"></i> Hubungkan
+            </button>
+            <button id="deleteNodeBtn" disabled onclick="deleteSelectedNode()" class="px-3 py-1.5 rounded-lg bg-red-600/20 hover:bg-red-600 disabled:opacity-40 disabled:pointer-events-none text-red-300 hover:text-white border border-red-500/40 text-xs transition">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Canvas Playground (Right Panel) -->
+      <div class="lg:col-span-9 bg-slate-950 border border-slate-800 rounded-2xl relative overflow-hidden flex flex-col shadow-2xl">
+        <!-- Canvas Status & Helper Bar -->
+        <div class="bg-slate-900/90 border-b border-slate-800 px-4 py-2.5 flex items-center justify-between z-10">
+          <div class="flex items-center gap-2">
+            <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span class="text-xs font-montserrat font-bold text-slate-300 tracking-wide uppercase">Drawing Surface Canvas</span>
+          </div>
+          <div id="connectionHint" class="text-xs font-semibold text-amber-400 hidden animate-bounce">
+            <i class="fa-solid fa-link mr-1"></i> Mode Menghubungkan: Klik simbol tujuan sekarang!
+          </div>
+          <div class="text-[11px] text-slate-400">
+            Geser (<span class="text-slate-200">Drag</span>) kotak di kanvas untuk menata posisi alur
+          </div>
+        </div>
+
+        <!-- Interactive Canvas Area -->
+        <div id="bpmnCanvas" class="canvas-grid flex-1 relative overflow-auto p-8 min-h-[500px]">
+          <!-- SVG Container for Connections -->
+          <svg id="svgConnectorLayer" class="absolute top-0 left-0 w-full h-full pointer-events-none z-0">
+            <defs>
+              <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1 L 9 5 L 0 9 z" fill="#0284C7" />
+              </marker>
+              <marker id="arrow-amber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1 L 9 5 L 0 9 z" fill="#D97706" />
+              </marker>
+            </defs>
+          </svg>
+
+          <!-- Nodes are injected here dynamically -->
+        </div>
+
+        <!-- Validation Output Drawer -->
+        <div id="validationResultBox" class="hidden border-t border-slate-800 p-4 bg-slate-900/95 transition-all z-10">
+          <div class="flex items-start justify-between">
+            <div class="flex items-start gap-3">
+              <div id="validationIcon" class="text-xl mt-0.5"></div>
+              <div>
+                <h4 id="validationTitle" class="font-montserrat font-bold text-sm"></h4>
+                <p id="validationDesc" class="text-xs text-slate-300 mt-1 leading-relaxed"></p>
+              </div>
+            </div>
+            <button onclick="document.getElementById('validationResultBox').classList.add('hidden')" class="text-slate-400 hover:text-white">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- JAVASCRIPT LOGIC ENGINE -->
+  <script>
+    // ==========================================
+    // 1. DATA MASTER: SYMBOLS & DEFINITIONS
+    // ==========================================
+    const BPMN_SYMBOLS = [
+      {
+        id: 'start-event',
+        name: 'Start Event',
+        category: 'Event',
+        svg: `<svg viewBox="0 0 100 100" class="w-16 h-16"><circle cx="50" cy="50" r="38" fill="#ECFDF5" stroke="#10B981" stroke-width="5"/></svg>`,
+        desc: 'Menandakan pemicu mutlak di mana sebuah alur proses bisnis dimulai.'
+      },
+      {
+        id: 'task-activity',
+        name: 'Task / Activity',
+        category: 'Activity',
+        svg: `<svg viewBox="0 0 120 80" class="w-20 h-14"><rect x="5" y="5" width="110" height="70" rx="12" fill="#E0F2FE" stroke="#0284C7" stroke-width="4"/><text x="60" y="46" font-size="14" font-family="Montserrat" font-weight="bold" fill="#0369A1" text-anchor="middle">Task</text></svg>`,
+        desc: 'Pekerjaan tunggal yang dilakukan oleh manusia atau sistem dengan format [Kata Kerja] + [Objek].'
+      },
+      {
+        id: 'gateway-xor',
+        name: 'Exclusive Gateway (XOR)',
+        category: 'Gateway',
+        svg: `<svg viewBox="0 0 100 100" class="w-16 h-16"><polygon points="50,6 94,50 50,94 6,50" fill="#FFF7ED" stroke="#EA580C" stroke-width="5"/><path d="M36,36 L64,64 M64,36 L36,64" stroke="#EA580C" stroke-width="5" stroke-linecap="round"/></svg>`,
+        desc: 'Percabangan logika di mana alur HANYA BOLEH memilih salah satu cabang (kondisi YA atau TIDAK).'
+      },
+      {
+        id: 'gateway-and',
+        name: 'Parallel Gateway (AND)',
+        category: 'Gateway',
+        svg: `<svg viewBox="0 0 100 100" class="w-16 h-16"><polygon points="50,6 94,50 50,94 6,50" fill="#FFF7ED" stroke="#EA580C" stroke-width="5"/><path d="M50,28 L50,72 M28,50 L72,50" stroke="#EA580C" stroke-width="5" stroke-linecap="round"/></svg>`,
+        desc: 'Membagi proses ke dalam dua atau lebih cabang aktivitas yang berjalan secara BERSAMAAN.'
+      },
+      {
+        id: 'data-store',
+        name: 'Data Store Reference',
+        category: 'Artifact',
+        svg: `<svg viewBox="0 0 100 100" class="w-16 h-16"><path d="M20,30 C20,20 80,20 80,30 L80,70 C80,80 20,80 20,70 Z" fill="#ECFEFF" stroke="#06B6D4" stroke-width="4"/><ellipse cx="50" cy="30" rx="30" ry="10" fill="#ECFEFF" stroke="#06B6D4" stroke-width="4"/><path d="M20,50 C20,60 80,60 80,50" fill="none" stroke="#06B6D4" stroke-width="3"/></svg>`,
+        desc: 'Mewakili tempat penyimpanan data persisten (Database server) yang dapat dibaca dan ditulis oleh aktivitas.'
+      },
+      {
+        id: 'end-event',
+        name: 'End Event',
+        category: 'Event',
+        svg: `<svg viewBox="0 0 100 100" class="w-16 h-16"><circle cx="50" cy="50" r="36" fill="#FEF2F2" stroke="#EF4444" stroke-width="12"/></svg>`,
+        desc: 'Menandakan hasil akhir telah tercapai dan seluruh jalannya proses bisnis berakhir.'
+      }
+    ];
+
+    // ==========================================
+    // 2. CASE STUDIES REPOSITORY
+    // ==========================================
+    const CASE_STUDIES = {
+      case1: {
+        title: "Studi Kasus 1: Pemesanan Kopi Online (@kopiapatuh)",
+        desc: `"Notifikasi pesanan GoFood berbunyi (Start). Kasir <strong>memeriksa stok bahan</strong>. Jika stok <em>Kosong</em>, kasir langsung <strong>membatalkan pesanan</strong> lalu selesai (End). Jika stok <em>Ada</em>, barista segera <strong>membuat kopi</strong>, kemudian kasir <strong>menyerahkan pesanan</strong> ke kurir. Proses selesai (End)."`,
+        expectedSteps: ["start", "task", "gateway-xor", "task", "end"],
+        solution: [
+          { type: 'start', text: 'Pesanan Masuk', x: 40, y: 180 },
+          { type: 'task', text: 'Memeriksa Stok Bahan', x: 200, y: 165 },
+          { type: 'gateway-xor', text: 'Stok Ada?', x: 420, y: 160 },
+          { type: 'task', text: 'Membuat Kopi', x: 580, y: 90 },
+          { type: 'task', text: 'Membatalkan Pesanan', x: 580, y: 250 },
+          { type: 'task', text: 'Menyerahkan Pesanan', x: 790, y: 90 },
+          { type: 'end', text: 'Pesanan Selesai', x: 990, y: 105 },
+          { type: 'end', text: 'Dibatalkan', x: 790, y: 265 }
+        ],
+        connections: [
+          [0, 1], [1, 2], [2, 3], [2, 4], [3, 5], [5, 6], [4, 7]
+        ]
+      },
+      case2: {
+        title: "Studi Kasus 2: Pengajuan Cuti Sakit Karyawan",
+        desc: `"Karyawan merasa sakit (Start). Karyawan <strong>mengisi formulir cuti</strong> di portal HRD. Manajer kemudian <strong>memverifikasi surat dokter</strong>. Jika <em>Ditolak</em>, manajer <strong>mengirim email penolakan</strong> lalu proses berakhir. Jika <em>Disetujui</em>, sistem <strong>memotong kuota cuti</strong> lalu proses selesai."`,
+        expectedSteps: ["start", "task", "task", "gateway-xor", "task", "end"]
+      },
+      case3: {
+        title: "Studi Kasus 3: Validasi Pembayaran Toko Online",
+        desc: `"Pembeli mengunggah bukti transfer (Start). Staf Keuangan <strong>memvalidasi mutasi bank</strong>. Jika transfer <em>Valid</em>, staf gudang <strong>mengemas barang</strong> dan kasir <strong>mencetak invoice</strong> secara paralel, lalu paket diserahkan (End)."`,
+        expectedSteps: ["start", "task", "gateway-xor", "gateway-and", "end"]
+      }
+    };
+
+    // ==========================================
+    // 3. TAB NAVIGATION
+    // ==========================================
+    function switchTab(tabId) {
+      document.getElementById('gameTab').classList.add('hidden');
+      document.getElementById('builderTab').classList.add('hidden');
+      document.getElementById(tabId).classList.remove('hidden');
+
+      const btn1 = document.getElementById('tabBtn1');
+      const btn2 = document.getElementById('tabBtn2');
+
+      if (tabId === 'gameTab') {
+        btn1.className = "px-4 py-2 rounded-lg text-sm font-montserrat font-bold transition-all bg-brandBlue text-white shadow-md";
+        btn2.className = "px-4 py-2 rounded-lg text-sm font-montserrat font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition-all";
+      } else {
+        btn2.className = "px-4 py-2 rounded-lg text-sm font-montserrat font-bold transition-all bg-brandBlue text-white shadow-md";
+        btn1.className = "px-4 py-2 rounded-lg text-sm font-montserrat font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition-all";
+        redrawConnections();
+      }
+    }
+
+    // ==========================================
+    // 4. GAME 1: MATCHING LOGIC
+    // ==========================================
+    let score = 0;
+    let matchesFound = 0;
+    let selectedSymbolCard = null;
+    let selectedTargetCard = null;
+    let gameTimerInterval = null;
+    let secondsElapsed = 0;
+
+    function initMatchingGame() {
+      score = 0;
+      matchesFound = 0;
+      secondsElapsed = 0;
+      selectedSymbolCard = null;
+      selectedTargetCard = null;
+      document.getElementById('gameScore').innerText = score;
+      document.getElementById('gameMatches').innerText = `0/${BPMN_SYMBOLS.length}`;
+      document.getElementById('gameWinModal').classList.add('hidden');
+
+      clearInterval(gameTimerInterval);
+      gameTimerInterval = setInterval(() => {
+        secondsElapsed++;
+        const mins = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
+        const secs = String(secondsElapsed % 60).padStart(2, '0');
+        document.getElementById('gameTimer').innerText = `${mins}:${secs}`;
+      }, 1000);
+
+      // Render Symbols Deck (Randomized)
+      const symbolsContainer = document.getElementById('symbolsDeck');
+      symbolsContainer.innerHTML = '';
+      const shuffledSymbols = [...BPMN_SYMBOLS].sort(() => 0.5 - Math.random());
+      
+      shuffledSymbols.forEach(item => {
+        const card = document.createElement('div');
+        card.className = "symbol-card bg-slate-950 border border-slate-800 hover:border-cyan-500 rounded-xl p-3.5 flex flex-col items-center justify-center gap-2 cursor-pointer transition transform hover:-translate-y-1 shadow-md select-none";
+        card.dataset.id = item.id;
+        card.innerHTML = `
+          ${item.svg}
+          <span class="text-xs font-montserrat font-bold text-slate-200 text-center tracking-wide">${item.name}</span>
+        `;
+        card.onclick = () => selectSymbolCard(card, item.id);
+        symbolsContainer.appendChild(card);
+      });
+
+      // Render Targets Deck (Randomized)
+      const targetsContainer = document.getElementById('targetsDeck');
+      targetsContainer.innerHTML = '';
+      const shuffledTargets = [...BPMN_SYMBOLS].sort(() => 0.5 - Math.random());
+
+      shuffledTargets.forEach(item => {
+        const slot = document.createElement('div');
+        slot.className = "target-card bg-slate-950 border border-slate-800 hover:border-amber-500 rounded-xl p-3.5 flex items-center justify-between gap-3 cursor-pointer transition shadow select-none";
+        slot.dataset.id = item.id;
+        slot.innerHTML = `
+          <div class="flex-1">
+            <div class="text-xs font-montserrat font-bold text-amber-400 uppercase tracking-wider">${item.category} Element</div>
+            <p class="text-xs text-slate-300 mt-1 leading-snug">${item.desc}</p>
+          </div>
+          <div class="status-indicator w-7 h-7 rounded-full border border-slate-700 flex items-center justify-center text-xs text-slate-500 shrink-0">
+            <i class="fa-solid fa-link"></i>
+          </div>
+        `;
+        slot.onclick = () => selectTargetCard(slot, item.id);
+        targetsContainer.appendChild(slot);
+      });
+    }
+
+    function selectSymbolCard(element, id) {
+      if (element.classList.contains('matched')) return;
+      document.querySelectorAll('.symbol-card').forEach(c => c.classList.remove('border-cyan-400', 'bg-cyan-950/40'));
+      element.classList.add('border-cyan-400', 'bg-cyan-950/40');
+      selectedSymbolCard = { element, id };
+      evaluatePair();
+    }
+
+    function selectTargetCard(element, id) {
+      if (element.classList.contains('matched')) return;
+      document.querySelectorAll('.target-card').forEach(c => c.classList.remove('border-amber-400', 'bg-amber-950/40'));
+      element.classList.add('border-amber-400', 'bg-amber-950/40');
+      selectedTargetCard = { element, id };
+      evaluatePair();
+    }
+
+    function evaluatePair() {
+      if (!selectedSymbolCard || !selectedTargetCard) return;
+
+      if (selectedSymbolCard.id === selectedTargetCard.id) {
+        // MATCH!
+        score += 100;
+        matchesFound++;
+        document.getElementById('gameScore').innerText = score;
+        document.getElementById('gameMatches').innerText = `${matchesFound}/${BPMN_SYMBOLS.length}`;
+
+        // Style Success
+        selectedSymbolCard.element.classList.remove('border-cyan-400', 'bg-cyan-950/40');
+        selectedSymbolCard.element.classList.add('matched', 'border-emerald-500', 'bg-emerald-950/30', 'opacity-60', 'pointer-events-none');
+        
+        selectedTargetCard.element.classList.remove('border-amber-400', 'bg-amber-950/40');
+        selectedTargetCard.element.classList.add('matched', 'border-emerald-500', 'bg-emerald-950/30', 'pointer-events-none');
+        
+        const indicator = selectedTargetCard.element.querySelector('.status-indicator');
+        indicator.className = "w-7 h-7 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs font-bold shrink-0";
+        indicator.innerHTML = '<i class="fa-solid fa-check"></i>';
+
+        selectedSymbolCard = null;
+        selectedTargetCard = null;
+
+        if (matchesFound === BPMN_SYMBOLS.length) {
+          clearInterval(gameTimerInterval);
+          document.getElementById('gameWinModal').classList.remove('hidden');
+        }
+      } else {
+        // WRONG PAIR
+        score = Math.max(0, score - 20);
+        document.getElementById('gameScore').innerText = score;
+        
+        selectedSymbolCard.element.classList.add('border-red-500', 'bg-red-950/40');
+        selectedTargetCard.element.classList.add('border-red-500', 'bg-red-950/40');
+
+        setTimeout(() => {
+          if (selectedSymbolCard) selectedSymbolCard.element.classList.remove('border-red-500', 'bg-red-950/40', 'border-cyan-400', 'bg-cyan-950/40');
+          if (selectedTargetCard) selectedTargetCard.element.classList.remove('border-red-500', 'bg-red-950/40', 'border-amber-400', 'bg-amber-950/40');
+          selectedSymbolCard = null;
+          selectedTargetCard = null;
+        }, 500);
+      }
+    }
+
+    function resetMatchingGame() {
+      initMatchingGame();
+    }
+
+    // ==========================================
+    // 5. GAME 2: IN-BROWSER BPMN DIAGRAM BUILDER
+    // ==========================================
+    let canvasNodes = [];
+    let canvasConnections = []; // Pair of indices [fromIndex, toIndex]
+    let selectedNodeIndex = null;
+    let isConnectingMode = false;
+    let connectSourceIndex = null;
+
+    function loadCaseStudy(caseKey) {
+      const data = CASE_STUDIES[caseKey];
+      document.getElementById('caseTitle').innerHTML = `<i class="fa-solid fa-file-lines"></i> ${data.title}`;
+      document.getElementById('caseDescription').innerHTML = data.desc;
+      clearCanvas();
+    }
+
+    function spawnNode(type, textLabel = null, xPos = null, yPos = null) {
+      const canvas = document.getElementById('bpmnCanvas');
+      const rect = canvas.getBoundingClientRect();
+      const nodeIndex = canvasNodes.length;
+
+      const nodeData = {
+        id: `node_${Date.now()}_${nodeIndex}`,
+        type: type,
+        text: textLabel || getDefaultLabel(type),
+        x: xPos !== null ? xPos : (60 + (nodeIndex % 4) * 160),
+        y: yPos !== null ? yPos : (80 + Math.floor(nodeIndex / 4) * 120)
+      };
+
+      canvasNodes.push(nodeData);
+      renderNodes();
+      selectNode(nodeIndex);
+    }
+
+    function getDefaultLabel(type) {
+      switch(type) {
+        case 'start': return 'Pemicu Awal';
+        case 'task': return 'Aktivitas Kerja';
+        case 'gateway-xor': return 'Kondisi?';
+        case 'gateway-and': return 'Paralel';
+        case 'end': return 'Proses Selesai';
+        default: return 'Element';
+      }
+    }
+
+    function renderNodes() {
+      const canvas = document.getElementById('bpmnCanvas');
+      // Remove existing nodes (preserve SVG connector layer)
+      const existingElements = canvas.querySelectorAll('.bpmn-canvas-node');
+      existingElements.forEach(el => el.remove());
+
+      canvasNodes.forEach((node, index) => {
+        const el = document.createElement('div');
+        el.className = `bpmn-canvas-node absolute cursor-move select-none flex flex-col items-center justify-center p-2 z-10 ${selectedNodeIndex === index ? 'node-selected' : ''}`;
+        el.id = node.id;
+        el.style.left = `${node.x}px`;
+        el.style.top = `${node.y}px`;
+
+        let visualHtml = '';
+        if (node.type === 'start') {
+          visualHtml = `
+            <div class="w-12 h-12 rounded-full bg-emerald-950/80 border-2 border-emerald-500 shadow-md flex items-center justify-center">
+              <div class="w-4 h-4 rounded-full bg-emerald-500"></div>
+            </div>
+            <div class="text-[11px] font-montserrat font-bold text-slate-200 mt-1 max-w-[100px] text-center editable-text" contenteditable="true">${node.text}</div>
+          `;
+        } else if (node.type === 'task') {
+          visualHtml = `
+            <div class="w-36 h-20 rounded-xl bg-slate-900 border-2 border-cyan-500 shadow-lg p-2.5 flex items-center justify-center text-center">
+              <span class="text-xs font-montserrat font-bold text-cyan-200 leading-snug editable-text" contenteditable="true">${node.text}</span>
+            </div>
+          `;
+        } else if (node.type === 'gateway-xor' || node.type === 'gateway-and') {
+          const isXor = node.type === 'gateway-xor';
+          visualHtml = `
+            <div class="w-12 h-12 rotate-45 bg-amber-950/80 border-2 border-amber-500 shadow-md flex items-center justify-center">
+              <span class="-rotate-45 text-amber-400 font-extrabold text-sm">${isXor ? '✕' : '＋'}</span>
+            </div>
+            <div class="text-[11px] font-montserrat font-bold text-amber-300 mt-1.5 max-w-[90px] text-center editable-text" contenteditable="true">${node.text}</div>
+          `;
+        } else if (node.type === 'end') {
+          visualHtml = `
+            <div class="w-12 h-12 rounded-full bg-red-950/80 border-4 border-red-500 shadow-md flex items-center justify-center">
+              <div class="w-4 h-4 rounded-full bg-red-500"></div>
+            </div>
+            <div class="text-[11px] font-montserrat font-bold text-slate-200 mt-1 max-w-[100px] text-center editable-text" contenteditable="true">${node.text}</div>
+          `;
+        }
+
+        el.innerHTML = visualHtml;
+
+        // Node Selection Handler
+        el.onclick = (e) => {
+          e.stopPropagation();
+          if (isConnectingMode) {
+            finishConnecting(index);
+          } else {
+            selectNode(index);
+          }
+        };
+
+        // Text Editing Listener
+        const editable = el.querySelector('.editable-text');
+        if (editable) {
+          editable.onblur = () => {
+            node.text = editable.innerText.trim();
+          };
+          editable.onkeydown = (e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              editable.blur();
+            }
+          };
+        }
+
+        // Drag Handler
+        setupNodeDragging(el, index);
+
+        canvas.appendChild(el);
+      });
+
+      redrawConnections();
+    }
+
+    function setupNodeDragging(element, index) {
+      let isDragging = false;
+      let startX, startY;
+
+      element.addEventListener('mousedown', (e) => {
+        if (e.target.classList.contains('editable-text')) return;
+        isDragging = true;
+        startX = e.clientX - canvasNodes[index].x;
+        startY = e.clientY - canvasNodes[index].y;
+        selectNode(index);
+
+        const onMouseMove = (moveEvent) => {
+          if (!isDragging) return;
+          const canvas = document.getElementById('bpmnCanvas');
+          const newX = Math.max(10, moveEvent.clientX - startX);
+          const newY = Math.max(10, moveEvent.clientY - startY);
+          canvasNodes[index].x = newX;
+          canvasNodes[index].y = newY;
+          element.style.left = `${newX}px`;
+          element.style.top = `${newY}px`;
+          redrawConnections();
+        };
+
+        const onMouseUp = () => {
+          isDragging = false;
+          window.removeEventListener('mousemove', onMouseMove);
+          window.removeEventListener('mouseup', onMouseUp);
+        };
+
+        window.addEventListener('mousemove', onMouseMove);
+        window.addEventListener('mouseup', onMouseUp);
+      });
+    }
+
+    function selectNode(index) {
+      selectedNodeIndex = index;
+      document.querySelectorAll('.bpmn-canvas-node').forEach((el, idx) => {
+        if (idx === index) el.classList.add('node-selected');
+        else el.classList.remove('node-selected');
+      });
+
+      const inspector = document.getElementById('selectedNodeTypeBadge');
+      const connectBtn = document.getElementById('connectBtn');
+      const deleteBtn = document.getElementById('deleteNodeBtn');
+
+      if (index !== null && canvasNodes[index]) {
+        inspector.innerText = canvasNodes[index].type.toUpperCase();
+        connectBtn.disabled = false;
+        deleteBtn.disabled = false;
+      } else {
+        inspector.innerText = 'Belum ada';
+        connectBtn.disabled = true;
+        deleteBtn.disabled = true;
+      }
+    }
+
+    function startConnecting() {
+      if (selectedNodeIndex === null) return;
+      isConnectingMode = true;
+      connectSourceIndex = selectedNodeIndex;
+      document.getElementById('connectionHint').classList.remove('hidden');
+    }
+
+    function finishConnecting(targetIndex) {
+      if (connectSourceIndex !== null && connectSourceIndex !== targetIndex) {
+        // Prevent duplicate connections
+        const exists = canvasConnections.some(([from, to]) => from === connectSourceIndex && to === targetIndex);
+        if (!exists) {
+          canvasConnections.push([connectSourceIndex, targetIndex]);
+        }
+      }
+      isConnectingMode = false;
+      connectSourceIndex = null;
+      document.getElementById('connectionHint').classList.add('hidden');
+      redrawConnections();
+    }
+
+    function deleteSelectedNode() {
+      if (selectedNodeIndex === null) return;
+      // Remove node
+      canvasNodes.splice(selectedNodeIndex, 1);
+      // Clean associated connections & adjust indexes
+      canvasConnections = canvasConnections
+        .filter(([from, to]) => from !== selectedNodeIndex && to !== selectedNodeIndex)
+        .map(([from, to]) => [
+          from > selectedNodeIndex ? from - 1 : from,
+          to > selectedNodeIndex ? to - 1 : to
+        ]);
+
+      selectedNodeIndex = null;
+      selectNode(null);
+      renderNodes();
+    }
+
+    function clearCanvas() {
+      canvasNodes = [];
+      canvasConnections = [];
+      selectedNodeIndex = null;
+      selectNode(null);
+      renderNodes();
+      document.getElementById('validationResultBox').classList.add('hidden');
+    }
+
+    function redrawConnections() {
+      const svg = document.getElementById('svgConnectorLayer');
+      // Keep defs marker
+      const defs = svg.querySelector('defs');
+      svg.innerHTML = '';
+      svg.appendChild(defs);
+
+      canvasConnections.forEach(([fromIdx, toIdx]) => {
+        const fromNode = canvasNodes[fromIdx];
+        const toNode = canvasNodes[toIdx];
+        if (!fromNode || !toNode) return;
+
+        // Compute anchor centers
+        const fromX = fromNode.x + (fromNode.type === 'task' ? 144 : 48);
+        const fromY = fromNode.y + (fromNode.type === 'task' ? 40 : 24);
+        const toX = toNode.x + (toNode.type === 'task' ? 0 : 0);
+        const toY = toNode.y + (toNode.type === 'task' ? 40 : 24);
+
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        // Simple Orthogonal curve or Bezier
+        const midX = (fromX + toX) / 2;
+        const d = `M ${fromX} ${fromY} C ${midX} ${fromY}, ${midX} ${toY}, ${toX} ${toY}`;
+        
+        path.setAttribute('d', d);
+        path.setAttribute('fill', 'none');
+        path.setAttribute('stroke', '#0284C7');
+        path.setAttribute('stroke-width', '2.5');
+        path.setAttribute('marker-end', 'url(#arrow)');
+
+        svg.appendChild(path);
+      });
+    }
+
+    // ==========================================
+    // 6. AUTO-VALIDATION & TEMPLATE SOLUTION
+    // ==========================================
+    function validateDiagram() {
+      const caseKey = document.getElementById('caseSelector').value;
+      const caseData = CASE_STUDIES[caseKey];
+      const box = document.getElementById('validationResultBox');
+      const title = document.getElementById('validationTitle');
+      const desc = document.getElementById('validationDesc');
+      const icon = document.getElementById('validationIcon');
+
+      box.classList.remove('hidden');
+
+      // Rule 1: Check start & end nodes
+      const hasStart = canvasNodes.some(n => n.type === 'start');
+      const hasEnd = canvasNodes.some(n => n.type === 'end');
+      const hasTask = canvasNodes.some(n => n.type === 'task');
+
+      if (!hasStart) {
+        icon.className = "fa-solid fa-circle-exclamation text-amber-400 text-2xl";
+        title.className = "font-montserrat font-bold text-sm text-amber-400";
+        title.innerText = "Belum Ada Start Event!";
+        desc.innerText = "Setiap diagram alur BPMN 2.0 wajib diawali oleh minimal satu Start Event (Lingkaran Hijau).";
+        return;
+      }
+
+      if (!hasTask) {
+        icon.className = "fa-solid fa-circle-exclamation text-amber-400 text-2xl";
+        title.className = "font-montserrat font-bold text-sm text-amber-400";
+        title.innerText = "Belum Ada Aktivitas (Task)!";
+        desc.innerText = "Proses bisnis harus memiliki pekerjaan nyata yang dikerjakan (Task Persegi Tumpul).";
+        return;
+      }
+
+      if (!hasEnd) {
+        icon.className = "fa-solid fa-circle-exclamation text-amber-400 text-2xl";
+        title.className = "font-montserrat font-bold text-sm text-amber-400";
+        title.innerText = "Belum Ada End Event!";
+        desc.innerText = "Alur diagram mengambang tanpa kejelasan di mana status akhir tercapai (End Event Lingkaran Merah).";
+        return;
+      }
+
+      if (canvasConnections.length < 2) {
+        icon.className = "fa-solid fa-circle-xmark text-red-400 text-2xl";
+        title.className = "font-montserrat font-bold text-sm text-red-400";
+        title.innerText = "Alur Panah (Sequence Flow) Belum Terhubung!";
+        desc.innerText = "Gunakan tombol '+ Hubungkan' untuk merangkai jalannya panah dari Start Event menuju Task hingga ke End Event.";
+        return;
+      }
+
+      // Check task active naming
+      const invalidTaskNames = canvasNodes.filter(n => n.type === 'task' && !/^[A-Z][a-z]+/.test(n.text));
+
+      // Success Celebration
+      icon.className = "fa-solid fa-circle-check text-emerald-400 text-2xl";
+      title.className = "font-montserrat font-bold text-sm text-emerald-400";
+      title.innerText = "Validasi Berhasil: Struktur Diagram BPMN Sesuai Standar!";
+      desc.innerHTML = `Selamat! Rangkaian proses telah memenuhi kaidah BPMN 2.0: memiliki <strong>Start Event</strong>, aktivitas dengan format kerja aktif, serta alur berakhir di <strong>End Event</strong> yang valid.`;
+    }
+
+    function loadTemplateSolution() {
+      const caseKey = document.getElementById('caseSelector').value;
+      const caseData = CASE_STUDIES[caseKey];
+      if (!caseData.solution) {
+        alert("Bantuan solusi alur tersedia untuk Studi Kasus 1.");
+        return;
+      }
+
+      clearCanvas();
+      canvasNodes = JSON.parse(JSON.stringify(caseData.solution));
+      canvasConnections = JSON.parse(JSON.stringify(caseData.connections));
+      renderNodes();
+    }
+
+    // ==========================================
+    // INITIALIZATION ON WINDOW LOAD
+    // ==========================================
+    window.onload = function() {
+      initMatchingGame();
+      loadCaseStudy('case1');
+
+      // Deselect canvas node when clicking background
+      document.getElementById('bpmnCanvas').addEventListener('click', (e) => {
+        if (e.target.id === 'bpmnCanvas' || e.target.id === 'svgConnectorLayer') {
+          selectNode(null);
+        }
+      });
+    };
+  </script>
+</body>
+</html>
