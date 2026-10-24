@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal Perkuliahan Analisa Proses Bisnis (INF1104) - ITB Swadharma</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & Montserrat -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@700;800;900&display=swap">
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Montserrat', 'sans-serif']
+          },
+          colors: {
+            brand: {
+              dark: '#080C16',
+              slate: '#0F172A',
+              card: '#131D31',
+              border: '#1E293B',
+              blue: '#0284C7',
+              cyan: '#06B6D4',
+              violet: '#8B5CF6',
+              amber: '#F59E0B',
+              emerald: '#10B981',
+              rose: '#F43F5E'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #080C16; }
+    ::-webkit-scrollbar-thumb { background: #1E293B; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #0284C7; }
+
+    /* Subtle Animated Glow Effects */
+    .glow-cyan {
+      box-shadow: 0 0 50px -15px rgba(6, 182, 212, 0.25);
+    }
+    .glow-violet {
+      box-shadow: 0 0 50px -15px rgba(139, 92, 246, 0.25);
+    }
+    .gradient-border {
+      background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.02));
+    }
+  </style>
+</head>
+<body class="bg-brand-dark text-slate-100 min-h-screen flex flex-col font-sans selection:bg-brand-cyan selection:text-brand-dark antialiased">
+
+  <!-- TOP APP BAR -->
+  <header class="sticky top-0 z-50 bg-brand-dark/85 backdrop-blur-md border-b border-brand-border">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- Brand & University -->
+      <div class="flex items-center gap-4">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-brand-cyan to-brand-blue flex items-center justify-center text-white font-display font-extrabold text-xl shadow-lg shadow-cyan-500/20">
+          <i class="fa-solid fa-shapes text-lg"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-display font-black text-xl tracking-tight text-white">APB<span class="text-brand-cyan">.ITBS</span></span>
+            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-cyan-950/80 border border-cyan-800/80 text-cyan-400">3 SKS</span>
+          </div>
+          <p class="text-xs text-slate-400 font-medium hidden sm:block">S1 Teknik Informatika • Institut Teknologi dan Bisnis Swadharma</p>
+        </div>
+      </div>
+
+      <!-- Quick Nav & Lecturer Pill -->
+      <div class="flex items-center gap-3">
+        <a href="#lab-game" class="hidden md:inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-violet-950/60 border border-violet-700/60 text-violet-300 text-xs font-semibold hover:bg-violet-900/60 transition">
+          <i class="fa-solid fa-gamepad text-brand-violet"></i> Lab Studio BPMN
+        </a>
+        <div class="flex items-center gap-2.5 bg-slate-900/90 border border-brand-border px-3.5 py-1.5 rounded-full shadow-inner">
+          <div class="w-6 h-6 rounded-full bg-gradient-to-tr from-brand-violet to-brand-cyan flex items-center justify-center text-white text-[10px] font-bold">
+            AA
+          </div>
+          <div class="text-left text-xs">
+            <span class="text-slate-400 block text-[10px]">Dosen Pengampu</span>
+            <span class="font-semibold text-slate-200">Ardi Ariansyah, S.Kom., Gr.</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section class="relative overflow-hidden py-16 sm:py-24 border-b border-brand-border bg-gradient-to-b from-brand-dark via-brand-slate to-brand-dark">
+    <!-- Background Radial Flares -->
+    <div class="absolute top-0 left-1/4 w-96 h-96 bg-brand-cyan/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-brand-violet/10 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+      
+      <!-- Semester Badge -->
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-800/90 border border-slate-700 text-cyan-400 text-xs font-bold uppercase tracking-wider mb-6 shadow-sm">
+        <span class="w-2 h-2 rounded-full bg-brand-cyan animate-pulse"></span>
+        Kurikulum RPS S1 Teknik Informatika (INF1104)
+      </div>
+
+      <!-- Main Headline -->
+      <h1 class="font-display font-extrabold text-3xl sm:text-5xl lg:text-6xl text-white tracking-tight max-w-4xl mx-auto leading-tight sm:leading-tight">
+        Portal Pembelajaran &amp; Simulasi <br>
+        <span class="bg-gradient-to-r from-brand-cyan via-sky-400 to-brand-violet bg-clip-text text-transparent">Analisa Proses Bisnis</span>
+      </h1>
+
+      <p class="mt-6 text-base sm:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed font-normal">
+        Jembatani logika bisnis dunia nyata dengan arsitektur teknologi informasi modern. Akses modul presentasi 16:9 interaktif, laboratorium BPMN 2.0 mandiri, hingga penugasan studi kasus analitis.
+      </p>
+
+      <!-- Action Buttons -->
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+        <a href="#materi-list" class="px-6 py-3.5 rounded-xl bg-gradient-to-r from-brand-cyan to-brand-blue text-brand-dark font-display font-bold text-sm shadow-lg shadow-cyan-500/20 hover:brightness-110 active:scale-95 transition flex items-center gap-2">
+          <i class="fa-solid fa-layer-group"></i> Jelajahi Modul Kuliah (P1 - P11)
+        </a>
+        <a href="bpmn_lab_game.html" target="_blank" class="px-6 py-3.5 rounded-xl bg-slate-900 border border-brand-border text-slate-200 font-display font-bold text-sm hover:border-violet-500/60 hover:text-white transition flex items-center gap-2">
+          <i class="fa-solid fa-gamepad text-brand-violet"></i> Masuk BPMN Lab Studio
+        </a>
+      </div>
+
+      <!-- Quick Metrics Counters -->
+      <div class="mt-14 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto text-left">
+        <div class="bg-brand-card/70 border border-brand-border p-4 rounded-xl">
+          <div class="text-xs text-slate-400 font-medium">Total Pertemuan</div>
+          <div class="text-2xl font-display font-extrabold text-white mt-1">11 <span class="text-xs text-brand-cyan font-normal">Modul Siap</span></div>
+        </div>
+        <div class="bg-brand-card/70 border border-brand-border p-4 rounded-xl">
+          <div class="text-xs text-slate-400 font-medium">Standar Notasi</div>
+          <div class="text-2xl font-display font-extrabold text-brand-cyan mt-1">BPMN 2.0</div>
+        </div>
+        <div class="bg-brand-card/70 border border-brand-border p-4 rounded-xl">
+          <div class="text-xs text-slate-400 font-medium">Evaluasi Resmi</div>
+          <div class="text-2xl font-display font-extrabold text-amber-400 mt-1">UTS &amp; Tugas</div>
+        </div>
+        <div class="bg-brand-card/70 border border-brand-border p-4 rounded-xl">
+          <div class="text-xs text-slate-400 font-medium">Simulasi Interaktif</div>
+          <div class="text-2xl font-display font-extrabold text-brand-emerald mt-1">Drag &amp; Drop</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- HIGHLIGHT SECTION: BPMN 2.0 LAB STUDIO & GAME -->
+  <section id="lab-game" class="py-12 bg-gradient-to-r from-brand-card via-slate-900 to-brand-card border-b border-brand-border relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="bg-gradient-to-r from-slate-950 to-slate-900 border border-cyan-500/30 rounded-3xl p-6 sm:p-10 shadow-2xl flex flex-col lg:flex-row items-center justify-between gap-8 glow-cyan">
+        
+        <div class="space-y-4 max-w-2xl">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950 border border-cyan-800 text-brand-cyan text-xs font-bold uppercase tracking-wider">
+            <i class="fa-solid fa-flask-vial"></i> Fitur Praktik Unggulan
+          </div>
+          <h2 class="font-display font-extrabold text-2xl sm:text-3xl text-white">
+            BPMN 2.0 Interactive Studio &amp; Game Lab
+          </h2>
+          <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+            Tak perlu menginstal aplikasi berat! Latih refleks pemahaman simbol BPMN 2.0 melalui permainan mencocokkan kartu, serta buat dan validasi diagram alur proses langsung di kanvas browser Anda.
+          </p>
+          <ul class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-300 pt-2 font-medium">
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-emerald"></i> Game 1: Matching Card Simbol &amp; Fungsi</li>
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-emerald"></i> Game 2: In-Browser Diagram Builder Studio</li>
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-emerald"></i> Auto-Validator Aturan Alur Panah</li>
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-emerald"></i> 3 Studi Kasus Bisnis Konkret</li>
+          </ul>
+        </div>
+
+        <div class="shrink-0 w-full lg:w-auto text-center">
+          <a href="bpmn_lab_game.html" target="_blank" class="inline-flex w-full lg:w-auto items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-tr from-brand-blue via-brand-cyan to-teal-400 text-brand-dark font-display font-extrabold text-base shadow-xl shadow-cyan-500/25 hover:brightness-110 active:scale-95 transition">
+            <i class="fa-solid fa-play"></i> Buka Studio Lab Sekarang
+          </a>
+          <span class="block text-xs text-slate-400 mt-2 font-mono">File: bpmn_lab_game.html</span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- MATERI & FILTER SECTION -->
+  <main id="materi-list" class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-10">
+    
+    <!-- Header Filter & Search -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-brand-border">
+      <div>
+        <div class="text-xs font-bold font-display uppercase tracking-wider text-brand-cyan">Daftar Modul Perkuliahan</div>
+        <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-white mt-1">Materi Slide Interaktif &amp; Evaluasi</h2>
+        <p class="text-sm text-slate-400 mt-1">Seluruh modul slide dirancang khusus dalam rasio 16:9 yang responsif dan dilengkapi kuis instan.</p>
+      </div>
+
+      <!-- Search & Category Filters -->
+      <div class="flex flex-wrap items-center gap-2">
+        <button onclick="filterCategory('all')" class="cat-btn active px-3.5 py-1.5 rounded-lg text-xs font-bold font-display transition bg-brand-cyan text-brand-dark shadow">Semua Modul</button>
+        <button onclick="filterCategory('dasar')" class="cat-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold font-display text-slate-400 hover:text-white bg-slate-900 border border-brand-border transition">Fase 1: As-Is &amp; Dasar</button>
+        <button onclick="filterCategory('analisis')" class="cat-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold font-display text-slate-400 hover:text-white bg-slate-900 border border-brand-border transition">Fase 2: Analisis &amp; Audit</button>
+        <button onclick="filterCategory('redesign')" class="cat-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold font-display text-slate-400 hover:text-white bg-slate-900 border border-brand-border transition">Fase 3: BPR &amp; To-Be</button>
+      </div>
+    </div>
+
+    <!-- MODULES GRID -->
+    <div id="modulesContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <!-- PERTEMUAN 1 -->
+      <div class="module-item group bg-brand-card border border-brand-border hover:border-brand-blue rounded-2xl p-6 transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:shadow-cyan-950/20" data-cat="dasar">
+        <div>
+          <div class="flex items-center justify-between text-xs mb-3">
+            <span class="px-2.5 py-1 rounded-md bg-sky-950 text-sky-400 border border-sky-800 font-bold font-mono">Pertemuan 01</span>
+            <span class="text-slate-400"><i class="fa-regular fa-clone"></i> 56 Slides</span>
+          </div>
+          <h3 class="font-display font-bold text-lg text-white group-hover:text-brand-cyan transition mb-2">
+            Pengantar Sistem &amp; Alur Operasional
+          </h3>
+          <p class="text-slate-400 text-xs leading-relaxed line-clamp-3">
+            Anatomi dasar proses bisnis (Input-Proses-Output), urgensi bidang Informatika, peran Systems Analyst sebagai jembatan bisnis &amp; programmer, serta 6 fase BPM Lifecycle.
+          </p>
+        </div>
+        <div class="pt-5 mt-4 border-t border-brand-border flex items-center justify-between">
+          <span class="text-[11px] text-slate-400 font-mono">Pertemuan1.html</span>
+          <a href="Pertemuan1.html" class="inline-flex items-center gap-1.5 text-xs font-bold text-brand-cyan group-hover:translate-x-1 transition">
+            Buka Slide <i class="fa-solid fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- PERTEMUAN 2 -->
+      <div class="module-item group bg-brand-card border border-brand-border hover:border-brand-blue rounded-2xl p-6 transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:shadow-cyan-950/20" data-cat="dasar">
+        <div>
+          <div class="flex items-center justify-between text-xs mb-3">
+            <span class="px-2.5 py-1 rounded-md bg-sky-950 text-sky-400 border border-sky-800 font-bold font-mono">Pertemuan 02</span>
+            <span class="text-slate-400"><i class="fa-regular fa-clone"></i> 45 Slides</span>
+          </div>
+          <h3 class="font-display font-bold text-lg text-white group-hover:text-brand-cyan transition mb-2">
+            Stakeholder &amp; Value Chain Porter
+          </h3>
+          <p class="text-slate-400 text-xs leading-relaxed line-clamp-3">
+            Identifikasi pemangku kepentingan (Internal, Connected, Eksternal), Matriks Mendelow (Power vs Interest), dekonstruksi 5 Primary &amp; 4 Support Activities rantai nilai Porter.
+          </p>
+        </div>
+        <div class="pt-5 mt-4 border-t border-brand-border flex items-center justify-between">
+          <span class="text-[11px] text-slate-400 font-mono">Pertemuan2.html</span>
+          <a href="Pertemuan2.html" class="inline-flex items-center gap-1.5 text-xs font-bold text-brand-cyan group-hover:translate-x-1 transition">
+            Buka Slide <i class="fa-solid fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- PERTEMUAN 3 -->
+      <div class="module-item group bg-brand-card border border-brand-border hover:border-brand-blue rounded-2xl p-6 transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:shadow-cyan-950/20" data-cat="dasar">
+        <div>
+          <div class="flex items-center justify-between text-xs mb-3">
+            <span class="px-2.5 py-1 rounded-md bg-sky-950 text-sky-400 border border-sky-800 font-bold font-mono">Pertemuan 03</span>
+            <span class="text-slate-400"><i class="fa-regular fa-clone"></i> 50 Slides</span>
+          </div>
+          <h3 class="font-display font-bold text-lg text-white group-hover:text-brand-cyan transition mb-2">
+            Pemetaan Proses &amp; Standar BPMN 2.0
+          </h3>
+          <p class="text-slate-400 text-xs leading-relaxed line-clamp-3">
+            Pengantar pemodelan standar ISO OMG, Flow Objects: Events (Start, Intermediate, End), Tasks (aturan kata kerja aktif), Gateways (Exclusive XOR vs Parallel AND), dan Connecting Objects.
+          </p>
+        </div>
+        <div class="pt-5 mt-4 border-t border-brand-border flex items-center justify-between">
+          <span class="text-[11px] text-slate-400 font-mono">Pertemuan3.html</span>
+          <a href="Pertemuan3.html" class="inline-flex items-center gap-1.5 text-xs font-bold text-brand-cyan group-hover:translate-x-1 transition">
+            Buka Slide <i class="fa-solid fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- PERTEMUAN 4 -->
+      <div class="module-item group bg-brand-card border border-brand-border hover:border-brand-blue rounded-2xl p-6 transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:shadow-cyan-950/20" data-cat="dasar">
+        <div>
+          <div class="flex items-center justify-between text-xs mb-3">
+            <span class="px-2.5 py-1 rounded-md bg-sky-950 text-sky-400 border border-sky-800 font-bold font-mono">Pertemuan 04</span>
+            <span class="text-slate-400"><i class="fa-regular fa-clone"></i> 50 Slides</span>
+          </div>
+          <h3 class="font-display font-bold text-lg text-white group-hover:text-brand-cyan transition mb-2">
+            Swimlanes, Artifacts &amp; Praktik Draw.io
+          </h3>
+          <p class="text-slate-400 text-xs leading-relaxed line-clamp-3">
+            Struktur Pools &amp; Lanes, aturan panah Sequence Flow vs Message Flow, Artifacts: Data Object, Data Store, Annotations, dan panduan stensil BPMN di Draw.io / Bizagi.
+          </p>
+        </div>
+        <div class="pt-5 mt-4 border-t border-brand-border flex items-center justify-between">
+          <span class="text-[11px] text-slate-400 font-mono">Pertemuan4.html</span>
+          <a href="Pertemuan4.html" class="inline-flex items-center gap-1.5 text-xs font-bold text-brand-cyan group-hover:translate-x-1 transition">
+            Buka Slide <i class="fa-solid fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- PERTEMUAN 5 -->
+      <div class="module-item group bg-brand-card border border-brand-border hover:border-brand-blue rounded-2xl p-6 transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:shadow-cyan-950/20" data-cat="dasar">
+        <div>
+          <div class="flex items-center justify-between text-xs mb-3">
+            <span class="px-2.5 py-1 rounded-md bg-sky-950 text-sky-400 border border-sky-800 font-bold font-mono">Pertemuan 05</span>
+            <span class="text-slate-400"><i class="fa-regular fa-clone"></i> 50 Slides</span>
+          </div>
+          <h3 class="font-display font-bold text-lg text-white group-hover:text-brand-cyan transition mb-2">
+            Pemodelan As-Is &amp; Teknik Elicitation
+          </h3>
+          <p class="text-slate-400 text-xs leading-relaxed line-clamp-3">
+            Memotret proses kondisi berjalan saat ini (As-Is Model), teknik penggalian fakta: Wawancara, Observasi langsung (Gemba Walk), Analisis Dokumen, serta deteksi Bottleneck.
+          </p>
+        </div>
+        <div class="pt-5 mt-4 border-t border-brand-border flex items-center justify-between">
+          <span class="text-[11px] text-slate-400 font-mono">Pertemuan5.html</span>
+          <a href="Pertemuan5.html" class="inline-flex items-center gap-1.5 text-xs font-bold text-brand-cyan group-hover:translate-x-1 transition">
+            Buka Slide <i class="fa-solid fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- PERTEMUAN 6 -->
+      <div class="module-item group bg-brand-card border border-brand-border hover:border-brand-cyan rounded-2xl p-6 transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:shadow-cyan-950/20" data-cat="analisis">
+        <div>
+          <div class="flex items-center justify-between text-xs mb-3">
+            <span class="px-2.5 py-1 rounded-md bg-cyan-950 text-cyan-400 border border-cyan-800 font-bold font-mono">Pertemuan 06</span>
+            <span class="text-slate-400"><i class="fa-regular fa-clone"></i> 50 Slides</span>
+          </div>
+          <h3 class="font-display font-bold text-lg text-white group-hover:text-brand-cyan transition mb-2">
+            Infrastruktur TI &amp; Aliran Data
+          </h3>
+          <p class="text-slate-400 text-xs leading-relaxed line-clamp-3">
+            Ketergantungan alur bisnis terhadap server (On-Premise vs Cloud), integrasi API, risiko Single Point of Failure (SPOF), latensi throughput, serta kontrak komitmen Service Level Agreement (SLA).
+          </p>
+        </div>
+        <div class="pt-5 mt-4 border-t border-brand-border flex items-center justify-between">
+          <span class="text-[11px] text-slate-400 font-mono">Pertemuan6.html</span>
+          <a href="Pertemuan6.html" class="inline-flex items-center gap-1.5 text-xs font-bold text-brand-cyan group-hover:translate-x-1 transition">
+            Buka Slide <i class="fa-solid fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- PERTEMUAN 7 -->
+      <div class="module-item group bg-brand-card border border-brand-border hover:border-rose-500/60 rounded-2xl p-6 transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:shadow-rose-950/20" data-cat="analisis">
+        <div>
+          <div class="flex items-center justify-between text-xs mb-3">
+            <span class="px-2.5 py-1 rounded-md bg-rose-950 text-rose-400 border border-rose-800 font-bold font-mono">Pertemuan 07</span>
+            <span class="text-slate-400"><i class="fa-regular fa-clone"></i> 50 Slides</span>
+          </div>
+          <h3 class="font-display font-bold text-lg text-white group-hover:text-rose-400 transition mb-2">
+            Security-Aware Business Process &amp; CIA Triad
+          </h3>
+          <p class="text-slate-400 text-xs leading-relaxed line-clamp-3">
+            Prinsip keamanan proses, dekonstruksi CIA Triad (Confidentiality, Integrity, Availability), celah Human Error vs System Vulnerability, serta integrasi kontrol Segregation of Duties (SoD) ke BPMN.
+          </p>
+        </div>
+        <div class="pt-5 mt-4 border-t border-brand-border flex items-center justify-between">
+          <span class="text-[11px] text-slate-400 font-mono">Pertemuan7.html</span>
+          <a href="Pertemuan7.html" class="inline-flex items-center gap-1.5 text-xs font-bold text-rose-400 group-hover:translate-x-1 transition">
+            Buka Slide <i class="fa-solid fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- PERTEMUAN 8 (UTS) -->
+      <div class="module-item group bg-gradient-to-b from-brand-card to-slate-900 border-2 border-amber-500/50 hover:border-amber-400 rounded-2xl p-6 transition-all duration-300 flex flex-col justify-between shadow-lg shadow-amber-950/20" data-cat="analisis">
+        <div>
+          <div class="flex items-center justify-between text-xs mb-3">
+            <span class="px-2.5 py-1 rounded-md bg-amber-950 text-amber-400 border border-amber-800 font-bold font-mono">Pertemuan 08 • UTS</span>
+            <span class="text-amber-400 font-bold">Bobot 30%</span>
+          </div>
+          <h3 class="font-display font-bold text-lg text-white group-hover:text-amber-400 transition mb-2">
+            Evaluasi Tengah Semester (UTS)
+          </h3>
+          <p class="text-slate-400 text-xs leading-relaxed line-clamp-3">
+            Naskah studi kasus komprehensif PT Swadharma Logistik Sejahtera, evaluasi stakeholder, audit SPOF &amp; CIA Triad, serta praktik pembuatan diagram As-Is di Draw.io.
+          </p>
+        </div>
+        <div class="pt-5 mt-4 border-t border-brand-border flex items-center justify-between">
+          <span class="text-[11px] text-slate-400 font-mono">Pertemuan8.html</span>
+          <a href="Pertemuan8.html" class="inline-flex items-center gap-1.5 text-xs font-bold text-amber-400 group-hover:translate-x-1 transition">
+            Buka Panduan &amp; Soal <i class="fa-solid fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- PERTEMUAN 9 -->
+      <div class="module-item group bg-brand-card border border-brand-border hover:border-brand-emerald rounded-2xl p-6 transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:shadow-emerald-950/20" data-cat="analisis">
+        <div>
+          <div class="flex items-center justify-between text-xs mb-3">
+            <span class="px-2.5 py-1 rounded-md bg-emerald-950 text-emerald-400 border border-emerald-800 font-bold font-mono">Pertemuan 09</span>
+            <span class="text-slate-400"><i class="fa-regular fa-clone"></i> 50 Slides</span>
+          </div>
+          <h3 class="font-display font-bold text-lg text-white group-hover:text-emerald-400 transition mb-2">
+            Value-Added Analysis &amp; 7 Lean Wastes
+          </h3>
+          <p class="text-slate-400 text-xs leading-relaxed line-clamp-3">
+            Trilogi klasifikasi langkah kerja: Value-Adding (VA), Business Value-Adding (BVA), Non-Value-Adding (NVA), metrik Process Cycle Efficiency (PCE), serta 7 pemborosan Lean (TIMWOOD).
+          </p>
+        </div>
+        <div class="pt-5 mt-4 border-t border-brand-border flex items-center justify-between">
+          <span class="text-[11px] text-slate-400 font-mono">Pertemuan9.html</span>
+          <a href="Pertemuan9.html" class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-400 group-hover:translate-x-1 transition">
+            Buka Slide <i class="fa-solid fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- PERTEMUAN 10 -->
+      <div class="module-item group bg-brand-card border border-brand-border hover:border-brand-cyan rounded-2xl p-6 transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:shadow-cyan-950/20" data-cat="analisis">
+        <div>
+          <div class="flex items-center justify-between text-xs mb-3">
+            <span class="px-2.5 py-1 rounded-md bg-cyan-950 text-cyan-400 border border-cyan-800 font-bold font-mono">Pertemuan 10</span>
+            <span class="text-slate-400"><i class="fa-regular fa-clone"></i> 50 Slides</span>
+          </div>
+          <h3 class="font-display font-bold text-lg text-white group-hover:text-brand-cyan transition mb-2">
+            Root Cause Analysis &amp; Fishbone Diagram
+          </h3>
+          <p class="text-slate-400 text-xs leading-relaxed line-clamp-3">
+            Analisis kualitatif akar masalah (RCA), konstruksi Diagram Ishikawa (Fishbone 6M &amp; 4P), interogasi 5 Whys Sakichi Toyoda, serta deteksi Bottleneck &amp; Redundansi (Theory of Constraints).
+          </p>
+        </div>
+        <div class="pt-5 mt-4 border-t border-brand-border flex items-center justify-between">
+          <span class="text-[11px] text-slate-400 font-mono">Pertemuan10.html</span>
+          <a href="Pertemuan10.html" class="inline-flex items-center gap-1.5 text-xs font-bold text-brand-cyan group-hover:translate-x-1 transition">
+            Buka Slide <i class="fa-solid fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- PERTEMUAN 11 -->
+      <div class="module-item group bg-brand-card border border-brand-border hover:border-brand-violet rounded-2xl p-6 transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:shadow-violet-950/20" data-cat="redesign">
+        <div>
+          <div class="flex items-center justify-between text-xs mb-3">
+            <span class="px-2.5 py-1 rounded-md bg-violet-950 text-violet-400 border border-violet-800 font-bold font-mono">Pertemuan 11</span>
+            <span class="text-slate-400"><i class="fa-regular fa-clone"></i> 50 Slides</span>
+          </div>
+          <h3 class="font-display font-bold text-lg text-white group-hover:text-violet-400 transition mb-2">
+            Process Redesign &amp; Reengineering (BPR)
+          </h3>
+          <p class="text-slate-400 text-xs leading-relaxed line-clamp-3">
+            Paradigma BPR Michael Hammer ("Don't Automate, Obliterate"), trade-off Devil's Quadrangle (Waktu, Biaya, Kualitas, Fleksibilitas), dan katalog heuristik redesign menuju model To-Be.
+          </p>
+        </div>
+        <div class="pt-5 mt-4 border-t border-brand-border flex items-center justify-between">
+          <span class="text-[11px] text-slate-400 font-mono">Pertemuan11.html</span>
+          <a href="Pertemuan11.html" class="inline-flex items-center gap-1.5 text-xs font-bold text-violet-400 group-hover:translate-x-1 transition">
+            Buka Slide <i class="fa-solid fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- REPOSITORY TUGAS & DOKUMEN RPS -->
+    <div class="pt-10 border-t border-brand-border">
+      <div class="text-xs font-bold font-display uppercase tracking-wider text-brand-amber">Penugasan &amp; Instrumen Evaluasi</div>
+      <h2 class="text-2xl font-display font-extrabold text-white mt-1 mb-6">Lembar Kerja &amp; Naskah Ujian Resmi</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <!-- Tugas 1 Card -->
+        <div class="bg-slate-900 border border-brand-border rounded-xl p-5 hover:border-slate-600 transition flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-2 text-xs font-semibold text-cyan-400 mb-2">
+              <i class="fa-solid fa-file-circle-check"></i> Tugas Formatif 1
+            </div>
+            <h4 class="font-display font-bold text-base text-white">Analisis Antrean Kantin Kampus</h4>
+            <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+              Dilema aplikasi cepat saji vs SOP dapur kantin. Menguji 3 pilar proses (Input-Process-Output) dan kesenjangan komunikasi (*The Gap*).
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-800 text-xs font-mono text-slate-500">
+            Berkas: Tugas_Pertemuan_1_Analisis_Studi_Kasus.md
+          </div>
+        </div>
+
+        <!-- Tugas 2 Card -->
+        <div class="bg-slate-900 border border-brand-border rounded-xl p-5 hover:border-slate-600 transition flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-2 text-xs font-semibold text-brand-emerald mb-2">
+              <i class="fa-solid fa-file-invoice"></i> Tugas Individu 1 (RPS)
+            </div>
+            <h4 class="font-display font-bold text-base text-white">Analisis Stakeholder &amp; Value Chain</h4>
+            <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+              Studi kasus UMKM Kopi Sahabat ITBS. Menguji Matriks Mendelow, 5 Primary &amp; 4 Support Activities Porter, serta usulan solusi TI penambah margin.
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-800 text-xs font-mono text-slate-500">
+            Berkas: Tugas_Pertemuan_2_Analisis_Value_Chain.md
+          </div>
+        </div>
+
+        <!-- Naskah Soal UTS Card -->
+        <div class="bg-slate-900 border border-brand-border rounded-xl p-5 hover:border-slate-600 transition flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-2 text-xs font-semibold text-amber-400 mb-2">
+              <i class="fa-solid fa-award"></i> Berkas Naskah Ujian Resmi
+            </div>
+            <h4 class="font-display font-bold text-base text-white">Naskah Ujian Tengah Semester (UTS)</h4>
+            <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+              Format siap cetak/ekspor Word (.docx) lengkap dengan kop ITBS, studi kasus PT Swadharma Logistik Sejahtera, dan rubrik penilaian objektif.
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-800 text-xs font-mono text-slate-500">
+            Berkas: Naskah_Soal_UTS_Analisa_Proses_Bisnis.md
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- PANDUAN PENGGUNAAN SLIDE DECK -->
+    <div class="bg-gradient-to-r from-slate-900 via-brand-card to-slate-900 border border-brand-border rounded-2xl p-6 sm:p-8">
+      <h3 class="font-display font-bold text-lg text-white mb-4 flex items-center gap-2">
+        <i class="fa-solid fa-circle-question text-brand-cyan"></i> Panduan Pengoperasian Slide Presentasi
+      </h3>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-xs text-slate-300">
+        <div class="space-y-1.5">
+          <div class="font-bold text-slate-100 flex items-center gap-2"><i class="fa-solid fa-arrows-left-right text-brand-cyan"></i> Navigasi Keyboard</div>
+          <p class="text-slate-400 leading-relaxed">Gunakan tombol panah <strong>Kanan/Kiri</strong>, <strong>Page Down/Up</strong>, atau <strong>Spasi</strong> untuk berpindah antar slide secara instan.</p>
+        </div>
+        <div class="space-y-1.5">
+          <div class="font-bold text-slate-100 flex items-center gap-2"><i class="fa-solid fa-list-ol text-brand-amber"></i> Pemilih Dropdown</div>
+          <p class="text-slate-400 leading-relaxed">Gunakan menu dropdown di bar navigasi atas untuk langsung melompat ke nomor atau topik pembahasan spesifik.</p>
+        </div>
+        <div class="space-y-1.5">
+          <div class="font-bold text-slate-100 flex items-center gap-2"><i class="fa-solid fa-hand-pointer text-brand-emerald"></i> Kuis &amp; Drag-and-Drop</div>
+          <p class="text-slate-400 leading-relaxed">Slide simulasi interaktif dapat digeser (drag) atau diklik untuk memunculkan pembahasan jawaban secara otomatis.</p>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="mt-auto border-t border-brand-border bg-brand-dark py-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
+      <div class="text-sm font-medium italic text-cyan-400">
+        💡 "Teknologi yang luar biasa tidak dapat menyelamatkan proses bisnis yang cacat sejak awal."
+      </div>
+      <p class="text-xs text-slate-400">
+        Analisa Proses Bisnis (INF1104) • Program Studi S1 Teknik Informatika • Fakultas Ilmu Komputer &amp; Desain<br>
+        <strong>Institut Teknologi dan Bisnis Swadharma (ITBS)</strong> Jakarta
+      </p>
+      <div class="text-xs text-slate-400 pt-2">
+        Dikelola oleh: <a href="https://github.com/ardiariansyah07" target="_blank" class="text-brand-cyan hover:underline font-semibold">Ardi Ariansyah, S.Kom., Gr.</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- SCRIPT FILTER CATEGORY -->
+  <script>
+    function filterCategory(category) {
+      // Toggle button styles
+      const buttons = document.querySelectorAll('.cat-btn');
+      buttons.forEach(btn => {
+        btn.classList.remove('bg-brand-cyan', 'text-brand-dark', 'active');
+        btn.classList.add('text-slate-400', 'bg-slate-900');
+      });
+
+      // Highlight clicked button
+      event.target.classList.remove('text-slate-400', 'bg-slate-900');
+      event.target.classList.add('bg-brand-cyan', 'text-brand-dark', 'active');
+
+      // Filter cards
+      const items = document.querySelectorAll('.module-item');
+      items.forEach(item => {
+        if (category === 'all' || item.getAttribute('data-cat') === category) {
+          item.style.display = 'flex';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>

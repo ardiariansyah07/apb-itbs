@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Analisa Proses Bisnis - Pertemuan 10</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Open+Sans:wght@400;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    /* CSS RESET & DIAGNOSTIC ROOT-CAUSE THEME VARIABLES */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-bg-light: #F8FAFC;
+      --color-text-dark: #0F172A;
+      --color-text-muted: #475569;
+      --color-primary: #0F172A;   /* Deep Slate */
+      --color-cyan: #06B6D4;      /* Investigation Cyan */
+      --color-amber: #D97706;     /* Cause Warning Amber */
+      --color-red: #DC2626;       /* Critical Symptom Red */
+      --color-green: #059669;     /* Solution Emerald */
+      --color-white: #FFFFFF;
+      --color-dark-bg: #0A0F1D;
+      --navbar-height: 60px;
+    }
+    
+    body { 
+      margin: 0; 
+      padding: 0; 
+      background: #060913; 
+      font-family: 'Open Sans', sans-serif; 
+      height: 100vh; 
+      overflow: hidden; 
+      position: relative;
+    }
+
+    /* TOP NAVIGATION BAR */
+    .top-navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: var(--navbar-height);
+      background: #0F172A;
+      border-bottom: 2px solid #1E293B;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 1000;
+      font-family: 'Montserrat', sans-serif;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.5);
+    }
+
+    .nav-left, .nav-center, .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-btn {
+      background: #1E293B;
+      border: 1px solid #334155;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+      padding: 8px 16px;
+      border-radius: 6px;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .nav-btn:hover { background: var(--color-cyan); border-color: var(--color-cyan); color: #0F172A; }
+
+    /* DROPDOWN MENU SLIDES */
+    .slide-selector {
+      background: #1E293B;
+      color: white;
+      border: 1px solid #334155;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      outline: none;
+      max-width: 380px;
+    }
+    .slide-selector option { background: #0F172A; }
+
+    /* MAIN CONTAINER ADJUSTMENT */
+    #presentation-area {
+      position: absolute;
+      top: var(--navbar-height);
+      left: 0;
+      right: 0;
+      bottom: 0; 
+      overflow: hidden;
+    }
+
+    /* HARD LOCK 16:9 CONTAINER (1280x720px) */
+    .slide-container {
+      width: 1280px !important;
+      height: 720px !important;
+      background: var(--color-bg-light);
+      color: var(--color-text-dark);
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(1);
+      transform-origin: center center;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.35s ease-in-out;
+      pointer-events: none;
+    }
+
+    .slide-container.active {
+      visibility: visible;
+      opacity: 1;
+      z-index: 5;
+      pointer-events: auto;
+    }
+
+    /* TYPOGRAPHY */
+    h1, h2, h3, h4, .eyebrow { font-family: 'Montserrat', sans-serif; }
+    h1 { font-size: 58px; font-weight: 800; line-height: 1.15; margin-bottom: 20px; color: var(--color-text-dark); }
+    h2 { font-size: 40px; font-weight: 700; line-height: 1.25; margin-bottom: 22px; color: var(--color-text-dark); }
+    h3 { font-size: 28px; font-weight: 700; margin-bottom: 14px; color: var(--color-cyan); }
+    p, li { font-size: 23px; line-height: 1.5; color: var(--color-text-muted); }
+    .eyebrow { font-size: 18px; font-weight: 700; color: var(--color-cyan); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; }
+    .divider { width: 80px; height: 6px; background: var(--color-cyan); margin: 18px 0 22px 0; }
+    
+    .bg-dark { background: var(--color-dark-bg) !important; color: var(--color-white) !important; }
+    .bg-dark h1, .bg-dark h2, .bg-dark h3, .bg-dark p, .bg-dark li { color: var(--color-white) !important; }
+    
+    /* LAYOUT: SPLIT SCREEN */
+    .layout-split { display: flex; flex-direction: row; flex: 1 1 100%; width: 100%; height: 100%; }
+    .split-col { display: flex; flex-direction: column; justify-content: center; height: 100%; padding: 40px 80px; }
+    .split-img-col { padding: 0 !important; margin: 0 !important; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #0F172A; }
+    .split-img-col img { width: 100%; height: 100%; object-fit: cover; display: block; margin: 0; padding: 0; }
+    
+    /* SPLIT RATIOS */
+    .w-40 { flex: 0 0 40%; width: 40%; }
+    .w-50 { flex: 0 0 50%; width: 50%; }
+    .w-60 { flex: 0 0 60%; width: 60%; }
+
+    /* LAYOUT: STANDARD / CENTERED */
+    .pad-standard { padding: 40px 80px; display: flex; flex-direction: column; flex: 1; height: 100%; }
+    .center-content { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; flex: 1; height: 100%; padding: 40px 80px; }
+    .flex-grow-center { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; }
+
+    /* COMPONENTS: LISTS & CARDS */
+    .minimal-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 18px; }
+    .minimal-list li { display: flex; align-items: flex-start; gap: 18px; font-weight: 600; }
+    .minimal-list li i { font-size: 28px; color: var(--color-cyan); width: 36px; text-align: center; margin-top: 4px; }
+
+    .card-grid { display: flex; gap: 22px; align-items: stretch; width: 100%; justify-content: center; flex-wrap: wrap; }
+    .card { background: var(--color-white); border-radius: 16px; padding: 28px 28px; flex: 1 1 0; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #E2E8F0; display: flex; flex-direction: column; align-items: flex-start; }
+    .card i { font-size: 44px; color: var(--color-cyan); margin-bottom: 14px; }
+
+    /* FISHBONE DIAGRAM VISUAL */
+    .fishbone-canvas {
+      position: relative;
+      width: 100%;
+      height: 380px;
+      background: #FFFFFF;
+      border: 2px solid #CBD5E1;
+      border-radius: 16px;
+      overflow: hidden;
+      padding: 16px;
+    }
+
+    /* INTERACTIVE: DRAG AND DROP */
+    .draggable-container { display: flex; gap: 14px; margin-bottom: 14px; justify-content: center; min-height: 56px; flex-wrap: wrap; }
+    .drag-item { 
+      cursor: grab; padding: 10px 18px; font-size: 17px; background: white; 
+      border: 3px solid var(--color-cyan); border-radius: 12px; font-weight: 700; 
+      user-select: none; color: #0F172A; text-align: center; margin-bottom: 6px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.2s; display: inline-block;
+    }
+    .drag-item:active { cursor: grabbing; transform: scale(0.95); }
+    .drag-item.dragging { opacity: 0.5; }
+    
+    .dropzones-container { display: flex; gap: 20px; justify-content: center; align-items: stretch; width: 100%; }
+    .drop-zone { 
+      border: 4px dashed #CBD5E1; border-radius: 16px; flex: 1; 
+      min-height: 170px; padding: 16px; display: flex; flex-direction: column; 
+      align-items: center; background: #FFFFFF; transition: 0.3s;
+    }
+    .drop-zone h3 { font-size: 20px; margin-bottom: 10px; color: #475569; border-bottom: 2px solid #CBD5E1; padding-bottom: 6px; width: 100%; text-align: center;}
+    .drop-zone.drag-over { border-color: var(--color-cyan); background: #ECFEFF; }
+    .drop-content { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; width: 100%; gap: 6px; }
+
+    /* INTERACTIVE: QUIZ */
+    .quiz-option {
+      background: #F8FAFC; border: 2px solid #CBD5E1; padding: 12px 20px; 
+      border-radius: 12px; font-size: 19px; font-weight: 600; cursor: pointer; 
+      text-align: left; transition: 0.2s; margin-bottom: 10px; width: 100%;
+      color: #334155; display: flex; align-items: center; gap: 16px;
+    }
+    .quiz-option:hover { background: #E2E8F0; transform: translateX(6px); }
+    .quiz-option.correct { background: #D1FAE5; border-color: #10B981; color: #065F46; }
+    .quiz-option.wrong { background: #FEE2E2; border-color: #EF4444; color: #991B1B; }
+    
+    .quiz-feedback { 
+      display: none; margin-top: 14px; padding: 14px 22px; background: #F0F9FF; 
+      border-left: 8px solid var(--color-cyan); border-radius: 0 12px 12px 0; font-size: 17px; 
+      animation: fadeIn 0.4s ease-in-out;
+    }
+    .quiz-feedback.show { display: block; }
+    .quiz-feedback h4 { font-size: 20px; margin-bottom: 6px; color: var(--color-cyan); }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* BADGES */
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(6, 182, 212, 0.15);
+      border: 1px solid var(--color-cyan);
+      color: var(--color-cyan);
+      padding: 6px 16px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP NAVIGATION BAR -->
+  <div class="top-navbar" id="navbar">
+    <div class="nav-left">
+      <div style="font-weight: 800; font-size: 18px; color: #38BDF8;">ITB Swadharma</div>
+    </div>
+    
+    <div class="nav-center">
+      <button class="nav-btn" onclick="prevSlide()" title="Slide Sebelumnya"><i class="fa-solid fa-chevron-left"></i></button>
+      <select class="slide-selector" id="slideSelector" onchange="jumpToSlide(this.value)"></select>
+      <button class="nav-btn" onclick="nextSlide()" title="Slide Berikutnya"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+
+    <div class="nav-right">
+      <div style="font-weight: 600; font-size: 14px; color: #94A3B8;">Analisa Proses Bisnis (3 SKS) • Ardi Ariansyah, S.Kom., Gr.</div>
+    </div>
+  </div>
+
+  <!-- MAIN PRESENTATION AREA -->
+  <div id="presentation-area">
+    <div id="slides-wrapper">
+
+      <!-- ==========================================
+           SECTION 1: COVER & PENDAHULUAN (SLIDES 1-5)
+           ========================================== -->
+
+      <!-- SLIDE 1 -->
+      <div class="slide-container layout-split bg-dark active" data-title="Sampul Depan">
+        <div class="split-col w-60 bg-dark">
+          <div class="badge-pill"><i class="fa-solid fa-microscope"></i> Analisis Kualitatif Lanjutan</div>
+          <p class="eyebrow">Pertemuan 10 • INF1104</p>
+          <h1>Root Cause Analysis &amp; 5 Whys</h1>
+          <div class="divider"></div>
+          <p style="font-size: 28px; font-weight: 600;">Menemukan Akar Masalah, Fishbone Diagram, &amp; Eliminasi Bottleneck</p>
+          <div style="margin-top: 36px; border-top: 2px solid #334155; padding-top: 18px;">
+            <p style="color: #94A3B8; font-size: 16px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Dosen Pengampu:</p>
+            <p style="color: #FFFFFF; font-size: 24px; font-weight: 700; margin-top: 4px;">Ardi Ariansyah, S.Kom., Gr.</p>
+            <p style="color: #38BDF8; font-size: 18px; font-weight: 600;">S1 Teknik Informatika • ITB Swadharma</p>
+          </div>
+        </div>
+        <div class="split-col split-img-col w-40">
+          <img src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&q=80" alt="Problem Solving Investigation">
+        </div>
+      </div>
+
+      <!-- SLIDE 2 -->
+      <div class="slide-container center-content" data-title="Kesiapan Perkuliahan">
+        <i class="fa-solid fa-brain" style="font-size: 96px; color: var(--color-cyan); margin-bottom: 24px;"></i>
+        <h2 style="font-size: 52px;">Investigasi Akar Masalah Proses</h2>
+        <p style="font-size: 26px; font-weight: 600; margin-top: 14px; max-width: 900px;">
+          Setelah di Pertemuan 9 kita memisahkan langkah kerja (VA, BVA, NVA), hari ini kita akan menembus ke inti terdalam: <strong>Mengapa inefisiensi tersebut bisa terjadi sejak awal?</strong>
+        </p>
+      </div>
+
+      <!-- SLIDE 3 -->
+      <div class="slide-container layout-split" data-title="Review Pertemuan 9">
+        <div class="split-col split-img-col w-40" style="background: #F1F5F9;">
+          <i class="fa-solid fa-filter-circle-dollar" style="font-size: 160px; color: var(--color-cyan);"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Kilas Balik Pertemuan 9</p>
+          <h2>Pemisahan Nilai &amp; Lean Wastes</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-check"></i> <span>**Value-Adding (VA):** Pelanggan rela membayar untuk aktivitas ini.</span></li>
+            <li><i class="fa-solid fa-check"></i> <span>**Business VA (BVA):** Kewajiban hukum, audit, dan regulasi.</span></li>
+            <li><i class="fa-solid fa-triangle-exclamation" style="color: var(--color-amber);"></i> <span>**Non-Value (NVA):** Pemborosan murni (7 Wastes / TIMWOOD).</span></li>
+            <li><i class="fa-solid fa-arrow-right"></i> <span>P9 mendeteksi *APA* pemborosannya. P10 mencari *MENGAPA* hal itu terjadi.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 4 -->
+      <div class="slide-container pad-standard" data-title="Target Capaian Sub-CPMK 3.4">
+        <h2>Target Capaian Pembelajaran (Sub-CPMK 3.4)</h2>
+        <div class="flex-grow-center">
+          <div style="background: #ECFEFF; border-left: 12px solid var(--color-cyan); padding: 48px; border-radius: 0 16px 16px 0;">
+            <h3 style="font-size: 30px; margin-bottom: 20px; color: #0E7490;">Kemampuan Akhir Pembelajaran</h3>
+            <p style="font-size: 26px; font-weight: 600; color: #155E75; line-height: 1.5;">
+              "Mahasiswa mampu menganalisis permasalahan proses operasional menggunakan metode kualitatif sistematis, mengonstruksi Fishbone Diagram (Ishikawa), menerapkan teknik 5 Whys untuk menemukan akar penyebab, serta mengidentifikasi titik Bottleneck dan Redundancy."
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 5 -->
+      <div class="slide-container pad-standard" data-title="Peta Materi Pertemuan 10">
+        <h2>Peta Materi Pertemuan 10</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 8px solid var(--color-cyan);">
+              <i class="fa-solid fa-magnifying-glass-chart"></i>
+              <h3>1. Root Cause Analysis</h3>
+              <p>Membedakan gejala permukaan (*Symptom*) dengan akar penyakit (*Root Cause*).</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--color-amber);">
+              <i class="fa-solid fa-code-fork" style="color: var(--color-amber);"></i>
+              <h3>2. Diagram Fishbone</h3>
+              <p>Kategori 6M/4P Ishikawa untuk membedah akar masalah operasional sistem.</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--color-green);">
+              <i class="fa-solid fa-arrows-down-to-line" style="color: var(--color-green);"></i>
+              <h3>3. Teknik 5 Whys &amp; Bottleneck</h3>
+              <p>Menelusuri 5 tingkat 'mengapa' dan mendeteksi penyumbatan alur kerja.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SECTION 2: GEJALA VS AKAR MASALAH (SLIDES 6-13)
+           ========================================== -->
+
+      <!-- SLIDE 6 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian I: Gejala vs Akar">
+        <p class="eyebrow">Bagian I</p>
+        <h1 style="font-size: 72px;">Gejala vs Akar Masalah</h1>
+        <div class="divider"></div>
+        <p style="font-size: 30px;">Mengobati Penyakit, Bukan Sekadar Menghilangkan Rasa Sakit.</p>
+      </div>
+
+      <!-- SLIDE 7 -->
+      <div class="slide-container layout-split" data-title="Analogi Dokter Analis">
+        <div class="split-col w-60">
+          <p class="eyebrow">Paradigma Medis</p>
+          <h2>Analogi Dokter &amp; Pasien</h2>
+          <p style="font-size: 22px; color: #475569; margin-bottom: 18px;">
+            Jika seorang pasien datang dengan demam 39°C karena infeksi usus buntu:
+          </p>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-pills" style="color: var(--color-amber);"></i> <span>Memberi obat parasetamol hanya menurunkan demam sementara (mengobati gejala).</span></li>
+            <li><i class="fa-solid fa-virus-slash" style="color: var(--color-green);"></i> <span>Mengoperasi usus buntu menyelesaikan infeksi hingga tuntas (mengobati akar masalah).</span></li>
+            <li><i class="fa-solid fa-laptop-code"></i> <span>*Systems Analyst* profesional harus bertindak seperti dokter spesialis bedah!</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40">
+          <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=800&q=80" alt="Doctor Diagnosis Problem">
+        </div>
+      </div>
+
+      <!-- SLIDE 8 -->
+      <div class="slide-container pad-standard" data-title="Perbandingan Gejala vs Akar">
+        <h2>Perbedaan Gejala vs Akar Masalah</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 8px solid var(--color-red);">
+              <h3 style="color: var(--color-red);"><i class="fa-solid fa-triangle-exclamation"></i> Gejala (Symptom)</h3>
+              <p>- Antrean loket pendaftaran menumpuk 4 jam.<br>- Server portal KRS tiba-tiba error dan down.<br>- Staf sering salah ketik alamat pengiriman.</p>
+              <p style="font-size: 17px; color: #64748B; margin-top: 10px;">*Terlihat jelas di permukaan, namun bukan sumber aslinya.*</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--color-green);">
+              <h3 style="color: var(--color-green);"><i class="fa-solid fa-tree"></i> Akar Masalah (Root Cause)</h3>
+              <p>- SOP mewajibkan verifikasi manual 3 lembar kuitansi.<br>- Tidak ada konfigurasi load-balancer dan auto-scaling.<br>- Kolom input form tidak diberi regex validasi alamat.</p>
+              <p style="font-size: 17px; color: #64748B; margin-top: 10px;">*Tersembunyi di balik sistem, namun menyelesaikan masalah permanen.*</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 9 -->
+      <div class="slide-container layout-split" data-title="Bahaya Solusi Gejala">
+        <div class="split-col split-img-col w-40" style="background: #FEF2F2;">
+          <i class="fa-solid fa-fire-extinguisher" style="font-size: 160px; color: var(--color-red);"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Jebakan Analis</p>
+          <h2>Bahaya Solusi Tingkat Gejala</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-xmark" style="color: var(--color-red);"></i> <span>Menambah 5 staf kasir baru saat antrean panjang hanya menambah biaya gaji bulanan.</span></li>
+            <li><i class="fa-solid fa-rotate-left"></i> <span>Masalah akan berulang kembali saat musim pendaftaran tahun depan.</span></li>
+            <li><i class="fa-solid fa-bullseye" style="color: var(--color-cyan);"></i> <span>**Solusi Sejati:** Ubah alur verifikasi manual menjadi verifikasi mutasi bank digital via Webhook!</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 10 -->
+      <div class="slide-container pad-standard" data-title="Prinsip RCA">
+        <h2>Prinsip Root Cause Analysis (RCA)</h2>
+        <div class="flex-grow-center">
+          <div style="background: white; border: 2px solid #CBD5E1; padding: 36px; border-radius: 16px;">
+            <p style="font-size: 26px; font-weight: 700; color: #0F172A; margin-bottom: 16px;">
+              Tiga Aturan Emas RCA menurut Dumas et al. (2018):
+            </p>
+            <ol style="font-size: 21px; line-height: 1.8; color: #334155; margin-left: 24px;">
+              <li><strong>Fokus pada Proses, Bukan Menyalahkan Individu (*Blameless Culture*):</strong> Human error hampir selalu dipicu oleh desain alur kerja yang membingungkan.</li>
+              <li><strong>Berpikir Berbasis Data (*Evidence-Based*):</strong> Gunakan catatan log sistem, waktu siklus riil, dan observasi langsung (Gemba).</li>
+              <li><strong>Tindakan Korektif Permanen:</strong> Solusi harus mencegah masalah yang sama terjadi lagi di masa depan.</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 11 -->
+      <div class="slide-container layout-split" data-title="Kasus Nyata Pemadaman Sistem">
+        <div class="split-col w-60">
+          <p class="eyebrow">Studi Kasus Lapangan</p>
+          <h2>Kasus: Tiket Konser 'Website Crash'</h2>
+          <p style="font-size: 21px; color: #475569; margin-bottom: 16px;">
+            Sebuah platform e-commerce menjual tiket konser musik besar. Tepat pukul 12.00 WIB, situs web mati total dan transaksi macet.
+          </p>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-triangle-exclamation" style="color: var(--color-amber);"></i> <span>*Gejala:* Server kehabisan memori CPU (100% Load).</span></li>
+            <li><i class="fa-solid fa-magnifying-glass"></i> <span>*Akar Masalah:* Sistem tidak memiliki mekanisme antrean virtual (*Virtual Waiting Room* / FIFO Queue), sehingga 200.000 user langsung menembak database secara bersamaan.</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40">
+          <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&q=80" alt="Server Datacenter Overload">
+        </div>
+      </div>
+
+      <!-- SLIDE 12 -->
+      <div class="slide-container center-content bg-dark" data-title="Kutipan Sakichi Toyoda">
+        <i class="fa-solid fa-quote-left" style="font-size: 70px; color: #334155; margin-bottom: 20px;"></i>
+        <h2 style="font-size: 38px; font-weight: 700; max-width: 900px; line-height: 1.4;">
+          "Jangan pernah menerima alasan pertama yang terlihat. Tanyakan mengapa hingga lima kali, maka akar masalah yang sebenarnya akan menampakkan diri."
+        </h2>
+        <p style="font-size: 20px; color: var(--color-cyan); margin-top: 16px; font-weight: 600;">— Sakichi Toyoda (Pendiri Toyota Group)</p>
+      </div>
+
+      <!-- SLIDE 13 -->
+      <div class="slide-container pad-standard" data-title="Matriks Hubungan Masalah">
+        <h2>Matriks Dampak Masalah Proses</h2>
+        <div class="flex-grow-center">
+          <table style="width: 100%; border-collapse: collapse; font-size: 18px; text-align: left; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+            <thead style="background: #0F172A; color: white;">
+              <tr>
+                <th style="padding: 12px;">Gejala Lapangan</th>
+                <th style="padding: 12px;">Tindakan Salah (Tingkat Gejala)</th>
+                <th style="padding: 12px;">Akar Masalah (Root Cause)</th>
+                <th style="padding: 12px;">Solusi Berkelanjutan (To-Be)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid #E2E8F0;">
+                <td style="padding: 10px;">Kasir salah input harga barang</td>
+                <td style="padding: 10px; color: var(--color-red);">Menegur dan memotong gaji kasir</td>
+                <td style="padding: 10px;">Katalog promo berganti tiap hari tanpa barcode scanner</td>
+                <td style="padding: 10px; color: var(--color-green); font-weight: bold;">Pemindai Barcode terintegrasi sistem POS</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #E2E8F0;">
+                <td style="padding: 10px;">Berkas cuti hilang di kantor</td>
+                <td style="padding: 10px; color: var(--color-red);">Membeli lemari arsip baru</td>
+                <td style="padding: 10px;">Proses persetujuan mengandalkan map kertas manual</td>
+                <td style="padding: 10px; color: var(--color-green); font-weight: bold;">Digital Approval Workflow System</td>
+              </tr>
+              <tr>
+                <td style="padding: 10px;">Struk kuitansi tidak terbaca</td>
+                <td style="padding: 10px; color: var(--color-red);">Menulis ulang nota dengan pulpen</td>
+                <td style="padding: 10px;">Printer thermal tidak pernah dibersihkan dan dipelihara</td>
+                <td style="padding: 10px; color: var(--color-green); font-weight: bold;">Kirim E-Receipt langsung via WhatsApp/Email</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SECTION 3: DIAGRAM TULANG IKAN / ISHIKAWA (SLIDES 14-23)
+           ========================================== -->
+
+      <!-- SLIDE 14 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian II: Fishbone Diagram">
+        <p class="eyebrow">Bagian II</p>
+        <h1 style="font-size: 72px;">Fishbone Diagram (Ishikawa)</h1>
+        <div class="divider"></div>
+        <p style="font-size: 30px;">Metodologi Pemetaan Sebab-Akibat Multidimensi.</p>
+      </div>
+
+      <!-- SLIDE 15 -->
+      <div class="slide-container layout-split" data-title="Pengantar Kaoru Ishikawa">
+        <div class="split-col w-60">
+          <p class="eyebrow">Asal Usul Metodologi</p>
+          <h2>Diagram Ishikawa (Cause &amp; Effect)</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-certificate"></i> <span>Diciptakan oleh **Dr. Kaoru Ishikawa** (1968) di University of Tokyo.</span></li>
+            <li><i class="fa-solid fa-fish"></i> <span>Dikenal sebagai *Fishbone Diagram* karena bentuknya menyerupai kerangka duri ikan.</span></li>
+            <li><i class="fa-solid fa-layer-group"></i> <span>Memetakan berbagai faktor pemicu ke dalam kategori terstruktur menuju satu masalah inti di bagian 'kepala ikan'.</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40" style="background: #F0FDF4;">
+          <i class="fa-solid fa-fish" style="font-size: 160px; color: var(--color-cyan);"></i>
+        </div>
+      </div>
+
+      <!-- SLIDE 16 -->
+      <div class="slide-container pad-standard" data-title="Anatomi Fishbone">
+        <h2>Anatomi Diagram Tulang Ikan</h2>
+        <div class="flex-grow-center">
+          <div class="fishbone-canvas">
+            <svg viewBox="0 0 1000 340" style="width: 100%; height: 100%;">
+              <!-- Backbone Spine Line -->
+              <line x1="60" y1="170" x2="820" y2="170" stroke="#0F172A" stroke-width="8" />
+              <!-- Fish Head (Problem Effect) -->
+              <polygon points="820,110 980,170 820,230" fill="#DC2626" />
+              <text x="890" y="165" fill="#FFFFFF" font-family="Montserrat" font-size="16" font-weight="bold" text-anchor="middle">MASALAH UTAMA</text>
+              <text x="890" y="185" fill="#FFFFFF" font-family="Montserrat" font-size="14" font-weight="bold" text-anchor="middle">(EFFECT / KELUHAN)</text>
+
+              <!-- Rib 1: Man (Top Left) -->
+              <line x1="220" y1="40" x2="320" y2="170" stroke="#06B6D4" stroke-width="5" />
+              <rect x="150" y="10" width="130" height="36" rx="8" fill="#0891B2" />
+              <text x="215" y="34" fill="#FFFFFF" font-family="Montserrat" font-size="15" font-weight="bold" text-anchor="middle">MAN (MANUSIA)</text>
+              <text x="170" y="90" fill="#475569" font-size="13" font-weight="600">• Kurang Training</text>
+
+              <!-- Rib 2: Machine (Top Center) -->
+              <line x1="450" y1="40" x2="550" y2="170" stroke="#06B6D4" stroke-width="5" />
+              <rect x="375" y="10" width="140" height="36" rx="8" fill="#0891B2" />
+              <text x="445" y="34" fill="#FFFFFF" font-family="Montserrat" font-size="15" font-weight="bold" text-anchor="middle">MACHINE / TI</text>
+              <text x="400" y="90" fill="#475569" font-size="13" font-weight="600">• Server SPOF</text>
+
+              <!-- Rib 3: Method (Top Right) -->
+              <line x1="670" y1="40" x2="770" y2="170" stroke="#06B6D4" stroke-width="5" />
+              <rect x="610" y="10" width="130" height="36" rx="8" fill="#0891B2" />
+              <text x="675" y="34" fill="#FFFFFF" font-family="Montserrat" font-size="15" font-weight="bold" text-anchor="middle">METHOD (SOP)</text>
+              <text x="630" y="90" fill="#475569" font-size="13" font-weight="600">• Verifikasi Manual</text>
+
+              <!-- Rib 4: Material (Bottom Left) -->
+              <line x1="220" y1="300" x2="320" y2="170" stroke="#D97706" stroke-width="5" />
+              <rect x="145" y="295" width="140" height="36" rx="8" fill="#D97706" />
+              <text x="215" y="319" fill="#FFFFFF" font-family="Montserrat" font-size="15" font-weight="bold" text-anchor="middle">MATERIAL (DATA)</text>
+              <text x="180" y="250" fill="#475569" font-size="13" font-weight="600">• Kertas Nota Rusak</text>
+
+              <!-- Rib 5: Measurement (Bottom Center) -->
+              <line x1="450" y1="300" x2="550" y2="170" stroke="#D97706" stroke-width="5" />
+              <rect x="360" y="295" width="170" height="36" rx="8" fill="#D97706" />
+              <text x="445" y="319" fill="#FFFFFF" font-family="Montserrat" font-size="14" font-weight="bold" text-anchor="middle">MEASUREMENT (SLA)</text>
+              <text x="400" y="250" fill="#475569" font-size="13" font-weight="600">• Tiada Target Waktu</text>
+
+              <!-- Rib 6: Milieu/Environment (Bottom Right) -->
+              <line x1="670" y1="300" x2="770" y2="170" stroke="#D97706" stroke-width="5" />
+              <rect x="600" y="295" width="150" height="36" rx="8" fill="#D97706" />
+              <text x="675" y="319" fill="#FFFFFF" font-family="Montserrat" font-size="14" font-weight="bold" text-anchor="middle">ENVIRONMENT</text>
+              <text x="630" y="250" fill="#475569" font-size="13" font-weight="600">• Ruangan Bising</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 17 -->
+      <div class="slide-container pad-standard" data-title="Kategori 6M Klasik">
+        <h2>Kategori 6M untuk Operasional &amp; Manufaktur</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 6px solid var(--color-cyan); padding: 18px;">
+              <h4>1. Man (Manusia)</h4>
+              <p style="font-size: 15px;">Kelelahan staf, kurangnya pelatihan, atau rotasi kerja terlalu cepat.</p>
+            </div>
+            <div class="card" style="border-top: 6px solid var(--color-cyan); padding: 18px;">
+              <h4>2. Machine (Mesin/TI)</h4>
+              <p style="font-size: 15px;">Komputer lawas, printer macet, kabel router putus, bug database.</p>
+            </div>
+            <div class="card" style="border-top: 6px solid var(--color-cyan); padding: 18px;">
+              <h4>3. Method (Metode/SOP)</h4>
+              <p style="font-size: 15px;">Prosedur birokrasi berbelit, paraf persetujuan berjenjang tidak perlu.</p>
+            </div>
+            <div class="card" style="border-top: 6px solid var(--color-amber); padding: 18px;">
+              <h4>4. Material (Bahan/Data)</h4>
+              <p style="font-size: 15px;">Data formulir rusak, kertas kuitansi buram, input email cacat.</p>
+            </div>
+            <div class="card" style="border-top: 6px solid var(--color-amber); padding: 18px;">
+              <h4>5. Measurement (Metrik)</h4>
+              <p style="font-size: 15px;">Ketiadaan indikator KPI durasi kerja atau SLA layanan tidak terukur.</p>
+            </div>
+            <div class="card" style="border-top: 6px solid var(--color-amber); padding: 18px;">
+              <h4>6. Milieu (Lingkungan)</h4>
+              <p style="font-size: 15px;">Ruang antrean sempit, suhu server panas, koneksi sinyal terhalang.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 18 -->
+      <div class="slide-container pad-standard" data-title="Kategori 4P Layanan TI">
+        <h2>Alternatif Layanan Digital: Kategori 4P</h2>
+        <div class="flex-grow-center">
+          <p style="font-size: 20px; color: #475569; margin-bottom: 20px;">
+            Pada organisasi perangkat lunak dan layanan digital murni, 6M sering diadaptasi menjadi <strong>4P</strong>:
+          </p>
+          <div class="card-grid">
+            <div class="card" style="border-left: 8px solid var(--color-cyan);">
+              <h4>People (Pengguna &amp; Operator)</h4>
+              <p style="font-size: 16px;">Keterampilan teknis pengguna, kebiasaan berbagi password, resistensi pada perubahan sistem.</p>
+            </div>
+            <div class="card" style="border-left: 8px solid var(--color-blue);">
+              <h4>Plant / Platform (Infrastruktur)</h4>
+              <p style="font-size: 16px;">Kapasitas cloud hosting, firewall keamanan, latensi jaringan fiber optic.</p>
+            </div>
+            <div class="card" style="border-left: 8px solid var(--color-amber);">
+              <h4>Process (Alur Bisnis)</h4>
+              <p style="font-size: 16px;">Langkah approval berantai, penulisan task non-standar, ketiadaan fallback offline.</p>
+            </div>
+            <div class="card" style="border-left: 8px solid var(--color-green);">
+              <h4>Policy (Kebijakan Regulasi)</h4>
+              <p style="font-size: 16px;">Aturan kepatuhan UU PDP, kebijakan pergantian shift kasir, batasan wewenang otorisasi.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 19 -->
+      <div class="slide-container layout-split" data-title="Kasus Fishbone: Pesanan Kopi">
+        <div class="split-col w-60">
+          <p class="eyebrow">Bedah Kasus Nyata</p>
+          <h2>Studi Kasus: Minuman Kopi Terlambat 30 Menit</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-users"></i> <span>**People:** Barista baru belum hafal resep racikan sirup.</span></li>
+            <li><i class="fa-solid fa-gears"></i> <span>**Machine:** Mesin espresso tersumbat kerak kapur karena jarang diservis.</span></li>
+            <li><i class="fa-solid fa-file-lines"></i> <span>**Method:** Nota kertas ditusuk paku meja acak tanpa urutan nomor antrean FIFO.</span></li>
+            <li><i class="fa-solid fa-box"></i> <span>**Material:** Susu pasteurisasi kehabisan stok di tengah jam sibuk siang hari.</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40">
+          <img src="https://images.unsplash.com/photo-1517256064527-09c73fc73e38?w=800&q=80" alt="Cafe Barista Order Queue">
+        </div>
+      </div>
+
+      <!-- SLIDE 20 -->
+      <div class="slide-container pad-standard" data-title="Langkah Membuat Fishbone">
+        <h2>4 Langkah Membangun Fishbone Diagram</h2>
+        <div class="flex-grow-center">
+          <ul class="minimal-list" style="gap: 22px;">
+            <li><i class="fa-solid fa-1"></i> <span><strong>Definisikan Kepala Ikan (*The Effect*):</strong> Tuliskan satu masalah spesifik yang terukur (misal: "Durasi verifikasi kartu SIM melebihi 24 jam").</span></li>
+            <li><i class="fa-solid fa-2"></i> <span><strong>Tentukan Tulang Utama (*Major Bones*):</strong> Pilih 4-6 kategori (Man, Machine, Method, Material, Measurement, Environment).</span></li>
+            <li><i class="fa-solid fa-3"></i> <span><strong>Brainstorming Duri Cabang (*Sub-causes*):</strong> Tanyakan mengapa masalah tersebut terjadi pada masing-masing kategori.</span></li>
+            <li><i class="fa-solid fa-4"></i> <span><strong>Uji Validitas di Lapangan:</strong> Verifikasi temuan duri ke sistem nyata, bukan sekadar opini ruang rapat.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 21 -->
+      <div class="slide-container layout-split" data-title="Kesalahan Membuat Fishbone">
+        <div class="split-col split-img-col w-40" style="background: #FEF2F2;">
+          <i class="fa-solid fa-circle-exclamation" style="font-size: 160px; color: var(--color-red);"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Jebakan Fishbone</p>
+          <h2>Kesalahan Fatal dalam Fishbone</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-xmark" style="color: var(--color-red);"></i> <span>Kepala ikan terlalu luas/abstrak (misal: "Perusahaan Rugi"). Spesifikasikan menjadi: "Tingkat pembatalan checkout web mencapai 40%".</span></li>
+            <li><i class="fa-solid fa-xmark" style="color: var(--color-red);"></i> <span>Duri cabang ditulis sebagai solusi, bukan penyebab (misal: menulis "Harus beli server baru" di tulang Machine).</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 22 -->
+      <div class="slide-container center-content bg-dark" data-title="Insight Fishbone">
+        <i class="fa-solid fa-lightbulb" style="font-size: 80px; color: var(--color-cyan); margin-bottom: 24px;"></i>
+        <h2>Kekuatan Visual Fishbone</h2>
+        <p style="font-size: 26px; max-width: 900px; margin-top: 16px; line-height: 1.5;">
+          Fishbone mencegah analis terjebak dalam *Tunnel Vision* (hanya menyalahkan software IT atau hanya menyalahkan karyawan). Seluruh faktor manusia, mesin, metode, dan bahan terlihat transparan dalam satu kanvas utuh.
+        </p>
+      </div>
+
+      <!-- SLIDE 23 -->
+      <div class="slide-container pad-standard" data-title="Hubungan Fishbone ke BPMN">
+        <h2>Menghubungkan Fishbone ke Diagram BPMN</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 6px solid var(--color-cyan);">
+              <h4>Duri "Method"</h4>
+              <p style="font-size: 16px;">Tercermin pada **Exclusive Gateway** yang berbelit-belit atau task manual yang redundan antar lane.</p>
+            </div>
+            <div class="card" style="border-top: 6px solid var(--color-amber);">
+              <h4>Duri "Machine"</h4>
+              <p style="font-size: 16px;">Tercermin pada ketergantungan **Data Store** yang lambat atau tidak adanya koneksi failover.</p>
+            </div>
+            <div class="card" style="border-top: 6px solid var(--color-green);">
+              <h4>Duri "Man"</h4>
+              <p style="font-size: 16px;">Tercermin pada alokasi tugas di **Lane** yang salah atau ketiadaan validasi otomatis pada input form.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SECTION 4: METODE 5 WHYS (SLIDES 24-32)
+           ========================================== -->
+
+      <!-- SLIDE 24 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian III: 5 Whys Method">
+        <p class="eyebrow">Bagian III</p>
+        <h1 style="font-size: 72px;">Teknik 5 Whys</h1>
+        <div class="divider"></div>
+        <p style="font-size: 30px;">Menggali Lima Tingkat Kedalaman Menuju Akar Penyebab Sejati.</p>
+      </div>
+
+      <!-- SLIDE 25 -->
+      <div class="slide-container layout-split" data-title="Prinsip 5 Whys">
+        <div class="split-col w-60">
+          <p class="eyebrow">Teknik Interogasi Sistem</p>
+          <h2>Konsep Dasar 5 Whys</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-layer-group"></i> <span>Dikembangkan oleh Sakichi Toyoda sebagai pilar Toyota Production System.</span></li>
+            <li><i class="fa-solid fa-arrows-down-to-line"></i> <span>Setiap kali menemukan sebuah jawaban 'mengapa', tanyakan lagi 'mengapa hal itu terjadi' berulang kali.</span></li>
+            <li><i class="fa-solid fa-check-double"></i> <span>Angka 5 bukanlah batasan kaku; bisa 3 kali atau 7 kali hingga menemukan akar yang dapat dikontrol.</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40" style="background: #ECFEFF;">
+          <i class="fa-solid fa-circle-question" style="font-size: 160px; color: var(--color-cyan);"></i>
+        </div>
+      </div>
+
+      <!-- SLIDE 26 -->
+      <div class="slide-container pad-standard" data-title="Contoh Eksekusi 5 Whys">
+        <h2>Simulasi Penerapan 5 Whys: Kendala Server Drop</h2>
+        <div class="flex-grow-center">
+          <div style="background: white; border: 2px solid #CBD5E1; padding: 24px; border-radius: 12px; font-size: 19px; line-height: 1.6;">
+            <p><strong>Masalah:</strong> Portal Ujian Mahasiswa down selama 2 jam saat UTS dimulai.</p>
+            <p style="color: #0369A1; margin-top: 6px;">1. <strong>Mengapa portal down?</strong> Karena database server kehabisan koneksi pool (*Connection Pool Exceeded*).</p>
+            <p style="color: #0369A1;">2. <strong>Mengapa koneksi pool habis?</strong> Karena 2.000 mahasiswa login pada detik yang sama secara serentak.</p>
+            <p style="color: #0369A1;">3. <strong>Mengapa login serentak?</strong> Karena seluruh mata kuliah dijadwalkan mulai pukul 08.00 WIB pas.</p>
+            <p style="color: #0369A1;">4. <strong>Mengapa dijadwalkan serentak?</strong> Karena tidak ada koordinasi staggered login antar fakultas di SOP ujian.</p>
+            <p style="color: #D97706; font-weight: bold; margin-top: 8px;">&rarr; 5. <strong>Akar Masalah Sejati:</strong> Ketiadaan sistem antrean virtual dan tidak adanya pembagian jadwal kloter ujian pada SOP akademik!</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 27 -->
+      <div class="slide-container layout-split" data-title="Solusi dari 5 Whys">
+        <div class="split-col split-img-col w-40" style="background: #F0FDF4;">
+          <i class="fa-solid fa-wand-magic-sparkles" style="font-size: 160px; color: var(--color-green);"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Dampak Solusi</p>
+          <h2>Beda Solusi Dangkal vs Solusi 5 Whys</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-xmark" style="color: var(--color-red);"></i> <span>*Solusi Dangkal:* Membeli RAM server tambahan yang mahal (uang terbuang).</span></li>
+            <li><i class="fa-solid fa-check" style="color: var(--color-green);"></i> <span>*Solusi 5 Whys:* Merancang ulang SOP kloter login per fakultas dan menerapkan middleware antrean pesan (Biaya Rp 0 tapi permanen!).</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 28 -->
+      <div class="slide-container pad-standard" data-title="Kapan Berhenti Bertanya Mengapa">
+        <h2>Kapan Kita Harus Berhenti Bertanya "Mengapa"?</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 6px solid var(--color-green);">
+              <h3 style="color: var(--color-green);">Kondisi Berhenti 1</h3>
+              <p>Ketika jawaban mengarah pada proses atau kontrol sistem yang **berada dalam wewenang tim untuk diubah**.</p>
+            </div>
+            <div class="card" style="border-top: 6px solid var(--color-green);">
+              <h3 style="color: var(--color-green);">Kondisi Berhenti 2</h3>
+              <p>Jika pertanyaan diteruskan akan menghasilkan jawaban di luar kendali logis (misal: "Karena manusia memang pelupa" atau "Karena takdir").</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 29 -->
+      <div class="slide-container layout-split" data-title="Kombinasi Fishbone & 5 Whys">
+        <div class="split-col w-60">
+          <p class="eyebrow">Sinergi Dua Senjata</p>
+          <h2>Kombinasi Fishbone + 5 Whys</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-fish"></i> <span>**Langkah 1 (Fishbone):** Melebarkan pandangan untuk menemukan SEMUA kemungkinan faktor (Horisontal).</span></li>
+            <li><i class="fa-solid fa-arrows-down-to-line"></i> <span>**Langkah 2 (5 Whys):** Menukik tajam ke dalam masing-masing duri utama untuk menemukan akar terdalamnya (Vertikal).</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40">
+          <img src="https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=800&q=80" alt="Process Engineering Strategy">
+        </div>
+      </div>
+
+      <!-- SLIDE 30 -->
+      <div class="slide-container pad-standard" data-title="Deteksi Bottleneck Proses">
+        <h2>Deteksi Bottleneck &amp; Redundancy</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 8px solid var(--color-red);">
+              <i class="fa-solid fa-traffic-light" style="color: var(--color-red);"></i>
+              <h3>Bottleneck (Penyumbatan)</h3>
+              <p>Aktivitas yang memiliki waktu tunggu rata-rata (*Waiting Time*) jauh lebih tinggi daripada waktu eksekusi aktualnya (*Processing Time*).</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--color-amber);">
+              <i class="fa-solid fa-copy" style="color: var(--color-amber);"></i>
+              <h3>Redundancy (Duplikasi)</h3>
+              <p>Dua aktivitas berbeda yang menginput atau memverifikasi data yang persis sama di sistem terpisah tanpa sinkronisasi otomatis.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 31 -->
+      <div class="slide-container layout-split" data-title="Theory of Constraints">
+        <div class="split-col split-img-col w-40" style="background: #0F172A;">
+          <i class="fa-solid fa-link-slash" style="font-size: 160px; color: var(--color-amber);"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Teori Kendala (Goldratt)</p>
+          <h2>Theory of Constraints (TOC)</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-gauge-simple"></i> <span>Kecepatan keseluruhan proses bisnis ditentukan oleh **mata rantai yang paling lambat**.</span></li>
+            <li><i class="fa-solid fa-triangle-exclamation"></i> <span>Mempercepat aktivitas lain tanpa membenahi bottleneck tidak akan meningkatkan throughput sistem sama sekali!</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 32 -->
+      <div class="slide-container center-content bg-dark" data-title="Kutipan Goldratt">
+        <i class="fa-solid fa-quote-left" style="font-size: 70px; color: #334155; margin-bottom: 20px;"></i>
+        <h2 style="font-size: 38px; font-weight: 700; max-width: 900px; line-height: 1.4;">
+          "Satu jam yang terbuang pada titik bottleneck adalah satu jam kerugian bagi keseluruhan sistem perusahaan."
+        </h2>
+        <p style="font-size: 20px; color: var(--color-cyan); margin-top: 16px; font-weight: 600;">— Dr. Eliyahu M. Goldratt (The Goal)</p>
+      </div>
+
+      <!-- ==========================================
+           SECTION 5: SIMULASI & GAME INTERAKTIF (SLIDES 33-36)
+           ========================================== -->
+
+      <!-- SLIDE 33 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian IV: Simulasi Praktik">
+        <p class="eyebrow">Bagian IV</p>
+        <h1 style="font-size: 72px;">Simulasi Uji Diagnosa</h1>
+        <div class="divider"></div>
+        <p style="font-size: 28px;">Menguji Kejelian Memetakan Faktor Penyebab ke Duri Fishbone.</p>
+      </div>
+
+      <!-- SLIDE 34: GAME 1 FISHBONE CATEGORY -->
+      <div class="slide-container pad-standard" style="background: #F8FAFC;" id="drag-drop-1" data-title="Game 1 (Kategori Duri Fishbone)">
+        <p class="eyebrow">Game 1: Drag &amp; Drop Fishbone</p>
+        <h2 style="font-size: 34px; margin-bottom: 10px;">Petakan Faktor Masalah ke Duri Ishikawa yang Tepat!</h2>
+        <p style="margin-bottom: 16px; font-size: 18px;">Studi Kasus: Sistem Tiket Helpdesk Kampus Selalu Lambat</p>
+        
+        <div class="flex-grow-center" style="justify-content: flex-start;">
+          <div class="draggable-container">
+            <div class="drag-item" draggable="true" data-type="man">Staf baru belum paham SOP eskalasi tiket darurat</div>
+            <div class="drag-item" draggable="true" data-type="machine">Server database PostgreSQL belum dibuatkan indexing pencarian</div>
+            <div class="drag-item" draggable="true" data-type="method">Tiket harus diparaf manual oleh 3 kepala divisi kampus</div>
+          </div>
+
+          <div class="dropzones-container">
+            <div class="drop-zone" data-target="man" style="border-color: var(--color-cyan); background: #ECFEFF;">
+              <h3 style="color: #0891B2;"><i class="fa-solid fa-users"></i> Duri: Man (Manusia)</h3>
+              <div class="drop-content"></div>
+            </div>
+            <div class="drop-zone" data-target="machine" style="border-color: var(--color-blue); background: #F0F9FF;">
+              <h3 style="color: var(--color-blue);"><i class="fa-solid fa-server"></i> Duri: Machine (Sistem TI)</h3>
+              <div class="drop-content"></div>
+            </div>
+            <div class="drop-zone" data-target="method" style="border-color: var(--color-amber); background: #FFFBEB;">
+              <h3 style="color: var(--color-amber);"><i class="fa-solid fa-file-signature"></i> Duri: Method (SOP)</h3>
+              <div class="drop-content"></div>
+            </div>
+          </div>
+
+          <div class="practice-feedback" style="text-align: center; margin-top: 14px; display: none;">
+            <p style="font-size: 24px; font-weight: 800; color: #10B981;"><i class="fa-solid fa-circle-check"></i> Klasifikasi Sempurna!</p>
+            <p style="font-size: 16px; color: #475569; margin-top: 2px;">Anda berhasil memisahkan akar manusia, mesin server, dan birokrasi SOP.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 35: GAME 2 BOTTLENECK -->
+      <div class="slide-container pad-standard" style="background: #F8FAFC;" id="drag-drop-2" data-title="Game 2 (Deteksi Titik Bottleneck)">
+        <p class="eyebrow">Game 2: Drag &amp; Drop Bottleneck</p>
+        <h2 style="font-size: 34px; margin-bottom: 10px;">Tentukan Status Tiap Tahapan Alur Kerja!</h2>
+        <p style="margin-bottom: 16px; font-size: 18px;">Seret status ke tahapan proses pengajuan beasiswa mahasiswa.</p>
+        
+        <div class="flex-grow-center" style="justify-content: flex-start;">
+          <div class="draggable-container">
+            <div class="drag-item" draggable="true" data-type="bottleneck">Menunggu tanda tangan Dekan yang antre 5 hari kerja</div>
+            <div class="drag-item" draggable="true" data-type="smooth">Pengecekan IPK otomatis oleh sistem SIAKAD (5 detik)</div>
+            <div class="drag-item" draggable="true" data-type="redundant">Staf mengetik ulang berkas PDF yang sudah diunggah mahasiswa</div>
+          </div>
+
+          <div class="dropzones-container">
+            <div class="drop-zone" data-target="bottleneck" style="border-color: var(--color-red); background: #FEF2F2;">
+              <h3 style="color: var(--color-red);"><i class="fa-solid fa-hourglass-end"></i> Bottleneck Kritis</h3>
+              <div class="drop-content"></div>
+            </div>
+            <div class="drop-zone" data-target="smooth" style="border-color: var(--color-green); background: #ECFDF5;">
+              <h3 style="color: var(--color-green);"><i class="fa-solid fa-gauge-high"></i> Lancar (Automated)</h3>
+              <div class="drop-content"></div>
+            </div>
+            <div class="drop-zone" data-target="redundant" style="border-color: var(--color-amber); background: #FFFBEB;">
+              <h3 style="color: var(--color-amber);"><i class="fa-solid fa-copy"></i> Redundansi (Over-processing)</h3>
+              <div class="drop-content"></div>
+            </div>
+          </div>
+
+          <div class="practice-feedback" style="text-align: center; margin-top: 14px; display: none;">
+            <p style="font-size: 24px; font-weight: 800; color: #10B981;"><i class="fa-solid fa-circle-check"></i> Deteksi Hambatan Tepat!</p>
+            <p style="font-size: 16px; color: #475569; margin-top: 2px;">Pemetaan ini menjadi dasar rancangan To-Be di Pertemuan 11-12.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 36 -->
+      <div class="slide-container center-content bg-dark" data-title="Insight Simulasi">
+        <i class="fa-solid fa-chart-line" style="font-size: 80px; color: var(--color-cyan); margin-bottom: 24px;"></i>
+        <h2>Hasil Diagnosa Masalah</h2>
+        <p style="font-size: 26px; max-width: 900px; margin-top: 16px; line-height: 1.5;">
+          Analisis kualitatif yang kuat adalah jembatan emas yang mengubah keluhan abstrak klien menjadi spesifikasi kebutuhan sistem (*Software Requirements*) yang presisi.
+        </p>
+      </div>
+
+      <!-- ==========================================
+           SECTION 6: EVALUASI KUIS FORMATIF (SLIDES 37-41)
+           ========================================== -->
+
+      <!-- SLIDE 37 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian V: Kuis Formatif">
+        <p class="eyebrow">Bagian V</p>
+        <h1 style="font-size: 72px;">Kuis Formatif Pertemuan 10</h1>
+        <div class="divider"></div>
+        <p style="font-size: 30px;">Uji Penguasaan Root Cause Analysis &amp; Fishbone Diagram.</p>
+      </div>
+
+      <!-- SLIDE 38 -->
+      <div class="slide-container pad-standard" style="background: #FFFFFF;" id="slide38" data-title="Kuis 1: Hakikat Fishbone">
+        <p class="eyebrow" style="margin-bottom: 6px;">Kuis Evaluasi • Soal 1/4</p>
+        <h2 style="margin-bottom: 14px;">Bagian manakah dari Diagram Fishbone yang merepresentasikan masalah utama yang sedang terjadi?</h2>
+        <div class="flex-grow-center" style="justify-content: flex-start; margin-top: 8px;">
+          <div class="quiz-option" onclick="handleQuiz(this, true, 'feedback-q1')" data-correct="true">
+            <i class="fa-regular fa-circle"></i> A. Kepala Ikan (Bagian paling kanan yang menjadi muara duri).
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q1')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> B. Ekor Ikan (Bagian paling kiri awal tulang belakang).
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q1')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> C. Duri tengah kategori Machine.
+          </div>
+
+          <div id="feedback-q1" class="quiz-feedback">
+            <h4><i class="fa-solid fa-lightbulb"></i> Pembahasan: A</h4>
+            <p>Kepala ikan adalah tempat menaruh efek/akibat utama (*The Problem Statement/Effect*), sedangkan duri-duri tulang adalah kategori penyebabnya (*Causes*).</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 39 -->
+      <div class="slide-container pad-standard" style="background: #FFFFFF;" id="slide39" data-title="Kuis 2: Manfaat 5 Whys">
+        <p class="eyebrow" style="margin-bottom: 6px;">Kuis Evaluasi • Soal 2/4</p>
+        <h2 style="margin-bottom: 14px;">Mengapa teknik 5 Whys sangat ditekankan sebelum merancang aplikasi baru?</h2>
+        <div class="flex-grow-center" style="justify-content: flex-start; margin-top: 8px;">
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q2')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> A. Agar programmer bisa menulis kode program 5 kali lebih cepat.
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, true, 'feedback-q2')" data-correct="true">
+            <i class="fa-regular fa-circle"></i> B. Untuk mencegah pembuatan aplikasi yang hanya mengobati gejala permukaan tanpa menyelesaikan akar masalah.
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q2')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> C. Untuk mencari karyawan yang bersalah agar dapat dipecat.
+          </div>
+
+          <div id="feedback-q2" class="quiz-feedback">
+            <h4><i class="fa-solid fa-lightbulb"></i> Pembahasan: B</h4>
+            <p>Mengembangkan aplikasi canggih untuk alur proses yang cacat sejak awal hanya menghasilkan pemborosan anggaran. 5 Whys memastikan sistem yang dibangun menyelesaikan akar persoalan sesungguhnya.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 40 -->
+      <div class="slide-container pad-standard" style="background: #FFFFFF;" id="slide40" data-title="Kuis 3: Karakteristik Bottleneck">
+        <p class="eyebrow" style="margin-bottom: 6px;">Kuis Evaluasi • Soal 3/4</p>
+        <h2 style="margin-bottom: 14px;">Manakah tanda paling akurat yang membuktikan adanya titik Bottleneck pada alur proses bisnis?</h2>
+        <div class="flex-grow-center" style="justify-content: flex-start; margin-top: 8px;">
+          <div class="quiz-option" onclick="handleQuiz(this, true, 'feedback-q3')" data-correct="true">
+            <i class="fa-regular fa-circle"></i> A. Terjadinya penumpukan antrean berkas/pekerjaan yang menggunung sebelum langkah tersebut dieksekusi.
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q3')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> B. Task tersebut diselesaikan dalam waktu kurang dari 1 detik.
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q3')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> C. Task tersebut menggunakan Parallel Gateway (AND).
+          </div>
+
+          <div id="feedback-q3" class="quiz-feedback">
+            <h4><i class="fa-solid fa-lightbulb"></i> Pembahasan: A</h4>
+            <p>Bottleneck dicirikan oleh rasio kapasitas kerja yang lebih kecil dari kedatangan tugas, sehingga menghasilkan antrean panjang (*Queue/Waiting Time*) di depan gerbang aktivitas tersebut.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 41 -->
+      <div class="slide-container pad-standard" style="background: #FFFFFF;" id="slide41" data-title="Kuis 4: Kategori Machine">
+        <p class="eyebrow" style="margin-bottom: 6px;">Kuis Evaluasi • Soal 4/4</p>
+        <h2 style="margin-bottom: 14px;">Kabel router pos timbang logistik tersambar petir dan mati total. Masuk ke kategori duri Fishbone mana insiden ini?</h2>
+        <div class="flex-grow-center" style="justify-content: flex-start; margin-top: 8px;">
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q4')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> A. Man (Manusia kelalaian sopir).
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, true, 'feedback-q4')" data-correct="true">
+            <i class="fa-regular fa-circle"></i> B. Machine / Infrastructure (Kelemahan perangkat keras & ketiadaan jalur failover).
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q4')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> C. Measurement (Metrik KPI gaji).
+          </div>
+
+          <div id="feedback-q4" class="quiz-feedback">
+            <h4><i class="fa-solid fa-lightbulb"></i> Pembahasan: B</h4>
+            <p>Kerusakan fisik perangkat keras dan jaringan yang menjadi titik kegagalan tunggal (SPOF) dikelompokkan ke dalam kategori Machine/Platform.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SECTION 7: PENERAPAN PADA PROYEK MINI (SLIDES 42-45)
+           ========================================== -->
+
+      <!-- SLIDE 42 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian VI: Proyek Mini Mahasiswa">
+        <p class="eyebrow">Bagian VI</p>
+        <h1 style="font-size: 72px;">Integrasi Proyek Mini</h1>
+        <div class="divider"></div>
+        <p style="font-size: 30px;">Menyelesaikan Tahap 2 Proyek Kelompok (Pekan 9-10 RPS).</p>
+      </div>
+
+      <!-- SLIDE 43 -->
+      <div class="slide-container pad-standard" data-title="Instruksi Tahap 2 Proyek">
+        <h2>Instruksi Tahap 2 Proyek Mini (P9-P10)</h2>
+        <div class="flex-grow-center">
+          <div style="background: #F8FAFC; border: 2px solid #CBD5E1; padding: 36px; border-radius: 16px;">
+            <p style="font-size: 24px; font-weight: 700; color: #0F172A; margin-bottom: 12px;">
+              Tugas Analisis Kualitatif Kelompok:
+            </p>
+            <ol style="font-size: 20px; line-height: 1.8; color: #334155; margin-left: 24px;">
+              <li>Ambil diagram <strong>BPMN As-Is</strong> yang telah kelompok Anda buat di Pertemuan 5.</li>
+              <li>Pilih <strong>1 masalah terbesar</strong> yang dialami oleh objek observasi (misal: antrean lambat, salah stok, atau kebocoran data).</li>
+              <li>Konstruksi <strong>Diagram Fishbone (Ishikawa)</strong> menggunakan kategori 6M atau 4P.</li>
+              <li>Lakukan interogasi <strong>5 Whys</strong> pada duri penyebab paling dominan hingga menemukan akar penyebab teknisnya.</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 44 -->
+      <div class="slide-container pad-standard" data-title="Format Laporan Bab Analisis">
+        <h2>Format Penyajian Laporan RCA Kelompok</h2>
+        <div class="flex-grow-center">
+          <table style="width: 100%; border-collapse: collapse; font-size: 18px; text-align: left; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+            <thead style="background: #0F172A; color: white;">
+              <tr>
+                <th style="padding: 12px;">No</th>
+                <th style="padding: 12px;">Sub-Bab Laporan</th>
+                <th style="padding: 12px;">Konten yang Wajib Ada</th>
+                <th style="padding: 12px;">Output Visual</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid #E2E8F0;">
+                <td style="padding: 10px;">1</td>
+                <td style="padding: 10px;">Analisis Nilai Tambah (P9)</td>
+                <td style="padding: 10px;">Tabel Klasifikasi VA, BVA, NVA seluruh task</td>
+                <td style="padding: 10px;">Tabel VAA &amp; Skor PCE</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #E2E8F0;">
+                <td style="padding: 10px;">2</td>
+                <td style="padding: 10px;">Fishbone Diagram (P10)</td>
+                <td style="padding: 10px;">Pemetaan kategori pemicu masalah utama</td>
+                <td style="padding: 10px; color: var(--color-cyan); font-weight: bold;">Gambar Diagram Fishbone</td>
+              </tr>
+              <tr>
+                <td style="padding: 10px;">3</td>
+                <td style="padding: 10px;">Penelusuran 5 Whys (P10)</td>
+                <td style="padding: 10px;">Urutan 5 tingkat interogasi akar masalah</td>
+                <td style="padding: 10px; color: var(--color-green); font-weight: bold;">Pohon Analisis 5 Whys</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SLIDE 45 -->
+      <div class="slide-container layout-split" data-title="Transisi Menuju Pertemuan 11">
+        <div class="split-col w-60">
+          <p class="eyebrow">Peta Jalan RPS</p>
+          <h2>Menghubungkan P10 ke Pertemuan 11</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-check" style="color: var(--color-green);"></i> <span>**P10 (Hari ini):** Menemukan akar penyakit operasional.</span></li>
+            <li><i class="fa-solid fa-forward" style="color: var(--color-cyan);"></i> <span>**P11 (Pekan Depan):** Mengobati masalah tersebut dengan prinsip **Business Process Reengineering (BPR)**.</span></li>
+            <li><i class="fa-solid fa-wand-magic-sparkles"></i> <span>Mulai merancang diagram **To-Be** terotomatisasi!</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40">
+          <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80" alt="Future Business Engineering">
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SECTION 8: DISKUSI & PENUTUP (SLIDES 46-50)
+           ========================================== -->
+
+      <!-- SLIDE 46 -->
+      <div class="slide-container pad-standard" data-title="Tanya Jawab Mahasiswa 1">
+        <h2>Tanya Jawab Analis 1</h2>
+        <div class="flex-grow-center">
+          <div style="background: #F8FAFC; border-left: 10px solid var(--color-cyan); padding: 36px; border-radius: 8px;">
+            <p style="font-size: 22px; font-weight: 700; color: #0F172A; margin-bottom: 10px;">
+              "Pak, apakah semua duri pada Diagram Fishbone harus memiliki jumlah sub-cabang yang sama?"
+            </p>
+            <p style="font-size: 20px; color: #475569; line-height: 1.5;">
+              Tidak harus sama. Sebuah masalah bisa saja 80% disebabkan oleh faktor <strong>Method (SOP berbelit)</strong> dan <strong>Machine (Server lambat)</strong>, sementara faktor Material hampir tidak bermasalah. Fishbone justru bertujuan menunjukkan di duri mana masalah terkonsentrasi paling padat.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 47 -->
+      <div class="slide-container pad-standard" data-title="Tanya Jawab Mahasiswa 2">
+        <h2>Tanya Jawab Analis 2</h2>
+        <div class="flex-grow-center">
+          <div style="background: #F8FAFC; border-left: 10px solid var(--color-amber); padding: 36px; border-radius: 8px;">
+            <p style="font-size: 22px; font-weight: 700; color: #0F172A; margin-bottom: 10px;">
+              "Bagaimana jika penelusuran 5 Whys kami berhenti di pertanyaan ke-3?"
+            </p>
+            <p style="font-size: 20px; color: #475569; line-height: 1.5;">
+              Boleh berhenti di pertanyaan ke-3 jika pada tingkat tersebut Anda sudah menemukan akar masalah teknis yang nyata dan dapat langsung diselesaikan oleh sistem IT baru. Angka 5 adalah pedoman filosofis agar analis tidak berhenti terlalu cepat di tingkat gejala permukaan.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 48 -->
+      <div class="slide-container center-content" data-title="Sesi Tanya Jawab">
+        <i class="fa-regular fa-comments" style="font-size: 110px; color: var(--color-cyan); margin-bottom: 28px;"></i>
+        <h1 style="font-size: 54px;">Sesi Diskusi &amp; Tanya Jawab</h1>
+        <p style="font-size: 26px; font-weight: 600; margin-top: 18px;">
+          Silakan ajukan pertanyaan di kolom chat Google Meet atau gunakan fitur mikrofon.
+        </p>
+      </div>
+
+      <!-- SLIDE 49 -->
+      <div class="slide-container center-content bg-dark" data-title="Ringkasan Akhir Pertemuan 10">
+        <i class="fa-solid fa-flag-checkered" style="font-size: 70px; color: var(--color-cyan); margin-bottom: 20px;"></i>
+        <h2>Ringkasan Akhir Pertemuan 10</h2>
+        <p style="font-size: 24px; max-width: 900px; margin-top: 14px; line-height: 1.5;">
+          Solusi sistem informasi yang berhasil bukanlah yang paling banyak fiturnya, melainkan yang paling tepat membedah dan melenyapkan <strong>akar penyebab masalah operasional</strong>.
+        </p>
+      </div>
+
+      <!-- SLIDE 50 -->
+      <div class="slide-container center-content bg-dark" data-title="Penutup Kuliah">
+        <h1 style="font-size: 76px; margin-bottom: 20px;">Terima Kasih!</h1>
+        <div class="divider"></div>
+        <p style="font-size: 30px; font-weight: 700; color: #38BDF8; font-style: italic; margin-top: 14px;">
+          "Sampai jumpa di Pertemuan 11: Business Process Redesign &amp; Reengineering (To-Be)."
+        </p>
+        <p style="font-size: 20px; color: #94A3B8; margin-top: 50px;">
+          Ardi Ariansyah, S.Kom., Gr. • Program Studi S1 Teknik Informatika • ITB Swadharma
+        </p>
+      </div>
+
+    </div> <!-- End of slides-wrapper -->
+  </div> <!-- End of presentation-area -->
+
+  <!-- PRESENTATION & INTERACTION SCRIPTS -->
+  <script>
+    // --- 1. CORE PRESENTATION LOGIC ---
+    const slides = document.querySelectorAll('.slide-container');
+    const selector = document.getElementById('slideSelector');
+    let currentSlide = 0;
+
+    function initDropdown() {
+      if(!selector) return;
+      selector.innerHTML = '';
+      slides.forEach((slide, index) => {
+        let title = slide.getAttribute('data-title') || `Slide ${index + 1}`;
+        let option = document.createElement('option');
+        option.value = index;
+        option.text = `${index + 1}. ${title}`;
+        selector.appendChild(option);
+      });
+    }
+
+    function updatePresentation() {
+      slides.forEach((slide, index) => {
+        if (index === currentSlide) {
+          slide.classList.add('active');
+        } else {
+          slide.classList.remove('active');
+        }
+      });
+      if(selector) selector.value = currentSlide;
+      
+      const presArea = document.getElementById('presentation-area') || document.body;
+      const scaleX = presArea.clientWidth / 1280;
+      const scaleY = presArea.clientHeight / 720;
+      const scale = Math.min(scaleX, scaleY) * 0.95;
+      
+      slides[currentSlide].style.transform = `translate(-50%, -50%) scale(${scale})`;
+    }
+
+    function nextSlide() {
+      if (currentSlide < slides.length - 1) { currentSlide++; updatePresentation(); }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) { currentSlide--; updatePresentation(); }
+    }
+
+    function jumpToSlide(index) {
+      currentSlide = parseInt(index); updatePresentation();
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if(e.target.isContentEditable || e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return; 
+      if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') nextSlide();
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') prevSlide();
+    });
+
+    window.addEventListener('resize', updatePresentation);
+    initDropdown();
+    updatePresentation();
+
+    // --- 2. DRAG AND DROP LOGIC (AUTO-APPLY) ---
+    const dropZones = document.querySelectorAll('.drop-zone');
+    const draggables = document.querySelectorAll('.drag-item');
+    const containers = document.querySelectorAll('.draggable-container');
+
+    draggables.forEach(draggable => {
+      draggable.addEventListener('dragstart', () => draggable.classList.add('dragging'));
+      draggable.addEventListener('dragend', () => {
+        draggable.classList.remove('dragging');
+        checkPracticeCompletion();
+      });
+    });
+
+    dropZones.forEach(zone => {
+      zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+      zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+      zone.addEventListener('drop', e => {
+        e.preventDefault();
+        zone.classList.remove('drag-over');
+        const draggable = document.querySelector('.dragging');
+        if (draggable) zone.querySelector('.drop-content').appendChild(draggable);
+      });
+    });
+
+    containers.forEach(container => {
+      container.addEventListener('dragover', e => e.preventDefault());
+      container.addEventListener('drop', e => {
+        const draggable = document.querySelector('.dragging');
+        if (draggable) container.appendChild(draggable);
+      });
+    });
+
+    function checkPracticeCompletion() {
+      document.querySelectorAll('.practice-feedback').forEach(feedback => {
+        let slide = feedback.closest('.slide-container');
+        let totalItems = slide.querySelectorAll('.drag-item').length;
+        let correct = 0;
+        slide.querySelectorAll('.drop-zone').forEach(zone => {
+          zone.querySelectorAll('.drag-item').forEach(item => {
+            if (item.dataset.type === zone.dataset.target) correct++;
+          });
+        });
+        feedback.style.display = (correct === totalItems && totalItems > 0) ? 'block' : 'none';
+      });
+    }
+
+    // --- 3. QUIZ LOGIC ---
+    window.handleQuiz = function(clickedBtn, isCorrect, feedbackId) {
+      const parent = clickedBtn.parentElement;
+      const allButtons = parent.querySelectorAll('.quiz-option');
+      allButtons.forEach(btn => {
+        btn.style.pointerEvents = 'none';
+        const icon = btn.querySelector('i');
+        icon.className = btn.dataset.correct === "true" ? 'fa-solid fa-check-circle' : 'fa-solid fa-circle-xmark';
+        if (btn.dataset.correct === "true") btn.classList.add('correct');
+      });
+      if (!isCorrect) clickedBtn.classList.add('wrong');
+      document.getElementById(feedbackId).classList.add('show');
+    };
+  </script>
+</body>
+</html>

@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Analisa Proses Bisnis - Pertemuan 7</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Open+Sans:wght@400;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    /* CSS RESET & SECURITY THEME VARIABLES */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-bg-light: #F8FAFC;
+      --color-text-dark: #0F172A;
+      --color-text-muted: #475569;
+      --color-primary: #0F172A;
+      --color-red: #DC2626;       /* Security Vulnerability / Warning */
+      --color-cyan: #06B6D4;      /* Cyber / System */
+      --color-green: #10B981;     /* Safe / Control */
+      --color-white: #FFFFFF;
+      --color-dark-bg: #0B0F19;
+      --navbar-height: 60px;
+    }
+    
+    body { 
+      margin: 0; 
+      padding: 0; 
+      background: #0B0F19; 
+      font-family: 'Open Sans', sans-serif; 
+      height: 100vh; 
+      overflow: hidden; 
+      position: relative;
+    }
+
+    /* TOP NAVIGATION BAR */
+    .top-navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: var(--navbar-height);
+      background: #0F172A;
+      border-bottom: 2px solid #1E293B;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 1000;
+      font-family: 'Montserrat', sans-serif;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.5);
+    }
+
+    .nav-left, .nav-center, .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-btn {
+      background: #1E293B;
+      border: 1px solid #334155;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+      padding: 8px 16px;
+      border-radius: 6px;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .nav-btn:hover { background: var(--color-red); border-color: var(--color-red); }
+
+    /* DROPDOWN MENU SLIDES */
+    .slide-selector {
+      background: #1E293B;
+      color: white;
+      border: 1px solid #334155;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      outline: none;
+      max-width: 360px;
+    }
+    .slide-selector option { background: #0F172A; }
+
+    /* MAIN CONTAINER ADJUSTMENT */
+    #presentation-area {
+      position: absolute;
+      top: var(--navbar-height);
+      left: 0;
+      right: 0;
+      bottom: 0; 
+      overflow: hidden;
+    }
+
+    /* HARD LOCK 16:9 CONTAINER (1280x720px) */
+    .slide-container {
+      width: 1280px !important;
+      height: 720px !important;
+      background: var(--color-bg-light);
+      color: var(--color-text-dark);
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(1);
+      transform-origin: center center;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.35s ease-in-out;
+      pointer-events: none;
+    }
+
+    .slide-container.active {
+      visibility: visible;
+      opacity: 1;
+      z-index: 5;
+      pointer-events: auto;
+    }
+
+    /* TYPOGRAPHY */
+    h1, h2, h3, h4, .eyebrow { font-family: 'Montserrat', sans-serif; }
+    h1 { font-size: 60px; font-weight: 800; line-height: 1.15; margin-bottom: 20px; color: var(--color-text-dark); }
+    h2 { font-size: 42px; font-weight: 700; line-height: 1.25; margin-bottom: 24px; color: var(--color-text-dark); }
+    h3 { font-size: 30px; font-weight: 700; margin-bottom: 14px; color: var(--color-red); }
+    p, li { font-size: 24px; line-height: 1.5; color: var(--color-text-muted); }
+    .eyebrow { font-size: 18px; font-weight: 700; color: var(--color-red); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; }
+    .divider { width: 80px; height: 6px; background: var(--color-red); margin: 20px 0 24px 0; }
+    
+    .bg-dark { background: var(--color-dark-bg) !important; color: var(--color-white) !important; }
+    .bg-dark h1, .bg-dark h2, .bg-dark h3, .bg-dark p, .bg-dark li { color: var(--color-white) !important; }
+    
+    /* LAYOUT: SPLIT SCREEN */
+    .layout-split { display: flex; flex-direction: row; flex: 1 1 100%; width: 100%; height: 100%; }
+    .split-col { display: flex; flex-direction: column; justify-content: center; height: 100%; padding: 40px 80px; }
+    .split-img-col { padding: 0 !important; margin: 0 !important; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #0F172A; }
+    .split-img-col img { width: 100%; height: 100%; object-fit: cover; display: block; margin: 0; padding: 0; }
+    
+    /* SPLIT RATIOS */
+    .w-40 { flex: 0 0 40%; width: 40%; }
+    .w-50 { flex: 0 0 50%; width: 50%; }
+    .w-60 { flex: 0 0 60%; width: 60%; }
+
+    /* LAYOUT: STANDARD / CENTERED */
+    .pad-standard { padding: 40px 80px; display: flex; flex-direction: column; flex: 1; height: 100%; }
+    .center-content { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; flex: 1; height: 100%; padding: 40px 80px; }
+    .flex-grow-center { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; }
+
+    /* COMPONENTS: LISTS & CARDS */
+    .minimal-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 20px; }
+    .minimal-list li { display: flex; align-items: flex-start; gap: 20px; font-weight: 600; }
+    .minimal-list li i { font-size: 32px; color: var(--color-red); width: 40px; text-align: center; margin-top: 4px; }
+
+    .card-grid { display: flex; gap: 24px; align-items: stretch; width: 100%; justify-content: center; flex-wrap: wrap; }
+    .card { background: var(--color-white); border-radius: 16px; padding: 32px 32px; flex: 1 1 0; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #E2E8F0; display: flex; flex-direction: column; align-items: flex-start; }
+    .card i { font-size: 48px; color: var(--color-red); margin-bottom: 16px; }
+
+    /* INTERACTIVE: DRAG AND DROP */
+    .draggable-container { display: flex; gap: 16px; margin-bottom: 16px; justify-content: center; min-height: 60px; flex-wrap: wrap; }
+    .drag-item { 
+      cursor: grab; padding: 10px 20px; font-size: 18px; background: white; 
+      border: 3px solid var(--color-red); border-radius: 12px; font-weight: 700; 
+      user-select: none; color: #0F172A; text-align: center; margin-bottom: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.2s; display: inline-block;
+    }
+    .drag-item:active { cursor: grabbing; transform: scale(0.95); }
+    .drag-item.dragging { opacity: 0.5; }
+    
+    .dropzones-container { display: flex; gap: 24px; justify-content: center; align-items: stretch; width: 100%; }
+    .drop-zone { 
+      border: 4px dashed #CBD5E1; border-radius: 16px; flex: 1; 
+      min-height: 180px; padding: 16px; display: flex; flex-direction: column; 
+      align-items: center; background: #FFFFFF; transition: 0.3s;
+    }
+    .drop-zone h3 { font-size: 22px; margin-bottom: 12px; color: #475569; border-bottom: 2px solid #CBD5E1; padding-bottom: 8px; width: 100%; text-align: center;}
+    .drop-zone.drag-over { border-color: var(--color-red); background: #FEF2F2; }
+    .drop-content { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; width: 100%; gap: 8px; }
+
+    /* INTERACTIVE: QUIZ */
+    .quiz-option {
+      background: #F8FAFC; border: 2px solid #CBD5E1; padding: 12px 20px; 
+      border-radius: 12px; font-size: 20px; font-weight: 600; cursor: pointer; 
+      text-align: left; transition: 0.2s; margin-bottom: 12px; width: 100%;
+      color: #334155; display: flex; align-items: center; gap: 16px;
+    }
+    .quiz-option:hover { background: #E2E8F0; transform: translateX(8px); }
+    .quiz-option.correct { background: #D1FAE5; border-color: #10B981; color: #065F46; }
+    .quiz-option.wrong { background: #FEE2E2; border-color: #EF4444; color: #991B1B; }
+    
+    .quiz-feedback { 
+      display: none; margin-top: 16px; padding: 16px 24px; background: #F0F9FF; 
+      border-left: 8px solid var(--color-red); border-radius: 0 12px 12px 0; font-size: 18px; 
+      animation: fadeIn 0.4s ease-in-out;
+    }
+    .quiz-feedback.show { display: block; }
+    .quiz-feedback h4 { font-size: 22px; margin-bottom: 8px; color: var(--color-red); }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+<body>
+
+  <!-- TOP NAVIGATION BAR -->
+  <div class="top-navbar" id="navbar">
+    <div class="nav-left">
+      <div style="font-weight: 800; font-size: 18px; color: #38BDF8;">ITB Swadharma</div>
+    </div>
+    
+    <div class="nav-center">
+      <button class="nav-btn" onclick="prevSlide()" title="Slide Sebelumnya"><i class="fa-solid fa-chevron-left"></i></button>
+      <select class="slide-selector" id="slideSelector" onchange="jumpToSlide(this.value)"></select>
+      <button class="nav-btn" onclick="nextSlide()" title="Slide Berikutnya"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+
+    <div class="nav-right">
+      <div style="font-weight: 600; font-size: 14px; color: #94A3B8;">Analisa Proses Bisnis (3 SKS) • Ardi Ariansyah, S.Kom., Gr.</div>
+    </div>
+  </div>
+
+  <!-- MAIN PRESENTATION AREA -->
+  <div id="presentation-area">
+    <div id="slides-wrapper">
+
+      <!-- ==========================================
+           SECTION 1: COVER & INTRODUCTION (SLIDES 1-5)
+           ========================================== -->
+
+      <!-- SLIDE 1 -->
+      <div class="slide-container layout-split bg-dark active" data-title="Sampul Depan">
+        <div class="split-col w-60 bg-dark">
+          <p class="eyebrow">Pertemuan 7 • INF1104</p>
+          <h1>Security-Aware Business Process</h1>
+          <div class="divider"></div>
+          <p style="font-size: 32px; font-weight: 600;">Identifikasi Celah Keamanan &amp; Prinsip CIA Triad</p>
+          <div style="margin-top: 40px; border-top: 2px solid #334155; padding-top: 20px;">
+            <p style="color: #94A3B8; font-size: 18px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Dosen Pengampu:</p>
+            <p style="color: #FFFFFF; font-size: 26px; font-weight: 700; margin-top: 6px;">Ardi Ariansyah, S.Kom., Gr.</p>
+            <p style="color: #38BDF8; font-size: 20px; font-weight: 600;">S1 Teknik Informatika • ITBS</p>
+          </div>
+        </div>
+        <div class="split-col split-img-col w-40">
+          <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800&q=80" alt="Cybersecurity Concept">
+        </div>
+      </div>
+
+      <!-- SLIDE 2 -->
+      <div class="slide-container center-content" data-title="Kesiapan Daring">
+        <i class="fa-solid fa-shield-halved" style="font-size: 100px; color: var(--color-red); margin-bottom: 32px;"></i>
+        <h2 style="font-size: 56px;">Kesiapan Sesi Pra-UTS</h2>
+        <p style="font-size: 28px; font-weight: 600; margin-top: 16px;">Pertemuan penutup paruh semester pertama sebelum evaluasi UTS pekan depan!</p>
+      </div>
+
+      <!-- SLIDE 3 -->
+      <div class="slide-container layout-split" data-title="Review Pertemuan 6">
+        <div class="split-col split-img-col w-40" style="background: #F1F5F9;">
+          <i class="fa-solid fa-network-wired" style="font-size: 180px; color: #94A3B8;"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Kilas Balik Pertemuan 6</p>
+          <h2>Infrastruktur &amp; Aliran Data</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-server"></i> <span>Ketergantungan alur kerja terhadap server, jaringan, dan cloud.</span></li>
+            <li><i class="fa-solid fa-triangle-exclamation"></i> <span>Dampak buruk *Single Point of Failure* (SPOF) dan bottleneck.</span></li>
+            <li><i class="fa-solid fa-handshake"></i> <span>Kontrak ketersediaan sistem melalui *Service Level Agreement* (SLA).</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 4 -->
+      <div class="slide-container pad-standard" data-title="Capaian Pembelajaran (CPMK)">
+        <h2>Target Capaian Sub-CPMK 3.2</h2>
+        <div class="flex-grow-center">
+          <div style="background: #FEF2F2; border-left: 12px solid var(--color-red); padding: 48px; border-radius: 0 16px 16px 0;">
+            <h3 style="font-size: 32px; margin-bottom: 24px; color: #991B1B;">Kemampuan Akhir Tahapan Belajar</h3>
+            <p style="font-size: 28px; font-weight: 600; color: var(--color-red);">"Mahasiswa mampu mengidentifikasi titik rawan keamanan informasi dalam alur proses bisnis (Security-Aware Process) menggunakan prinsip dasar CIA Triad dan mengevaluasi celah akibat kesalahan manusia (Human Error vs System Vulnerability)."</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 5 -->
+      <div class="slide-container pad-standard" data-title="Peta Materi">
+        <h2>Peta Materi Pertemuan 7</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 8px solid var(--color-red); text-align: center; align-items: center;">
+              <i class="fa-solid fa-triangle-exclamation" style="font-size: 56px; color: var(--color-red);"></i>
+              <h3>1. Paradigma Keamanan</h3>
+              <p>Mengapa proses operasional sering menjadi celah eksploitasi?</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--color-cyan); text-align: center; align-items: center;">
+              <i class="fa-solid fa-shield-virus" style="font-size: 56px; color: var(--color-cyan);"></i>
+              <h3>2. Prinsip CIA Triad</h3>
+              <p>Confidentiality, Integrity, dan Availability dalam alur bisnis.</p>
+            </div>
+            <div class="card" style="border-top: 8px solid #F59E0B; text-align: center; align-items: center;">
+              <i class="fa-solid fa-user-xmark" style="font-size: 56px; color: #F59E0B;"></i>
+              <h3>3. Human Error &amp; Kontrol</h3>
+              <p>Workarounds SOP dan integrasi kontrol keamanan di BPMN.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SECTION 2: PARADIGMA KEAMANAN PROSES BISNIS (SLIDES 6-12)
+           ========================================== -->
+
+      <!-- SLIDE 6 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian I: Paradigma Keamanan">
+        <p class="eyebrow">Bagian I</p>
+        <h1 style="font-size: 72px;">Keamanan Informasi &amp; Alur Kerja</h1>
+        <div class="divider"></div>
+        <p style="font-size: 32px;">Mengapa Kebocoran Data Sering Berasal dari SOP, Bukan Firewall?</p>
+      </div>
+
+      <!-- SLIDE 7 -->
+      <div class="slide-container layout-split" data-title="Mitos Keamanan TI">
+        <div class="split-col w-60">
+          <p class="eyebrow">Mitos vs Realita</p>
+          <h2>Mitos Keamanan Siber</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-xmark" style="color: #EF4444;"></i> <span>Mitos: Keamanan hanyalah tanggung jawab tim IT yang bertugas memasang antivirus dan firewall server.</span></li>
+            <li><i class="fa-solid fa-check" style="color: #10B981;"></i> <span>Realita: Lebih dari 80% insiden siber terjadi akibat celah desain operasional dan kelalaian prosedur manusia.</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40">
+          <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&q=80" alt="Cybersecurity Lock Screen">
+        </div>
+      </div>
+
+      <!-- SLIDE 8 -->
+      <div class="slide-container pad-standard" data-title="Definisi Security-Aware Process">
+        <h2>Apa itu "Security-Aware Business Process"?</h2>
+        <div class="flex-grow-center">
+          <div style="background: #FEF2F2; border-left: 12px solid var(--color-red); padding: 48px; border-radius: 0 16px 16px 0;">
+            <i class="fa-solid fa-shield-cat" style="font-size: 64px; color: var(--color-red); margin-bottom: 20px;"></i>
+            <p style="font-size: 30px; font-weight: 600; color: #0F172A; line-height: 1.5;">
+              Pendekatan di mana perlindungan aset informasi, otorisasi tugas, dan kontrol privasi dirancang secara menyatu ke dalam diagram alur kerja sejak awal (*Security by Design*), bukan sekadar tempelan di akhir.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 9 -->
+      <div class="slide-container layout-split" data-title="Analogi Pintu Benteng">
+        <div class="split-col split-img-col w-40" style="background: #F1F5F9;">
+          <i class="fa-solid fa-door-open" style="font-size: 180px; color: var(--color-red);"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Analogi Analis</p>
+          <h2>Pintu Baja dengan Kunci di Bawah Keset</h2>
+          <p style="font-size: 24px; color: #475569; margin-bottom: 20px;">
+            Perusahaan bisa saja menginvestasikan miliaran rupiah untuk enkripsi server cloud. Namun jika staf kasir menempelkan catatan *username* dan *password* admin di layar monitor POS, seluruh investasi benteng digital tersebut menjadi sia-sia.
+          </p>
+        </div>
+      </div>
+
+      <!-- SLIDE 10 -->
+      <div class="slide-container pad-standard" data-title="Dampak Finansial & Hukum">
+        <h2>Dampak Hukum &amp; Finansial Insiden Data</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 8px solid var(--color-red);">
+              <i class="fa-solid fa-scale-balanced" style="color: var(--color-red);"></i>
+              <h3>Sanksi Regulasi (UU PDP)</h3>
+              <p>Undang-Undang Perlindungan Data Pribadi mengenakan denda ganti rugi hingga miliaran rupiah bagi pengelola data yang teledor.</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--color-red);">
+              <i class="fa-solid fa-users-slash" style="color: var(--color-red);"></i>
+              <h3>Kehilangan Kepercayaan Klien</h3>
+              <p>Sekali data pelanggan bocor ke dark web, reputasi merek runtuh dan pelanggan akan bermigrasi seketika ke pesaing.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 11 -->
+      <div class="slide-container layout-split" data-title="Titik Rawan Umum">
+        <div class="split-col w-60">
+          <p class="eyebrow">Peta Kerentanan</p>
+          <h2>Di Mana Celah Sering Muncul?</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-envelope-open-text"></i> <span>Pertukaran dokumen eksternal via email publik tanpa proteksi sandi.</span></li>
+            <li><i class="fa-solid fa-print"></i> <span>Kertas nota cetak berisi nomor telepon pelanggan tercecer di meja sampah.</span></li>
+            <li><i class="fa-solid fa-right-from-bracket"></i> <span>Staf tidak melakukan *lock screen* saat beranjak istirahat makan siang.</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40">
+          <img src="https://images.unsplash.com/photo-1510511459019-5dda7724fd87?w=800&q=80" alt="Data Privacy Concept">
+        </div>
+      </div>
+
+      <!-- SLIDE 12 -->
+      <div class="slide-container center-content bg-dark" data-title="Kutipan Keamanan">
+        <i class="fa-solid fa-quote-left" style="font-size: 80px; color: #334155; margin-bottom: 24px;"></i>
+        <h2 style="font-size: 38px; font-weight: 700; max-width: 900px; line-height: 1.4;">
+          "Sistem komputer tidak pernah membuat kesalahan keamanan dengan sendirinya; manusia yang merancang alur kerjalah yang menciptakan pintu masuknya."
+        </h2>
+      </div>
+
+      <!-- ==========================================
+           SECTION 3: TRILOGI CIA TRIAD DALAM OPERASIONAL (SLIDES 13-21)
+           ========================================== -->
+
+      <!-- SLIDE 13 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian II: CIA Triad">
+        <p class="eyebrow">Bagian II</p>
+        <h1 style="font-size: 80px;">Prinsip CIA Triad</h1>
+        <div class="divider"></div>
+        <p style="font-size: 32px;">Tiga Pilar Utama Ketahanan Informasi dalam Alur Bisnis.</p>
+      </div>
+
+      <!-- SLIDE 14 -->
+      <div class="slide-container pad-standard" data-title="3 Pilar CIA Triad">
+        <h2>3 Pilar Ketahanan Informasi Bisnis</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 8px solid var(--color-red);">
+              <i class="fa-solid fa-user-secret" style="color: var(--color-red);"></i>
+              <h3>1. Confidentiality</h3>
+              <p>Kerahasiaan data: Hanya aktor yang sah yang diizinkan membaca atau mengakses dokumen.</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--color-cyan);">
+              <i class="fa-solid fa-file-shield" style="color: var(--color-cyan);"></i>
+              <h3>2. Integrity</h3>
+              <p>Keutuhan data: Data dijamin tidak dimanipulasi, diubah, atau dihapus oleh pihak tak berwenang.</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--color-green);">
+              <i class="fa-solid fa-server" style="color: var(--color-green);"></i>
+              <h3>3. Availability</h3>
+              <p>Ketersediaan data: Sistem dan informasi selalu siap diakses setiap kali proses membutuhkannya.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 15 -->
+      <div class="slide-container layout-split" data-title="Pilar 1: Confidentiality">
+        <div class="split-col w-60">
+          <p class="eyebrow">Pilar 1: Kerahasiaan</p>
+          <h2>Confidentiality dalam Proses</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-eye-slash"></i> <span>Mencegah pihak yang tidak berhak mengintip data privat (NIK, gaji, riwayat transaksi).</span></li>
+            <li><i class="fa-solid fa-triangle-exclamation"></i> <span>**Celah Proses:** Mengirimkan berkas rekap mutasi bank seluruh staf ke grup WhatsApp umum tanpa proteksi enkripsi berkas.</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40">
+          <img src="https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?w=800&q=80" alt="Confidentiality Shield">
+        </div>
+      </div>
+
+      <!-- SLIDE 16 -->
+      <div class="slide-container pad-standard" data-title="Shoulder Surfing">
+        <h2>Ancaman Fisik: Shoulder Surfing</h2>
+        <div class="flex-grow-center">
+          <div style="background: #FFFBEB; border-left: 12px solid #F59E0B; padding: 40px; border-radius: 0 16px 16px 0;">
+            <p style="font-size: 26px; font-weight: 600; color: #1E293B; line-height: 1.5;">
+              "Meja loket pendaftaran di kampus atau kasir kafe diletakkan menghadap area antrean publik tanpa filter privasi (*privacy filter screen*). Orang asing di belakang antrean dapat dengan mudah membaca nomor PIN, kata sandi, atau data pribadi yang diketik staf."
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 17 -->
+      <div class="slide-container layout-split" data-title="Pilar 2: Integrity">
+        <div class="split-col split-img-col w-40" style="background: #ECFEFF;">
+          <i class="fa-solid fa-file-pen" style="font-size: 180px; color: var(--color-cyan);"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Pilar 2: Keutuhan</p>
+          <h2>Integrity dalam Proses</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-signature"></i> <span>Memastikan informasi transaksi tidak diubah secara ilegal di tengah jalan (*Tampering*).</span></li>
+            <li><i class="fa-solid fa-triangle-exclamation"></i> <span>**Celah Proses:** Staf gudang mencatat retur barang pada buku fisik yang mudah dicoret nominalnya tanpa meninggalkan jejak log sistem.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 18 -->
+      <div class="slide-container pad-standard" data-title="Bahaya Integritas: Nilai Akademik">
+        <h2>Studi Kasus Integritas: Pemalsuan Nilai</h2>
+        <div class="flex-grow-center">
+          <div style="background: #FEF2F2; border-left: 12px solid var(--color-red); padding: 40px; border-radius: 0 16px 16px 0;">
+            <p style="font-size: 26px; font-weight: 600; color: #991B1B; line-height: 1.5;">
+              "Jika form penilaian mahasiswa diunggah dalam format Excel biasa tanpa enkripsi dan kunci tanda tangan digital dosen, staf perantara dapat mengubah nilai mahasiswa bermasalah sebelum diimpor ke sistem SIAKAD kampus."
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 19 -->
+      <div class="slide-container layout-split" data-title="Pilar 3: Availability">
+        <div class="split-col w-60">
+          <p class="eyebrow">Pilar 3: Ketersediaan</p>
+          <h2>Availability dalam Proses</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-bolt"></i> <span>Menjamin alur operasional tetap dapat berjalan saat sistem utama mengalami masalah.</span></li>
+            <li><i class="fa-solid fa-triangle-exclamation"></i> <span>**Celah Proses:** Sistem tiket penerbangan atau registrasi KRS kampus tidak memiliki server cadangan sehingga mati total saat diserbu ribuan user serentak.</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40">
+          <img src="https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=800&q=80" alt="Server Hardware Availability">
+        </div>
+      </div>
+
+      <!-- SLIDE 20 -->
+      <div class="slide-container pad-standard" data-title="Korelasi CIA dengan BPMN">
+        <h2>Menghubungkan CIA Triad ke Notasi BPMN</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 8px solid var(--color-red);">
+              <h4>Confidentiality &rarr; Lane Otorisasi</h4>
+              <p style="font-size: 16px;">Membatasi hanya Lane Manajer yang boleh melihat Data Object laporan keuangan.</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--color-cyan);">
+              <h4>Integrity &rarr; Verification Task</h4>
+              <p style="font-size: 16px;">Menambahkan Task "Memvalidasi Hash / Tanda Tangan Digital" sebelum data disimpan.</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--color-green);">
+              <h4>Availability &rarr; Fallback Branch</h4>
+              <p style="font-size: 16px;">Menambahkan Gateway cabang jika API server down beralih ke mode pencatatan offline.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 21 -->
+      <div class="slide-container center-content bg-dark" data-title="Refleksi CIA">
+        <h2 style="font-size: 44px; max-width: 900px;">
+          "Sistem yang aman bukanlah sistem yang memblokir semua orang, melainkan sistem yang menjamin orang yang tepat dapat bekerja dengan data yang benar kapan pun dibutuhkan."
+        </h2>
+      </div>
+
+      <!-- ==========================================
+           SECTION 4: HUMAN ERROR VS SYSTEM VULNERABILITY (SLIDES 22-30)
+           ========================================== -->
+
+      <!-- SLIDE 22 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian III: Faktor Manusia">
+        <p class="eyebrow">Bagian III</p>
+        <h1 style="font-size: 72px;">Human Error vs System Flaw</h1>
+        <div class="divider"></div>
+        <p style="font-size: 32px;">Ketika Desain SOP yang Kaku Memaksa Karyawan Melanggar Keamanan.</p>
+      </div>
+
+      <!-- SLIDE 23 -->
+      <div class="slide-container pad-standard" data-title="Hukum Jalan Pintas SOP">
+        <h2>Hukum Jalan Pintas Operasional (*Workarounds*)</h2>
+        <div class="flex-grow-center">
+          <div style="background: #FFFBEB; border-left: 12px solid #F59E0B; padding: 48px; border-radius: 0 16px 16px 0;">
+            <p style="font-size: 30px; font-weight: 700; color: #92400E; line-height: 1.5;">
+              "Jika prosedur keamanan yang dirancang terlalu rumit dan menghambat target kecepatan kerja harian, karyawan PASTI akan menciptakan jalan pintas yang justru melubangi benteng keamanan sistem."
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 24 -->
+      <div class="slide-container layout-split" data-title="Studi Kasus: Berbagi Password">
+        <div class="split-col w-60">
+          <p class="eyebrow">Studi Kasus Ritel</p>
+          <h2>Berbagi Password di Meja Kasir</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-users"></i> <span>SOP mewajibkan setiap pergantian shift kasir login akun masing-masing dengan OTP 2FA.</span></li>
+            <li><i class="fa-solid fa-clock"></i> <span>Karena antrean panjang, kasir malas logout dan memilih menggunakan 1 akun bersama (*Shared Account*).</span></li>
+            <li><i class="fa-solid fa-bomb" style="color: var(--color-red);"></i> <span>Akibat: Saat uang tunai di kasir selisih hilang, manajemen tidak bisa melacak siapa yang bertanggung jawab (*Loss of Accountability*).</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40" style="background: #FEF2F2;">
+          <i class="fa-solid fa-key" style="font-size: 180px; color: var(--color-red);"></i>
+        </div>
+      </div>
+
+      <!-- SLIDE 25 -->
+      <div class="slide-container pad-standard" data-title="Perbandingan Celah">
+        <h2>Perbandingan Sumber Kerentanan Bisnis</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 8px solid var(--color-red);">
+              <h3 style="color: #991B1B;">Human Error / SOP Flaw</h3>
+              <p>Salah kirim dokumen via email, tertipu rekayasa sosial (*Phishing*), membiarkan komputer tanpa kunci layar, menggunakan kata sandi lemah.</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--color-cyan);">
+              <h3 style="color: #0891B2;">System Vulnerability</h3>
+              <p>Bug pada kode aplikasi backend, basis data tidak dienkripsi, port server terbuka tanpa firewall, celah injeksi kode SQL pada form web.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 26 -->
+      <div class="slide-container layout-split" data-title="Phishing & Social Engineering">
+        <div class="split-col split-img-col w-40" style="background: #F1F5F9;">
+          <i class="fa-solid fa-fish-fins" style="font-size: 180px; color: var(--color-accent);"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Serangan Manipulasi Psikologis</p>
+          <h2>Social Engineering dalam Proses</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-envelope-circle-check"></i> <span>Penyerang mengirim email menyamar sebagai direktur kampus meminta staf keuangan segera mentransfer dana darurat.</span></li>
+            <li><i class="fa-solid fa-triangle-exclamation"></i> <span>Staf mentransfer dana karena tidak ada SOP verifikasi telepon ganda sebelum eksekusi pembayaran bernilai besar.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 27 -->
+      <div class="slide-container pad-standard" data-title="Prinsip Hak Akses Minimum">
+        <h2>Prinsip Hak Akses Terkecil (*Least Privilege*)</h2>
+        <div class="flex-grow-center">
+          <div style="background: #EEF2FF; border-left: 12px solid #4338CA; padding: 40px; border-radius: 0 16px 16px 0;">
+            <p style="font-size: 26px; font-weight: 600; color: #1E293B; line-height: 1.5;">
+              "Setiap aktor (Lane) di dalam proses bisnis hanya boleh diberikan wewenang hak akses minimum mutlak yang mereka perlukan untuk menyelesaikan tugasnya, tidak lebih."
+            </p>
+            <p style="font-size: 20px; color: #475569; margin-top: 16px;">
+              Contoh: Barista kafe hanya berhak melihat daftar menu pesanan, tetapi DILARANG memiliki akses membaca laporan laba bersih harian pemilik kafe.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 28 -->
+      <div class="slide-container layout-split" data-title="Keseimbangan Usability vs Security">
+        <div class="split-col w-60">
+          <p class="eyebrow">Dilema Perancangan</p>
+          <h2>Usability vs Security</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-lock"></i> <span>Terlalu aman &rarr; Proses lambat, pelanggan kabur, staf frustrasi.</span></li>
+            <li><i class="fa-solid fa-unlock"></i> <span>Terlalu mudah &rarr; Data bocor, mudah dimanipulasi, rentan penipuan.</span></li>
+            <li><i class="fa-solid fa-scale-balanced"></i> <span>Tugas Analis Sistem: Menemukan titik temu yang aman namun tetap ramah operasional (*Frictionless Security*).</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40" style="background: #ECFDF5;">
+          <i class="fa-solid fa-sliders" style="font-size: 180px; color: var(--color-green);"></i>
+        </div>
+      </div>
+
+      <!-- SLIDE 29 -->
+      <div class="slide-container pad-standard" data-title="Shadow IT">
+        <h2>Bahaya "Shadow IT" di Organisasi</h2>
+        <div class="flex-grow-center">
+          <div style="background: #FEF2F2; border-left: 12px solid var(--color-red); padding: 40px; border-radius: 0 16px 16px 0;">
+            <p style="font-size: 26px; font-weight: 600; color: #991B1B; line-height: 1.5;">
+              "Shadow IT adalah penggunaan perangkat lunak atau layanan cloud tanpa persetujuan tim IT resmi perusahaan (misal: staf menggunakan Google Drive pribadi untuk menyimpan data KTP pelanggan karena server kantor lambat)."
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 30 -->
+      <div class="slide-container center-content bg-dark" data-title="Kutipan Human Factor">
+        <h2 style="font-size: 42px; font-weight: 700; max-width: 900px; line-height: 1.4;">
+          "Rancanglah alur kerja yang mempermudah staf melakukan hal yang benar, dan mempersulit staf melakukan hal yang salah."
+        </h2>
+      </div>
+
+      <!-- ==========================================
+           SECTION 5: INTEGRASI KONTROL KEAMANAN KE BPMN (SLIDES 31-38)
+           ========================================== -->
+
+      <!-- SLIDE 31 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian IV: Kontrol dalam BPMN">
+        <p class="eyebrow">Bagian IV</p>
+        <h1 style="font-size: 72px;">Integrasi Kontrol ke BPMN</h1>
+        <div class="divider"></div>
+        <p style="font-size: 32px;">Memetakan Keamanan Secara Visual pada Pemodelan Proses.</p>
+      </div>
+
+      <!-- SLIDE 32 -->
+      <div class="slide-container layout-split" data-title="Prinsip SoD">
+        <div class="split-col w-60">
+          <p class="eyebrow">Kontrol Fondasi</p>
+          <h2>Segregation of Duties (SoD)</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-user-group"></i> <span>Pemisahan kewenangan tugas penting kepada lebih dari satu individu guna mencegah kecurangan (*Fraud*).</span></li>
+            <li><i class="fa-solid fa-code-branch"></i> <span>Di BPMN: Pembuat tagihan invoice **tidak boleh berada di satu Lane yang sama** dengan yang mencairkan transfer dana.</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40" style="background: #EEF2FF;">
+          <i class="fa-solid fa-scale-balanced" style="font-size: 180px; color: #4338CA;"></i>
+        </div>
+      </div>
+
+      <!-- SLIDE 33 -->
+      <div class="slide-container pad-standard" data-title="3 Elemen Kontrol BPMN">
+        <h2>3 Elemen Kontrol Keamanan di Diagram BPMN</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 8px solid var(--color-green);">
+              <i class="fa-solid fa-fingerprint" style="color: var(--color-green);"></i>
+              <h3>Task Autentikasi</h3>
+              <p>Menyisipkan Task eksplisit: "Memverifikasi Kode OTP / Biometrik" sebelum transaksi final disetujui.</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--color-cyan);">
+              <i class="fa-solid fa-file-shield" style="color: var(--color-cyan);"></i>
+              <h3>Data Store Terenkripsi</h3>
+              <p>Menghubungkan Task penyimpanan ke Data Store bertuliskan "Database Terenkripsi AES-256".</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--color-red);">
+              <i class="fa-solid fa-shield-virus" style="color: var(--color-red);"></i>
+              <h3>Boundary Error Event</h3>
+              <p>Menempelkan Boundary Event di task login: Jika gagal 3 kali, panah proses otomatis mengarah ke blokir akun.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 34 -->
+      <div class="slide-container layout-split" data-title="Pencatatan Audit Trail">
+        <div class="split-col split-img-col w-40" style="background: #F8FAFC;">
+          <i class="fa-solid fa-clock-rotate-left" style="font-size: 180px; color: var(--color-cyan);"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Bukti Forensik</p>
+          <h2>Pencatatan Log Audit (*Audit Trail*)</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-pen-to-square"></i> <span>Setiap aktivitas perubahan status kritis (misal: perubahan nilai atau pencairan dana) wajib memiliki sub-aktivitas pencatatan log.</span></li>
+            <li><i class="fa-solid fa-server"></i> <span>Log audit merekam identitas staf, alamat IP, waktu detik, dan nilai sebelum vs sesudah perubahan.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 35 -->
+      <div class="slide-container pad-standard" data-title="Two-Person Rule">
+        <h2>Prinsip Validasi Ganda (*Two-Person Rule*)</h2>
+        <div class="flex-grow-center">
+          <div style="background: #F8FAFC; border: 2px solid #CBD5E1; padding: 36px; border-radius: 16px;">
+            <p style="font-size: 24px; font-weight: 700; color: #0F172A; margin-bottom: 12px;">
+              Penerapan di Alur Keuangan Kampus:
+            </p>
+            <p style="font-size: 22px; color: #475569; line-height: 1.6;">
+              Lane 1 (Staf Keuangan) menginput nominal pengadaan perlengkapan lab &rarr; Exclusive Gateway mengecek: jika nominal > Rp10.000.000, proses TIDAK BOLEH langsung cair, melainkan wajib diarahkan ke Lane 2 (Wakil Rektor II) untuk melakukan otorisasi kunci digital kedua.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 36 -->
+      <div class="slide-container layout-split" data-title="Data Redaction">
+        <div class="split-col w-60">
+          <p class="eyebrow">Proteksi Dokumen</p>
+          <h2>Penyamaran Data (*Data Masking*)</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-mask"></i> <span>Aktivitas di mana sistem secara otomatis menyamarkan data pribadi sensitif sebelum ditampilkan ke layar staf.</span></li>
+            <li><i class="fa-solid fa-credit-card"></i> <span>Contoh: Kasir hanya melihat 4 digit terakhir nomor rekening pelanggan (misal: **********1234).</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40" style="background: #ECFEFF;">
+          <i class="fa-solid fa-user-shield" style="font-size: 180px; color: var(--color-cyan);"></i>
+        </div>
+      </div>
+
+      <!-- SLIDE 37 -->
+      <div class="slide-container pad-standard" data-title="Enkripsi Data At-Rest & Transit">
+        <h2>Enkripsi dalam Aliran Data BPMN</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 8px solid var(--color-cyan);">
+              <h3>Data in-Transit (Bergerak)</h3>
+              <p>Message Flow antar Pool dilindungi sertifikat SSL/TLS HTTPS untuk mencegah pembajakan transmisi data di jaringan publik.</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--color-primary);">
+              <h3>Data at-Rest (Tersimpan)</h3>
+              <p>Data Store dienkripsi menggunakan kunci kriptografi agar jika hard disk server dicuri, data di dalamnya tidak dapat dibaca.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 38 -->
+      <div class="slide-container center-content bg-dark" data-title="Kesimpulan Integrasi BPMN">
+        <i class="fa-solid fa-diagram-project" style="font-size: 80px; color: var(--color-cyan); margin-bottom: 24px;"></i>
+        <h2>BPMN yang Berkesadaran Keamanan</h2>
+        <p style="font-size: 26px; max-width: 900px; margin-top: 16px; line-height: 1.5;">
+          Dengan menyertakan gerbang kontrol dan jalur penanganan insiden, diagram proses bisnis kita menjadi panduan nyata bagi tim pengembang keamanan perangkat lunak.
+        </p>
+      </div>
+
+      <!-- ==========================================
+           SECTION 6: SIMULASI & GAME INTERAKTIF (SLIDES 39-42)
+           ========================================== -->
+
+      <!-- SLIDE 39 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian V: Game Interaktif">
+        <p class="eyebrow">Bagian V</p>
+        <h1 style="font-size: 76px;">Simulasi Audit Siber</h1>
+        <div class="divider"></div>
+        <p style="font-size: 32px;">Uji Refleks Mendeteksi Pelanggaran Prinsip CIA Triad.</p>
+      </div>
+
+      <!-- SLIDE 40 -->
+      <div class="slide-container pad-standard" style="background: #F8FAFC;" id="drag-drop-1" data-title="Game CIA Triad">
+        <p class="eyebrow">Game 1: Drag &amp; Drop</p>
+        <h2 style="font-size: 36px; margin-bottom: 12px;">Klasifikasikan Pelanggaran CIA Triad!</h2>
+        <p style="margin-bottom: 20px; font-size: 18px;">Seret insiden di bawah ini ke pilar CIA yang dilanggar.</p>
+        
+        <div class="flex-grow-center" style="justify-content: flex-start;">
+          <div class="draggable-container">
+            <div class="drag-item" draggable="true" data-type="c">Kasir membiarkan layar monitor pelanggan diintip oleh orang asing</div>
+            <div class="drag-item" draggable="true" data-type="i">Hacker mengubah nominal tagihan invoice dari Rp100.000 menjadi Rp10.000.000</div>
+            <div class="drag-item" draggable="true" data-type="a">Serangan DDoS mematikan server portal KRS kampus saat jam ujian</div>
+          </div>
+
+          <div class="dropzones-container">
+            <div class="drop-zone" data-target="c" style="border-color: var(--color-red); background: #FEF2F2;">
+              <h3 style="color: #991B1B;"><i class="fa-solid fa-user-secret"></i> Confidentiality</h3>
+              <div class="drop-content"></div>
+            </div>
+            <div class="drop-zone" data-target="i" style="border-color: var(--color-cyan); background: #ECFEFF;">
+              <h3 style="color: #0891B2;"><i class="fa-solid fa-file-shield"></i> Integrity</h3>
+              <div class="drop-content"></div>
+            </div>
+            <div class="drop-zone" data-target="a" style="border-color: var(--color-green); background: #ECFDF5;">
+              <h3 style="color: #047857;"><i class="fa-solid fa-server"></i> Availability</h3>
+              <div class="drop-content"></div>
+            </div>
+          </div>
+
+          <div class="practice-feedback" style="text-align: center; margin-top: 16px; display: none;">
+            <p style="font-size: 26px; font-weight: 800; color: #10B981;"><i class="fa-solid fa-circle-check"></i> Audit Sempurna!</p>
+            <p style="font-size: 18px; color: #475569; margin-top: 4px;">Anda berhasil memisahkan kebocoran rahasia, pemalsuan data transaksi, dan kelumpuhan server.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 41 -->
+      <div class="slide-container pad-standard" style="background: #F8FAFC;" id="drag-drop-2" data-title="Game Kontrol Keamanan">
+        <p class="eyebrow">Game 2: Drag &amp; Drop</p>
+        <h2 style="font-size: 36px; margin-bottom: 12px;">Pasangkan Risiko dengan Kontrol Solusinya</h2>
+        <p style="margin-bottom: 20px; font-size: 18px;">Seret solusi kontrol ke ancaman risiko yang tepat.</p>
+        
+        <div class="flex-grow-center" style="justify-content: flex-start;">
+          <div class="draggable-container">
+            <div class="drag-item" draggable="true" data-type="sod">Pemisahan Lane Pembuat dan Penyetuju Dana (SoD)</div>
+            <div class="drag-item" draggable="true" data-type="mfa">Verifikasi Kode OTP / Biometrik (MFA)</div>
+            <div class="drag-item" draggable="true" data-type="backup">Backup Otomatis Harian ke Cloud Sekunder</div>
+          </div>
+
+          <div class="dropzones-container">
+            <div class="drop-zone" data-target="sod" style="border-color: var(--color-primary); background: #EEF2FF;">
+              <h3 style="color: var(--color-primary);"><i class="fa-solid fa-scale-balanced"></i> Risiko Penggelapan Dana Kas</h3>
+              <div class="drop-content"></div>
+            </div>
+            <div class="drop-zone" data-target="mfa" style="border-color: var(--color-red); background: #FEF2F2;">
+              <h3 style="color: var(--color-red);"><i class="fa-solid fa-key"></i> Risiko Pembajakan Password</h3>
+              <div class="drop-content"></div>
+            </div>
+            <div class="drop-zone" data-target="backup" style="border-color: var(--color-green); background: #ECFDF5;">
+              <h3 style="color: var(--color-green);"><i class="fa-solid fa-database"></i> Risiko Korupsi Data Server</h3>
+              <div class="drop-content"></div>
+            </div>
+          </div>
+
+          <div class="practice-feedback" style="text-align: center; margin-top: 16px; display: none;">
+            <p style="font-size: 26px; font-weight: 800; color: #10B981;"><i class="fa-solid fa-circle-check"></i> Tepat Sasaran!</p>
+            <p style="font-size: 18px; color: #475569; margin-top: 4px;">Strategi mitigasi kontrol proses berhasil dipetakan secara akurat.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 42 -->
+      <div class="slide-container center-content bg-dark" data-title="Insight Game">
+        <i class="fa-solid fa-user-shield" style="font-size: 80px; color: var(--color-green); margin-bottom: 24px;"></i>
+        <h2>Hasil Analisis Keamanan</h2>
+        <p style="font-size: 26px; max-width: 900px; margin-top: 16px; line-height: 1.5;">
+          Setiap risiko dalam operasional bisnis selalu memiliki pasangan kontrol mitigasinya dalam desain alur kerja.
+        </p>
+      </div>
+
+      <!-- ==========================================
+           SECTION 7: EVALUASI KUIS FORMATIF (SLIDES 43-47)
+           ========================================== -->
+
+      <!-- SLIDE 43 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian VI: Kuis Formatif">
+        <p class="eyebrow">Bagian VI</p>
+        <h1 style="font-size: 76px;">Kuis Formatif Pra-UTS</h1>
+        <div class="divider"></div>
+        <p style="font-size: 32px;">Uji Pemahaman Aspek Keamanan Informasi.</p>
+      </div>
+
+      <!-- SLIDE 44 -->
+      <div class="slide-container pad-standard" style="background: #FFFFFF;" id="slide44" data-title="Kuis 1: Integritas Data">
+        <p class="eyebrow" style="margin-bottom: 8px;">Kuis Evaluasi • Soal 1/4</p>
+        <h2 style="margin-bottom: 16px;">Jika ada staf mengubah nilai mahasiswa di database tanpa izin dosen, pilar CIA manakah yang runtuh?</h2>
+        <div class="flex-grow-center" style="justify-content: flex-start; margin-top: 10px;">
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q1')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> A. Confidentiality (Kerahasiaan)
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, true, 'feedback-q1')" data-correct="true">
+            <i class="fa-regular fa-circle"></i> B. Integrity (Keutuhan Data)
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q1')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> C. Availability (Ketersediaan Layanan)
+          </div>
+
+          <div id="feedback-q1" class="quiz-feedback">
+            <h4><i class="fa-solid fa-lightbulb"></i> Pembahasan: B</h4>
+            <p>Pengubahan data secara tidak sah merusak keaslian dan keutuhan data (*Integrity*), sehingga data tersebut tidak dapat dipercaya lagi kebenarannya.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 45 -->
+      <div class="slide-container pad-standard" style="background: #FFFFFF;" id="slide45" data-title="Kuis 2: Manfaat SoD">
+        <p class="eyebrow" style="margin-bottom: 8px;">Kuis Evaluasi • Soal 2/4</p>
+        <h2 style="margin-bottom: 16px;">Mengapa staf yang membuat faktur pembelian dilarang merangkap mentransfer uang pembayaran?</h2>
+        <div class="flex-grow-center" style="justify-content: flex-start;">
+          <div class="quiz-option" onclick="handleQuiz(this, true, 'feedback-q2')" data-correct="true">
+            <i class="fa-regular fa-circle"></i> A. Mencegah penipuan internal (*Fraud*) melalui pemisahan kewenangan (*Segregation of Duties*).
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q2')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> B. Agar komputer kasir tidak mengalami kelebihan beban memori.
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q2')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> C. Karena standar BPMN melarang satu staf memiliki lebih dari satu tugas.
+          </div>
+
+          <div id="feedback-q2" class="quiz-feedback">
+            <h4><i class="fa-solid fa-lightbulb"></i> Pembahasan: A</h4>
+            <p>Prinsip SoD menjamin tidak ada satu individu pun yang memegang kontrol tunggal penuh atas aliran uang perusahaan tanpa verifikasi pihak lain.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 46 -->
+      <div class="slide-container pad-standard" style="background: #FFFFFF;" id="slide46" data-title="Kuis 3: Celah Kerahasiaan">
+        <p class="eyebrow" style="margin-bottom: 8px;">Kuis Evaluasi • Soal 3/4</p>
+        <h2 style="margin-bottom: 16px;">Kasir mencatat nomor kartu kredit dan kode CVV pembeli di kertas catatan. Bahaya keamanan terbesar apa yang muncul?</h2>
+        <div class="flex-grow-center" style="justify-content: flex-start; margin-top: 10px;">
+          <div class="quiz-option" onclick="handleQuiz(this, true, 'feedback-q3')" data-correct="true">
+            <i class="fa-regular fa-circle"></i> A. Pelanggaran Confidentiality dan ancaman pencurian dana rekening nasabah.
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q3')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> B. Gangguan Availability karena kertas mudah sobek atau terbakar.
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q3')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> C. Mesin EDC perbankan akan otomatis terinfeksi virus ransomware.
+          </div>
+
+          <div id="feedback-q3" class="quiz-feedback">
+            <h4><i class="fa-solid fa-lightbulb"></i> Pembahasan: A</h4>
+            <p>Menyimpan data CVV secara terbuka melanggar standar privasi perbankan global (PCI-DSS) dan prinsip kerahasiaan data (*Confidentiality*).</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 47 -->
+      <div class="slide-container pad-standard" style="background: #FFFFFF;" id="slide47" data-title="Kuis 4: Akar Masalah Manusia">
+        <p class="eyebrow" style="margin-bottom: 8px;">Kuis Evaluasi • Soal 4/4</p>
+        <h2 style="margin-bottom: 16px;">Apa penyebab paling sering karyawan sengaja mengabaikan prosedur keamanan di tempat kerja?</h2>
+        <div class="flex-grow-center" style="justify-content: flex-start; margin-top: 10px;">
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q4')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> A. Karyawan sengaja ingin membantu hacker luar negeri.
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, true, 'feedback-q4')" data-correct="true">
+            <i class="fa-regular fa-circle"></i> B. Alur SOP keamanan dirancang terlalu rumit dan menghambat target kecepatan kerja harian.
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q4')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> C. Browser komputer tidak mendukung diagram alir BPMN.
+          </div>
+
+          <div id="feedback-q4" class="quiz-feedback">
+            <h4><i class="fa-solid fa-lightbulb"></i> Pembahasan: B</h4>
+            <p>Prosedur keamanan yang kaku menciptakan friksi kerja, sehingga manusia terdorong membuat jalan pintas ilegal demi mengejar target operasional.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SECTION 8: PERSIAPAN UTS & PENUTUP (SLIDES 48-50)
+           ========================================== -->
+
+      <!-- SLIDE 48 -->
+      <div class="slide-container pad-standard" data-title="Review Komprehensif Pra-UTS">
+        <h2>Rangkuman Materi Menjelang UTS (Pekan Depan)</h2>
+        <div class="flex-grow-center">
+          <ul class="minimal-list" style="gap: 16px; font-size: 20px;">
+            <li><i class="fa-solid fa-check" style="color: var(--color-green);"></i> <span>**P1:** Konsep Proses Bisnis, 3 Pilar (Input-Proses-Output), &amp; Peran Systems Analyst.</span></li>
+            <li><i class="fa-solid fa-check" style="color: var(--color-green);"></i> <span>**P2:** Analisis Stakeholder (Matriks Mendelow) &amp; Rantai Nilai Porter (Value Chain).</span></li>
+            <li><i class="fa-solid fa-check" style="color: var(--color-green);"></i> <span>**P3-P4:** Notasi BPMN 2.0 (Events, Tasks, Gateways, Swimlanes, &amp; Artifacts).</span></li>
+            <li><i class="fa-solid fa-check" style="color: var(--color-green);"></i> <span>**P5:** Pemodelan Proses As-Is &amp; Teknik Pengumpulan Informasi (Elicitation).</span></li>
+            <li><i class="fa-solid fa-check" style="color: var(--color-green);"></i> <span>**P6-P7:** Ketergantungan Infrastruktur TI, SPOF, SLA, dan Integrasi Kontrol CIA Triad.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 49 -->
+      <div class="slide-container center-content" data-title="Sesi Tanya Jawab">
+        <i class="fa-regular fa-comments" style="font-size: 110px; color: var(--color-red); margin-bottom: 28px;"></i>
+        <h1 style="font-size: 54px;">Sesi Diskusi &amp; Tanya Jawab</h1>
+        <p style="font-size: 28px; font-weight: 700; margin-top: 20px;">Silakan ajukan pertanyaan terkait materi keamanan maupun kisi-kisi UTS.</p>
+      </div>
+
+      <!-- SLIDE 50 -->
+      <div class="slide-container center-content bg-dark" data-title="Penutup">
+        <h1 style="font-size: 90px; margin-bottom: 24px;">Terima Kasih</h1>
+        <div class="divider"></div>
+        <p style="font-size: 34px; font-weight: 700; color: #38BDF8; font-style: italic; margin-top: 16px;">
+          "Keamanan informasi bukanlah penghambat inovasi, melainkan pelindung nilai bisnis."
+        </p>
+        <p style="font-size: 22px; color: #94A3B8; margin-top: 60px;">
+          Ardi Ariansyah, S.Kom., Gr. • ITB Swadharma • Sukses untuk UTS Pekan Depan!
+        </p>
+      </div>
+
+    </div> <!-- End of slides-wrapper -->
+  </div> <!-- End of presentation-area -->
+
+  <!-- PRESENTATION & INTERACTION SCRIPTS -->
+  <script>
+    // --- 1. CORE PRESENTATION LOGIC ---
+    const slides = document.querySelectorAll('.slide-container');
+    const selector = document.getElementById('slideSelector');
+    let currentSlide = 0;
+
+    function initDropdown() {
+      if(!selector) return;
+      selector.innerHTML = '';
+      slides.forEach((slide, index) => {
+        let title = slide.getAttribute('data-title') || `Slide ${index + 1}`;
+        let option = document.createElement('option');
+        option.value = index;
+        option.text = `${index + 1}. ${title}`;
+        selector.appendChild(option);
+      });
+    }
+
+    function updatePresentation() {
+      slides.forEach((slide, index) => {
+        if (index === currentSlide) {
+          slide.classList.add('active');
+        } else {
+          slide.classList.remove('active');
+        }
+      });
+      if(selector) selector.value = currentSlide;
+      
+      const presArea = document.getElementById('presentation-area') || document.body;
+      const scaleX = presArea.clientWidth / 1280;
+      const scaleY = presArea.clientHeight / 720;
+      const scale = Math.min(scaleX, scaleY) * 0.95;
+      
+      slides[currentSlide].style.transform = `translate(-50%, -50%) scale(${scale})`;
+    }
+
+    function nextSlide() {
+      if (currentSlide < slides.length - 1) { currentSlide++; updatePresentation(); }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) { currentSlide--; updatePresentation(); }
+    }
+
+    function jumpToSlide(index) {
+      currentSlide = parseInt(index); updatePresentation();
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if(e.target.isContentEditable || e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return; 
+      if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') nextSlide();
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') prevSlide();
+    });
+
+    window.addEventListener('resize', updatePresentation);
+    initDropdown();
+    updatePresentation();
+
+    // --- 2. DRAG AND DROP LOGIC (AUTO-APPLY) ---
+    const dropZones = document.querySelectorAll('.drop-zone');
+    const draggables = document.querySelectorAll('.drag-item');
+    const containers = document.querySelectorAll('.draggable-container');
+
+    draggables.forEach(draggable => {
+      draggable.addEventListener('dragstart', () => draggable.classList.add('dragging'));
+      draggable.addEventListener('dragend', () => {
+        draggable.classList.remove('dragging');
+        checkPracticeCompletion();
+      });
+    });
+
+    dropZones.forEach(zone => {
+      zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+      zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+      zone.addEventListener('drop', e => {
+        e.preventDefault();
+        zone.classList.remove('drag-over');
+        const draggable = document.querySelector('.dragging');
+        if (draggable) zone.querySelector('.drop-content').appendChild(draggable);
+      });
+    });
+
+    containers.forEach(container => {
+      container.addEventListener('dragover', e => e.preventDefault());
+      container.addEventListener('drop', e => {
+        const draggable = document.querySelector('.dragging');
+        if (draggable) container.appendChild(draggable);
+      });
+    });
+
+    function checkPracticeCompletion() {
+      document.querySelectorAll('.practice-feedback').forEach(feedback => {
+        let slide = feedback.closest('.slide-container');
+        let totalItems = slide.querySelectorAll('.drag-item').length;
+        let correct = 0;
+        slide.querySelectorAll('.drop-zone').forEach(zone => {
+          zone.querySelectorAll('.drag-item').forEach(item => {
+            if (item.dataset.type === zone.dataset.target) correct++;
+          });
+        });
+        feedback.style.display = (correct === totalItems && totalItems > 0) ? 'block' : 'none';
+      });
+    }
+
+    // --- 3. QUIZ LOGIC ---
+    window.handleQuiz = function(clickedBtn, isCorrect, feedbackId) {
+      const parent = clickedBtn.parentElement;
+      const allButtons = parent.querySelectorAll('.quiz-option');
+      allButtons.forEach(btn => {
+        btn.style.pointerEvents = 'none';
+        const icon = btn.querySelector('i');
+        icon.className = btn.dataset.correct === "true" ? 'fa-solid fa-check-circle' : 'fa-solid fa-circle-xmark';
+        if (btn.dataset.correct === "true") btn.classList.add('correct');
+      });
+      if (!isCorrect) clickedBtn.classList.add('wrong');
+      document.getElementById(feedbackId).classList.add('show');
+    };
+  </script>
+</body>
+</html>

@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Analisa Proses Bisnis - Pertemuan 11</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Open+Sans:wght@400;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    /* CSS RESET & REDESIGN / BPR THEME VARIABLES */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-bg-light: #F8FAFC;
+      --color-text-dark: #0F172A;
+      --color-text-muted: #475569;
+      --color-primary: #0F172A;   /* Deep Slate */
+      --color-violet: #8B5CF6;    /* Reengineering Innovation Violet */
+      --color-cyan: #06B6D4;      /* Digital Transformation Cyan */
+      --color-green: #10B981;     /* Optimization Emerald */
+      --color-red: #DC2626;       /* Bottleneck Elimination Red */
+      --color-amber: #D97706;     /* Heuristic Warning Amber */
+      --color-white: #FFFFFF;
+      --color-dark-bg: #0A0F1D;
+      --navbar-height: 60px;
+    }
+    
+    body { 
+      margin: 0; 
+      padding: 0; 
+      background: #060913; 
+      font-family: 'Open Sans', sans-serif; 
+      height: 100vh; 
+      overflow: hidden; 
+      position: relative;
+    }
+
+    /* TOP NAVIGATION BAR */
+    .top-navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: var(--navbar-height);
+      background: #0F172A;
+      border-bottom: 2px solid #1E293B;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 1000;
+      font-family: 'Montserrat', sans-serif;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.5);
+    }
+
+    .nav-left, .nav-center, .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-btn {
+      background: #1E293B;
+      border: 1px solid #334155;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+      padding: 8px 16px;
+      border-radius: 6px;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .nav-btn:hover { background: var(--color-violet); border-color: var(--color-violet); color: white; }
+
+    /* DROPDOWN MENU SLIDES */
+    .slide-selector {
+      background: #1E293B;
+      color: white;
+      border: 1px solid #334155;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      outline: none;
+      max-width: 380px;
+    }
+    .slide-selector option { background: #0F172A; }
+
+    /* MAIN CONTAINER ADJUSTMENT */
+    #presentation-area {
+      position: absolute;
+      top: var(--navbar-height);
+      left: 0;
+      right: 0;
+      bottom: 0; 
+      overflow: hidden;
+    }
+
+    /* HARD LOCK 16:9 CONTAINER (1280x720px) */
+    .slide-container {
+      width: 1280px !important;
+      height: 720px !important;
+      background: var(--color-bg-light);
+      color: var(--color-text-dark);
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(1);
+      transform-origin: center center;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.35s ease-in-out;
+      pointer-events: none;
+    }
+
+    .slide-container.active {
+      visibility: visible;
+      opacity: 1;
+      z-index: 5;
+      pointer-events: auto;
+    }
+
+    /* TYPOGRAPHY */
+    h1, h2, h3, h4, .eyebrow { font-family: 'Montserrat', sans-serif; }
+    h1 { font-size: 56px; font-weight: 800; line-height: 1.15; margin-bottom: 20px; color: var(--color-text-dark); }
+    h2 { font-size: 40px; font-weight: 700; line-height: 1.25; margin-bottom: 22px; color: var(--color-text-dark); }
+    h3 { font-size: 28px; font-weight: 700; margin-bottom: 14px; color: var(--color-violet); }
+    p, li { font-size: 23px; line-height: 1.5; color: var(--color-text-muted); }
+    .eyebrow { font-size: 18px; font-weight: 700; color: var(--color-violet); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; }
+    .divider { width: 80px; height: 6px; background: var(--color-violet); margin: 18px 0 22px 0; }
+    
+    .bg-dark { background: var(--color-dark-bg) !important; color: var(--color-white) !important; }
+    .bg-dark h1, .bg-dark h2, .bg-dark h3, .bg-dark p, .bg-dark li { color: var(--color-white) !important; }
+    
+    /* LAYOUT: SPLIT SCREEN */
+    .layout-split { display: flex; flex-direction: row; flex: 1 1 100%; width: 100%; height: 100%; }
+    .split-col { display: flex; flex-direction: column; justify-content: center; height: 100%; padding: 40px 80px; }
+    .split-img-col { padding: 0 !important; margin: 0 !important; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #0F172A; }
+    .split-img-col img { width: 100%; height: 100%; object-fit: cover; display: block; margin: 0; padding: 0; }
+    
+    /* SPLIT RATIOS */
+    .w-40 { flex: 0 0 40%; width: 40%; }
+    .w-50 { flex: 0 0 50%; width: 50%; }
+    .w-60 { flex: 0 0 60%; width: 60%; }
+
+    /* LAYOUT: STANDARD / CENTERED */
+    .pad-standard { padding: 40px 80px; display: flex; flex-direction: column; flex: 1; height: 100%; }
+    .center-content { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; flex: 1; height: 100%; padding: 40px 80px; }
+    .flex-grow-center { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; }
+
+    /* COMPONENTS: LISTS & CARDS */
+    .minimal-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 18px; }
+    .minimal-list li { display: flex; align-items: flex-start; gap: 18px; font-weight: 600; }
+    .minimal-list li i { font-size: 28px; color: var(--color-violet); width: 36px; text-align: center; margin-top: 4px; }
+
+    .card-grid { display: flex; gap: 22px; align-items: stretch; width: 100%; justify-content: center; flex-wrap: wrap; }
+    .card { background: var(--color-white); border-radius: 16px; padding: 28px 28px; flex: 1 1 0; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #E2E8F0; display: flex; flex-direction: column; align-items: flex-start; }
+    .card i { font-size: 44px; color: var(--color-violet); margin-bottom: 14px; }
+
+    /* INTERACTIVE: DRAG AND DROP */
+    .draggable-container { display: flex; gap: 14px; margin-bottom: 14px; justify-content: center; min-height: 56px; flex-wrap: wrap; }
+    .drag-item { 
+      cursor: grab; padding: 10px 18px; font-size: 17px; background: white; 
+      border: 3px solid var(--color-violet); border-radius: 12px; font-weight: 700; 
+      user-select: none; color: #0F172A; text-align: center; margin-bottom: 6px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.2s; display: inline-block;
+    }
+    .drag-item:active { cursor: grabbing; transform: scale(0.95); }
+    .drag-item.dragging { opacity: 0.5; }
+    
+    .dropzones-container { display: flex; gap: 20px; justify-content: center; align-items: stretch; width: 100%; }
+    .drop-zone { 
+      border: 4px dashed #CBD5E1; border-radius: 16px; flex: 1; 
+      min-height: 170px; padding: 16px; display: flex; flex-direction: column; 
+      align-items: center; background: #FFFFFF; transition: 0.3s;
+    }
+    .drop-zone h3 { font-size: 20px; margin-bottom: 10px; color: #475569; border-bottom: 2px solid #CBD5E1; padding-bottom: 6px; width: 100%; text-align: center;}
+    .drop-zone.drag-over { border-color: var(--color-violet); background: #F5F3FF; }
+    .drop-content { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; width: 100%; gap: 6px; }
+
+    /* INTERACTIVE: QUIZ */
+    .quiz-option {
+      background: #F8FAFC; border: 2px solid #CBD5E1; padding: 12px 20px; 
+      border-radius: 12px; font-size: 19px; font-weight: 600; cursor: pointer; 
+      text-align: left; transition: 0.2s; margin-bottom: 10px; width: 100%;
+      color: #334155; display: flex; align-items: center; gap: 16px;
+    }
+    .quiz-option:hover { background: #E2E8F0; transform: translateX(6px); }
+    .quiz-option.correct { background: #D1FAE5; border-color: #10B981; color: #065F46; }
+    .quiz-option.wrong { background: #FEE2E2; border-color: #EF4444; color: #991B1B; }
+    
+    .quiz-feedback { 
+      display: none; margin-top: 14px; padding: 14px 22px; background: #F5F3FF; 
+      border-left: 8px solid var(--color-violet); border-radius: 0 12px 12px 0; font-size: 17px; 
+      animation: fadeIn 0.4s ease-in-out;
+    }
+    .quiz-feedback.show { display: block; }
+    .quiz-feedback h4 { font-size: 20px; margin-bottom: 6px; color: var(--color-violet); }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* BADGES */
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(139, 92, 246, 0.15);
+      border: 1px solid var(--color-violet);
+      color: #A78BFA;
+      padding: 6px 16px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP NAVIGATION BAR -->
+  <div class="top-navbar" id="navbar">
+    <div class="nav-left">
+      <div style="font-weight: 800; font-size: 18px; color: #38BDF8;">ITB Swadharma</div>
+    </div>
+    
+    <div class="nav-center">
+      <button class="nav-btn" onclick="prevSlide()" title="Slide Sebelumnya"><i class="fa-solid fa-chevron-left"></i></button>
+      <select class="slide-selector" id="slideSelector" onchange="jumpToSlide(this.value)"></select>
+      <button class="nav-btn" onclick="nextSlide()" title="Slide Berikutnya"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+
+    <div class="nav-right">
+      <div style="font-weight: 600; font-size: 14px; color: #94A3B8;">Analisa Proses Bisnis (3 SKS) • Ardi Ariansyah, S.Kom., Gr.</div>
+    </div>
+  </div>
+
+  <!-- MAIN PRESENTATION AREA -->
+  <div id="presentation-area">
+    <div id="slides-wrapper">
+
+      <!-- ==========================================
+           SECTION 1: COVER & PENDAHULUAN (SLIDES 1-5)
+           ========================================== -->
+
+      <!-- SLIDE 1 -->
+      <div class="slide-container layout-split bg-dark active" data-title="Sampul Depan">
+        <div class="split-col w-60 bg-dark">
+          <div class="badge-pill"><i class="fa-solid fa-wand-magic-sparkles"></i> Fase Solusi &amp; Inovasi</div>
+          <p class="eyebrow">Pertemuan 11 • INF1104</p>
+          <h1>Process Redesign &amp; Reengineering</h1>
+          <div class="divider"></div>
+          <p style="font-size: 28px; font-weight: 600;">Prinsip BPR, Heuristik Redesign, &amp; Otomatisasi TI Menuju Model To-Be</p>
+          <div style="margin-top: 36px; border-top: 2px solid #334155; padding-top: 18px;">
+            <p style="color: #94A3B8; font-size: 16px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Dosen Pengampu:</p>
+            <p style="color: #FFFFFF; font-size: 24px; font-weight: 700; margin-top: 4px;">Ardi Ariansyah, S.Kom., Gr.</p>
+            <p style="color: #38BDF8; font-size: 18px; font-weight: 600;">S1 Teknik Informatika • ITB Swadharma</p>
+          </div>
+        </div>
+        <div class="split-col split-img-col w-40">
+          <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&q=80" alt="Process Redesign Digital Transformation">
+        </div>
+      </div>
+
+      <!-- SLIDE 2 -->
+      <div class="slide-container center-content" data-title="Kesiapan Perkuliahan">
+        <i class="fa-solid fa-rocket" style="font-size: 96px; color: var(--color-violet); margin-bottom: 24px;"></i>
+        <h2 style="font-size: 52px;">Dari Diagnosa Menuju Solusi</h2>
+        <p style="font-size: 26px; font-weight: 600; margin-top: 14px; max-width: 900px;">
+          Di Pertemuan 9 dan 10 kita telah menemukan pemborosan (NVA) dan akar penyakit operasional (Fishbone &amp; 5 Whys). Hari ini kita bertindak sebagai **Arsitek Transformasi**: <strong>Bagaimana merancang ulang proses agar 10 kali lebih cepat dan efisien?</strong>
+        </p>
+      </div>
+
+      <!-- SLIDE 3 -->
+      <div class="slide-container layout-split" data-title="Kilas Balik Analisis">
+        <div class="split-col split-img-col w-40" style="background: #F1F5F9;">
+          <i class="fa-solid fa-code-fork" style="font-size: 160px; color: var(--color-cyan);"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Kilas Balik Analisis</p>
+          <h2>Pijakan Kuat Sebelum Merombak</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-check"></i> <span>**P9 (VAA):** Membedakan langkah VA, BVA, dan mendeteksi pemborosan Lean (TIMWOOD).</span></li>
+            <li><i class="fa-solid fa-check"></i> <span>**P10 (RCA):** Mengurai akar masalah sistemik menggunakan Fishbone 6M/4P dan 5 Whys.</span></li>
+            <li><i class="fa-solid fa-forward" style="color: var(--color-violet);"></i> <span>**P11 (Hari Ini):** Menentukan strategi perombakan: Evolusi bertahap atau Revolusi radikal (BPR)?</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 4 -->
+      <div class="slide-container pad-standard" data-title="Target Capaian Sub-CPMK 4.1">
+        <h2>Target Capaian Pembelajaran (Sub-CPMK 4.1)</h2>
+        <div class="flex-grow-center">
+          <div style="background: #F5F3FF; border-left: 12px solid var(--color-violet); padding: 48px; border-radius: 0 16px 16px 0;">
+            <h3 style="font-size: 30px; margin-bottom: 20px; color: #6D28D9;">Kemampuan Akhir Pembelajaran</h3>
+            <p style="font-size: 26px; font-weight: 600; color: #4C1D95; line-height: 1.5;">
+              "Mahasiswa mampu mengusulkan perbaikan proses bisnis melalui prinsip Business Process Redesign (BPR), menerapkan pola heuristik perancangan ulang (eliminasi, integrasi, otomasi, dan paralelisasi), serta merumuskan konsep model To-Be terintegrasi teknologi informasi."
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 5 -->
+      <div class="slide-container pad-standard" data-title="Peta Materi Pertemuan 11">
+        <h2>Peta Materi Pertemuan 11</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 8px solid var(--color-violet);">
+              <i class="fa-solid fa-arrows-split-up-and-left"></i>
+              <h3>1. Paradigma BPR</h3>
+              <p>Filosofi Hammer &amp; Champy: Perbaikan inkremental vs Perombakan radikal.</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--color-cyan);">
+              <i class="fa-solid fa-puzzle-piece" style="color: var(--color-cyan);"></i>
+              <h3>2. Devil's Quadrangle</h3>
+              <p>Menyeimbangkan empat dimensi: Waktu, Biaya, Kualitas, dan Fleksibilitas.</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--color-green);">
+              <i class="fa-solid fa-sliders" style="color: var(--color-green);"></i>
+              <h3>3. Heuristik Redesign &amp; TI</h3>
+              <p>Pola taktis: Task Elimination, Parallelism, Case Assignment, &amp; Digital Approval.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SECTION 2: PARADIGMA BPR VS PENINGKATAN KONTINU (SLIDES 6-13)
+           ========================================== -->
+
+      <!-- SLIDE 6 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian I: Paradigma BPR">
+        <p class="eyebrow">Bagian I</p>
+        <h1 style="font-size: 72px;">Paradigma BPR</h1>
+        <div class="divider"></div>
+        <p style="font-size: 30px;">Jangan Mengotomatisasi Proses yang Rusak, Ciptakan Kembali!</p>
+      </div>
+
+      <!-- SLIDE 7 -->
+      <div class="slide-container layout-split" data-title="Asal Mula BPR">
+        <div class="split-col w-60">
+          <p class="eyebrow">Sejarah &amp; Konsep</p>
+          <h2>Reengineering: Michael Hammer (1990)</h2>
+          <p style="font-size: 22px; color: #475569; margin-bottom: 18px;">
+            Dalam artikel klasiknya di <em>Harvard Business Review</em>: <strong>"Don't Automate, Obliterate"</strong>:
+          </p>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-triangle-exclamation" style="color: var(--color-amber);"></i> <span>Banyak perusahaan menggunakan komputer mahal hanya untuk mempercepat alur kerja usang warisan zaman dulu.</span></li>
+            <li><i class="fa-solid fa-bolt" style="color: var(--color-violet);"></i> <span>**BPR Sejati:** Membuang asumsi lama, memulai dari kanvas kosong, dan mendesain ulang dari akar-akarnya.</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40">
+          <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80" alt="Corporate Transformation Architecture">
+        </div>
+      </div>
+
+      <!-- SLIDE 8 -->
+      <div class="slide-container pad-standard" data-title="Inkremental vs Radikal">
+        <h2>Dua Jalur Redesign: CPI vs BPR</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 8px solid var(--color-cyan);">
+              <h3 style="color: #0E7490;"><i class="fa-solid fa-arrow-trend-up"></i> Inkremental (Kaizen / CPI)</h3>
+              <p>- Perbaikan kecil bertahap secara berkelanjutan.<br>- Risiko rendah, biaya implementasi terjangkau.<br>- Menghilangkan sedikit inefisiensi pada proses berjalan.<br>- Peningkatan kinerja berkisar 5% – 15%.</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--color-violet);">
+              <h3 style="color: var(--color-violet);"><i class="fa-solid fa-burst"></i> Radikal (BPR Reengineering)</h3>
+              <p>- Perombakan fundamental dari kanvas kosong (*Clean Slate*).<br>- Risiko tinggi, restrukturisasi organisasi dan budaya.<br>- Mengubah paradigma alur kerja secara total dengan TI modern.<br>- Lompatan kinerja dramatis mencapai 70% – 90%!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 9 -->
+      <div class="slide-container layout-split" data-title="Studi Kasus Ford vs Mazda">
+        <div class="split-col split-img-col w-40" style="background: #F1F5F9;">
+          <i class="fa-solid fa-car" style="font-size: 160px; color: var(--color-violet);"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Studi Kasus Legendaris BPR</p>
+          <h2>Kasus Ford vs Mazda (Accounts Payable)</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-users" style="color: var(--color-red);"></i> <span>Tahun 1980-an, Ford mempekerjakan <strong>500 staf</strong> di bagian utang dagang (*Accounts Payable*) untuk mencocokkan nota PO, faktur, dan bukti terima fisik.</span></li>
+            <li><i class="fa-solid fa-building" style="color: var(--color-cyan);"></i> <span>Mazda mengelola fungsi yang sama hanya dengan <strong>5 orang</strong>!</span></li>
+            <li><i class="fa-solid fa-wand-magic-sparkles" style="color: var(--color-green);"></i> <span>**Solusi BPR Ford:** Menghapus faktur kertas sama sekali! Diciptakan konsep *Invoiceless Processing* berbantuan database terpadu. Jumlah staf dipotong hingga 75%.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 10 -->
+      <div class="slide-container pad-standard" data-title="Jebakan Paving Cow Paths">
+        <h2>Jebakan "Paving the Cow Paths"</h2>
+        <div class="flex-grow-center">
+          <div style="background: #FEF2F2; border-left: 12px solid var(--color-red); padding: 40px; border-radius: 0 16px 16px 0;">
+            <h3 style="color: var(--color-red); margin-bottom: 14px;">Mengaspal Jalan Sapi yang Berkelok-kelok</h3>
+            <p style="font-size: 24px; color: #991B1B; line-height: 1.6; font-weight: 600;">
+              "Jika Anda hanya membuat software aplikasi untuk mengotomatisasi proses manual yang birokratis dan cacat sejak awal, Anda tidak sedang melakukan inovasi bisnis. Anda hanya membelanjakan uang mahal untuk membuat inefisiensi bekerja lebih cepat!"
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 11 -->
+      <div class="slide-container layout-split" data-title="Kapan Memilih BPR">
+        <div class="split-col w-60">
+          <p class="eyebrow">Kriteria Keputusan</p>
+          <h2>Kapan BPR Wajib Diterapkan?</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-skull-crossbones" style="color: var(--color-red);"></i> <span>**Kondisi Krisis Ekstrem:** Perusahaan kehilangan pangsa pasar dan terancam gulung tikar jika cara kerja tidak diubah total.</span></li>
+            <li><i class="fa-solid fa-bolt" style="color: var(--color-cyan);"></i> <span>**Disrupsi Teknologi Baru:** Kemunculan platform baru (Cloud, Mobile, AI, Webhook) yang membuat SOP manual menjadi usang.</span></li>
+            <li><i class="fa-solid fa-bullseye" style="color: var(--color-green);"></i> <span>**Target Lompatan Radikal:** Manajemen menginginkan pemotongan waktu dari hitungan minggu menjadi detik.</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40">
+          <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80" alt="Process Engineering Strategy">
+        </div>
+      </div>
+
+      <!-- SLIDE 12 -->
+      <div class="slide-container center-content bg-dark" data-title="Kutipan Michael Hammer">
+        <i class="fa-solid fa-quote-left" style="font-size: 70px; color: #334155; margin-bottom: 20px;"></i>
+        <h2 style="font-size: 38px; font-weight: 700; max-width: 900px; line-height: 1.4;">
+          "Satu-satunya hal yang lebih buruk daripada tidak menggunakan teknologi sama sekali adalah menggunakan teknologi mahal untuk mengeksekusi proses yang seharusnya tidak perlu ada."
+        </h2>
+        <p style="font-size: 20px; color: var(--color-violet); margin-top: 16px; font-weight: 600;">— Dr. Michael Hammer</p>
+      </div>
+
+      <!-- SLIDE 13 -->
+      <div class="slide-container pad-standard" data-title="Perbandingan Spektrum Redesign">
+        <h2>Matriks Spektrum Pendekatan Redesign</h2>
+        <div class="flex-grow-center">
+          <table style="width: 100%; border-collapse: collapse; font-size: 18px; text-align: left; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+            <thead style="background: #0F172A; color: white;">
+              <tr>
+                <th style="padding: 12px;">Dimensi Pembeda</th>
+                <th style="padding: 12px;">Peningkatan Kontinu (Kaizen)</th>
+                <th style="padding: 12px;">Perombakan Radikal (BPR)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid #E2E8F0;">
+                <td style="padding: 10px; font-weight: 600;">Titik Mulai</td>
+                <td style="padding: 10px;">Proses As-Is yang sudah ada</td>
+                <td style="padding: 10px; color: var(--color-violet); font-weight: bold;">Kanvas kosong (Clean Slate)</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #E2E8F0;">
+                <td style="padding: 10px; font-weight: 600;">Frekuensi Perubahan</td>
+                <td style="padding: 10px;">Rutin, berkelanjutan harian</td>
+                <td style="padding: 10px;">Periodik, perombakan besar 5-10 tahun</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #E2E8F0;">
+                <td style="padding: 10px; font-weight: 600;">Peran Teknologi Informasi</td>
+                <td style="padding: 10px;">Alat otomatisasi task tunggal</td>
+                <td style="padding: 10px; color: var(--color-cyan); font-weight: bold;">Enabler utama perombakan alur bisnis</td>
+              </tr>
+              <tr>
+                <td style="padding: 10px; font-weight: 600;">Tingkat Risiko</td>
+                <td style="padding: 10px; color: var(--color-green); font-weight: bold;">Rendah (Mudah diterima staf)</td>
+                <td style="padding: 10px; color: var(--color-red); font-weight: bold;">Tinggi (Resistensi budaya &amp; restrukturisasi)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SECTION 3: DEVIL'S QUADRANGLE (SLIDES 14-22)
+           ========================================== -->
+
+      <!-- SLIDE 14 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian II: Devil's Quadrangle">
+        <p class="eyebrow">Bagian II</p>
+        <h1 style="font-size: 72px;">Devil's Quadrangle</h1>
+        <div class="divider"></div>
+        <p style="font-size: 30px;">Dilema Trade-off Empat Dimensi Kinerja Proses Bisnis.</p>
+      </div>
+
+      <!-- SLIDE 15 -->
+      <div class="slide-container layout-split" data-title="Konsep Devil's Quadrangle">
+        <div class="split-col w-60">
+          <p class="eyebrow">Trade-off Kinerja</p>
+          <h2>Empat Sudut Setan (Brand &amp; van der Aalst)</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-shapes"></i> <span>Perancangan ulang proses bisnis selalu melibatkan pertarungan empat dimensi: **Time, Cost, Quality, dan Flexibility**.</span></li>
+            <li><i class="fa-solid fa-scale-balanced"></i> <span>Meningkatkan satu sudut hampir selalu menekan atau mengorbankan sudut lainnya.</span></li>
+            <li><i class="fa-solid fa-bullseye" style="color: var(--color-violet);"></i> <span>Tugas Systems Analyst adalah menemukan titik kompromi paling optimal bagi bisnis.</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40" style="background: #F5F3FF;">
+          <i class="fa-solid fa-diamond" style="font-size: 160px; color: var(--color-violet);"></i>
+        </div>
+      </div>
+
+      <!-- SLIDE 16 -->
+      <div class="slide-container pad-standard" data-title="Anatomi Empat Dimensi">
+        <h2>Anatomi Dimensi Kinerja Proses</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 6px solid var(--color-cyan); padding: 22px;">
+              <h4 style="color: #0E7490;"><i class="fa-solid fa-clock"></i> 1. Time (Waktu)</h4>
+              <p style="font-size: 16px;">Memperpendek waktu siklus (*Cycle Time*) dan memangkas waktu tunggu (*Waiting Time*).</p>
+            </div>
+            <div class="card" style="border-top: 6px solid var(--color-green); padding: 22px;">
+              <h4 style="color: #047857;"><i class="fa-solid fa-money-bill-wave"></i> 2. Cost (Biaya)</h4>
+              <p style="font-size: 16px;">Mengurangi biaya tenaga kerja operasional, penggunaan kertas, dan lisensi server.</p>
+            </div>
+            <div class="card" style="border-top: 6px solid var(--color-violet); padding: 22px;">
+              <h4 style="color: var(--color-violet);"><i class="fa-solid fa-award"></i> 3. Quality (Kualitas)</h4>
+              <p style="font-size: 16px;">Meningkatkan akurasi transaksi, kepuasan pelanggan, dan menekan angka cacat (*error rate*).</p>
+            </div>
+            <div class="card" style="border-top: 6px solid var(--color-amber); padding: 22px;">
+              <h4 style="color: var(--color-amber);"><i class="fa-solid fa-arrows-spin"></i> 4. Flexibility (Fleksibilitas)</h4>
+              <p style="font-size: 16px;">Kemampuan sistem merespons perubahan volume transaksi, variasi produk, atau aturan baru.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 17 -->
+      <div class="slide-container layout-split" data-title="Dilema Dimensi Kinerja">
+        <div class="split-col split-img-col w-40" style="background: #FEF2F2;">
+          <i class="fa-solid fa-arrows-split-up-and-left" style="font-size: 160px; color: var(--color-red);"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Dilema Klasik</p>
+          <h2>Contoh Gesekan Antar Dimensi</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-arrow-down" style="color: var(--color-green);"></i> <span>**Waktu dipersingkat:** Menghilangkan verifikasi dokumen manual membuat waktu layanan dari 3 hari menjadi 5 menit (*Time &uarr;*).</span></li>
+            <li><i class="fa-solid fa-arrow-down" style="color: var(--color-red);"></i> <span>**Kualitas risiko terancam:** Berpotensi meloloskan dokumen palsu karena tidak dicek mendalam (*Quality &darr;*).</span></li>
+            <li><i class="fa-solid fa-shield-halved" style="color: var(--color-cyan);"></i> <span>**Solusi TI:** Terapkan verifikasi biometrik e-KTP berbasis AI otomatis (Waktu kilat dan Kualitas tetap tinggi!).</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 18 -->
+      <div class="slide-container pad-standard" data-title="Dimensi Waktu & Biaya">
+        <h2>Fokus Efisiensi: Waktu vs Biaya</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-left: 8px solid var(--color-cyan);">
+              <h4>Optimalisasi Waktu Siklus</h4>
+              <p style="font-size: 16px;">Aktivitas kerja aktual (*Processing Time*) seringkali hanya memakan 5% dari total durasi. 95% sisanya adalah waktu berkas mengantre di meja manajer. Memangkas waktu tunggu adalah target termurah dan tercepat!</p>
+            </div>
+            <div class="card" style="border-left: 8px solid var(--color-green);">
+              <h4>Reduksi Biaya Operasional</h4>
+              <p style="font-size: 16px;">Otomatisasi pemrosesan data faktur mengurangi jam lembur staf akuntansi, meniadakan biaya fotokopi, kurir internal antar-cabang, serta menghemat ruang sewa gudang arsip fisik.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 19 -->
+      <div class="slide-container pad-standard" data-title="Dimensi Kualitas & Fleksibilitas">
+        <h2>Kualitas Eksternal vs Fleksibilitas Sistem</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-left: 8px solid var(--color-violet);">
+              <h4>Kualitas Eksternal (Kepuasan Pelanggan)</h4>
+              <p style="font-size: 16px;">Pelanggan merasakan transparansi status (*real-time tracking*), tidak perlu mengetik ulang data yang sama, dan mendapatkan layanan yang presisi tanpa kesalahan input nama atau alamat.</p>
+            </div>
+            <div class="card" style="border-left: 8px solid var(--color-amber);">
+              <h4>Fleksibilitas Operasional</h4>
+              <p style="font-size: 16px;">Sistem To-Be harus mampu menangani lonjakan transaksi mendadak (*Elastic Scalability*), mendukung ragam metode pembayaran baru (QRIS, E-Wallet), serta mudah diubah saat regulasi pemerintah berganti.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 20 -->
+      <div class="slide-container layout-split" data-title="Peran TI Menembus Batas">
+        <div class="split-col w-60">
+          <p class="eyebrow">Game Changer</p>
+          <h2>Teknologi: Penghancur Trade-off</h2>
+          <p style="font-size: 21px; color: #475569; margin-bottom: 16px;">
+            Dulu manajemen percaya: *"Jika ingin cepat dan berkualitas tinggi, biayanya pasti mahal."*
+          </p>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-wand-magic-sparkles" style="color: var(--color-violet);"></i> <span>**Peran Teknologi Informasi:** Mengubah aturan main (*Breaking Compromises*).</span></li>
+            <li><i class="fa-solid fa-check" style="color: var(--color-green);"></i> <span>Dengan integrasi API, otomatisasi bot, dan arsitektur cloud, sistem bisa menjadi **lebih cepat, lebih murah, lebih akurat, sekaligus fleksibel** pada saat bersamaan!</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40">
+          <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80" alt="Cloud Big Data Dashboard">
+        </div>
+      </div>
+
+      <!-- SLIDE 21 -->
+      <div class="slide-container center-content bg-dark" data-title="Insight Quadrangle">
+        <i class="fa-solid fa-lightbulb" style="font-size: 80px; color: var(--color-violet); margin-bottom: 24px;"></i>
+        <h2>Target Perancangan Sejati</h2>
+        <p style="font-size: 26px; max-width: 900px; margin-top: 16px; line-height: 1.5;">
+          Perancangan proses yang matang tidak mengejar kecepatan membabi buta dengan mengorbankan keamanan data. Keseimbangan empat sudut adalah tolok ukur kedewasaan seorang Systems Analyst.
+        </p>
+      </div>
+
+      <!-- SLIDE 22 -->
+      <div class="slide-container pad-standard" data-title="Audit Quadrangle pada BPMN">
+        <h2>Mengaudit Empat Dimensi pada Diagram As-Is</h2>
+        <div class="flex-grow-center">
+          <ul class="minimal-list" style="gap: 22px;">
+            <li><i class="fa-solid fa-1"></i> <span><strong>Deteksi Titik Boros Waktu:</strong> Temukan Task yang memiliki durasi antrean tunggu (*Waiting Time*) berhari-hari.</span></li>
+            <li><i class="fa-solid fa-2"></i> <span><strong>Deteksi Titik Boros Biaya:</strong> Temukan aktivitas cetak kertas berulang atau pemeriksaan berkas fisik yang memakan gaji staf.</span></li>
+            <li><i class="fa-solid fa-3"></i> <span><strong>Deteksi Titik Cacat Kualitas:</strong> Temukan percabangan XOR yang sering mengembalikan berkas revisi (*Rework loop*).</span></li>
+            <li><i class="fa-solid fa-4"></i> <span><strong>Deteksi Kekakuan Sistem:</strong> Temukan ketergantungan pada tanda tangan basah pejabat tunggal di kantor fisik.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SECTION 4: HEURISTIK PERANCANGAN ULANG PROSES (SLIDES 23-32)
+           ========================================== -->
+
+      <!-- SLIDE 23 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian III: Heuristik Redesign">
+        <p class="eyebrow">Bagian III</p>
+        <h1 style="font-size: 72px;">Heuristik Redesign</h1>
+        <div class="divider"></div>
+        <p style="font-size: 30px;">Katalog Pola Taktis Merombak Alur Kerja Menuju Model To-Be.</p>
+      </div>
+
+      <!-- SLIDE 24 -->
+      <div class="slide-container layout-split" data-title="Pengantar Heuristik">
+        <div class="split-col w-60">
+          <p class="eyebrow">Pedoman Desain</p>
+          <h2>Apa itu Heuristik Redesign?</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-toolbox"></i> <span>Kumpulan resep praktis teruji (*Best Practices*) yang dirumuskan Dumas et al. (2018) untuk memperbaiki alur proses.</span></li>
+            <li><i class="fa-solid fa-puzzle-piece"></i> <span>Memberikan panduan konkret: Task mana yang harus dihapus, digabung, diparalelkan, atau diotomatisasi oleh komputer.</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40" style="background: #F5F3FF;">
+          <i class="fa-solid fa-wrench" style="font-size: 160px; color: var(--color-violet);"></i>
+        </div>
+      </div>
+
+      <!-- SLIDE 25 -->
+      <div class="slide-container pad-standard" data-title="Peta 4 Pola Heuristik Utama">
+        <h2>4 Kelompok Pola Heuristik Utama</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 6px solid var(--color-red); padding: 18px;">
+              <h4>1. Task Elimination</h4>
+              <p style="font-size: 15px;">Melenyapkan langkah NVA, audit ganda, dan stempel manual yang tidak memberi nilai tambah.</p>
+            </div>
+            <div class="card" style="border-top: 6px solid var(--color-cyan); padding: 18px;">
+              <h4>2. Task Automation</h4>
+              <p style="font-size: 15px;">Menggantikan pekerjaan klerikal manusia dengan integrasi software, OCR, atau webhook API.</p>
+            </div>
+            <div class="card" style="border-top: 6px solid var(--color-violet); padding: 18px;">
+              <h4>3. Parallelism</h4>
+              <p style="font-size: 15px;">Mengubah urutan sekuensial yang berderet lambat menjadi aktivitas serentak (Parallel Gateway).</p>
+            </div>
+            <div class="card" style="border-top: 6px solid var(--color-green); padding: 18px;">
+              <h4>4. Case Assignment</h4>
+              <p style="font-size: 15px;">Menyatukan banyak peran staf ke satu penanggung jawab tunggal (*Case Manager*).</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 26 -->
+      <div class="slide-container layout-split" data-title="Pola 1: Task Elimination">
+        <div class="split-col split-img-col w-40" style="background: #FEF2F2;">
+          <i class="fa-solid fa-trash-can" style="font-size: 160px; color: var(--color-red);"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Pola Heuristik #1</p>
+          <h2>Task Elimination (Pembersihan Langkah)</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-ban" style="color: var(--color-red);"></i> <span>Hapus verifikasi berlapis untuk transaksi bernilai kecil (*Control Relocation*).</span></li>
+            <li><i class="fa-solid fa-eraser"></i> <span>Hapus keharusan mencetak berkas fisik jika mutasi digital sudah tersimpan di database.</span></li>
+            <li><i class="fa-solid fa-check" style="color: var(--color-green);"></i> <span>*Contoh:* Menghapus keharusan legalisir ijazah fisik bagi alumni internal kampus.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 27 -->
+      <div class="slide-container layout-split" data-title="Pola 2: Task Automation">
+        <div class="split-col w-60">
+          <p class="eyebrow">Pola Heuristik #2</p>
+          <h2>Task Automation (Otomatisasi Sistem)</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-robot" style="color: var(--color-cyan);"></i> <span>Ganti staf verifikasi mutasi bank manual dengan Webhook Payment Gateway.</span></li>
+            <li><i class="fa-solid fa-barcode"></i> <span>Ganti pengetikan nomor faktur dengan pemindai barcode / QR Code instan.</span></li>
+            <li><i class="fa-solid fa-paper-plane"></i> <span>Pemberitahuan email atau WhatsApp dikirim otomatis oleh *Service Task* sistem tanpa perlu intervensi staf.</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40" style="background: #ECFEFF;">
+          <i class="fa-solid fa-gears" style="font-size: 160px; color: var(--color-cyan);"></i>
+        </div>
+      </div>
+
+      <!-- SLIDE 28 -->
+      <div class="slide-container layout-split" data-title="Pola 3: Parallelism">
+        <div class="split-col split-img-col w-40" style="background: #F5F3FF;">
+          <i class="fa-solid fa-code-branch" style="font-size: 160px; color: var(--color-violet);"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Pola Heuristik #3</p>
+          <h2>Parallelism (Pekerjaan Serentak)</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-forward"></i> <span>Pada model As-Is: Gudang menunggu persetujuan faktur selesai dicetak baru mulai membungkus barang (Sekuensial).</span></li>
+            <li><i class="fa-solid fa-plus" style="color: var(--color-violet);"></i> <span>Pada model To-Be: Terapkan **Parallel Gateway (AND)**. Seketika pembayaran valid, gudang membungkus kargo bersamaan dengan bagian keuangan mencetak faktur!</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 29 -->
+      <div class="slide-container layout-split" data-title="Pola 4: Case Assignment">
+        <div class="split-col w-60">
+          <p class="eyebrow">Pola Heuristik #4</p>
+          <h2>Case Manager &amp; Triage</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-user-tie" style="color: var(--color-green);"></i> <span>**Case Manager:** Menyatukan beberapa tugas yang tadinya berpindah antar 4 departemen menjadi tanggung jawab 1 orang operator terpadu.</span></li>
+            <li><i class="fa-solid fa-filter" style="color: var(--color-amber);"></i> <span>**Triage:** Pisahkan jalur kasus mudah dan kasus rumit di awal gerbang. Kasus klaim standar langsung disetujui otomatis oleh sistem, sedangkan kasus bermasalah dialirkan ke tim investigasi senior.</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40" style="background: #ECFDF5;">
+          <i class="fa-solid fa-user-gear" style="font-size: 160px; color: var(--color-green);"></i>
+        </div>
+      </div>
+
+      <!-- SLIDE 30 -->
+      <div class="slide-container pad-standard" data-title="Pola 5: Resequencing & Buffer">
+        <h2>Resequencing &amp; Eliminasi Buffer</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 6px solid var(--color-violet);">
+              <h4>Resequencing (Mengubah Urutan)</h4>
+              <p style="font-size: 16px;">Pindahkan aktivitas verifikasi kelayakan yang berpeluang menolak ke urutan paling awal sebelum pekerjaan berat lainnya dieksekusi, sehingga menghemat jam kerja tim dapur/gudang.</p>
+            </div>
+            <div class="card" style="border-top: 6px solid var(--color-cyan);">
+              <h4>Buffer Elimination (Menghilangkan Penampungan)</h4>
+              <p style="font-size: 16px;">Hapus tumpukan map fisik di atas meja kerja. Hubungkan tugas antar-lane secara langsung melalui pesan antrean digital (*Zero Intermediate Inventory*).</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 31 -->
+      <div class="slide-container layout-split" data-title="Integrasi TI Modern">
+        <div class="split-col split-img-col w-40" style="background: #0F172A;">
+          <i class="fa-solid fa-network-wired" style="font-size: 160px; color: #38BDF8;"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Teknologi Pendorong BPR</p>
+          <h2>Enabler TI untuk Model To-Be</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-file-signature" style="color: var(--color-cyan);"></i> <span>**Digital Signature &amp; SSO:** Menghilangkan stempel basah dan tatap muka fisik.</span></li>
+            <li><i class="fa-solid fa-server" style="color: var(--color-violet);"></i> <span>**Single Source of Truth (Database Terpadu):** Meniadakan ketik ulang antar-Excel.</span></li>
+            <li><i class="fa-solid fa-bell" style="color: var(--color-green);"></i> <span>**Event-Driven Architecture:** Setiap perubahan data langsung memicu notifikasi waktu-nyata ke pengguna.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 32 -->
+      <div class="slide-container center-content bg-dark" data-title="Kutipan Davenport">
+        <i class="fa-solid fa-quote-left" style="font-size: 70px; color: #334155; margin-bottom: 20px;"></i>
+        <h2 style="font-size: 38px; font-weight: 700; max-width: 900px; line-height: 1.4;">
+          "Proses bisnis adalah struktur di mana organisasi menciptakan nilai. Teknologi informasi adalah roda gigi yang menggerakkan struktur tersebut pada kecepatan masa depan."
+        </h2>
+        <p style="font-size: 20px; color: var(--color-violet); margin-top: 16px; font-weight: 600;">— Thomas H. Davenport</p>
+      </div>
+
+      <!-- ==========================================
+           SECTION 5: SIMULASI & GAME INTERAKTIF (SLIDES 33-36)
+           ========================================== -->
+
+      <!-- SLIDE 33 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian IV: Simulasi BPR">
+        <p class="eyebrow">Bagian IV</p>
+        <h1 style="font-size: 72px;">Simulasi Heuristik Redesign</h1>
+        <div class="divider"></div>
+        <p style="font-size: 28px;">Uji Kejelian Memilih Pola Perbaikan yang Tepat untuk Tiap Inefisiensi.</p>
+      </div>
+
+      <!-- SLIDE 34: GAME 1 HEURISTIC MATCHING -->
+      <div class="slide-container pad-standard" style="background: #F8FAFC;" id="drag-drop-1" data-title="Game 1 (Pencocokan Pola Heuristik)">
+        <p class="eyebrow">Game 1: Drag &amp; Drop Redesign</p>
+        <h2 style="font-size: 34px; margin-bottom: 10px;">Terapkan Pola Heuristik yang Tepat untuk Tiap Masalah!</h2>
+        <p style="margin-bottom: 16px; font-size: 18px;">Seret masalah operasional ke solusi pola perbaikan yang sesuai.</p>
+        
+        <div class="flex-grow-center" style="justify-content: flex-start;">
+          <div class="draggable-container">
+            <div class="drag-item" draggable="true" data-type="eliminate">Surat izin perjalanan wajib diparaf oleh 5 pejabat berbeda</div>
+            <div class="drag-item" draggable="true" data-type="automate">Kasir mengetik ulang nota kuitansi manual ke file Excel setiap sore</div>
+            <div class="drag-item" draggable="true" data-type="parallel">Bagian gudang menunggu faktur dicetak 3 hari baru mulai mengemas barang</div>
+          </div>
+
+          <div class="dropzones-container">
+            <div class="drop-zone" data-target="eliminate" style="border-color: var(--color-red); background: #FEF2F2;">
+              <h3 style="color: var(--color-red);"><i class="fa-solid fa-trash-can"></i> Task Elimination</h3>
+              <div class="drop-content"></div>
+            </div>
+            <div class="drop-zone" data-target="automate" style="border-color: var(--color-cyan); background: #ECFEFF;">
+              <h3 style="color: #0891B2;"><i class="fa-solid fa-robot"></i> Task Automation</h3>
+              <div class="drop-content"></div>
+            </div>
+            <div class="drop-zone" data-target="parallel" style="border-color: var(--color-violet); background: #F5F3FF;">
+              <h3 style="color: var(--color-violet);"><i class="fa-solid fa-code-branch"></i> Parallelism</h3>
+              <div class="drop-content"></div>
+            </div>
+          </div>
+
+          <div class="practice-feedback" style="text-align: center; margin-top: 14px; display: none;">
+            <p style="font-size: 24px; font-weight: 800; color: #10B981;"><i class="fa-solid fa-circle-check"></i> Pemilihan Pola Sempurna!</p>
+            <p style="font-size: 16px; color: #475569; margin-top: 2px;">Anda berhasil memadukan eliminasi birokrasi, otomatisasi digital, dan kerja serentak.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 35: GAME 2 TRADE-OFF DEVIL'S QUADRANGLE -->
+      <div class="slide-container pad-standard" style="background: #F8FAFC;" id="drag-drop-2" data-title="Game 2 (Audit Devil's Quadrangle)">
+        <p class="eyebrow">Game 2: Drag &amp; Drop Quadrangle</p>
+        <h2 style="font-size: 34px; margin-bottom: 10px;">Petakan Dampak Inovasi ke Dimensi Kinerja!</h2>
+        <p style="margin-bottom: 16px; font-size: 18px;">Seret dampak implementasi sistem To-Be ke sudut kinerja utamanya.</p>
+        
+        <div class="flex-grow-center" style="justify-content: flex-start;">
+          <div class="draggable-container">
+            <div class="drag-item" draggable="true" data-type="time">Waktu persetujuan berkas dipotong dari 4 hari menjadi 10 detik</div>
+            <div class="drag-item" draggable="true" data-type="cost">Peniadaan biaya kertas formulir fisik dan kurir antar-cabang</div>
+            <div class="drag-item" draggable="true" data-type="quality">Peniadaan kesalahan ketik nomor rekening nasabah berkat validasi otomatis</div>
+          </div>
+
+          <div class="dropzones-container">
+            <div class="drop-zone" data-target="time" style="border-color: var(--color-cyan); background: #ECFEFF;">
+              <h3 style="color: #0891B2;"><i class="fa-solid fa-clock"></i> Dimensi: Time</h3>
+              <div class="drop-content"></div>
+            </div>
+            <div class="drop-zone" data-target="cost" style="border-color: var(--color-green); background: #ECFDF5;">
+              <h3 style="color: #047857;"><i class="fa-solid fa-money-bill-wave"></i> Dimensi: Cost</h3>
+              <div class="drop-content"></div>
+            </div>
+            <div class="drop-zone" data-target="quality" style="border-color: var(--color-violet); background: #F5F3FF;">
+              <h3 style="color: var(--color-violet);"><i class="fa-solid fa-award"></i> Dimensi: Quality</h3>
+              <div class="drop-content"></div>
+            </div>
+          </div>
+
+          <div class="practice-feedback" style="text-align: center; margin-top: 14px; display: none;">
+            <p style="font-size: 24px; font-weight: 800; color: #10B981;"><i class="fa-solid fa-circle-check"></i> Analisis Dimensi Akurat!</p>
+            <p style="font-size: 16px; color: #475569; margin-top: 2px;">Pemahaman trade-off ini menjadi dasar pertanggungjawaban proyek mini Anda.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 36 -->
+      <div class="slide-container center-content bg-dark" data-title="Insight Simulasi BPR">
+        <i class="fa-solid fa-chart-line" style="font-size: 80px; color: var(--color-violet); margin-bottom: 24px;"></i>
+        <h2>Nilai Strategis Redesign</h2>
+        <p style="font-size: 26px; max-width: 900px; margin-top: 16px; line-height: 1.5;">
+          Redesign yang sukses bukan tentang kecanggihan teknologi yang digunakan, melainkan tentang seberapa bersih proses tersebut membuang beban birokrasi dan melayani pelanggan dengan cepat.
+        </p>
+      </div>
+
+      <!-- ==========================================
+           SECTION 6: EVALUASI KUIS FORMATIF (SLIDES 37-41)
+           ========================================== -->
+
+      <!-- SLIDE 37 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian V: Kuis Formatif">
+        <p class="eyebrow">Bagian V</p>
+        <h1 style="font-size: 72px;">Kuis Formatif Pertemuan 11</h1>
+        <div class="divider"></div>
+        <p style="font-size: 30px;">Uji Penguasaan Prinsip Business Process Redesign &amp; BPR.</p>
+      </div>
+
+      <!-- SLIDE 38 -->
+      <div class="slide-container pad-standard" style="background: #FFFFFF;" id="slide38" data-title="Kuis 1: Prinsip Hammer">
+        <p class="eyebrow" style="margin-bottom: 6px;">Kuis Evaluasi • Soal 1/4</p>
+        <h2 style="margin-bottom: 14px;">Apa maksud dari jargon BPR terkenal: "Don't Automate, Obliterate"?</h2>
+        <div class="flex-grow-center" style="justify-content: flex-start; margin-top: 8px;">
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q1')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> A. Jangan membeli komputer kantor sebelum semua karyawan dipecat.
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, true, 'feedback-q1')" data-correct="true">
+            <i class="fa-regular fa-circle"></i> B. Jangan hanya membuat software untuk mempercepat proses lama yang rusak, tetapi hancurkan alur kerja usang dan rancang kembali dari nol.
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q1')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> C. Menghapus database cadangan agar kapasitas memori bertambah.
+          </div>
+
+          <div id="feedback-q1" class="quiz-feedback">
+            <h4><i class="fa-solid fa-lightbulb"></i> Pembahasan: B</h4>
+            <p>Michael Hammer menekankan bahwa mengotomatisasi proses yang buruk hanya menghasilkan inefisiensi berkecepatan tinggi. Proses bisnis harus dipikirkan ulang secara radikal sebelum didukung oleh TI.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 39 -->
+      <div class="slide-container pad-standard" style="background: #FFFFFF;" id="slide39" data-title="Kuis 2: Devil's Quadrangle">
+        <p class="eyebrow" style="margin-bottom: 6px;">Kuis Evaluasi • Soal 2/4</p>
+        <h2 style="margin-bottom: 14px;">Manakah yang BUKAN merupakan salah satu dari empat dimensi dalam kerangka Devil's Quadrangle?</h2>
+        <div class="flex-grow-center" style="justify-content: flex-start; margin-top: 8px;">
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q2')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> A. Time (Waktu siklus dan waktu tunggu).
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q2')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> B. Flexibility (Kemampuan beradaptasi terhadap perubahan).
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, true, 'feedback-q2')" data-correct="true">
+            <i class="fa-regular fa-circle"></i> C. Popularity (Popularitas merek aplikasi di media sosial).
+          </div>
+
+          <div id="feedback-q2" class="quiz-feedback">
+            <h4><i class="fa-solid fa-lightbulb"></i> Pembahasan: C</h4>
+            <p>Empat dimensi kinerja Devil's Quadrangle adalah <strong>Time, Cost, Quality, dan Flexibility</strong>. Popularity bukan bagian dari metrik trade-off operasional ini.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 40 -->
+      <div class="slide-container pad-standard" style="background: #FFFFFF;" id="slide40" data-title="Kuis 3: Paralelisasi">
+        <p class="eyebrow" style="margin-bottom: 6px;">Kuis Evaluasi • Soal 3/4</p>
+        <h2 style="margin-bottom: 14px;">Simbol gateway BPMN apa yang diterapkan dalam pola heuristik Parallelism?</h2>
+        <div class="flex-grow-center" style="justify-content: flex-start; margin-top: 8px;">
+          <div class="quiz-option" onclick="handleQuiz(this, true, 'feedback-q3')" data-correct="true">
+            <i class="fa-regular fa-circle"></i> A. Parallel Gateway (AND - Simbol tanda tambah +) untuk membagi dan menyatukan aktivitas serentak.
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q3')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> B. Exclusive Gateway (XOR - Simbol silang X) untuk memilih salah satu cabang.
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q3')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> C. Complex Gateway untuk pembagian acak.
+          </div>
+
+          <div id="feedback-q3" class="quiz-feedback">
+            <h4><i class="fa-solid fa-lightbulb"></i> Pembahasan: A</h4>
+            <p>Pola Parallelism bertujuan mengeksekusi dua aktivitas independen secara bersamaan untuk memangkas waktu tunggu total, sehingga wajib menggunakan <strong>Parallel Gateway (AND)</strong>.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 41 -->
+      <div class="slide-container pad-standard" style="background: #FFFFFF;" id="slide41" data-title="Kuis 4: Pola Triage">
+        <p class="eyebrow" style="margin-bottom: 6px;">Kuis Evaluasi • Soal 4/4</p>
+        <h2 style="margin-bottom: 14px;">Membagi berkas pengajuan kredit menjadi jalur cepat (otomatis disetujui untuk nasabah prima) dan jalur reguler menerapkan pola heuristik apa?</h2>
+        <div class="flex-grow-center" style="justify-content: flex-start; margin-top: 8px;">
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q4')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> A. Buffer Creation (Menumpuk berkas lebih banyak di gudang).
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, true, 'feedback-q4')" data-correct="true">
+            <i class="fa-regular fa-circle"></i> B. Case Triage (Memilah penanganan kasus sederhana vs kasus kompleks).
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q4')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> C. Task Multiplication (Menggandakan jumlah formulir).
+          </div>
+
+          <div id="feedback-q4" class="quiz-feedback">
+            <h4><i class="fa-solid fa-lightbulb"></i> Pembahasan: B</h4>
+            <p>Pola <strong>Case Triage</strong> memilah kasus berdasarkan kompleksitas di gerbang awal. Kasus sederhana diproses otomatis seketika, sehingga tenaga ahli manusia bisa fokus pada kasus yang berisiko tinggi.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SECTION 7: PENERAPAN PADA PROYEK MINI (SLIDES 42-45)
+           ========================================== -->
+
+      <!-- SLIDE 42 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian VI: Proyek Mini Mahasiswa">
+        <p class="eyebrow">Bagian VI</p>
+        <h1 style="font-size: 72px;">Transisi Menuju Model To-Be</h1>
+        <div class="divider"></div>
+        <p style="font-size: 30px;">Memulai Tahap 3 Proyek Kelompok (Pekan 11-13 RPS).</p>
+      </div>
+
+      <!-- SLIDE 43 -->
+      <div class="slide-container pad-standard" data-title="Instruksi Tahap 3 Proyek">
+        <h2>Instruksi Tahap 3 Proyek Mini (P11-P13)</h2>
+        <div class="flex-grow-center">
+          <div style="background: #F8FAFC; border: 2px solid #CBD5E1; padding: 36px; border-radius: 16px;">
+            <p style="font-size: 24px; font-weight: 700; color: #0F172A; margin-bottom: 12px;">
+              Tugas Perancangan Model Masa Depan (To-Be):
+            </p>
+            <ol style="font-size: 20px; line-height: 1.8; color: #334155; margin-left: 24px;">
+              <li>Ambil hasil evaluasi <strong>Value-Added Analysis (P9)</strong> dan akar masalah <strong>Fishbone/5 Whys (P10)</strong>.</li>
+              <li>Pilih minimal <strong>3 pola heuristik redesign</strong> (misal: Task Elimination, Parallelism, dan Task Automation).</li>
+              <li>Tentukan usulan sistem informasi atau teknologi pendukung baru (misal: Portal Webhook, QR Scanner, atau Mobile Approval).</li>
+              <li>Mulai membuat sketsa konseptual diagram <strong>To-Be BPMN</strong> yang bersih dari pemborosan NVA.</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 44 -->
+      <div class="slide-container pad-standard" data-title="Tabel Gap Analysis As-Is vs To-Be">
+        <h2>Format Tabel Gap Analysis (Penyusun Bab To-Be)</h2>
+        <div class="flex-grow-center">
+          <table style="width: 100%; border-collapse: collapse; font-size: 18px; text-align: left; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+            <thead style="background: #0F172A; color: white;">
+              <tr>
+                <th style="padding: 12px;">No</th>
+                <th style="padding: 12px;">Kondisi As-Is (Saat Ini)</th>
+                <th style="padding: 12px;">Pola Heuristik yang Dipakai</th>
+                <th style="padding: 12px;">Usulan Solusi To-Be</th>
+                <th style="padding: 12px;">Estimasi Efisiensi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid #E2E8F0;">
+                <td style="padding: 10px;">1</td>
+                <td style="padding: 10px;">Verifikasi kuitansi manual 3 hari</td>
+                <td style="padding: 10px; color: var(--color-cyan); font-weight: bold;">Task Automation</td>
+                <td style="padding: 10px;">Webhook Payment Gateway API</td>
+                <td style="padding: 10px; color: var(--color-green); font-weight: bold;">Waktu pangkas 99%</td>
+              </tr>
+              <tr style="border-bottom: 1px solid #E2E8F0;">
+                <td style="padding: 10px;">2</td>
+                <td style="padding: 10px;">Tanda tangan fisik berjenjang</td>
+                <td style="padding: 10px; color: var(--color-red); font-weight: bold;">Task Elimination</td>
+                <td style="padding: 10px;">Auto-Approval di bawah Rp 1 Juta</td>
+                <td style="padding: 10px; color: var(--color-green); font-weight: bold;">Antrean hilang</td>
+              </tr>
+              <tr>
+                <td style="padding: 10px;">3</td>
+                <td style="padding: 10px;">Ketik ulang berkas PDF ke Excel</td>
+                <td style="padding: 10px; color: var(--color-violet); font-weight: bold;">Single Data Source</td>
+                <td style="padding: 10px;">Formulir Web Terintegrasi Database</td>
+                <td style="padding: 10px; color: var(--color-green); font-weight: bold;">Error rate 0%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SLIDE 45 -->
+      <div class="slide-container layout-split" data-title="Transisi Menuju Pertemuan 12">
+        <div class="split-col w-60">
+          <p class="eyebrow">Peta Jalan RPS</p>
+          <h2>Menghubungkan P11 ke Pertemuan 12</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-check" style="color: var(--color-green);"></i> <span>**P11 (Hari ini):** Menguasai prinsip perancangan ulang (BPR &amp; Heuristik).</span></li>
+            <li><i class="fa-solid fa-forward" style="color: var(--color-violet);"></i> <span>**P12 (Pekan Depan):** Praktik langsung mengonstruksi diagram **To-Be BPMN 2.0** menggunakan software Draw.io!</span></li>
+            <li><i class="fa-solid fa-laptop-code"></i> <span>Mulai memodelkan sistem baru dengan elemen Service Task dan Event modern.</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40">
+          <img src="https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=800&q=80" alt="Process Engineering Roadmap">
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SECTION 8: DISKUSI & PENUTUP (SLIDES 46-50)
+           ========================================== -->
+
+      <!-- SLIDE 46 -->
+      <div class="slide-container pad-standard" data-title="Tanya Jawab Mahasiswa 1">
+        <h2>Tanya Jawab Analis 1</h2>
+        <div class="flex-grow-center">
+          <div style="background: #F8FAFC; border-left: 10px solid var(--color-violet); padding: 36px; border-radius: 8px;">
+            <p style="font-size: 22px; font-weight: 700; color: #0F172A; margin-bottom: 10px;">
+              "Pak, apakah proyek mini kelompok kami wajib menggunakan pendekatan radikal BPR atau boleh perbaikan inkremental?"
+            </p>
+            <p style="font-size: 20px; color: #475569; line-height: 1.5;">
+              Untuk skala UMKM atau layanan kampus, kombinasi keduanya adalah yang paling realistis. Terapkan <strong>prinsip BPR</strong> pada tahapan yang menjadi bottleneck terparah (misal: verifikasi pembayaran manual diubah radikal ke digital payment), dan terapkan <strong>perbaikan inkremental</strong> pada aktivitas yang sudah berjalan cukup baik.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 47 -->
+      <div class="slide-container pad-standard" data-title="Tanya Jawab Mahasiswa 2">
+        <h2>Tanya Jawab Analis 2</h2>
+        <div class="flex-grow-center">
+          <div style="background: #F8FAFC; border-left: 10px solid var(--color-cyan); padding: 36px; border-radius: 8px;">
+            <p style="font-size: 22px; font-weight: 700; color: #0F172A; margin-bottom: 10px;">
+              "Bagaimana jika pihak manajemen objek observasi menolak usulan penghapusan tanda tangan manual karena alasan tradisi kantor?"
+            </p>
+            <p style="font-size: 20px; color: #475569; line-height: 1.5;">
+              Inilah tantangan terbesar *Change Management*. Gunakan data kuantitatif dari Pertemuan 9 dan 10: tunjukkan berapa hari waktu terbuang dan berapa rupiah kerugian yang diderita kantor hanya untuk menunggu tanda tangan tersebut. Usulkan kompromi berupa <strong>Digital Signature / Notifikasi Approval</strong> sekali klik di ponsel atasan.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 48 -->
+      <div class="slide-container center-content" data-title="Sesi Tanya Jawab">
+        <i class="fa-regular fa-comments" style="font-size: 110px; color: var(--color-violet); margin-bottom: 28px;"></i>
+        <h1 style="font-size: 54px;">Sesi Diskusi &amp; Tanya Jawab</h1>
+        <p style="font-size: 26px; font-weight: 600; margin-top: 18px;">
+          Silakan ajukan pertanyaan di kolom chat Google Meet atau gunakan fitur mikrofon.
+        </p>
+      </div>
+
+      <!-- SLIDE 49 -->
+      <div class="slide-container center-content bg-dark" data-title="Ringkasan Akhir Pertemuan 11">
+        <i class="fa-solid fa-flag-checkered" style="font-size: 70px; color: var(--color-violet); margin-bottom: 20px;"></i>
+        <h2>Ringkasan Akhir Pertemuan 11</h2>
+        <p style="font-size: 24px; max-width: 900px; margin-top: 14px; line-height: 1.5;">
+          Perancangan proses masa depan (*To-Be*) adalah seni memadukan keberanian mendobrak kebiasaan lama (**BPR**) dengan ketajaman memilih teknologi yang tepat guna menghasilkan lompatan efisiensi nyata.
+        </p>
+      </div>
+
+      <!-- SLIDE 50 -->
+      <div class="slide-container center-content bg-dark" data-title="Penutup Kuliah">
+        <h1 style="font-size: 76px; margin-bottom: 20px;">Terima Kasih!</h1>
+        <div class="divider"></div>
+        <p style="font-size: 30px; font-weight: 700; color: #A78BFA; font-style: italic; margin-top: 14px;">
+          "Sampai jumpa di Pertemuan 12: Pemodelan Diagram To-Be BPMN 2.0 &amp; Gap Analysis."
+        </p>
+        <p style="font-size: 20px; color: #94A3B8; margin-top: 50px;">
+          Ardi Ariansyah, S.Kom., Gr. • Program Studi S1 Teknik Informatika • ITB Swadharma
+        </p>
+      </div>
+
+    </div> <!-- End of slides-wrapper -->
+  </div> <!-- End of presentation-area -->
+
+  <!-- PRESENTATION & INTERACTION SCRIPTS -->
+  <script>
+    // --- 1. CORE PRESENTATION LOGIC ---
+    const slides = document.querySelectorAll('.slide-container');
+    const selector = document.getElementById('slideSelector');
+    let currentSlide = 0;
+
+    function initDropdown() {
+      if(!selector) return;
+      selector.innerHTML = '';
+      slides.forEach((slide, index) => {
+        let title = slide.getAttribute('data-title') || `Slide ${index + 1}`;
+        let option = document.createElement('option');
+        option.value = index;
+        option.text = `${index + 1}. ${title}`;
+        selector.appendChild(option);
+      });
+    }
+
+    function updatePresentation() {
+      slides.forEach((slide, index) => {
+        if (index === currentSlide) {
+          slide.classList.add('active');
+        } else {
+          slide.classList.remove('active');
+        }
+      });
+      if(selector) selector.value = currentSlide;
+      
+      const presArea = document.getElementById('presentation-area') || document.body;
+      const scaleX = presArea.clientWidth / 1280;
+      const scaleY = presArea.clientHeight / 720;
+      const scale = Math.min(scaleX, scaleY) * 0.95;
+      
+      slides[currentSlide].style.transform = `translate(-50%, -50%) scale(${scale})`;
+    }
+
+    function nextSlide() {
+      if (currentSlide < slides.length - 1) { currentSlide++; updatePresentation(); }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) { currentSlide--; updatePresentation(); }
+    }
+
+    function jumpToSlide(index) {
+      currentSlide = parseInt(index); updatePresentation();
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if(e.target.isContentEditable || e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return; 
+      if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') nextSlide();
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') prevSlide();
+    });
+
+    window.addEventListener('resize', updatePresentation);
+    initDropdown();
+    updatePresentation();
+
+    // --- 2. DRAG AND DROP LOGIC (AUTO-APPLY) ---
+    const dropZones = document.querySelectorAll('.drop-zone');
+    const draggables = document.querySelectorAll('.drag-item');
+    const containers = document.querySelectorAll('.draggable-container');
+
+    draggables.forEach(draggable => {
+      draggable.addEventListener('dragstart', () => draggable.classList.add('dragging'));
+      draggable.addEventListener('dragend', () => {
+        draggable.classList.remove('dragging');
+        checkPracticeCompletion();
+      });
+    });
+
+    dropZones.forEach(zone => {
+      zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+      zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+      zone.addEventListener('drop', e => {
+        e.preventDefault();
+        zone.classList.remove('drag-over');
+        const draggable = document.querySelector('.dragging');
+        if (draggable) zone.querySelector('.drop-content').appendChild(draggable);
+      });
+    });
+
+    containers.forEach(container => {
+      container.addEventListener('dragover', e => e.preventDefault());
+      container.addEventListener('drop', e => {
+        const draggable = document.querySelector('.dragging');
+        if (draggable) container.appendChild(draggable);
+      });
+    });
+
+    function checkPracticeCompletion() {
+      document.querySelectorAll('.practice-feedback').forEach(feedback => {
+        let slide = feedback.closest('.slide-container');
+        let totalItems = slide.querySelectorAll('.drag-item').length;
+        let correct = 0;
+        slide.querySelectorAll('.drop-zone').forEach(zone => {
+          zone.querySelectorAll('.drag-item').forEach(item => {
+            if (item.dataset.type === zone.dataset.target) correct++;
+          });
+        });
+        feedback.style.display = (correct === totalItems && totalItems > 0) ? 'block' : 'none';
+      });
+    }
+
+    // --- 3. QUIZ LOGIC ---
+    window.handleQuiz = function(clickedBtn, isCorrect, feedbackId) {
+      const parent = clickedBtn.parentElement;
+      const allButtons = parent.querySelectorAll('.quiz-option');
+      allButtons.forEach(btn => {
+        btn.style.pointerEvents = 'none';
+        const icon = btn.querySelector('i');
+        icon.className = btn.dataset.correct === "true" ? 'fa-solid fa-check-circle' : 'fa-solid fa-circle-xmark';
+        if (btn.dataset.correct === "true") btn.classList.add('correct');
+      });
+      if (!isCorrect) clickedBtn.classList.add('wrong');
+      document.getElementById(feedbackId).classList.add('show');
+    };
+  </script>
+</body>
+</html>

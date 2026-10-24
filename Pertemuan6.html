@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Analisa Proses Bisnis - Pertemuan 6</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Open+Sans:wght@400;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    /* CSS RESET & INFRASTRUCTURE THEME VARIABLES */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-bg-light: #F8FAFC;
+      --color-text-dark: #0F172A;
+      --color-text-muted: #475569;
+      --color-primary: #1E40AF;   /* Deep Blue */
+      --color-accent: #2563EB;    /* Electric Blue */
+      --color-green: #059669;     /* Network Stable */
+      --color-red: #DC2626;       /* Outage / Alert */
+      --color-orange: #D97706;    /* Amber Warning */
+      --color-white: #FFFFFF;
+      --color-dark-bg: #0A0F1D;
+      --navbar-height: 60px;
+    }
+    
+    body { 
+      margin: 0; 
+      padding: 0; 
+      background: #060913; 
+      font-family: 'Open Sans', sans-serif; 
+      height: 100vh; 
+      overflow: hidden; 
+      position: relative;
+    }
+
+    /* TOP NAVIGATION BAR */
+    .top-navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: var(--navbar-height);
+      background: #0B1120;
+      border-bottom: 2px solid #1E293B;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 1000;
+      font-family: 'Montserrat', sans-serif;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.5);
+    }
+
+    .nav-left, .nav-center, .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-btn {
+      background: #1E293B;
+      border: 1px solid #334155;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+      padding: 8px 16px;
+      border-radius: 6px;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .nav-btn:hover { background: var(--color-accent); border-color: var(--color-accent); }
+
+    /* DROPDOWN MENU SLIDES */
+    .slide-selector {
+      background: #1E293B;
+      color: white;
+      border: 1px solid #334155;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      outline: none;
+      max-width: 360px;
+    }
+    .slide-selector option { background: #0F172A; }
+
+    /* MAIN CONTAINER ADJUSTMENT */
+    #presentation-area {
+      position: absolute;
+      top: var(--navbar-height);
+      left: 0;
+      right: 0;
+      bottom: 0; 
+      overflow: hidden;
+    }
+
+    /* HARD LOCK 16:9 CONTAINER (1280x720px) */
+    .slide-container {
+      width: 1280px !important;
+      height: 720px !important;
+      background: var(--color-bg-light);
+      color: var(--color-text-dark);
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(1);
+      transform-origin: center center;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.35s ease-in-out;
+      pointer-events: none;
+    }
+
+    .slide-container.active {
+      visibility: visible;
+      opacity: 1;
+      z-index: 5;
+      pointer-events: auto;
+    }
+
+    /* TYPOGRAPHY */
+    h1, h2, h3, h4, .eyebrow { font-family: 'Montserrat', sans-serif; }
+    h1 { font-size: 58px; font-weight: 800; line-height: 1.15; margin-bottom: 20px; color: var(--color-text-dark); }
+    h2 { font-size: 42px; font-weight: 700; line-height: 1.25; margin-bottom: 24px; color: var(--color-text-dark); }
+    h3 { font-size: 28px; font-weight: 700; margin-bottom: 14px; color: var(--color-primary); }
+    p, li { font-size: 24px; line-height: 1.5; color: var(--color-text-muted); }
+    .eyebrow { font-size: 18px; font-weight: 700; color: var(--color-accent); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; }
+    .divider { width: 80px; height: 6px; background: var(--color-accent); margin: 20px 0 24px 0; }
+    
+    .bg-dark { background: var(--color-dark-bg) !important; color: var(--color-white) !important; }
+    .bg-dark h1, .bg-dark h2, .bg-dark h3, .bg-dark p, .bg-dark li { color: var(--color-white) !important; }
+    
+    /* LAYOUT: SPLIT SCREEN */
+    .layout-split { display: flex; flex-direction: row; flex: 1 1 100%; width: 100%; height: 100%; }
+    .split-col { display: flex; flex-direction: column; justify-content: center; height: 100%; padding: 40px 80px; }
+    .split-img-col { padding: 0 !important; margin: 0 !important; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #0B1120; }
+    .split-img-col img { width: 100%; height: 100%; object-fit: cover; display: block; margin: 0; padding: 0; }
+    
+    /* SPLIT RATIOS */
+    .w-40 { flex: 0 0 40%; width: 40%; }
+    .w-50 { flex: 0 0 50%; width: 50%; }
+    .w-60 { flex: 0 0 60%; width: 60%; }
+
+    /* LAYOUT: STANDARD / CENTERED */
+    .pad-standard { padding: 40px 80px; display: flex; flex-direction: column; flex: 1; height: 100%; }
+    .center-content { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; flex: 1; height: 100%; padding: 40px 80px; }
+    .flex-grow-center { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; }
+
+    /* COMPONENTS: LISTS & CARDS */
+    .minimal-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 20px; }
+    .minimal-list li { display: flex; align-items: flex-start; gap: 20px; font-weight: 600; }
+    .minimal-list li i { font-size: 30px; color: var(--color-accent); width: 38px; text-align: center; margin-top: 4px; }
+
+    .card-grid { display: flex; gap: 24px; align-items: stretch; width: 100%; justify-content: center; flex-wrap: wrap; }
+    .card { background: var(--color-white); border-radius: 16px; padding: 32px 32px; flex: 1 1 0; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #E2E8F0; display: flex; flex-direction: column; align-items: flex-start; }
+    .card i { font-size: 46px; color: var(--color-accent); margin-bottom: 16px; }
+
+    /* INTERACTIVE: DRAG AND DROP */
+    .draggable-container { display: flex; gap: 16px; margin-bottom: 16px; justify-content: center; min-height: 60px; flex-wrap: wrap; }
+    .drag-item { 
+      cursor: grab; padding: 10px 20px; font-size: 18px; background: white; 
+      border: 3px solid var(--color-accent); border-radius: 12px; font-weight: 700; 
+      user-select: none; color: #0F172A; text-align: center; margin-bottom: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.2s; display: inline-block;
+    }
+    .drag-item:active { cursor: grabbing; transform: scale(0.95); }
+    .drag-item.dragging { opacity: 0.5; }
+    
+    .dropzones-container { display: flex; gap: 24px; justify-content: center; align-items: stretch; width: 100%; }
+    .drop-zone { 
+      border: 4px dashed #CBD5E1; border-radius: 16px; flex: 1; 
+      min-height: 180px; padding: 16px; display: flex; flex-direction: column; 
+      align-items: center; background: #FFFFFF; transition: 0.3s;
+    }
+    .drop-zone h3 { font-size: 22px; margin-bottom: 12px; color: #475569; border-bottom: 2px solid #CBD5E1; padding-bottom: 8px; width: 100%; text-align: center;}
+    .drop-zone.drag-over { border-color: var(--color-accent); background: #EFF6FF; }
+    .drop-content { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; width: 100%; gap: 8px; }
+
+    /* INTERACTIVE: QUIZ */
+    .quiz-option {
+      background: #F8FAFC; border: 2px solid #CBD5E1; padding: 12px 20px; 
+      border-radius: 12px; font-size: 20px; font-weight: 600; cursor: pointer; 
+      text-align: left; transition: 0.2s; margin-bottom: 12px; width: 100%;
+      color: #334155; display: flex; align-items: center; gap: 16px;
+    }
+    .quiz-option:hover { background: #E2E8F0; transform: translateX(8px); }
+    .quiz-option.correct { background: #D1FAE5; border-color: #10B981; color: #065F46; }
+    .quiz-option.wrong { background: #FEE2E2; border-color: #EF4444; color: #991B1B; }
+    
+    .quiz-feedback { 
+      display: none; margin-top: 16px; padding: 16px 24px; background: #F0F9FF; 
+      border-left: 8px solid var(--color-accent); border-radius: 0 12px 12px 0; font-size: 18px; 
+      animation: fadeIn 0.4s ease-in-out;
+    }
+    .quiz-feedback.show { display: block; }
+    .quiz-feedback h4 { font-size: 22px; margin-bottom: 8px; color: var(--color-accent); }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+<body>
+
+  <!-- TOP NAVIGATION BAR -->
+  <div class="top-navbar" id="navbar">
+    <div class="nav-left">
+      <div style="font-weight: 800; font-size: 18px; color: #38BDF8;">ITB Swadharma</div>
+    </div>
+    
+    <div class="nav-center">
+      <button class="nav-btn" onclick="prevSlide()" title="Slide Sebelumnya"><i class="fa-solid fa-chevron-left"></i></button>
+      <select class="slide-selector" id="slideSelector" onchange="jumpToSlide(this.value)"></select>
+      <button class="nav-btn" onclick="nextSlide()" title="Slide Berikutnya"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+
+    <div class="nav-right">
+      <div style="font-weight: 600; font-size: 14px; color: #94A3B8;">Analisa Proses Bisnis (3 SKS) • Ardi Ariansyah, S.Kom., Gr.</div>
+    </div>
+  </div>
+
+  <!-- MAIN PRESENTATION AREA -->
+  <div id="presentation-area">
+    <div id="slides-wrapper">
+
+      <!-- ==========================================
+           SECTION 1: COVER & INTRODUCTION (SLIDES 1-5)
+           ========================================== -->
+
+      <!-- SLIDE 1 -->
+      <div class="slide-container layout-split bg-dark active" data-title="Sampul Depan">
+        <div class="split-col w-60 bg-dark">
+          <p class="eyebrow">Pertemuan 6 • INF1104</p>
+          <h1>Infrastruktur TI &amp; Aliran Data</h1>
+          <div class="divider"></div>
+          <p style="font-size: 30px; font-weight: 600;">Membedah Fondasi Ketergantungan Proses Bisnis Modern</p>
+          <div style="margin-top: 40px; border-top: 2px solid #334155; padding-top: 20px;">
+            <p style="color: #94A3B8; font-size: 18px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Dosen Pengampu:</p>
+            <p style="color: #FFFFFF; font-size: 26px; font-weight: 700; margin-top: 6px;">Ardi Ariansyah, S.Kom., Gr.</p>
+            <p style="color: #38BDF8; font-size: 20px; font-weight: 600;">S1 Teknik Informatika • ITBS</p>
+          </div>
+        </div>
+        <div class="split-col split-img-col w-40">
+          <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&q=80" alt="Data Center Server Racks">
+        </div>
+      </div>
+
+      <!-- SLIDE 2 -->
+      <div class="slide-container center-content" data-title="Kesiapan Daring">
+        <i class="fa-solid fa-network-wired" style="font-size: 96px; color: var(--color-accent); margin-bottom: 28px;"></i>
+        <h2 style="font-size: 52px;">Kesiapan Koneksi Jaringan</h2>
+        <p style="font-size: 28px; font-weight: 600; margin-top: 16px;">Ketik "ONLINE" di chat Google Meet untuk memvalidasi kelancaran transmisi data Anda.</p>
+      </div>
+
+      <!-- SLIDE 3 -->
+      <div class="slide-container layout-split" data-title="Review Pertemuan 5">
+        <div class="split-col split-img-col w-40" style="background: #F1F5F9;">
+          <i class="fa-solid fa-backward-step" style="font-size: 180px; color: #94A3B8;"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Kilas Balik Pertemuan 5</p>
+          <h2>Pemodelan Proses As-Is</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-camera-retro"></i> <span>**As-Is:** Memotret fakta proses saat ini secara apa adanya.</span></li>
+            <li><i class="fa-solid fa-comments"></i> <span>**Elicitation:** Wawancara, observasi lapangan, dan analisis arsip.</span></li>
+            <li><i class="fa-solid fa-traffic-light"></i> <span>**Bottleneck:** Mendeteksi titik antrean yang memicu inefisiensi waktu.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 4 -->
+      <div class="slide-container pad-standard" data-title="Capaian Pembelajaran (CPMK)">
+        <h2>Capaian Pembelajaran Sub-CPMK 3.1</h2>
+        <div class="flex-grow-center">
+          <div style="background: #EFF6FF; border-left: 12px solid var(--color-accent); padding: 48px; border-radius: 0 16px 16px 0;">
+            <h3 style="font-size: 30px; margin-bottom: 20px; color: #0F172A;">Kemampuan Akhir Tahapan Belajar</h3>
+            <p style="font-size: 26px; font-weight: 600; color: #1E40AF; line-height: 1.5;">
+              "Mahasiswa mampu mengidentifikasi ketergantungan proses bisnis terhadap infrastruktur TI (jaringan, server, cloud/on-premise), memetakan aliran data, dan mengevaluasi dampak Service Level Agreement (SLA)."
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 5 -->
+      <div class="slide-container pad-standard" data-title="Peta Materi">
+        <h2>Peta Materi Pertemuan 6</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 8px solid var(--color-primary); text-align: center; align-items: center;">
+              <i class="fa-solid fa-server" style="font-size: 52px; color: var(--color-primary);"></i>
+              <h3>1. Infrastruktur TI</h3>
+              <p>On-Premise, Cloud, Jaringan, &amp; Endpoint.</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--color-accent); text-align: center; align-items: center;">
+              <i class="fa-solid fa-route" style="font-size: 52px; color: var(--color-accent);"></i>
+              <h3>2. Pemetaan Aliran Data</h3>
+              <p>Siklus hidup data (Input &rarr; Process &rarr; Store).</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--color-orange); text-align: center; align-items: center;">
+              <i class="fa-solid fa-handshake" style="font-size: 52px; color: var(--color-orange);"></i>
+              <h3>3. SLA &amp; Bottleneck TI</h3>
+              <p>Single Point of Failure &amp; Keandalan Sistem.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SECTION 2: ILUSI DIGITAL & KETERGANTUNGAN TI (SLIDES 6-13)
+           ========================================== -->
+
+      <!-- SLIDE 6 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian I: Ketergantungan TI">
+        <p class="eyebrow">Bagian I</p>
+        <h1 style="font-size: 76px;">Ketergantungan TI</h1>
+        <div class="divider"></div>
+        <p style="font-size: 32px;">Saat Kabel dan Server Menjadi Penentu Hidup-Matinya Bisnis.</p>
+      </div>
+
+      <!-- SLIDE 7 -->
+      <div class="slide-container layout-split" data-title="Mitos Aplikasi Berdiri Sendiri">
+        <div class="split-col w-60">
+          <p class="eyebrow">Realita Arsitektur</p>
+          <h2>Mitos "Aplikasi Berdiri Sendiri"</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-mobile-screen"></i> <span>Pengguna hanya melihat antarmuka (UI/UX) di layar ponsel.</span></li>
+            <li><i class="fa-solid fa-diagram-project"></i> <span>Namun di baliknya, sebuah klik "Beli" menggerakkan puluhan server, sakelar jaringan, dan basis data terdistribusi.</span></li>
+            <li><i class="fa-solid fa-link-slash" style="color: var(--color-red);"></i> <span>Jika satu kabel putus, seluruh proses bisnis terhenti.</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40">
+          <img src="https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=800&q=80" alt="Network Cable Architecture">
+        </div>
+      </div>
+
+      <!-- SLIDE 8 -->
+      <div class="slide-container pad-standard" data-title="Kategori Elemen TI">
+        <h2>4 Lapisan Fondasi Infrastruktur TI Bisnis</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 6px solid var(--color-primary); padding: 24px;">
+              <h3 style="font-size: 22px;">1. Perangkat Komputasi</h3>
+              <p style="font-size: 16px;">Server fisik, mesin virtual (VM), kontainer mikro, dan storage array.</p>
+            </div>
+            <div class="card" style="border-top: 6px solid var(--color-accent); padding: 24px;">
+              <h3 style="font-size: 22px;">2. Jaringan &amp; Bandwidth</h3>
+              <p style="font-size: 16px;">Router, Switch, Firewall, Fiber Optic, dan bandwidth ISP penyedia.</p>
+            </div>
+            <div class="card" style="border-top: 6px solid var(--color-green); padding: 24px;">
+              <h3 style="font-size: 22px;">3. Layanan Cloud &amp; Middleware</h3>
+              <p style="font-size: 16px;">API Gateway, Web Server Nginx, Message Broker (Kafka/RabbitMQ).</p>
+            </div>
+            <div class="card" style="border-top: 6px solid var(--color-orange); padding: 24px;">
+              <h3 style="font-size: 22px;">4. Terminal Endpoint</h3>
+              <p style="font-size: 16px;">Mesin kasir POS, scanner barcode gudang, tablet barista, PC staf kantor.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 9 -->
+      <div class="slide-container layout-split" data-title="On-Premise vs Cloud">
+        <div class="split-col w-50" style="background: #F1F5F9;">
+          <p class="eyebrow">Model Tradisional</p>
+          <h2>On-Premise Server</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-hard-drive"></i> <span>Server fisik dibeli dan disimpan di ruang server kantor sendiri.</span></li>
+            <li><i class="fa-solid fa-wrench"></i> <span>Perawatan, listrik, genset, dan AC pendingin ditanggung tim lokal.</span></li>
+            <li><i class="fa-solid fa-shield"></i> <span>Kontrol data 100% internal, namun biaya modal awal (Capex) sangat tinggi.</span></li>
+          </ul>
+        </div>
+        <div class="split-col w-50" style="background: #EFF6FF;">
+          <p class="eyebrow">Model Modern</p>
+          <h2>Cloud Infrastructure</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-cloud"></i> <span>Menyewa komputasi dari penyedia global (AWS, GCP, Azure, Alibaba).</span></li>
+            <li><i class="fa-solid fa-chart-line"></i> <span>Elastis: server otomatis bertambah saat pesanan melonjak.</span></li>
+            <li><i class="fa-solid fa-wifi" style="color: var(--color-red);"></i> <span>Ketergantungan absolut pada stabilitas koneksi internet.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 10 -->
+      <div class="slide-container pad-standard" data-title="Kelemahan On-Premise">
+        <h2>Risiko Operasional Pada Model On-Premise</h2>
+        <div class="flex-grow-center">
+          <div style="background: #FFFBEB; border-left: 12px solid var(--color-orange); padding: 40px; border-radius: 0 16px 16px 0;">
+            <p style="font-size: 26px; font-weight: 600; color: #1E293B; line-height: 1.5;">
+              "Banyak toko ritel meletakkan komputer server kasir di bawah meja kasir tanpa UPS. Saat listrik padam 1 detik, basis data kasir mengalami korupsi data (*data corruption*) dan transaksi macet berjam-jam."
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 11 -->
+      <div class="slide-container layout-split" data-title="Studi Kasus Cloud POS">
+        <div class="split-col w-60">
+          <p class="eyebrow">Studi Kasus Ritel</p>
+          <h2>Dilema Kasir Berbasis Cloud</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-cash-register"></i> <span>Toko kopi menggunakan aplikasi POS Android berbasis cloud.</span></li>
+            <li><i class="fa-solid fa-wifi-slash" style="color: var(--color-red);"></i> <span>Pukul 12.30 WIB (Jam makan siang sibuk), kabel fiber optik di jalan terputus truk kontainer.</span></li>
+            <li><i class="fa-solid fa-triangle-exclamation" style="color: var(--color-red);"></i> <span>Kasir tidak bisa input pesanan, QRIS gagal cetak, pembeli membubarkan diri.</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40" style="background: #FEF2F2;">
+          <i class="fa-solid fa-triangle-exclamation" style="font-size: 160px; color: var(--color-red);"></i>
+        </div>
+      </div>
+
+      <!-- SLIDE 12 -->
+      <div class="slide-container pad-standard" data-title="Peran Fallback SOP">
+        <h2>Pentingnya SOP Cadangan (*Fallback Procedure*)</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 8px solid var(--color-green);">
+              <i class="fa-solid fa-rotate"></i>
+              <h3>Mode Offline Sinkronisasi</h3>
+              <p>Aplikasi kasir harus memiliki cache lokal agar tetap bisa mencatat transaksi saat internet terputus, lalu otomatis sinkronisasi saat online.</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--color-primary);">
+              <i class="fa-solid fa-sim-card"></i>
+              <h3>Koneksi Dual-WAN Failover</h3>
+              <p>Router kafe/kantor dipasang modem kartu seluler 4G/5G otomatis beralih jika kabel fiber optik utama putus.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 13 -->
+      <div class="slide-container center-content bg-dark" data-title="Kutipan Infrastruktur">
+        <i class="fa-solid fa-quote-left" style="font-size: 80px; color: #334155; margin-bottom: 24px;"></i>
+        <h2 style="font-size: 40px; font-weight: 700; max-width: 900px; line-height: 1.4;">
+          "BPMN memodelkan alur logika manusia, namun infrastruktur TI menentukan apakah logika tersebut mampu bertahan di dunia nyata."
+        </h2>
+      </div>
+
+      <!-- ==========================================
+           SECTION 3: PEMETAAN ALIRAN DATA & INTEGRASI (SLIDES 14-22)
+           ========================================== -->
+
+      <!-- SLIDE 14 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian II: Aliran Data">
+        <p class="eyebrow">Bagian II</p>
+        <h1 style="font-size: 76px;">Pemetaan Aliran Data</h1>
+        <div class="divider"></div>
+        <p style="font-size: 32px;">Melacak Perjalanan Data: Dari Input Hingga Penyimpanan Persisten.</p>
+      </div>
+
+      <!-- SLIDE 15 -->
+      <div class="slide-container layout-split" data-title="Anatomi Aliran Data">
+        <div class="split-col w-60">
+          <p class="eyebrow">Siklus Hidup Informasi</p>
+          <h2>3 Titik Kritis Aliran Data</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-right-to-bracket"></i> <span>**Data Ingestion (Masuk):** Validasi format input dari formulir atau sensor.</span></li>
+            <li><i class="fa-solid fa-gears"></i> <span>**Data In-Transit (Bergerak):** Transmisi data antar server melalui protokol HTTPS/API.</span></li>
+            <li><i class="fa-solid fa-database"></i> <span>**Data At-Rest (Diam):** Penyimpanan aman di basis data relational / objek.</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40">
+          <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&q=80" alt="Data Flow Stream Code">
+        </div>
+      </div>
+
+      <!-- SLIDE 16 -->
+      <div class="slide-container pad-standard" data-title="Silo Data vs Integrasi">
+        <h2>Bahaya "Silo Data" di Organisasi</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border: 2px solid var(--color-red); background: #FEF2F2;">
+              <h3 style="color: var(--color-red);"><i class="fa-solid fa-box-archive"></i> Silo Data (Terisolasi)</h3>
+              <p>Departemen Gudang mencatat stok di Excel lokal, kasir mencatat di kasir cloud terpisah. Hasil: Kasir menjual barang yang fisiknya sudah habis di gudang.</p>
+            </div>
+            <div class="card" style="border: 2px solid var(--color-green); background: #ECFDF5;">
+              <h3 style="color: var(--color-green);"><i class="fa-solid fa-arrows-split-up-and-left"></i> Terintegrasi (Enterprise Bus)</h3>
+              <p>Setiap transaksi kasir langsung memicu *event* pembaruan stok secara *real-time* ke basis data gudang menggunakan webhook atau pesan antrean.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 17 -->
+      <div class="slide-container layout-split" data-title="Integrasi API">
+        <div class="split-col split-img-col w-40" style="background: #EEF2FF;">
+          <i class="fa-solid fa-plug" style="font-size: 160px; color: var(--color-primary);"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Konektor Antar Sistem</p>
+          <h2>Application Programming Interface (API)</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-handshake-simple"></i> <span>Pintu kontrak resmi pertukaran data antar aplikasi berbeda.</span></li>
+            <li><i class="fa-solid fa-cloud-arrow-down"></i> <span>Contoh: Toko Kopi ITBS memanggil API Bank BCA untuk mengecek mutasi transfer QRIS secara otomatis tanpa repot cek mutasi manual.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 18 -->
+      <div class="slide-container pad-standard" data-title="Representasi Data di BPMN">
+        <h2>Menghubungkan Aliran Data ke BPMN 2.0</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 8px solid var(--color-primary);">
+              <i class="fa-regular fa-file-lines"></i>
+              <h3>Data Input &amp; Output</h3>
+              <p>Menempelkan ikon Data Object ke Task dengan panah berarah untuk memperlihatkan berkas masukan dan luaran.</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--color-green);">
+              <i class="fa-solid fa-database"></i>
+              <h3>Data Store Reference</h3>
+              <p>Memetakan tabel basis data mana yang dibaca (*read*) dan diperbarui (*write*) oleh masing-masing lane kerja.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 19 -->
+      <div class="slide-container layout-split" data-title="Kapasitas Bandwidth">
+        <div class="split-col w-60">
+          <p class="eyebrow">Hambatan Fisik Jaringan</p>
+          <h2>Throughput &amp; Latency</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-gauge-high"></i> <span>**Throughput:** Kapasitas volume pipa data per detik (Mbps / Gbps).</span></li>
+            <li><i class="fa-solid fa-stopwatch"></i> <span>**Latency:** Jeda waktu yang dibutuhkan paket data untuk bolak-balik dari ponsel ke server.</span></li>
+            <li><i class="fa-solid fa-triangle-exclamation"></i> <span>Latency di atas 500ms membuat kasir lambat merespons pembeli, memicu frustrasi antrean.</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40">
+          <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=800&q=80" alt="Speed Latency Test Monitor">
+        </div>
+      </div>
+
+      <!-- SLIDE 20 -->
+      <div class="slide-container pad-standard" data-title="Inkonsistensi Data">
+        <h2>Risiko Transaksi Gagal (*Concurrency Issue*)</h2>
+        <div class="flex-grow-center">
+          <div style="background: #FEF2F2; border-left: 12px solid var(--color-red); padding: 40px; border-radius: 0 16px 16px 0;">
+            <p style="font-size: 26px; font-weight: 600; color: #991B1B; line-height: 1.5;">
+              "Dua pelanggan membeli 1 porsi roti bakar terakhir pada detik yang sama di GoFood dan di kasir langsung. Jika sistem tidak memiliki mekanisme *database locking*, kedua transaksi akan disetujui, dan staf dapur akan kewalahan karena roti fisiknya hanya tersisa satu."
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 21 -->
+      <div class="slide-container layout-split" data-title="Message Broker">
+        <div class="split-col split-img-col w-40" style="background: #F0FDF4;">
+          <i class="fa-solid fa-envelope-open-text" style="font-size: 160px; color: var(--color-green);"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Solusi Arsitektur</p>
+          <h2>Antrean Pesan (*Asynchronous Messaging*)</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-layer-group"></i> <span>Daripada server langsung crash saat menerima 10.000 pesanan serentak, pesanan ditampung dalam antrean (*Queue*).</span></li>
+            <li><i class="fa-solid fa-check-double"></i> <span>Sistem dapur memproses pesanan satu per satu sesuai urutan antrean tanpa kehilangan data.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 22 -->
+      <div class="slide-container center-content" data-title="Visualisasi Arsitektur">
+        <i class="fa-solid fa-sitemap" style="font-size: 80px; color: var(--color-primary); margin-bottom: 24px;"></i>
+        <h2>Ringkasan Lapisan Aliran Data</h2>
+        <div style="display: flex; gap: 24px; margin-top: 32px; width: 100%; max-width: 900px;">
+          <div class="card" style="align-items: center; text-align: center; background: #EEF2FF; border: 2px solid var(--color-primary);">
+            <h4>1. User Device</h4>
+            <p style="font-size: 16px;">Web / Mobile App</p>
+          </div>
+          <div class="card" style="align-items: center; text-align: center; background: #EFF6FF; border: 2px solid var(--color-accent);">
+            <h4>2. Gateway</h4>
+            <p style="font-size: 16px;">API &amp; Load Balancer</p>
+          </div>
+          <div class="card" style="align-items: center; text-align: center; background: #ECFDF5; border: 2px solid var(--color-green);">
+            <h4>3. Backend</h4>
+            <p style="font-size: 16px;">Microservices Engine</p>
+          </div>
+          <div class="card" style="align-items: center; text-align: center; background: #FFFBEB; border: 2px solid var(--color-orange);">
+            <h4>4. Storage</h4>
+            <p style="font-size: 16px;">SQL / NoSQL Database</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SECTION 4: SERVICE LEVEL AGREEMENT (SLA) (SLIDES 23-31)
+           ========================================== -->
+
+      <!-- SLIDE 23 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian III: SLA & Kinerja">
+        <p class="eyebrow">Bagian III</p>
+        <h1 style="font-size: 76px;">Service Level Agreement</h1>
+        <div class="divider"></div>
+        <p style="font-size: 32px;">Menjamin Ketersediaan Sistem &amp; Menghitung Kerugian Downtime.</p>
+      </div>
+
+      <!-- SLIDE 24 -->
+      <div class="slide-container layout-split" data-title="Definisi SLA">
+        <div class="split-col w-60">
+          <p class="eyebrow">Kontrak Kinerja</p>
+          <h2>Apa itu SLA?</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-file-signature"></i> <span>Perjanjian formal antara penyedia layanan TI dengan unit bisnis mengenai target performa minimum.</span></li>
+            <li><i class="fa-solid fa-clock-rotate-left"></i> <span>Mencakup metrik: **Uptime**, **Waktu Respons Transaksi**, dan **Waktu Pemulihan Bencana**.</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40">
+          <img src="https://images.unsplash.com/photo-1450133064473-71024230f91b?w=800&q=80" alt="Signing Contract Agreement">
+        </div>
+      </div>
+
+      <!-- SLIDE 25 -->
+      <div class="slide-container pad-standard" data-title="Konsep Uptime 99.9%">
+        <h2>Memahami Standar Ketersediaan (*High Availability*)</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 8px solid var(--color-orange);">
+              <h3>99% Availability ("Two Nines")</h3>
+              <p style="font-size: 18px; color: var(--color-red); font-weight: 700;">Toleransi Downtime: 3,65 Hari / Tahun</p>
+              <p style="font-size: 15px;">Terlalu buruk untuk platform pembayaran digital atau rumah sakit.</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--color-accent);">
+              <h3>99.9% Availability ("Three Nines")</h3>
+              <p style="font-size: 18px; color: var(--color-accent); font-weight: 700;">Toleransi Downtime: 8,76 Jam / Tahun</p>
+              <p style="font-size: 15px;">Standar umum untuk aplikasi e-commerce dan operasional ritel harian.</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--color-green);">
+              <h3>99.99% Availability ("Four Nines")</h3>
+              <p style="font-size: 18px; color: var(--color-green); font-weight: 700;">Toleransi Downtime: 52,6 Menit / Tahun</p>
+              <p style="font-size: 15px;">Standar perbankan nasional, telekomunikasi inti, dan server bursa saham.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 26 -->
+      <div class="slide-container layout-split" data-title="Metrik MTTR & MTTF">
+        <div class="split-col w-60">
+          <p class="eyebrow">Dua Metrik Kunci Kegagalan</p>
+          <h2>MTBF vs MTTR</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-hourglass-start"></i> <span>**MTBF (Mean Time Between Failures):** Rata-rata durasi sistem berjalan lancar sebelum terjadi kerusakan berikutnya. Semakin lama, semakin tangguh.</span></li>
+            <li><i class="fa-solid fa-wrench"></i> <span>**MTTR (Mean Time to Recover):** Berapa lama tim IT membutuhkan waktu untuk memperbaiki server down hingga sistem hidup kembali.</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40" style="background: #F1F5F9;">
+          <i class="fa-solid fa-stopwatch-20" style="font-size: 160px; color: var(--color-primary);"></i>
+        </div>
+      </div>
+
+      <!-- SLIDE 27 -->
+      <div class="slide-container pad-standard" data-title="Single Point of Failure">
+        <h2>Single Point of Failure (SPOF)</h2>
+        <div class="flex-grow-center">
+          <div style="background: #FEF2F2; border-left: 12px solid var(--color-red); padding: 40px; border-radius: 0 16px 16px 0;">
+            <p style="font-size: 26px; font-weight: 600; color: #991B1B; line-height: 1.5;">
+              "SPOF adalah satu komponen tunggal pada sistem infrastruktur yang jika mengalami kegagalan, maka SELURUH sistem bisnis akan langsung mati total."
+            </p>
+            <p style="font-size: 20px; color: #475569; margin-top: 16px;">
+              Contoh: Sebuah kantor memiliki 50 komputer modern, tetapi hanya memiliki 1 kabel colokan listrik utama tanpa UPS cadangan.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 28 -->
+      <div class="slide-container layout-split" data-title="Redundansi Sistem">
+        <div class="split-col split-img-col w-40" style="background: #ECFDF5;">
+          <i class="fa-solid fa-shield-halved" style="font-size: 160px; color: var(--color-green);"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Menghilangkan SPOF</p>
+          <h2>Prinsip Redundansi (Pencadangan)</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-copy"></i> <span>Menyediakan salinan komponen cadangan yang siap menggantikan seketika (*Hot Standby*).</span></li>
+            <li><i class="fa-solid fa-bolt"></i> <span>Penyediaan dua unit UPS listrik ganda.</span></li>
+            <li><i class="fa-solid fa-network-wired"></i> <span>Berlangganan dua ISP internet berbeda (misal: Telkom IndiHome + Biznet).</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 29 -->
+      <div class="slide-container pad-standard" data-title="Biaya Downtime">
+        <h2>Berapa Kerugian Finansial Saat Server Mati?</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 8px solid var(--color-red);">
+              <i class="fa-solid fa-money-bill-transfer" style="color: var(--color-red);"></i>
+              <h3>1. Kehilangan Pendapatan Langsung</h3>
+              <p>Pelanggan beralih memesan makanan ke kompetitor saat aplikasi gerai mengalami error.</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--color-red);">
+              <i class="fa-solid fa-user-xmark" style="color: var(--color-red);"></i>
+              <h3>2. Gaji Karyawan Menganggur</h3>
+              <p>Staf dapur dan barista tetap dibayar per jam, namun tidak bisa membuat kopi karena ketiadaan data tiket.</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--color-red);">
+              <i class="fa-solid fa-heart-crack" style="color: var(--color-red);"></i>
+              <h3>3. Rusaknya Reputasi Merek</h3>
+              <p>Ulasan bintang satu bertebaran di Google Maps akibat kekecewaan pelanggan yang antre lama.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 30 -->
+      <div class="slide-container layout-split" data-title="Disaster Recovery">
+        <div class="split-col w-60">
+          <p class="eyebrow">Rencana Kontinjensi</p>
+          <h2>Disaster Recovery Plan (DRP)</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-fire-extinguisher"></i> <span>Prosedur pemulihan ketika pusat data mengalami musibah banjir, kebakaran, atau serangan siber.</span></li>
+            <li><i class="fa-solid fa-cloud-arrow-up"></i> <span>**RPO (Recovery Point Objective):** Batas usia data cadangan yang boleh hilang (misal: cadangan tiap 1 jam).</span></li>
+            <li><i class="fa-solid fa-clock"></i> <span>**RTO (Recovery Time Objective):** Batas waktu maksimal sistem harus sudah hidup kembali (misal: maksimal 2 jam).</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40">
+          <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&q=80" alt="Disaster Recovery Emergency Team">
+        </div>
+      </div>
+
+      <!-- SLIDE 31 -->
+      <div class="slide-container center-content bg-dark" data-title="Kuis Cepat SLA">
+        <p class="eyebrow">Refleksi Cepat</p>
+        <h2 style="font-size: 44px; max-width: 900px;">
+          "Jika SLA server KRS kampus menjanjikan uptime 99%, apakah mahasiswa puas jika portal down selama 3 hari di masa pengisian KRS?"
+        </h2>
+        <p style="font-size: 26px; color: var(--color-accent); margin-top: 24px; font-weight: 700;">
+          Tentu TIDAK. Kebutuhan operasional akademik membutuhkan ketersediaan tinggi di momen kritis!
+        </p>
+      </div>
+
+      <!-- ==========================================
+           SECTION 5: SIMULASI & GAME INTERAKTIF (SLIDES 32-35)
+           ========================================== -->
+
+      <!-- SLIDE 32 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian IV: Praktik Simulasi">
+        <p class="eyebrow">Bagian IV</p>
+        <h1 style="font-size: 76px;">Simulasi Interaktif</h1>
+        <div class="divider"></div>
+        <p style="font-size: 32px;">Uji Kemampuan Analisis Infrastruktur &amp; Mengatasi Bottleneck Jaringan.</p>
+      </div>
+
+      <!-- SLIDE 33 -->
+      <div class="slide-container pad-standard" style="background: #F8FAFC;" id="drag-drop-1" data-title="Game 1 (Pilah SPOF)">
+        <p class="eyebrow">Game 1: Drag &amp; Drop</p>
+        <h2 style="font-size: 36px; margin-bottom: 12px;">Identifikasi SPOF vs Arsitektur Tangguh</h2>
+        <p style="margin-bottom: 20px; font-size: 18px;">Seret skenario di bawah ini ke kotak kategori yang tepat!</p>
+        
+        <div class="flex-grow-center" style="justify-content: flex-start;">
+          <div class="draggable-container">
+            <div class="drag-item" draggable="true" data-type="spof">Satu-satunya switch jaringan utama kantor tidak memiliki cadangan</div>
+            <div class="drag-item" draggable="true" data-type="redundant">Server basis data otomatis mereplikasi data ke cloud sekunder</div>
+            <div class="drag-item" draggable="true" data-type="spof">Hanya ada satu admin IT yang tahu kata sandi root database</div>
+            <div class="drag-item" draggable="true" data-type="redundant">Menggunakan 2 koneksi ISP internet dengan fitur failover otomatis</div>
+          </div>
+
+          <div class="dropzones-container">
+            <div class="drop-zone" data-target="spof" style="border-color: var(--color-red); background: #FEF2F2;">
+              <h3 style="color: var(--color-red);"><i class="fa-solid fa-triangle-exclamation"></i> Single Point of Failure (SPOF)</h3>
+              <div class="drop-content"></div>
+            </div>
+            <div class="drop-zone" data-target="redundant" style="border-color: var(--color-green); background: #ECFDF5;">
+              <h3 style="color: var(--color-green);"><i class="fa-solid fa-shield-halved"></i> Tangguh (Redundant)</h3>
+              <div class="drop-content"></div>
+            </div>
+          </div>
+
+          <div class="practice-feedback" style="text-align: center; margin-top: 16px; display: none;">
+            <p style="font-size: 26px; font-weight: 800; color: #10B981;"><i class="fa-solid fa-circle-check"></i> Hebat Sekali!</p>
+            <p style="font-size: 18px; color: #475569; margin-top: 4px;">Anda berhasil mendeteksi titik rawan kegagalan tunggal yang berisiko melumpuhkan operasional.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 34 -->
+      <div class="slide-container pad-standard" style="background: #F8FAFC;" id="drag-drop-2" data-title="Game 2 (Komponen TI)">
+        <p class="eyebrow">Game 2: Drag &amp; Drop</p>
+        <h2 style="font-size: 36px; margin-bottom: 12px;">Klasifikasikan Komponen Infrastruktur TI</h2>
+        <p style="margin-bottom: 20px; font-size: 18px;">Seret perangkat di bawah ini ke klasifikasi perannya.</p>
+        
+        <div class="flex-grow-center" style="justify-content: flex-start;">
+          <div class="draggable-container">
+            <div class="drag-item" draggable="true" data-type="compute">Virtual Machine AWS EC2</div>
+            <div class="drag-item" draggable="true" data-type="network">Kabel Fiber Optic 10 Gbps</div>
+            <div class="drag-item" draggable="true" data-type="endpoint">Scanner Barcode Handheld Gudang</div>
+          </div>
+
+          <div class="dropzones-container">
+            <div class="drop-zone" data-target="compute" style="border-color: var(--color-primary); background: #EEF2FF;">
+              <h3 style="color: var(--color-primary);"><i class="fa-solid fa-server"></i> Komputasi / Server</h3>
+              <div class="drop-content"></div>
+            </div>
+            <div class="drop-zone" data-target="network" style="border-color: var(--color-accent); background: #EFF6FF;">
+              <h3 style="color: var(--color-accent);"><i class="fa-solid fa-network-wired"></i> Jaringan Komunikasi</h3>
+              <div class="drop-content"></div>
+            </div>
+            <div class="drop-zone" data-target="endpoint" style="border-color: var(--color-orange); background: #FFFBEB;">
+              <h3 style="color: var(--color-orange);"><i class="fa-solid fa-barcode"></i> Terminal Endpoint</h3>
+              <div class="drop-content"></div>
+            </div>
+          </div>
+
+          <div class="practice-feedback" style="text-align: center; margin-top: 16px; display: none;">
+            <p style="font-size: 26px; font-weight: 800; color: #10B981;"><i class="fa-solid fa-circle-check"></i> Tepat Sasaran!</p>
+            <p style="font-size: 18px; color: #475569; margin-top: 4px;">Pemisahan perangkat keras komputasi, transmisi data, dan antarmuka operasional berhasil dipetakan.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 35 -->
+      <div class="slide-container center-content bg-dark" data-title="Insight Simulasi">
+        <i class="fa-solid fa-lightbulb" style="font-size: 80px; color: var(--color-accent); margin-bottom: 24px;"></i>
+        <h2>Hasil Analisis Infrastruktur</h2>
+        <p style="font-size: 26px; max-width: 900px; margin-top: 16px; line-height: 1.5;">
+          Seorang Systems Analyst profesional tidak boleh hanya melihat fungsi modul perangkat lunak, tetapi wajib memahami di perangkat fisik apa modul tersebut dijalankan.
+        </p>
+      </div>
+
+      <!-- ==========================================
+           SECTION 6: EVALUASI KUIS FORMATIF (SLIDES 36-41)
+           ========================================== -->
+
+      <!-- SLIDE 36 -->
+      <div class="slide-container center-content bg-dark" data-title="Bagian V: Kuis Formatif">
+        <p class="eyebrow">Bagian V</p>
+        <h1 style="font-size: 76px;">Kuis Pemahaman Formatif</h1>
+        <div class="divider"></div>
+        <p style="font-size: 32px;">Uji Penguasaan Materi Pertemuan 1 Hingga 6.</p>
+      </div>
+
+      <!-- SLIDE 37 -->
+      <div class="slide-container pad-standard" style="background: #FFFFFF;" id="slide37" data-title="Kuis 1: Arti SLA">
+        <p class="eyebrow" style="margin-bottom: 8px;">Kuis Evaluasi • Soal 1/4</p>
+        <h2 style="margin-bottom: 16px;">Apa kepanjangan dan tujuan dari Service Level Agreement (SLA)?</h2>
+        <div class="flex-grow-center" style="justify-content: flex-start; margin-top: 10px;">
+          <div class="quiz-option" onclick="handleQuiz(this, true, 'feedback-q1')" data-correct="true">
+            <i class="fa-regular fa-circle"></i> A. Perjanjian tingkat layanan minimum antara penyedia TI dan pengguna bisnis.
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q1')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> B. Lisensi perangkat lunak open-source untuk kompilasi kode program.
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q1')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> C. Standar penggajian teknisi jaringan telekomunikasi.
+          </div>
+
+          <div id="feedback-q1" class="quiz-feedback">
+            <h4><i class="fa-solid fa-lightbulb"></i> Pembahasan: A</h4>
+            <p>SLA (Service Level Agreement) adalah dokumen kontrak yang menetapkan standar kinerja minimum, waktu respons, dan target uptime sistem TI.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 38 -->
+      <div class="slide-container pad-standard" style="background: #FFFFFF;" id="slide38" data-title="Kuis 2: Konsep SPOF">
+        <p class="eyebrow" style="margin-bottom: 8px;">Kuis Evaluasi • Soal 2/4</p>
+        <h2 style="margin-bottom: 16px;">Apa bahaya utama dari keberadaan Single Point of Failure (SPOF) pada proses bisnis?</h2>
+        <div class="flex-grow-center" style="justify-content: flex-start;">
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q2')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> A. Menyebabkan kecepatan internet komputer menjadi terlalu tinggi.
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, true, 'feedback-q2')" data-correct="true">
+            <i class="fa-regular fa-circle"></i> B. Jika satu komponen tersebut rusak, seluruh operasional bisnis langsung lumpuh total.
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q2')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> C. Meningkatkan biaya tagihan listrik di server lokal.
+          </div>
+
+          <div id="feedback-q2" class="quiz-feedback">
+            <h4><i class="fa-solid fa-lightbulb"></i> Pembahasan: B</h4>
+            <p>SPOF tidak memiliki jalur cadangan. Kerusakan pada titik tunggal ini secara instan memutus mata rantai proses bisnis organisasi.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 39 -->
+      <div class="slide-container pad-standard" style="background: #FFFFFF;" id="slide39" data-title="Kuis 3: API Gateway">
+        <p class="eyebrow" style="margin-bottom: 8px;">Kuis Evaluasi • Soal 3/4</p>
+        <h2 style="margin-bottom: 16px;">Teknologi apa yang menjadi jembatan penghubung pertukaran data antar sistem aplikasi yang berbeda platform?</h2>
+        <div class="flex-grow-center" style="justify-content: flex-start; margin-top: 10px;">
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q3')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> A. Flashdisk USB Fisik
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, true, 'feedback-q3')" data-correct="true">
+            <i class="fa-regular fa-circle"></i> B. Application Programming Interface (API)
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q3')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> C. Monitor VGA Komputer
+          </div>
+
+          <div id="feedback-q3" class="quiz-feedback">
+            <h4><i class="fa-solid fa-lightbulb"></i> Pembahasan: B</h4>
+            <p>API memungkinkan dua sistem berbeda (misal: Tokopedia dan Bank BCA) saling mengirimkan informasi dan memvalidasi pembayaran secara terstandar.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 40 -->
+      <div class="slide-container pad-standard" style="background: #FFFFFF;" id="slide40" data-title="Kuis 4: MTTR Metrik">
+        <p class="eyebrow" style="margin-bottom: 8px;">Kuis Evaluasi • Soal 4/4</p>
+        <h2 style="margin-bottom: 16px;">Apa kepanjangan dari MTTR dalam manajemen pemeliharaan sistem?</h2>
+        <div class="flex-grow-center" style="justify-content: flex-start; margin-top: 10px;">
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q4')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> A. Maximum Time to Restart
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, true, 'feedback-q4')" data-correct="true">
+            <i class="fa-regular fa-circle"></i> B. Mean Time to Recover / Repair
+          </div>
+          <div class="quiz-option" onclick="handleQuiz(this, false, 'feedback-q4')" data-correct="false">
+            <i class="fa-regular fa-circle"></i> C. Minimum Traffic Total Rate
+          </div>
+
+          <div id="feedback-q4" class="quiz-feedback">
+            <h4><i class="fa-solid fa-lightbulb"></i> Pembahasan: B</h4>
+            <p>MTTR mengukur rata-rata durasi yang dibutuhkan tim teknis untuk memulihkan kembali sistem setelah terjadi gangguan (*downtime*).</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 41 -->
+      <div class="slide-container center-content" data-title="Apresiasi Kuis">
+        <i class="fa-solid fa-circle-check" style="font-size: 80px; color: var(--color-green); margin-bottom: 24px;"></i>
+        <h2>Evaluasi Konseptual Selesai</h2>
+        <p style="font-size: 26px; max-width: 900px; margin-top: 16px; line-height: 1.5;">
+          Pemahaman mengenai ketergantungan infrastruktur ini adalah bekal krusial sebelum kita masuk ke aspek keamanan informasi (*Security-Aware Process*) di Pertemuan 7.
+        </p>
+      </div>
+
+      <!-- ==========================================
+           SECTION 7: PENUTUP & PERSIAPAN UTS (SLIDES 42-50)
+           ========================================== -->
+
+      <!-- SLIDE 42 -->
+      <div class="slide-container pad-standard" data-title="Checklist Infrastruktur">
+        <h2>Checklist Penilaian Infrastruktur bagi Analis</h2>
+        <div class="flex-grow-center">
+          <ul class="minimal-list" style="gap: 24px;">
+            <li><i class="fa-solid fa-square-check" style="color: var(--color-green);"></i> <span>Apakah setiap task digital memiliki ketergantungan koneksi internet yang jelas?</span></li>
+            <li><i class="fa-solid fa-square-check" style="color: var(--color-green);"></i> <span>Apakah basis data dilindungi oleh mekanisme backup otomatis harian?</span></li>
+            <li><i class="fa-solid fa-square-check" style="color: var(--color-green);"></i> <span>Apakah ada prosedur manual jika sistem cloud sewaktu-waktu mengalami gangguan?</span></li>
+            <li><i class="fa-solid fa-square-check" style="color: var(--color-green);"></i> <span>Apakah SLA pihak ketiga (API Payment/Logistik) telah dipahami oleh manajemen?</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 43 -->
+      <div class="slide-container pad-standard" data-title="Ringkasan Materi Pertemuan 6">
+        <h2>Ringkasan Utama Hari Ini</h2>
+        <div class="flex-grow-center">
+          <div style="background: #EFF6FF; border-left: 12px solid var(--color-accent); padding: 40px; border-radius: 0 16px 16px 0;">
+            <p style="font-size: 24px; line-height: 1.6; color: #0F172A;">
+              1. Proses bisnis modern mustahil dilepaskan dari infrastruktur TI (server, jaringan, cloud).<br>
+              2. Aliran data yang lancar mencegah terjadinya *silo data* dan inkonsistensi transaksi antar bagian.<br>
+              3. Eliminasi *Single Point of Failure (SPOF)* melalui redundansi adalah kunci menjaga SLA ketersediaan tinggi (*High Availability*).
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 44 -->
+      <div class="slide-container layout-split" data-title="Pengumuman Kuis 1">
+        <div class="split-col w-60">
+          <p class="eyebrow">Evaluasi Formatif</p>
+          <h2>Pelaksanaan Kuis 1 (Online)</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-bullhorn"></i> <span>Mencakup seluruh materi **Pertemuan 1 hingga Pertemuan 6**.</span></li>
+            <li><i class="fa-solid fa-laptop-code"></i> <span>Dikerjakan melalui portal e-learning resmi ITBS.</span></li>
+            <li><i class="fa-solid fa-calendar-check"></i> <span>Bobot kuis menjadi bagian dari komponen Tugas Mandiri (20% nilai akhir).</span></li>
+          </ul>
+        </div>
+        <div class="split-col split-img-col w-40" style="background: #F8FAFC;">
+          <i class="fa-solid fa-file-pen" style="font-size: 160px; color: var(--color-accent);"></i>
+        </div>
+      </div>
+
+      <!-- SLIDE 45 -->
+      <div class="slide-container layout-split" data-title="Persiapan Pertemuan 7">
+        <div class="split-col split-img-col w-40" style="background: #0B1120;">
+          <i class="fa-solid fa-shield-virus" style="font-size: 160px; color: #38BDF8;"></i>
+        </div>
+        <div class="split-col w-60">
+          <p class="eyebrow">Aksi Berikutnya</p>
+          <h2>Persiapan Pertemuan 7</h2>
+          <ul class="minimal-list">
+            <li><i class="fa-solid fa-shield-halved"></i> <span>Topik: **Security-Aware Business Process**.</span></li>
+            <li><i class="fa-solid fa-key"></i> <span>Membedah prinsip CIA Triad (*Confidentiality, Integrity, Availability*).</span></li>
+            <li><i class="fa-solid fa-user-shield"></i> <span>Mendeteksi celah kebocoran data dan *human error* dalam alur kerja operasional.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 46 -->
+      <div class="slide-container pad-standard" data-title="Roadmap Menuju UTS">
+        <h2>Peta Jalan Menuju Evaluasi Tengah Semester (UTS)</h2>
+        <div class="flex-grow-center">
+          <div class="card-grid">
+            <div class="card" style="border-top: 8px solid var(--color-green);">
+              <h4>Pertemuan 1-6</h4>
+              <p style="font-size: 16px;">Fondasi Proses, Value Chain, BPMN Dasar &amp; Lanjutan, Infrastruktur TI.</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--color-accent);">
+              <h4>Pertemuan 7</h4>
+              <p style="font-size: 16px;">Integrasi Kontrol Keamanan Siber &amp; Review Komprehensif Pra-UTS.</p>
+            </div>
+            <div class="card" style="border-top: 8px solid var(--color-orange);">
+              <h4>Pertemuan 8</h4>
+              <p style="font-size: 16px;">**UJIAN TENGAH SEMESTER (UTS):** Ujian praktik pemodelan studi kasus nyata.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 47 -->
+      <div class="slide-container center-content" data-title="Sesi Tanya Jawab">
+        <i class="fa-regular fa-comments" style="font-size: 110px; color: var(--color-accent); margin-bottom: 28px;"></i>
+        <h1 style="font-size: 54px;">Sesi Diskusi &amp; Tanya Jawab</h1>
+        <p style="font-size: 28px; font-weight: 700; margin-top: 20px;">Silakan ajukan pertanyaan terkait integrasi infrastruktur dan SLA.</p>
+      </div>
+
+      <!-- SLIDE 48 -->
+      <div class="slide-container pad-standard" data-title="FAQ Mahasiswa 1">
+        <h2>Tanya Jawab Umum 1</h2>
+        <div class="flex-grow-center">
+          <div style="background: #F8FAFC; border-left: 10px solid var(--color-accent); padding: 36px; border-radius: 8px;">
+            <p style="font-size: 24px; font-weight: 700; color: #0F172A; margin-bottom: 12px;">
+              "Pak, apakah seorang Systems Analyst harus bisa setting router jaringan dan server fisik?"
+            </p>
+            <p style="font-size: 22px; color: #475569;">
+              Tidak harus sampai mengonfigurasi kabelnya sendiri. Namun, Analis wajib memahami kapasitas, batas kecepatan, dan risiko kegagalan perangkat tersebut agar tidak membuat rancangan sistem yang mustahil dieksekusi di lapangan.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 49 -->
+      <div class="slide-container pad-standard" data-title="FAQ Mahasiswa 2">
+        <h2>Tanya Jawab Umum 2</h2>
+        <div class="flex-grow-center">
+          <div style="background: #F8FAFC; border-left: 10px solid var(--color-green); padding: 36px; border-radius: 8px;">
+            <p style="font-size: 24px; font-weight: 700; color: #0F172A; margin-bottom: 12px;">
+              "Kapan sebuah UMKM harus pindah dari On-Premise ke Cloud?"
+            </p>
+            <p style="font-size: 22px; color: #475569;">
+              Saat volume transaksi harian mulai tidak terduga, toko membuka cabang baru di luar kota, atau saat biaya perawatan server fisik di kantor sudah lebih mahal daripada biaya langganan cloud bulanan.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 50 -->
+      <div class="slide-container center-content bg-dark" data-title="Penutup">
+        <h1 style="font-size: 90px; margin-bottom: 24px;">Terima Kasih</h1>
+        <div class="divider"></div>
+        <p style="font-size: 34px; font-weight: 700; color: #38BDF8; font-style: italic; margin-top: 16px;">
+          "Sistem bisnis yang hebat berdiri di atas infrastruktur yang andal dan teruji."
+        </p>
+        <p style="font-size: 22px; color: #94A3B8; margin-top: 60px;">
+          Ardi Ariansyah, S.Kom., Gr. • ITB Swadharma
+        </p>
+      </div>
+
+    </div> <!-- End of slides-wrapper -->
+  </div> <!-- End of presentation-area -->
+
+  <!-- PRESENTATION & INTERACTION SCRIPTS -->
+  <script>
+    // --- 1. CORE PRESENTATION LOGIC ---
+    const slides = document.querySelectorAll('.slide-container');
+    const selector = document.getElementById('slideSelector');
+    let currentSlide = 0;
+
+    function initDropdown() {
+      if(!selector) return;
+      selector.innerHTML = '';
+      slides.forEach((slide, index) => {
+        let title = slide.getAttribute('data-title') || `Slide ${index + 1}`;
+        let option = document.createElement('option');
+        option.value = index;
+        option.text = `${index + 1}. ${title}`;
+        selector.appendChild(option);
+      });
+    }
+
+    function updatePresentation() {
+      slides.forEach((slide, index) => {
+        if (index === currentSlide) {
+          slide.classList.add('active');
+        } else {
+          slide.classList.remove('active');
+        }
+      });
+      if(selector) selector.value = currentSlide;
+      
+      const presArea = document.getElementById('presentation-area') || document.body;
+      const scaleX = presArea.clientWidth / 1280;
+      const scaleY = presArea.clientHeight / 720;
+      const scale = Math.min(scaleX, scaleY) * 0.95;
+      
+      slides[currentSlide].style.transform = `translate(-50%, -50%) scale(${scale})`;
+    }
+
+    function nextSlide() {
+      if (currentSlide < slides.length - 1) { currentSlide++; updatePresentation(); }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) { currentSlide--; updatePresentation(); }
+    }
+
+    function jumpToSlide(index) {
+      currentSlide = parseInt(index); updatePresentation();
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if(e.target.isContentEditable || e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return; 
+      if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') nextSlide();
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') prevSlide();
+    });
+
+    window.addEventListener('resize', updatePresentation);
+    initDropdown();
+    updatePresentation();
+
+    // --- 2. DRAG AND DROP LOGIC (AUTO-APPLY) ---
+    const dropZones = document.querySelectorAll('.drop-zone');
+    const draggables = document.querySelectorAll('.drag-item');
+    const containers = document.querySelectorAll('.draggable-container');
+
+    draggables.forEach(draggable => {
+      draggable.addEventListener('dragstart', () => draggable.classList.add('dragging'));
+      draggable.addEventListener('dragend', () => {
+        draggable.classList.remove('dragging');
+        checkPracticeCompletion();
+      });
+    });
+
+    dropZones.forEach(zone => {
+      zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+      zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+      zone.addEventListener('drop', e => {
+        e.preventDefault();
+        zone.classList.remove('drag-over');
+        const draggable = document.querySelector('.dragging');
+        if (draggable) zone.querySelector('.drop-content').appendChild(draggable);
+      });
+    });
+
+    containers.forEach(container => {
+      container.addEventListener('dragover', e => e.preventDefault());
+      container.addEventListener('drop', e => {
+        const draggable = document.querySelector('.dragging');
+        if (draggable) container.appendChild(draggable);
+      });
+    });
+
+    function checkPracticeCompletion() {
+      document.querySelectorAll('.practice-feedback').forEach(feedback => {
+        let slide = feedback.closest('.slide-container');
+        let totalItems = slide.querySelectorAll('.drag-item').length;
+        let correct = 0;
+        slide.querySelectorAll('.drop-zone').forEach(zone => {
+          zone.querySelectorAll('.drag-item').forEach(item => {
+            if (item.dataset.type === zone.dataset.target) correct++;
+          });
+        });
+        feedback.style.display = (correct === totalItems && totalItems > 0) ? 'block' : 'none';
+      });
+    }
+
+    // --- 3. QUIZ LOGIC ---
+    window.handleQuiz = function(clickedBtn, isCorrect, feedbackId) {
+      const parent = clickedBtn.parentElement;
+      const allButtons = parent.querySelectorAll('.quiz-option');
+      allButtons.forEach(btn => {
+        btn.style.pointerEvents = 'none';
+        const icon = btn.querySelector('i');
+        icon.className = btn.dataset.correct === "true" ? 'fa-solid fa-check-circle' : 'fa-solid fa-circle-xmark';
+        if (btn.dataset.correct === "true") btn.classList.add('correct');
+      });
+      if (!isCorrect) clickedBtn.classList.add('wrong');
+      document.getElementById(feedbackId).classList.add('show');
+    };
+  </script>
+</body>
+</html>
