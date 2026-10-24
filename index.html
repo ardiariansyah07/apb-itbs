@@ -7,7 +7,7 @@
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts: Inter & Montserrat -->
+  <!-- Google Fonts -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@700;800;900&display=swap">
   <!-- Font Awesome 6 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -23,10 +23,11 @@
           },
           colors: {
             brand: {
-              dark: '#080C16',
-              slate: '#0F172A',
-              card: '#131D31',
-              border: '#1E293B',
+              dark: '#060A12',
+              slate: '#0D1527',
+              card: '#111C33',
+              cardHover: '#162442',
+              border: '#1E2F4D',
               blue: '#0284C7',
               cyan: '#06B6D4',
               violet: '#8B5CF6',
@@ -41,34 +42,45 @@
   </script>
 
   <style>
-    /* Custom Scrollbar */
     ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: #080C16; }
+    ::-webkit-scrollbar-track { background: #060A12; }
     ::-webkit-scrollbar-thumb { background: #1E293B; border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: #0284C7; }
+    ::-webkit-scrollbar-thumb:hover { background: #06B6D4; }
 
-    /* Subtle Animated Glow Effects */
-    .glow-cyan {
-      box-shadow: 0 0 50px -15px rgba(6, 182, 212, 0.25);
+    .bpmn-blueprint-grid {
+      background-size: 32px 32px;
+      background-image: 
+        linear-gradient(to right, rgba(30, 47, 77, 0.4) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(30, 47, 77, 0.4) 1px, transparent 1px);
     }
-    .glow-violet {
-      box-shadow: 0 0 50px -15px rgba(139, 92, 246, 0.25);
+
+    .glow-cyan { box-shadow: 0 0 50px -10px rgba(6, 182, 212, 0.22); }
+    .glow-violet { box-shadow: 0 0 50px -10px rgba(139, 92, 246, 0.22); }
+    .glow-rose { box-shadow: 0 0 50px -10px rgba(244, 63, 94, 0.22); }
+    .glow-emerald { box-shadow: 0 0 50px -10px rgba(16, 185, 129, 0.22); }
+    .glow-amber { box-shadow: 0 0 50px -10px rgba(245, 158, 11, 0.22); }
+
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-6px); }
     }
-    .gradient-border {
-      background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.02));
-    }
+    .animate-float { animation: floatSlow 5s ease-in-out infinite; }
   </style>
 </head>
-<body class="bg-brand-dark text-slate-100 min-h-screen flex flex-col font-sans selection:bg-brand-cyan selection:text-brand-dark antialiased">
+<body class="bg-brand-dark text-slate-100 min-h-screen flex flex-col font-sans selection:bg-brand-cyan selection:text-brand-dark antialiased bpmn-blueprint-grid">
 
   <!-- TOP APP BAR -->
-  <header class="sticky top-0 z-50 bg-brand-dark/85 backdrop-blur-md border-b border-brand-border">
+  <header class="sticky top-0 z-50 bg-brand-dark/95 backdrop-blur-md border-b border-brand-border">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
       
-      <!-- Brand & University -->
       <div class="flex items-center gap-4">
-        <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-brand-cyan to-brand-blue flex items-center justify-center text-white font-display font-extrabold text-xl shadow-lg shadow-cyan-500/20">
-          <i class="fa-solid fa-shapes text-lg"></i>
+        <div class="relative w-11 h-11 rounded-2xl bg-gradient-to-tr from-brand-cyan via-brand-blue to-brand-violet flex items-center justify-center text-white font-display font-extrabold text-xl shadow-lg shadow-cyan-500/20">
+          <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="14" rx="2"></rect>
+            <line x1="8" y1="21" x2="16" y2="21"></line>
+            <line x1="12" y1="17" x2="12" y2="21"></line>
+            <path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01"></path>
+          </svg>
         </div>
         <div>
           <div class="flex items-center gap-2">
@@ -79,16 +91,18 @@
         </div>
       </div>
 
-      <!-- Quick Nav & Lecturer Pill -->
-      <div class="flex items-center gap-3">
-        <a href="#lab-game" class="hidden md:inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-violet-950/60 border border-violet-700/60 text-violet-300 text-xs font-semibold hover:bg-violet-900/60 transition">
-          <i class="fa-solid fa-gamepad text-brand-violet"></i> Lab Studio BPMN
+      <div class="flex items-center gap-2.5">
+        <a href="RPS_Analisa_Proses_Bisnis.html" target="_blank" class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-950/70 border border-cyan-800/80 text-cyan-300 text-xs font-semibold hover:bg-cyan-900/80 transition">
+          <i class="fa-solid fa-scroll text-brand-cyan"></i> Dokumen RPS
         </a>
-        <div class="flex items-center gap-2.5 bg-slate-900/90 border border-brand-border px-3.5 py-1.5 rounded-full shadow-inner">
-          <div class="w-6 h-6 rounded-full bg-gradient-to-tr from-brand-violet to-brand-cyan flex items-center justify-center text-white text-[10px] font-bold">
+        <a href="#arena-games" class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-rose-950/70 border border-rose-800/80 text-rose-300 text-xs font-semibold hover:bg-rose-900/80 transition">
+          <i class="fa-solid fa-gamepad text-brand-rose"></i> 7 Lab Games
+        </a>
+        <div class="hidden sm:flex items-center gap-2.5 bg-slate-900/95 border border-brand-border px-3.5 py-1.5 rounded-full shadow-inner">
+          <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-brand-violet to-brand-cyan flex items-center justify-center text-white text-[11px] font-bold shadow">
             AA
           </div>
-          <div class="text-left text-xs">
+          <div class="text-left text-xs hidden lg:block">
             <span class="text-slate-400 block text-[10px]">Dosen Pengampu</span>
             <span class="font-semibold text-slate-200">Ardi Ariansyah, S.Kom., Gr.</span>
           </div>
@@ -99,125 +113,354 @@
   </header>
 
   <!-- HERO SECTION -->
-  <section class="relative overflow-hidden py-16 sm:py-24 border-b border-brand-border bg-gradient-to-b from-brand-dark via-brand-slate to-brand-dark">
-    <!-- Background Radial Flares -->
-    <div class="absolute top-0 left-1/4 w-96 h-96 bg-brand-cyan/10 rounded-full blur-3xl pointer-events-none"></div>
-    <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-brand-violet/10 rounded-full blur-3xl pointer-events-none"></div>
+  <section class="relative overflow-hidden py-14 sm:py-20 border-b border-brand-border bg-gradient-to-b from-brand-dark via-brand-slate to-brand-dark">
+    <div class="absolute top-10 left-1/4 w-96 h-96 bg-brand-cyan/15 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute bottom-10 right-1/4 w-96 h-96 bg-brand-violet/15 rounded-full blur-3xl pointer-events-none"></div>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-      
-      <!-- Semester Badge -->
-      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-800/90 border border-slate-700 text-cyan-400 text-xs font-bold uppercase tracking-wider mb-6 shadow-sm">
-        <span class="w-2 h-2 rounded-full bg-brand-cyan animate-pulse"></span>
-        Kurikulum RPS S1 Teknik Informatika (INF1104)
-      </div>
-
-      <!-- Main Headline -->
-      <h1 class="font-display font-extrabold text-3xl sm:text-5xl lg:text-6xl text-white tracking-tight max-w-4xl mx-auto leading-tight sm:leading-tight">
-        Portal Pembelajaran &amp; Simulasi <br>
-        <span class="bg-gradient-to-r from-brand-cyan via-sky-400 to-brand-violet bg-clip-text text-transparent">Analisa Proses Bisnis</span>
-      </h1>
-
-      <p class="mt-6 text-base sm:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed font-normal">
-        Jembatani logika bisnis dunia nyata dengan arsitektur teknologi informasi modern. Akses modul presentasi 16:9 interaktif, laboratorium BPMN 2.0 mandiri, hingga penugasan studi kasus analitis.
-      </p>
-
-      <!-- Action Buttons -->
-      <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
-        <a href="#materi-list" class="px-6 py-3.5 rounded-xl bg-gradient-to-r from-brand-cyan to-brand-blue text-brand-dark font-display font-bold text-sm shadow-lg shadow-cyan-500/20 hover:brightness-110 active:scale-95 transition flex items-center gap-2">
-          <i class="fa-solid fa-layer-group"></i> Jelajahi Modul Kuliah (P1 - P11)
-        </a>
-        <a href="bpmn_lab_game.html" target="_blank" class="px-6 py-3.5 rounded-xl bg-slate-900 border border-brand-border text-slate-200 font-display font-bold text-sm hover:border-violet-500/60 hover:text-white transition flex items-center gap-2">
-          <i class="fa-solid fa-gamepad text-brand-violet"></i> Masuk BPMN Lab Studio
-        </a>
-      </div>
-
-      <!-- Quick Metrics Counters -->
-      <div class="mt-14 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto text-left">
-        <div class="bg-brand-card/70 border border-brand-border p-4 rounded-xl">
-          <div class="text-xs text-slate-400 font-medium">Total Pertemuan</div>
-          <div class="text-2xl font-display font-extrabold text-white mt-1">11 <span class="text-xs text-brand-cyan font-normal">Modul Siap</span></div>
-        </div>
-        <div class="bg-brand-card/70 border border-brand-border p-4 rounded-xl">
-          <div class="text-xs text-slate-400 font-medium">Standar Notasi</div>
-          <div class="text-2xl font-display font-extrabold text-brand-cyan mt-1">BPMN 2.0</div>
-        </div>
-        <div class="bg-brand-card/70 border border-brand-border p-4 rounded-xl">
-          <div class="text-xs text-slate-400 font-medium">Evaluasi Resmi</div>
-          <div class="text-2xl font-display font-extrabold text-amber-400 mt-1">UTS &amp; Tugas</div>
-        </div>
-        <div class="bg-brand-card/70 border border-brand-border p-4 rounded-xl">
-          <div class="text-xs text-slate-400 font-medium">Simulasi Interaktif</div>
-          <div class="text-2xl font-display font-extrabold text-brand-emerald mt-1">Drag &amp; Drop</div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- HIGHLIGHT SECTION: BPMN 2.0 LAB STUDIO & GAME -->
-  <section id="lab-game" class="py-12 bg-gradient-to-r from-brand-card via-slate-900 to-brand-card border-b border-brand-border relative">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="bg-gradient-to-r from-slate-950 to-slate-900 border border-cyan-500/30 rounded-3xl p-6 sm:p-10 shadow-2xl flex flex-col lg:flex-row items-center justify-between gap-8 glow-cyan">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="flex flex-col lg:flex-row items-center justify-between gap-12 text-center lg:text-left">
         
-        <div class="space-y-4 max-w-2xl">
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950 border border-cyan-800 text-brand-cyan text-xs font-bold uppercase tracking-wider">
-            <i class="fa-solid fa-flask-vial"></i> Fitur Praktik Unggulan
+        <div class="max-w-2xl space-y-6">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-slate-700/80 text-cyan-400 text-xs font-bold uppercase tracking-wider shadow-sm">
+            <span class="w-2 h-2 rounded-full bg-brand-cyan animate-ping"></span>
+            Portal Pembelajaran Resmi BPMN 2.0 &amp; Rekayasa Proses Bisnis
           </div>
-          <h2 class="font-display font-extrabold text-2xl sm:text-3xl text-white">
-            BPMN 2.0 Interactive Studio &amp; Game Lab
-          </h2>
-          <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
-            Tak perlu menginstal aplikasi berat! Latih refleks pemahaman simbol BPMN 2.0 melalui permainan mencocokkan kartu, serta buat dan validasi diagram alur proses langsung di kanvas browser Anda.
+
+          <h1 class="font-display font-extrabold text-3xl sm:text-5xl lg:text-6xl text-white tracking-tight leading-tight sm:leading-tight">
+            Portal Pembelajaran &amp; Lab Studio <br>
+            <span class="bg-gradient-to-r from-brand-cyan via-sky-400 to-brand-violet bg-clip-text text-transparent">Analisa Proses Bisnis</span>
+          </h1>
+
+          <p class="text-base sm:text-lg text-slate-300 leading-relaxed font-normal">
+            Jembatani proses operasional dunia nyata dengan arsitektur teknologi informasi modern. Akses seluruh materi perkuliahan interaktif dan asah kemampuan analisis melalui 7 studio laboratorium game simulasi skenario nyata.
           </p>
-          <ul class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-300 pt-2 font-medium">
-            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-emerald"></i> Game 1: Matching Card Simbol &amp; Fungsi</li>
-            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-emerald"></i> Game 2: In-Browser Diagram Builder Studio</li>
-            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-emerald"></i> Auto-Validator Aturan Alur Panah</li>
-            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-emerald"></i> 3 Studi Kasus Bisnis Konkret</li>
-          </ul>
+
+          <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
+            <a href="#materi-list" class="px-6 py-3.5 rounded-xl bg-gradient-to-r from-brand-cyan to-brand-blue text-brand-dark font-display font-extrabold text-sm shadow-xl shadow-cyan-500/20 hover:brightness-110 active:scale-95 transition flex items-center gap-2.5">
+              <i class="fa-solid fa-play text-xs"></i> Jelajahi Modul Kuliah
+            </a>
+            <a href="#arena-games" class="px-6 py-3.5 rounded-xl bg-slate-900/90 border border-rose-800/80 text-rose-300 font-display font-bold text-sm hover:bg-slate-800 hover:text-white transition flex items-center gap-2">
+              <i class="fa-solid fa-gamepad text-brand-rose"></i> Buka 7 Lab Game Studio
+            </a>
+          </div>
         </div>
 
-        <div class="shrink-0 w-full lg:w-auto text-center">
-          <a href="Games-BPMN.html" target="_blank" class="inline-flex w-full lg:w-auto items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-tr from-brand-blue via-brand-cyan to-teal-400 text-brand-dark font-display font-extrabold text-base shadow-xl shadow-cyan-500/25 hover:brightness-110 active:scale-95 transition">
-            <i class="fa-solid fa-play"></i> Buka Studio Lab Sekarang
-          </a>
-          <span class="block text-xs text-slate-400 mt-2 font-mono">File: bpmn_lab_game.html</span>
+        <div class="w-full max-w-lg lg:max-w-md shrink-0 animate-float select-none">
+          <div class="bg-gradient-to-tr from-brand-card via-slate-900 to-brand-card border-2 border-brand-border rounded-3xl p-6 shadow-2xl relative glow-cyan">
+            
+            <div class="flex items-center justify-between pb-3.5 border-b border-slate-800/80 text-xs font-mono text-slate-400">
+              <span class="flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-rose-500"></span>
+                <span class="w-3 h-3 rounded-full bg-amber-500"></span>
+                <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+              </span>
+              <span class="text-[11px] tracking-wide">BPMN 2.0 Architecture Flow</span>
+            </div>
+
+            <svg class="w-full h-56 mt-2" viewBox="0 0 460 250" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <marker id="seqFlowArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#06B6D4"/>
+                </marker>
+                <marker id="msgFlowArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#8B5CF6"/>
+                </marker>
+              </defs>
+
+              <rect x="12" y="8" width="436" height="42" rx="8" fill="#091122" stroke="#1E2F4D" stroke-width="1.8"/>
+              <text x="26" y="33" fill="#94A3B8" font-family="Montserrat" font-size="11" font-weight="700">Pool: Pelanggan (Black-Box)</text>
+
+              <path d="M 152 50 L 152 105" stroke="#8B5CF6" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#msgFlowArrow)"/>
+              <rect x="162" y="64" width="76" height="18" rx="4" fill="#13102B" stroke="#8B5CF6" stroke-width="0.8"/>
+              <text x="200" y="76" fill="#C4B5FD" font-family="Inter" font-size="8.5" font-style="italic" font-weight="600" text-anchor="middle">Message API</text>
+
+              <rect x="12" y="95" width="436" height="142" rx="8" fill="#0C172E" stroke="#0284C7" stroke-width="1.8"/>
+              <text x="26" y="125" fill="#38BDF8" font-family="Montserrat" font-size="10" font-weight="700">Pool: Sistem Organisasi ITBS</text>
+              
+              <line x1="12" y1="188" x2="448" y2="188" stroke="#1E2F4D" stroke-dasharray="4 4" stroke-width="1.4"/>
+              <text x="26" y="210" fill="#64748B" font-family="Montserrat" font-size="9" font-weight="600">Lane: Keuangan &amp; Akademik</text>
+
+              <circle cx="50" cy="146" r="14" fill="#064E3B" stroke="#10B981" stroke-width="2.5"/>
+              <circle cx="50" cy="146" r="5" fill="#10B981"/>
+
+              <line x1="64" y1="146" x2="108" y2="146" stroke="#06B6D4" stroke-width="2" marker-end="url(#seqFlowArrow)"/>
+
+              <rect x="110" y="129" width="86" height="34" rx="6" fill="#082347" stroke="#06B6D4" stroke-width="2"/>
+              <text x="153" y="150" fill="#E0F2FE" font-family="Inter" font-size="9.5" font-weight="700" text-anchor="middle">Validasi Data</text>
+
+              <line x1="196" y1="146" x2="234" y2="146" stroke="#06B6D4" stroke-width="2" marker-end="url(#seqFlowArrow)"/>
+
+              <polygon points="252,129 269,146 252,163 235,146" fill="#451A03" stroke="#F59E0B" stroke-width="2"/>
+              <text x="252" y="150" fill="#FBBF24" font-family="Inter" font-size="11" font-weight="900" text-anchor="middle">✕</text>
+
+              <line x1="269" y1="146" x2="308" y2="146" stroke="#06B6D4" stroke-width="2" marker-end="url(#seqFlowArrow)"/>
+
+              <rect x="310" y="129" width="86" height="34" rx="6" fill="#082347" stroke="#06B6D4" stroke-width="2"/>
+              <text x="353" y="150" fill="#E0F2FE" font-family="Inter" font-size="9.5" font-weight="700" text-anchor="middle">Simpan DB</text>
+
+              <line x1="396" y1="146" x2="416" y2="146" stroke="#06B6D4" stroke-width="2" marker-end="url(#seqFlowArrow)"/>
+
+              <circle cx="426" cy="146" r="13" fill="#4C0519" stroke="#F43F5E" stroke-width="3.5"/>
+            </svg>
+
+            <div class="mt-3 pt-3.5 border-t border-slate-800/80 grid grid-cols-3 gap-2 text-center text-xs">
+              <div class="p-2 rounded-xl bg-slate-950/70 border border-slate-800">
+                <div class="text-[10px] text-slate-400 font-medium">BPMN Standard</div>
+                <div class="text-sm font-display font-extrabold text-cyan-400">OMG 2.0</div>
+              </div>
+              <div class="p-2 rounded-xl bg-slate-950/70 border border-slate-800">
+                <div class="text-[10px] text-slate-400 font-medium">Modul Kuliah</div>
+                <div class="text-sm font-display font-extrabold text-white">13 Sesi</div>
+              </div>
+              <div class="p-2 rounded-xl bg-slate-950/70 border border-slate-800">
+                <div class="text-[10px] text-slate-400 font-medium">Lab Game</div>
+                <div class="text-sm font-display font-extrabold text-emerald-400">7 Studio</div>
+              </div>
+            </div>
+
+          </div>
         </div>
 
       </div>
     </div>
   </section>
 
-  <!-- MATERI & FILTER SECTION -->
+  <!-- ARENA 7 GAME STUDIO LAB -->
+  <section id="arena-games" class="py-14 border-b border-brand-border bg-gradient-to-r from-brand-card via-slate-950 to-brand-card relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
+        <div>
+          <div class="inline-flex items-center gap-2 text-xs font-bold font-display uppercase tracking-widest text-brand-rose mb-2">
+            <i class="fa-solid fa-flask-vial"></i> Interactive Laboratory Suite
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-display font-black text-white">
+            Arena Laboratorium Game &amp; Studio Simulasi
+          </h2>
+          <p class="text-sm text-slate-400 mt-1">
+            Uji kemampuan analisis manajemen krisis, pemulihan infrastruktur SRE, audit siber SOC, eliminasi Lean, investigasi RCA, proses tycooning, dan alokasi modal TELOS langsung di browser.
+          </p>
+        </div>
+        <div class="text-xs text-slate-400 font-mono hidden sm:block">
+          In-Browser Simulator &bull; Crisis Engine &bull; Real-Time Telemetry
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        <!-- GAME P2 -->
+        <div class="group bg-gradient-to-b from-slate-900 to-brand-card border-2 border-brand-border hover:border-rose-500/80 rounded-3xl p-6 flex flex-col justify-between shadow-2xl transition duration-300 relative overflow-hidden glow-rose">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="px-2.5 py-1 rounded-full text-[10px] font-bold font-display uppercase tracking-wider bg-rose-950 border border-rose-800 text-rose-400">
+                <i class="fa-solid fa-chess-knight"></i> P2 • Mendelow
+              </span>
+              <span class="text-[10px] font-mono text-slate-400 bg-slate-950 px-2 py-0.5 rounded border border-slate-800">
+                Games-Mendelow.html
+              </span>
+            </div>
+            <h3 class="font-display font-extrabold text-base text-white group-hover:text-brand-rose transition mb-2">
+              Mendelow Stakeholder Battlefield Simulator
+            </h3>
+            <p class="text-slate-300 text-xs leading-relaxed mb-4">
+              Simulasi negosiasi krisis pemangku kepentingan. Kelola influence points dan seimbangkan 4 Kuadran Mendelow secara real-time.
+            </p>
+          </div>
+          <div class="pt-4 border-t border-slate-800/80 flex items-center justify-between">
+            <span class="text-[11px] text-slate-400 font-mono">Modul P2</span>
+            <a href="Games-Mendelow.html" target="_blank" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-brand-rose to-amber-500 text-white font-display font-black text-xs shadow-lg hover:brightness-110 transition flex items-center gap-1.5">
+              <i class="fa-solid fa-play text-[9px]"></i> Mainkan
+            </a>
+          </div>
+        </div>
+
+        <!-- GAME P6 -->
+        <div class="group bg-gradient-to-b from-slate-900 to-brand-card border-2 border-brand-border hover:border-cyan-500/80 rounded-3xl p-6 flex flex-col justify-between shadow-2xl transition duration-300 relative overflow-hidden glow-cyan">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="px-2.5 py-1 rounded-full text-[10px] font-bold font-display uppercase tracking-wider bg-cyan-950 border border-cyan-800 text-cyan-400">
+                <i class="fa-solid fa-server"></i> P6 • SRE Lab
+              </span>
+              <span class="text-[10px] font-mono text-slate-400 bg-slate-950 px-2 py-0.5 rounded border border-slate-800">
+                Games-Infrastruktur.html
+              </span>
+            </div>
+            <h3 class="font-display font-extrabold text-base text-white group-hover:text-brand-cyan transition mb-2">
+              Network Traffic &amp; SPOF Eliminator
+            </h3>
+            <p class="text-slate-300 text-xs leading-relaxed mb-4">
+              Simulasi SRE mengatasi putusnya serat optik dan lonjakan flash sale. Jaga SLA uptime dan basmi Single Point of Failure.
+            </p>
+          </div>
+          <div class="pt-4 border-t border-slate-800/80 flex items-center justify-between">
+            <span class="text-[11px] text-slate-400 font-mono">Modul P6</span>
+            <a href="Games-Infrastruktur.html" target="_blank" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-brand-cyan to-brand-blue text-brand-dark font-display font-black text-xs shadow-lg hover:brightness-110 transition flex items-center gap-1.5">
+              <i class="fa-solid fa-play text-[9px]"></i> Mainkan
+            </a>
+          </div>
+        </div>
+
+        <!-- GAME P7 -->
+        <div class="group bg-gradient-to-b from-slate-900 to-brand-card border-2 border-brand-border hover:border-violet-500/80 rounded-3xl p-6 flex flex-col justify-between shadow-2xl transition duration-300 relative overflow-hidden glow-violet">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="px-2.5 py-1 rounded-full text-[10px] font-bold font-display uppercase tracking-wider bg-violet-950 border border-violet-800 text-violet-400">
+                <i class="fa-solid fa-shield-halved"></i> P7 • Security Lab
+              </span>
+              <span class="text-[10px] font-mono text-slate-400 bg-slate-950 px-2 py-0.5 rounded border border-slate-800">
+                Games-Security.html
+              </span>
+            </div>
+            <h3 class="font-display font-extrabold text-base text-white group-hover:text-violet-400 transition mb-2">
+              Security-Aware &amp; CIA Triad Simulator
+            </h3>
+            <p class="text-slate-300 text-xs leading-relaxed mb-4">
+              Audit insiden berbagi password, manipulasi data, dan serangan bot. Terapkan patch keamanan CIA Triad profesional.
+            </p>
+          </div>
+          <div class="pt-4 border-t border-slate-800/80 flex items-center justify-between">
+            <span class="text-[11px] text-slate-400 font-mono">Modul P7</span>
+            <a href="Games-Security.html" target="_blank" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-brand-violet to-indigo-500 text-white font-display font-black text-xs shadow-lg hover:brightness-110 transition flex items-center gap-1.5">
+              <i class="fa-solid fa-play text-[9px]"></i> Mainkan
+            </a>
+          </div>
+        </div>
+
+        <!-- GAME P9 -->
+        <div class="group bg-gradient-to-b from-slate-900 to-brand-card border-2 border-brand-border hover:border-emerald-500/80 rounded-3xl p-6 flex flex-col justify-between shadow-2xl transition duration-300 relative overflow-hidden glow-emerald">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="px-2.5 py-1 rounded-full text-[10px] font-bold font-display uppercase tracking-wider bg-emerald-950 border border-emerald-800 text-emerald-400">
+                <i class="fa-solid fa-recycle"></i> P9 • Lean Lab
+              </span>
+              <span class="text-[10px] font-mono text-slate-400 bg-slate-950 px-2 py-0.5 rounded border border-slate-800">
+                Games-Lean.html
+              </span>
+            </div>
+            <h3 class="font-display font-extrabold text-base text-white group-hover:text-emerald-400 transition mb-2">
+              The Waste Terminator &amp; Lean Factory
+            </h3>
+            <p class="text-slate-300 text-xs leading-relaxed mb-4">
+              Basmi pemborosan TIMWOOD dan lakukan Value-Added Analysis di atas konveyor operasional untuk mendongkrak skor PCE.
+            </p>
+          </div>
+          <div class="pt-4 border-t border-slate-800/80 flex items-center justify-between">
+            <span class="text-[11px] text-slate-400 font-mono">Modul P9</span>
+            <a href="Games-Lean.html" target="_blank" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-brand-emerald to-teal-500 text-white font-display font-black text-xs shadow-lg hover:brightness-110 transition flex items-center gap-1.5">
+              <i class="fa-solid fa-play text-[9px]"></i> Mainkan
+            </a>
+          </div>
+        </div>
+
+        <!-- GAME P10 -->
+        <div class="group bg-gradient-to-b from-slate-900 to-brand-card border-2 border-brand-border hover:border-cyan-500/80 rounded-3xl p-6 flex flex-col justify-between shadow-2xl transition duration-300 relative overflow-hidden glow-cyan">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="px-2.5 py-1 rounded-full text-[10px] font-bold font-display uppercase tracking-wider bg-cyan-950 border border-cyan-800 text-cyan-400">
+                <i class="fa-solid fa-magnifying-glass-chart"></i> P10 • RCA Lab
+              </span>
+              <span class="text-[10px] font-mono text-slate-400 bg-slate-950 px-2 py-0.5 rounded border border-slate-800">
+                Games-Fishbone.html
+              </span>
+            </div>
+            <h3 class="font-display font-extrabold text-base text-white group-hover:text-cyan-300 transition mb-2">
+              5 Whys Detective &amp; Root Cause Investigation
+            </h3>
+            <p class="text-slate-300 text-xs leading-relaxed mb-4">
+              Simulasi investigasi pasca-insiden. Lacak akar masalah sistemik menggunakan teknik 5 Whys dan isi kerangka Ishikawa 6M.
+            </p>
+          </div>
+          <div class="pt-4 border-t border-slate-800/80 flex items-center justify-between">
+            <span class="text-[11px] text-slate-400 font-mono">Modul P10</span>
+            <a href="Games-Fishbone.html" target="_blank" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-brand-cyan to-indigo-600 text-white font-display font-black text-xs shadow-lg hover:brightness-110 transition flex items-center gap-1.5">
+              <i class="fa-solid fa-play text-[9px]"></i> Mainkan
+            </a>
+          </div>
+        </div>
+
+        <!-- GAME P11 -->
+        <div class="group bg-gradient-to-b from-slate-900 to-brand-card border-2 border-brand-border hover:border-violet-500/80 rounded-3xl p-6 flex flex-col justify-between shadow-2xl transition duration-300 relative overflow-hidden glow-violet">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="px-2.5 py-1 rounded-full text-[10px] font-bold font-display uppercase tracking-wider bg-violet-950 border border-violet-800 text-violet-400">
+                <i class="fa-solid fa-diamond"></i> P11 • BPR Lab
+              </span>
+              <span class="text-[10px] font-mono text-slate-400 bg-slate-950 px-2 py-0.5 rounded border border-slate-800">
+                Games-Quadrangle.html
+              </span>
+            </div>
+            <h3 class="font-display font-extrabold text-base text-white group-hover:text-violet-300 transition mb-2">
+              Devil's Quadrangle Equilibrium &amp; Process Tycoon
+            </h3>
+            <p class="text-slate-300 text-xs leading-relaxed mb-4">
+              Seimbangkan dilema trade-off Kecepatan, Biaya, Kualitas, dan Fleksibilitas dalam skenario perombakan birokrasi BPR.
+            </p>
+          </div>
+          <div class="pt-4 border-t border-slate-800/80 flex items-center justify-between">
+            <span class="text-[11px] text-slate-400 font-mono">Modul P11</span>
+            <a href="Games-Quadrangle.html" target="_blank" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-brand-violet to-emerald-500 text-white font-display font-black text-xs shadow-lg hover:brightness-110 transition flex items-center gap-1.5">
+              <i class="fa-solid fa-play text-[9px]"></i> Mainkan
+            </a>
+          </div>
+        </div>
+
+        <!-- GAME P13 -->
+        <div class="group bg-gradient-to-b from-slate-900 to-brand-card border-2 border-brand-border hover:border-amber-500/80 rounded-3xl p-6 flex flex-col justify-between shadow-2xl transition duration-300 relative overflow-hidden glow-amber col-span-1 md:col-span-2 lg:col-span-3">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="px-2.5 py-1 rounded-full text-[10px] font-bold font-display uppercase tracking-wider bg-amber-950 border border-amber-800 text-amber-400">
+                <i class="fa-solid fa-scale-balanced"></i> P13 • Feasibility Lab
+              </span>
+              <span class="text-[10px] font-mono text-slate-400 bg-slate-950 px-2 py-0.5 rounded border border-slate-800">
+                Games-TELOS.html
+              </span>
+            </div>
+            <h3 class="font-display font-extrabold text-base sm:text-lg text-white group-hover:text-amber-300 transition mb-2">
+              The Venture Pitch: TELOS Budget &amp; Risk Allocator
+            </h3>
+            <p class="text-slate-300 text-xs sm:text-sm leading-relaxed mb-4 max-w-3xl">
+              Alokasikan modal investasi Rp 100 Juta untuk 5 pilar TELOS (Technical, Economic, Legal, Operational, Schedule). Hindari pilar bernilai Rp 0 dan yakinkan dewan direksi dalam sidang proposal modernisasi UMKM.
+            </p>
+          </div>
+          <div class="pt-4 border-t border-slate-800/80 flex items-center justify-between">
+            <span class="text-[11px] text-slate-400 font-mono">Modul P13</span>
+            <a href="Games-TELOS.html" target="_blank" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-emerald-500 text-slate-950 font-display font-black text-xs shadow-lg hover:brightness-110 transition flex items-center gap-1.5">
+              <i class="fa-solid fa-play text-[9px]"></i> Mainkan Simulator TELOS
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- MATERI LIST SECTION -->
   <main id="materi-list" class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-10">
     
-    <!-- Header Filter & Search -->
     <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-brand-border">
       <div>
         <div class="text-xs font-bold font-display uppercase tracking-wider text-brand-cyan">Daftar Modul Perkuliahan</div>
-        <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-white mt-1">Materi Slide Interaktif &amp; Evaluasi</h2>
-        <p class="text-sm text-slate-400 mt-1">Seluruh modul slide dirancang khusus dalam rasio 16:9 yang responsif dan dilengkapi kuis instan.</p>
+        <h2 class="text-2xl sm:text-3xl font-display font-black text-white mt-1">Materi Slide Interaktif 16:9</h2>
+        <p class="text-sm text-slate-400 mt-1">Setiap berkas slide mandiri, didesain full-screen dengan navigasi keyboard, kuis instan, dan simulasi.</p>
       </div>
 
-      <!-- Search & Category Filters -->
       <div class="flex flex-wrap items-center gap-2">
         <button onclick="filterCategory('all')" class="cat-btn active px-3.5 py-1.5 rounded-lg text-xs font-bold font-display transition bg-brand-cyan text-brand-dark shadow">Semua Modul</button>
         <button onclick="filterCategory('dasar')" class="cat-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold font-display text-slate-400 hover:text-white bg-slate-900 border border-brand-border transition">Fase 1: As-Is &amp; Dasar</button>
         <button onclick="filterCategory('analisis')" class="cat-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold font-display text-slate-400 hover:text-white bg-slate-900 border border-brand-border transition">Fase 2: Analisis &amp; Audit</button>
-        <button onclick="filterCategory('redesign')" class="cat-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold font-display text-slate-400 hover:text-white bg-slate-900 border border-brand-border transition">Fase 3: BPR &amp; To-Be</button>
+        <button onclick="filterCategory('redesign')" class="cat-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold font-display text-slate-400 hover:text-white bg-slate-900 border border-brand-border transition">Fase 3: BPR &amp; Solusi</button>
       </div>
     </div>
 
-    <!-- MODULES GRID -->
     <div id="modulesContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-      <!-- PERTEMUAN 1 -->
-      <div class="module-item group bg-brand-card border border-brand-border hover:border-brand-blue rounded-2xl p-6 transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:shadow-cyan-950/20" data-cat="dasar">
+      <!-- P1 -->
+      <div class="module-item group bg-brand-card hover:bg-brand-cardHover border border-brand-border hover:border-brand-blue rounded-2xl p-6 transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:shadow-cyan-950/20" data-cat="dasar">
         <div>
           <div class="flex items-center justify-between text-xs mb-3">
             <span class="px-2.5 py-1 rounded-md bg-sky-950 text-sky-400 border border-sky-800 font-bold font-mono">Pertemuan 01</span>
-            <span class="text-slate-400"><i class="fa-regular fa-clone"></i> 56 Slides</span>
+            <span class="text-slate-400"><i class="fa-regular fa-clone"></i> 50 Slides</span>
           </div>
           <h3 class="font-display font-bold text-lg text-white group-hover:text-brand-cyan transition mb-2">
             Pengantar Sistem &amp; Alur Operasional
@@ -234,12 +477,12 @@
         </div>
       </div>
 
-      <!-- PERTEMUAN 2 -->
-      <div class="module-item group bg-brand-card border border-brand-border hover:border-brand-blue rounded-2xl p-6 transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:shadow-cyan-950/20" data-cat="dasar">
+      <!-- P2 -->
+      <div class="module-item group bg-brand-card hover:bg-brand-cardHover border border-brand-border hover:border-brand-blue rounded-2xl p-6 transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:shadow-cyan-950/20" data-cat="dasar">
         <div>
           <div class="flex items-center justify-between text-xs mb-3">
             <span class="px-2.5 py-1 rounded-md bg-sky-950 text-sky-400 border border-sky-800 font-bold font-mono">Pertemuan 02</span>
-            <span class="text-slate-400"><i class="fa-regular fa-clone"></i> 45 Slides</span>
+            <span class="text-slate-400"><i class="fa-regular fa-clone"></i> 40 Slides</span>
           </div>
           <h3 class="font-display font-bold text-lg text-white group-hover:text-brand-cyan transition mb-2">
             Stakeholder &amp; Value Chain Porter
@@ -256,8 +499,8 @@
         </div>
       </div>
 
-      <!-- PERTEMUAN 3 -->
-      <div class="module-item group bg-brand-card border border-brand-border hover:border-brand-blue rounded-2xl p-6 transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:shadow-cyan-950/20" data-cat="dasar">
+      <!-- P3 -->
+      <div class="module-item group bg-brand-card hover:bg-brand-cardHover border border-brand-border hover:border-brand-blue rounded-2xl p-6 transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:shadow-cyan-950/20" data-cat="dasar">
         <div>
           <div class="flex items-center justify-between text-xs mb-3">
             <span class="px-2.5 py-1 rounded-md bg-sky-950 text-sky-400 border border-sky-800 font-bold font-mono">Pertemuan 03</span>
@@ -278,8 +521,8 @@
         </div>
       </div>
 
-      <!-- PERTEMUAN 4 -->
-      <div class="module-item group bg-brand-card border border-brand-border hover:border-brand-blue rounded-2xl p-6 transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:shadow-cyan-950/20" data-cat="dasar">
+      <!-- P4 -->
+      <div class="module-item group bg-brand-card hover:bg-brand-cardHover border border-brand-border hover:border-brand-blue rounded-2xl p-6 transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:shadow-cyan-950/20" data-cat="dasar">
         <div>
           <div class="flex items-center justify-between text-xs mb-3">
             <span class="px-2.5 py-1 rounded-md bg-sky-950 text-sky-400 border border-sky-800 font-bold font-mono">Pertemuan 04</span>
@@ -300,8 +543,8 @@
         </div>
       </div>
 
-      <!-- PERTEMUAN 5 -->
-      <div class="module-item group bg-brand-card border border-brand-border hover:border-brand-blue rounded-2xl p-6 transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:shadow-cyan-950/20" data-cat="dasar">
+      <!-- P5 -->
+      <div class="module-item group bg-brand-card hover:bg-brand-cardHover border border-brand-border hover:border-brand-blue rounded-2xl p-6 transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:shadow-cyan-950/20" data-cat="dasar">
         <div>
           <div class="flex items-center justify-between text-xs mb-3">
             <span class="px-2.5 py-1 rounded-md bg-sky-950 text-sky-400 border border-sky-800 font-bold font-mono">Pertemuan 05</span>
@@ -322,8 +565,8 @@
         </div>
       </div>
 
-      <!-- PERTEMUAN 6 -->
-      <div class="module-item group bg-brand-card border border-brand-border hover:border-brand-cyan rounded-2xl p-6 transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:shadow-cyan-950/20" data-cat="analisis">
+      <!-- P6 -->
+      <div class="module-item group bg-brand-card hover:bg-brand-cardHover border border-brand-border hover:border-brand-cyan rounded-2xl p-6 transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:shadow-cyan-950/20" data-cat="analisis">
         <div>
           <div class="flex items-center justify-between text-xs mb-3">
             <span class="px-2.5 py-1 rounded-md bg-cyan-950 text-cyan-400 border border-cyan-800 font-bold font-mono">Pertemuan 06</span>
@@ -344,8 +587,8 @@
         </div>
       </div>
 
-      <!-- PERTEMUAN 7 -->
-      <div class="module-item group bg-brand-card border border-brand-border hover:border-rose-500/60 rounded-2xl p-6 transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:shadow-rose-950/20" data-cat="analisis">
+      <!-- P7 -->
+      <div class="module-item group bg-brand-card hover:bg-brand-cardHover border border-brand-border hover:border-rose-500/60 rounded-2xl p-6 transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:shadow-rose-950/20" data-cat="analisis">
         <div>
           <div class="flex items-center justify-between text-xs mb-3">
             <span class="px-2.5 py-1 rounded-md bg-rose-950 text-rose-400 border border-rose-800 font-bold font-mono">Pertemuan 07</span>
@@ -366,8 +609,8 @@
         </div>
       </div>
 
-      <!-- PERTEMUAN 9 -->
-      <div class="module-item group bg-brand-card border border-brand-border hover:border-brand-emerald rounded-2xl p-6 transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:shadow-emerald-950/20" data-cat="analisis">
+      <!-- P9 -->
+      <div class="module-item group bg-brand-card hover:bg-brand-cardHover border border-brand-border hover:border-brand-emerald rounded-2xl p-6 transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:shadow-emerald-950/20" data-cat="analisis">
         <div>
           <div class="flex items-center justify-between text-xs mb-3">
             <span class="px-2.5 py-1 rounded-md bg-emerald-950 text-emerald-400 border border-emerald-800 font-bold font-mono">Pertemuan 09</span>
@@ -388,8 +631,8 @@
         </div>
       </div>
 
-      <!-- PERTEMUAN 10 -->
-      <div class="module-item group bg-brand-card border border-brand-border hover:border-brand-cyan rounded-2xl p-6 transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:shadow-cyan-950/20" data-cat="analisis">
+      <!-- P10 -->
+      <div class="module-item group bg-brand-card hover:bg-brand-cardHover border border-brand-border hover:border-brand-cyan rounded-2xl p-6 transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:shadow-cyan-950/20" data-cat="analisis">
         <div>
           <div class="flex items-center justify-between text-xs mb-3">
             <span class="px-2.5 py-1 rounded-md bg-cyan-950 text-cyan-400 border border-cyan-800 font-bold font-mono">Pertemuan 10</span>
@@ -410,8 +653,8 @@
         </div>
       </div>
 
-      <!-- PERTEMUAN 11 -->
-      <div class="module-item group bg-brand-card border border-brand-border hover:border-brand-violet rounded-2xl p-6 transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:shadow-violet-950/20" data-cat="redesign">
+      <!-- P11 -->
+      <div class="module-item group bg-brand-card hover:bg-brand-cardHover border border-brand-border hover:border-brand-violet rounded-2xl p-6 transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:shadow-violet-950/20" data-cat="redesign">
         <div>
           <div class="flex items-center justify-between text-xs mb-3">
             <span class="px-2.5 py-1 rounded-md bg-violet-950 text-violet-400 border border-violet-800 font-bold font-mono">Pertemuan 11</span>
@@ -432,12 +675,100 @@
         </div>
       </div>
 
+      <!-- P12 -->
+      <div class="module-item group bg-brand-card hover:bg-brand-cardHover border border-brand-border hover:border-brand-emerald rounded-2xl p-6 transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:shadow-emerald-950/20" data-cat="redesign">
+        <div>
+          <div class="flex items-center justify-between text-xs mb-3">
+            <span class="px-2.5 py-1 rounded-md bg-emerald-950 text-emerald-400 border border-emerald-800 font-bold font-mono">Pertemuan 12</span>
+            <span class="text-slate-400"><i class="fa-regular fa-clone"></i> 50 Slides</span>
+          </div>
+          <h3 class="font-display font-bold text-lg text-white group-hover:text-brand-emerald transition mb-2">
+            Pemodelan To-Be &amp; Gap Analysis
+          </h3>
+          <p class="text-slate-400 text-xs leading-relaxed line-clamp-3">
+            Konstruksi diagram proses bisnis masa depan (To-Be Model) dengan standar BPMN 2.0, matriks kesenjangan Gap Analysis, dan integrasi notasi software enabler (Service Task, Message Webhooks, Central Data Store).
+          </p>
+        </div>
+        <div class="pt-5 mt-4 border-t border-brand-border flex items-center justify-between">
+          <span class="text-[11px] text-slate-400 font-mono">Pertemuan12.html</span>
+          <a href="Pertemuan12.html" class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-400 group-hover:translate-x-1 transition">
+            Buka Slide <i class="fa-solid fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- P13 -->
+      <div class="module-item group bg-brand-card hover:bg-brand-cardHover border border-brand-border hover:border-amber-500/60 rounded-2xl p-6 transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:shadow-amber-950/20" data-cat="redesign">
+        <div>
+          <div class="flex items-center justify-between text-xs mb-3">
+            <span class="px-2.5 py-1 rounded-md bg-amber-950 text-amber-400 border border-amber-800 font-bold font-mono">Pertemuan 13</span>
+            <span class="text-slate-400"><i class="fa-regular fa-clone"></i> 50 Slides</span>
+          </div>
+          <h3 class="font-display font-bold text-lg text-white group-hover:text-amber-400 transition mb-2">
+            Evaluasi Kelayakan &amp; Dampak Keamanan
+          </h3>
+          <p class="text-slate-400 text-xs leading-relaxed line-clamp-3">
+            Uji kelayakan sistem To-Be menggunakan kerangka TELOS (Technical, Economic, Legal, Operational, Schedule), analisis TCO &amp; ROI, manajemen perubahan SDM, serta kontrol privasi data (UU PDP).
+          </p>
+        </div>
+        <div class="pt-5 mt-4 border-t border-brand-border flex items-center justify-between">
+          <span class="text-[11px] text-slate-400 font-mono">Pertemuan13.html</span>
+          <a href="Pertemuan13.html" class="inline-flex items-center gap-1.5 text-xs font-bold text-amber-400 group-hover:translate-x-1 transition">
+            Buka Slide <i class="fa-solid fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- P14 -->
+      <div class="module-item group bg-brand-card hover:bg-brand-cardHover border border-brand-border hover:border-brand-emerald rounded-2xl p-6 transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:shadow-emerald-950/20" data-cat="redesign">
+        <div>
+          <div class="flex items-center justify-between text-xs mb-3">
+            <span class="px-2.5 py-1 rounded-md bg-emerald-950 text-emerald-400 border border-emerald-800 font-bold font-mono">Pertemuan 14</span>
+            <span class="text-slate-400"><i class="fa-regular fa-clone"></i> 50 Slides</span>
+          </div>
+          <h3 class="font-display font-bold text-lg text-white group-hover:text-emerald-400 transition mb-2">
+            Finalisasi Laporan &amp; Asistensi Proyek
+          </h3>
+          <p class="text-slate-400 text-xs leading-relaxed line-clamp-3">
+            Penyusunan dokumen laporan utuh Bab 1 s/d 5, audit sintaks BPMN kualitas tinggi, pembagian peran kelompok, serta sesi asistensi akhir sebelum pitching.
+          </p>
+        </div>
+        <div class="pt-5 mt-4 border-t border-brand-border flex items-center justify-between">
+          <span class="text-[11px] text-slate-400 font-mono">Pertemuan14.html</span>
+          <a href="Pertemuan14.html" class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-400 group-hover:translate-x-1 transition">
+            Buka Slide <i class="fa-solid fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- P15 -->
+      <div class="module-item group bg-brand-card hover:bg-brand-cardHover border border-brand-border hover:border-sky-500/60 rounded-2xl p-6 transition-all duration-300 flex flex-col justify-between hover:shadow-xl hover:shadow-sky-950/20" data-cat="redesign">
+        <div>
+          <div class="flex items-center justify-between text-xs mb-3">
+            <span class="px-2.5 py-1 rounded-md bg-sky-950 text-sky-400 border border-sky-800 font-bold font-mono">Pertemuan 15</span>
+            <span class="text-slate-400"><i class="fa-regular fa-clone"></i> 50 Slides</span>
+          </div>
+          <h3 class="font-display font-bold text-lg text-white group-hover:text-sky-400 transition mb-2">
+            Teknik Presentasi &amp; Pitching Solusi Bisnis
+          </h3>
+          <p class="text-slate-400 text-xs leading-relaxed line-clamp-3">
+            Struktur piramida Minto untuk executive deck 10 menit, data storytelling finansial, strategi menjawab sanggahan penguji, dan simulasi pitching kelas.
+          </p>
+        </div>
+        <div class="pt-5 mt-4 border-t border-brand-border flex items-center justify-between">
+          <span class="text-[11px] text-slate-400 font-mono">Pertemuan15.html</span>
+          <a href="Pertemuan15.html" class="inline-flex items-center gap-1.5 text-xs font-bold text-sky-400 group-hover:translate-x-1 transition">
+            Buka Slide <i class="fa-solid fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+
     </div>
 
-    <!-- PANDUAN PENGGUNAAN SLIDE DECK -->
+    <!-- Panduan Pengoperasian -->
     <div class="bg-gradient-to-r from-slate-900 via-brand-card to-slate-900 border border-brand-border rounded-2xl p-6 sm:p-8">
       <h3 class="font-display font-bold text-lg text-white mb-4 flex items-center gap-2">
-        <i class="fa-solid fa-circle-question text-brand-cyan"></i> Panduan Pengoperasian Slide Presentasi
+        <i class="fa-solid fa-circle-question text-brand-cyan"></i> Panduan Pengoperasian Slide Presentasi &amp; Lab Game
       </h3>
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-xs text-slate-300">
         <div class="space-y-1.5">
@@ -449,8 +780,8 @@
           <p class="text-slate-400 leading-relaxed">Gunakan menu dropdown di bar navigasi atas untuk langsung melompat ke nomor atau topik pembahasan spesifik.</p>
         </div>
         <div class="space-y-1.5">
-          <div class="font-bold text-slate-100 flex items-center gap-2"><i class="fa-solid fa-hand-pointer text-brand-emerald"></i> Kuis &amp; Drag-and-Drop</div>
-          <p class="text-slate-400 leading-relaxed">Slide simulasi interaktif dapat digeser (drag) atau diklik untuk memunculkan pembahasan jawaban secara otomatis.</p>
+          <div class="font-bold text-slate-100 flex items-center gap-2"><i class="fa-solid fa-hand-pointer text-brand-emerald"></i> Lab Game &amp; Simulasi</div>
+          <p class="text-slate-400 leading-relaxed">Akses ke-7 game lab interaktif di bagian atas untuk menguji kemampuan simulasi krisis, SRE, SOC, Lean, RCA, Tycoon, dan TELOS.</p>
         </div>
       </div>
     </div>
@@ -473,21 +804,17 @@
     </div>
   </footer>
 
-  <!-- SCRIPT FILTER CATEGORY -->
   <script>
     function filterCategory(category) {
-      // Toggle button styles
       const buttons = document.querySelectorAll('.cat-btn');
       buttons.forEach(btn => {
         btn.classList.remove('bg-brand-cyan', 'text-brand-dark', 'active');
         btn.classList.add('text-slate-400', 'bg-slate-900');
       });
 
-      // Highlight clicked button
       event.target.classList.remove('text-slate-400', 'bg-slate-900');
       event.target.classList.add('bg-brand-cyan', 'text-brand-dark', 'active');
 
-      // Filter cards
       const items = document.querySelectorAll('.module-item');
       items.forEach(item => {
         if (category === 'all' || item.getAttribute('data-cat') === category) {
