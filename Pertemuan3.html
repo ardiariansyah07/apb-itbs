@@ -164,6 +164,10 @@
     .card { background: var(--color-white); border-radius: 16px; padding: 32px 32px; flex: 1 1 0; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #E2E8F0; display: flex; flex-direction: column; align-items: flex-start; }
     .card i { font-size: 48px; color: var(--color-orange); margin-bottom: 16px; }
 
+    .bpmn-categories .card { padding: 14px !important; }
+    .bpmn-categories h3 { font-size: 24px !important; margin-bottom: 8px; }
+    .bpmn-categories p { font-size: 20px; }
+
     /* CUSTOM BPMN CSS SHAPES */
     .bpmn-event { width: 120px; height: 120px; border-radius: 50%; border: 4px solid var(--bpmn-event); background: #ECFDF5; display: flex; align-items: center; justify-content: center; font-size: 40px; color: var(--bpmn-event); box-shadow: 0 10px 20px rgba(0,0,0,0.05);}
     .bpmn-event.end { border: 10px solid #EF4444; background: #FEF2F2; color: #EF4444; }
@@ -229,7 +233,7 @@
     </div>
 
     <div class="nav-right">
-      <div style="font-weight: 600; font-size: 14px; color: #94A3B8;">Analisa Proses Bisnis (3 SKS) • Ardi Ariansyah, S.Kom., Gr.</div>
+      <div style="font-weight: 600; font-size: 14px; color: #94A3B8;">Analisa Proses Bisnis (3 SKS) • Ardi Ariansyah</div>
     </div>
   </div>
 
@@ -250,7 +254,7 @@
           <p style="font-size: 32px; font-weight: 600;">Menggambar Cetak Biru Operasional Bisnis</p>
           <div style="margin-top: 40px; border-top: 2px solid #334155; padding-top: 20px;">
             <p style="color: #94A3B8; font-size: 18px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Dosen Pengampu:</p>
-            <p style="color: #FFFFFF; font-size: 26px; font-weight: 700; margin-top: 6px;">Ardi Ariansyah, S.Kom., Gr.</p>
+            <p style="color: #FFFFFF; font-size: 26px; font-weight: 700; margin-top: 6px;">Ardi Ariansyah</p>
             <p style="color: #0369A1; font-size: 20px; font-weight: 600;">S1 Teknik Informatika • ITBS</p>
           </div>
         </div>
@@ -275,9 +279,9 @@
           <p class="eyebrow">Kilas Balik Pertemuan 2</p>
           <h2>Stakeholder &amp; Value Chain</h2>
           <ul class="minimal-list">
-            <li><i class="fa-solid fa-users"></i> <span>Setiap proses memiliki Aktor **Internal** dan **Eksternal**.</span></li>
+            <li><i class="fa-solid fa-users"></i> <span>Setiap proses memiliki Aktor <strong>Internal</strong> dan <strong>Eksternal</strong>.</span></li>
             <li><i class="fa-solid fa-sitemap"></i> <span>Aktivitas terbagi menjadi: Core, Support, dan Management.</span></li>
-            <li><i class="fa-solid fa-link"></i> <span>IT adalah *Support Activity* yang mengendalikan kelancaran semua proses.</span></li>
+            <li><i class="fa-solid fa-link"></i> <span>IT adalah <em>Support Activity</em> yang mengendalikan kelancaran semua proses.</span></li>
           </ul>
         </div>
       </div>
@@ -324,10 +328,10 @@
         <div class="split-col w-60">
           <p class="eyebrow">Analogi Dunia Nyata</p>
           <h2>Programmer vs Arsitek</h2>
-          <p style="font-size: 24px; color: #475569; margin-bottom: 24px; line-height: 1.5;">Apakah seorang tukang bangunan bisa membangun rumah tingkat tiga hanya dari **"omongan / deskripsi mulut"** pemilik rumah?</p>
+          <p style="font-size: 24px; color: #475569; margin-bottom: 24px; line-height: 1.5;">Apakah seorang tukang bangunan bisa membangun rumah tingkat tiga hanya dari <strong>"omongan / deskripsi mulut"</strong> pemilik rumah?</p>
           <ul class="minimal-list">
             <li><i class="fa-solid fa-xmark" style="color: #EF4444;"></i> <span>Tidak. Hasilnya pasti berantakan & tidak sesuai.</span></li>
-            <li><i class="fa-solid fa-map-location-dot" style="color: #10B981;"></i> <span>Tukang butuh **Cetak Biru (Blueprint)** dari Arsitek.</span></li>
+            <li><i class="fa-solid fa-map-location-dot" style="color: #10B981;"></i> <span>Tukang butuh <strong>Cetak Biru (Blueprint)</strong> dari Arsitek.</span></li>
           </ul>
         </div>
         <div class="split-col split-img-col w-40">
@@ -355,8 +359,8 @@
           <p class="eyebrow">Tujuan Utama 1</p>
           <h2>Media Komunikasi</h2>
           <ul class="minimal-list">
-            <li><i class="fa-solid fa-bridge"></i> <span>Menjembatani orang bisnis awam dan *Programmer*.</span></li>
-            <li><i class="fa-solid fa-book-open"></i> <span>Menjadi SOP standar untuk *training* karyawan baru.</span></li>
+            <li><i class="fa-solid fa-bridge"></i> <span>Menjembatani orang bisnis awam dan <em>Programmer</em>.</span></li>
+            <li><i class="fa-solid fa-book-open"></i> <span>Menjadi SOP standar untuk <em>training</em> karyawan baru.</span></li>
             <li><i class="fa-solid fa-handshake"></i> <span>Menghindari kalimat multi-tafsir dari dokumen teks.</span></li>
           </ul>
         </div>
@@ -368,8 +372,8 @@
           <p class="eyebrow">Tujuan Utama 2</p>
           <h2>Analisis &amp; Optimasi</h2>
           <ul class="minimal-list">
-            <li><i class="fa-solid fa-magnifying-glass"></i> <span>Lebih mudah melihat *bottleneck* (kemacetan) proses.</span></li>
-            <li><i class="fa-solid fa-scissors"></i> <span>Mencari langkah *redundant* (kerja ganda) untuk dihapus.</span></li>
+            <li><i class="fa-solid fa-magnifying-glass"></i> <span>Lebih mudah melihat <em>bottleneck</em> (kemacetan) proses.</span></li>
+            <li><i class="fa-solid fa-scissors"></i> <span>Mencari langkah <em>redundant</em> (kerja ganda) untuk dihapus.</span></li>
             <li><i class="fa-solid fa-robot"></i> <span>Menemukan celah mana yang bisa diotomatisasi oleh IT.</span></li>
           </ul>
         </div>
@@ -391,7 +395,7 @@
             <div class="card" style="border-top: 8px solid #EF4444; background: #FEF2F2;">
               <i class="fa-solid fa-users-slash" style="color: #EF4444;"></i>
               <h3 style="color: #B91C1C;">Knowledge Loss</h3>
-              <p>Jika staf senior *resign*, staf baru kebingungan karena tidak ada panduan visual SOP perusahaan.</p>
+              <p>Jika staf senior <em>resign</em>, staf baru kebingungan karena tidak ada panduan visual SOP perusahaan.</p>
             </div>
           </div>
         </div>
@@ -431,8 +435,8 @@
           <p class="eyebrow">Tata Kelola Standar</p>
           <h2>Dikelola Secara Global</h2>
           <ul class="minimal-list">
-            <li><i class="fa-solid fa-building-flag"></i> <span>BPMN dikelola oleh **Object Management Group (OMG)**.</span></li>
-            <li><i class="fa-solid fa-code-merge"></i> <span>Versi standar industri terbaru dan terluas saat ini adalah **BPMN 2.0**.</span></li>
+            <li><i class="fa-solid fa-building-flag"></i> <span>BPMN dikelola oleh <strong>Object Management Group (OMG)</strong>.</span></li>
+            <li><i class="fa-solid fa-code-merge"></i> <span>Versi standar industri terbaru dan terluas saat ini adalah <strong>BPMN 2.0</strong>.</span></li>
             <li><i class="fa-solid fa-certificate"></i> <span>Diakui sebagai standar kualitas ISO/IEC 19510.</span></li>
           </ul>
         </div>
@@ -448,11 +452,11 @@
           <div class="card-grid">
             <div class="card" style="border: 2px solid #EF4444; background: #FEF2F2;">
               <h3 style="color: #B91C1C;">Flowchart Klasik</h3>
-              <p>Simbolnya tidak konsisten. Setiap ahli bisa menggambar dengan arti berbeda. Sulit dipakai untuk sistem IT kompleks dengan banyak aktor.</p>
+              <p>Flowchart cocok untuk menggambarkan alur umum dan juga memiliki konvensi simbol. BPMN menyediakan notasi khusus untuk peserta, pesan, event, dan perilaku proses.</p>
             </div>
             <div class="card" style="border: 2px solid #10B981; background: #ECFDF5;">
               <h3 style="color: #047857;">BPMN 2.0</h3>
-              <p>Punya aturan *syntax* yang baku. Sangat kaya fitur untuk memodelkan sistem timer, error, pertukaran data, dan integrasi antar divisi.</p>
+              <p>Punya aturan <em>syntax</em> yang baku. Sangat kaya fitur untuk memodelkan sistem timer, error, pertukaran data, dan integrasi antar divisi.</p>
             </div>
           </div>
         </div>
@@ -463,7 +467,7 @@
         <h2>BPMN sebagai "Bahasa Universal"</h2>
         <div class="flex-grow-center">
           <div style="background: #FFF7ED; border-left: 12px solid #EA580C; padding: 48px; border-radius: 0 16px 16px 0;">
-            <p style="font-size: 32px; font-weight: 600; color: #0F172A; line-height: 1.5;">"Flowchart biasa itu ibarat bahasa gaul, setiap daerah maknanya bisa beda. Sedangkan BPMN itu ibarat Bahasa Inggris, standar internasional yang semua ahli IT di dunia pasti paham."</p>
+            <p style="font-size: 32px; font-weight: 600; color: #0F172A; line-height: 1.5;">"Pilih notasi sesuai kebutuhan: flowchart untuk alur umum; BPMN untuk menjelaskan proses, tanggung jawab peserta, dan pertukaran pesan dengan aturan yang dapat dipelajari bersama."</p>
           </div>
         </div>
       </div>
@@ -481,11 +485,11 @@
       </div>
 
       <!-- SLIDE 18 -->
-      <div class="slide-container pad-standard" data-title="4 Kategori Simbol">
-        <h2>4 Kategori Utama Simbol BPMN</h2>
-        <p style="font-size: 24px; color: #64748B; margin-bottom: 24px;">Agar mudah dipelajari, BPMN membagi simbolnya menjadi 4 jenis:</p>
+      <div class="slide-container pad-standard bpmn-categories" data-title="5 Kategori Simbol">
+        <h2>5 Kategori Dasar Elemen BPMN 2.0</h2>
+        <p style="font-size: 22px; color: #64748B; margin-bottom: 16px;">Menurut OMG, kategori Data dibedakan dari Artifacts:</p>
         <div class="flex-grow-center">
-          <div class="card-grid" style="flex-wrap: wrap;">
+          <div class="card-grid" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px;">
             <div class="card" style="flex: 1 1 40%; padding: 24px; align-items: center; text-align: center; border-top: 8px solid #0369A1;">
               <h3 style="font-size: 28px;">1. Flow Objects</h3>
               <p>Objek utama (Kejadian, Aktivitas, Keputusan).</p>
@@ -496,11 +500,15 @@
             </div>
             <div class="card" style="flex: 1 1 40%; padding: 24px; align-items: center; text-align: center; border-top: 8px solid #94A3B8;">
               <h3 style="font-size: 28px; color: #475569;">3. Swimlanes</h3>
-              <p>Wadah pemisah peran Aktor (*Pools & Lanes*).</p>
+              <p>Wadah pemisah peran Aktor (<em>Pools & Lanes</em>).</p>
             </div>
             <div class="card" style="flex: 1 1 40%; padding: 24px; align-items: center; text-align: center; border-top: 8px solid #94A3B8;">
-              <h3 style="font-size: 28px; color: #475569;">4. Artifacts</h3>
-              <p>Info ekstra (Ikon Database, Catatan).</p>
+              <h3 style="font-size: 28px; color: #475569;">4. Data</h3>
+              <p>Data Object, Data Input/Output, dan Data Store.</p>
+            </div>
+            <div class="card" style="flex: 1 1 40%; padding: 20px; align-items: center; text-align: center; border-top: 8px solid #94A3B8;">
+              <h3 style="font-size: 28px; color: #475569;">5. Artifacts</h3>
+              <p>Group dan Text Annotation: informasi tambahan.</p>
             </div>
           </div>
         </div>
@@ -520,7 +528,7 @@
             <li><i class="fa-regular fa-circle" style="color: var(--bpmn-event);"></i> <span>Sesuatu yang terjadi (bukan dilakukan secara aktif).</span></li>
             <li><i class="fa-solid fa-layer-group"></i> <span>BPMN membaginya berdasarkan posisinya: Awal, Tengah, dan Akhir.</span></li>
           </ul>
-          <p style="margin-top: 24px; font-size: 22px; color: #64748B;">*Setiap proses di BPMN WAJIB memiliki setidaknya satu Start Event dan satu End Event.*</p>
+          <p style="margin-top: 24px; font-size: 22px; color: #64748B;">Dalam latihan pengantar ini, gunakan Start Event dan End Event agar batas proses jelas. Ini ketentuan latihan; BPMN juga mengizinkan bentuk model tertentu dengan event awal/akhir implisit.</p>
         </div>
       </div>
 
@@ -530,7 +538,7 @@
           <p class="eyebrow">Jenis Event</p>
           <h2>Start Event (Awal)</h2>
           <ul class="minimal-list">
-            <li><i class="fa-solid fa-play"></i> <span>Simbol: Lingkaran dengan **Garis Tipis**.</span></li>
+            <li><i class="fa-solid fa-play"></i> <span>Simbol: Lingkaran dengan <strong>Garis Tipis</strong>.</span></li>
             <li><i class="fa-solid fa-bolt"></i> <span>Pemicu mutlak yang menyebabkan proses dimulai.</span></li>
             <li><i class="fa-solid fa-lightbulb"></i> <span>Contoh: "Email keluhan pelanggan diterima".</span></li>
           </ul>
@@ -549,7 +557,7 @@
           <p class="eyebrow">Jenis Event</p>
           <h2>End Event (Akhir)</h2>
           <ul class="minimal-list">
-            <li><i class="fa-solid fa-stop"></i> <span>Simbol: Lingkaran dengan **Garis Sangat Tebal**.</span></li>
+            <li><i class="fa-solid fa-stop"></i> <span>Simbol: Lingkaran dengan <strong>Garis Sangat Tebal</strong>.</span></li>
             <li><i class="fa-solid fa-flag-checkered"></i> <span>Menandakan sebuah hasil akhir telah tercapai dan proses selesai.</span></li>
             <li><i class="fa-solid fa-lightbulb"></i> <span>Contoh: "Pesanan berhasil dikirim ke kurir".</span></li>
           </ul>
@@ -562,7 +570,7 @@
           <p class="eyebrow">Jenis Event</p>
           <h2>Intermediate Event</h2>
           <ul class="minimal-list">
-            <li><i class="fa-solid fa-pause"></i> <span>Simbol: Lingkaran dengan **Garis Ganda** (*Double Line*).</span></li>
+            <li><i class="fa-solid fa-pause"></i> <span>Simbol: Lingkaran dengan <strong>Garis Ganda</strong> (<em>Double Line</em>).</span></li>
             <li><i class="fa-solid fa-stopwatch"></i> <span>Terjadi di tengah-tengah proses. Biasanya berupa penundaan (Timer) atau pesan masuk.</span></li>
           </ul>
         </div>
@@ -592,8 +600,8 @@
         <h2>Aturan Penamaan Task (Sangat Penting!)</h2>
         <div class="flex-grow-center">
           <div style="background: #FFF7ED; border-left: 12px solid #EA580C; padding: 48px; border-radius: 0 16px 16px 0;">
-            <p style="font-size: 32px; font-weight: 700; color: #0F172A;">Format Wajib: <span style="color: #EA580C;">[Kata Kerja]</span> + <span style="color: #0369A1;">[Kata Benda]</span></p>
-            <p style="font-size: 24px; margin-top: 16px; color: #475569;">BPMN mensyaratkan aktivitas harus berupa kalimat aktif (Aktor melakukan sesuatu).</p>
+            <p style="font-size: 32px; font-weight: 700; color: #0F172A;">Pedoman Penamaan: <span style="color: #EA580C;">[Kata Kerja]</span> + <span style="color: #0369A1;">[Objek]</span></p>
+            <p style="font-size: 23px; margin-top: 16px; color: #475569;">Nama aktif membantu pembaca memahami pekerjaan, misalnya “Memverifikasi Pembayaran”. Ini pedoman keterbacaan, bukan syarat sintaks OMG yang otomatis membuat diagram tidak sah.</p>
           </div>
         </div>
       </div>
@@ -604,7 +612,7 @@
         <div class="flex-grow-center">
           <div class="card-grid">
             <div class="card" style="border: 4px solid #EF4444; background: #FEF2F2;">
-              <h3 style="color: #B91C1C;"><i class="fa-solid fa-xmark"></i> SALAH</h3>
+              <h3 style="color: #B91C1C;">Kurang Jelas</h3>
               <ul style="font-size: 24px; margin-left: 24px; line-height: 2;">
                 <li>"Faktur" (Hanya kata benda)</li>
                 <li>"Memeriksa" (Tidak jelas apa yang diperiksa)</li>
@@ -612,7 +620,7 @@
               </ul>
             </div>
             <div class="card" style="border: 4px solid #10B981; background: #ECFDF5;">
-              <h3 style="color: #047857;"><i class="fa-solid fa-check"></i> BENAR</h3>
+              <h3 style="color: #047857;">Lebih Jelas</h3>
               <ul style="font-size: 24px; margin-left: 24px; line-height: 2;">
                 <li>"Membuat Faktur"</li>
                 <li>"Memeriksa Dokumen"</li>
@@ -648,7 +656,7 @@
           <h2>Exclusive Gateway (XOR)</h2>
           <ul class="minimal-list">
             <li><i class="fa-solid fa-xmark"></i> <span>Simbol: Belah ketupat berisi huruf "X" (atau kosong).</span></li>
-            <li><i class="fa-solid fa-1"></i> <span>Sifat: **Hanya bisa pilih SALAH SATU cabang**.</span></li>
+            <li><i class="fa-solid fa-1"></i> <span>Sifat: <strong>Hanya bisa pilih SALAH SATU cabang</strong>.</span></li>
             <li><i class="fa-solid fa-lightbulb"></i> <span>Contoh: Metode Pembayaran (Cash ATAU Debit).</span></li>
           </ul>
         </div>
@@ -661,7 +669,7 @@
           <h2>Parallel Gateway (AND)</h2>
           <ul class="minimal-list">
             <li><i class="fa-solid fa-plus"></i> <span>Simbol: Belah ketupat berisi tanda "+".</span></li>
-            <li><i class="fa-solid fa-clone"></i> <span>Sifat: **Kedua cabang berjalan BERSAMAAN**.</span></li>
+            <li><i class="fa-solid fa-clone"></i> <span>Sifat: <strong>Kedua cabang berjalan BERSAMAAN</strong>.</span></li>
             <li><i class="fa-solid fa-lightbulb"></i> <span>Contoh: Kasir "Mencetak Struk" DAN Staff "Membungkus Barang".</span></li>
           </ul>
         </div>
@@ -681,7 +689,7 @@
             </div>
             <div class="card" style="border-top: 8px solid #EA580C; align-items: center; text-align: center;">
               <h3 style="color: #EA580C; font-size: 32px;"><i class="fa-solid fa-plus"></i> Parallel</h3>
-              <p style="font-size: 22px;">"Pesanan makanan matang."<br><br>Gojek mengantar makanan, *sementara* Restoran mencatat laporan pemasukan.</p>
+              <p style="font-size: 22px;">"Pesanan makanan matang."<br><br>Gojek mengantar makanan, <em>sementara</em> Restoran mencatat laporan pemasukan.</p>
             </div>
           </div>
         </div>
@@ -691,7 +699,7 @@
       <div class="slide-container pad-standard" style="background: #F8F9FA;" id="drag-drop-1" data-title="Praktik 1 (Simbol)">
         <p class="eyebrow">Praktik Langsung (Drag & Drop) - Bagian 1</p>
         <h2 style="font-size: 40px; margin-bottom: 12px;">Identifikasi Simbol BPMN Dasar</h2>
-        <p style="margin-bottom: 24px; font-size: 20px;">Tarik (*Drag*) fungsi objek di bawah ini dan lepaskan ke dalam bentuk visual (*Shape*) yang tepat!</p>
+        <p style="margin-bottom: 24px; font-size: 20px;">Tarik (<em>Drag</em>) fungsi objek di bawah ini dan lepaskan ke dalam bentuk visual (<em>Shape</em>) yang tepat!</p>
         
         <div class="flex-grow-center" style="justify-content: flex-start;">
           <div class="draggable-container">
@@ -744,7 +752,7 @@
           </div>
           <div style="background: #F8F9FA; padding: 40px; border-radius: 16px; max-width: 800px; border: 2px solid #CBD5E1;">
             <p style="font-size: 24px; font-weight: 600; color: #0F172A; margin-bottom: 16px;">Garis Lurus Utuh dengan Panah Hitam</p>
-            <p style="font-size: 22px; color: #475569;">Menunjukkan <strong>urutan eksekusi</strong> (mana aktivitas yang dikerjakan lebih dulu) di dalam satu kolam (*Pool*) atau organisasi yang sama.</p>
+            <p style="font-size: 22px; color: #475569;">Menunjukkan <strong>urutan eksekusi</strong> (mana aktivitas yang dikerjakan lebih dulu) di dalam satu kolam (<em>Pool</em>) atau organisasi yang sama.</p>
           </div>
         </div>
       </div>
@@ -756,7 +764,7 @@
           <div style="background: #FEF2F2; border-left: 12px solid #EF4444; padding: 48px; border-radius: 0 16px 16px 0;">
             <i class="fa-solid fa-ban" style="font-size: 48px; color: #EF4444; margin-bottom: 16px;"></i>
             <p style="font-size: 28px; font-weight: 600; color: #B91C1C; line-height: 1.5;">Sequence Flow (Garis Lurus) TIDAK BOLEH menyeberang ke organisasi/aktor luar.</p>
-            <p style="font-size: 22px; margin-top: 16px; color: #475569;">Misal: Garis lurus dari staf ITBS ke server Bank BCA itu **Ilegal** di BPMN. Mengapa? Karena ITBS tidak bisa mengontrol langsung urutan kerja di dalam kantor Bank BCA.</p>
+            <p style="font-size: 22px; margin-top: 16px; color: #475569;">Misal: Garis lurus dari staf ITBS ke server Bank BCA itu <strong>Ilegal</strong> di BPMN. Mengapa? Karena ITBS tidak bisa mengontrol langsung urutan kerja di dalam kantor Bank BCA.</p>
           </div>
         </div>
       </div>
@@ -781,8 +789,8 @@
           <p class="eyebrow">Penerapan IT</p>
           <h2>Penggunaan Message Flow</h2>
           <ul class="minimal-list">
-            <li><i class="fa-solid fa-envelope"></i> <span>Menggambarkan komunikasi B2B (*Business to Business*).</span></li>
-            <li><i class="fa-solid fa-network-wired"></i> <span>Dalam dunia TI modern, garis putus-putus ini melambangkan **Pemanggilan API** (*API Request / Response*).</span></li>
+            <li><i class="fa-solid fa-envelope"></i> <span>Menggambarkan komunikasi B2B (<em>Business to Business</em>).</span></li>
+            <li><i class="fa-solid fa-network-wired"></i> <span>Dalam dunia TI modern, garis putus-putus ini dapat menggambarkan pertukaran pesan dalam <strong>pemanggilan API</strong> (<em>API Request / Response</em>).</span></li>
             <li><i class="fa-solid fa-lightbulb"></i> <span>Contoh: Sistem Tokopedia mengirim data ke API Bank Mandiri.</span></li>
           </ul>
         </div>
@@ -870,7 +878,7 @@
       <!-- SLIDE 41 -->
       <div class="slide-container pad-standard" style="background: #F8F9FA;" id="drag-drop-2" data-title="Praktik 2 (Merakit Linear)">
         <p class="eyebrow">Praktik Langsung (Drag & Drop) - Bagian 2</p>
-        <h2 style="font-size: 40px; margin-bottom: 12px;">Merakit Alur Linear (*Happy Path*)</h2>
+        <h2 style="font-size: 40px; margin-bottom: 12px;">Merakit Alur Linear (<em>Happy Path</em>)</h2>
         <p style="margin-bottom: 24px; font-size: 20px;">Susun 3 blok di bawah ini menjadi urutan proses yang benar dari kiri ke kanan.</p>
         
         <div class="flex-grow-center" style="justify-content: flex-start;">
@@ -996,7 +1004,7 @@
 
           <div id="feedback-q4" class="quiz-feedback">
             <h4><i class="fa-solid fa-lightbulb"></i> Pembahasan: C</h4>
-            <p>Penamaan <em>Task</em> wajib menggunakan pola aktif yaitu <strong>[Kata Kerja] + [Kata Benda]</strong> agar jelas siapa melakukan apa. Contoh: Membuat Laporan, Memverifikasi Data.</p>
+            <p>Penamaan <em>Task</em> dianjurkan menggunakan pola aktif <strong>[Kata Kerja] + [Objek]</strong> agar pekerjaan jelas. Contoh: Membuat Laporan, Memverifikasi Data. Ini pedoman gaya penamaan, bukan ketentuan validitas sintaks OMG.</p>
           </div>
         </div>
       </div>
@@ -1013,7 +1021,7 @@
           <ul class="minimal-list" style="gap: 32px;">
             <li><i class="fa-solid fa-xmark" style="color:#EF4444;"></i> <span><strong>Lupa Start/End:</strong> Membuat diagram mengambang tanpa tahu dimana awal dan akhirnya.</span></li>
             <li><i class="fa-solid fa-xmark" style="color:#EF4444;"></i> <span><strong>Gateway Tanpa Pertanyaan:</strong> Membuat percabangan XOR tapi tidak menuliskan kondisi persyaratannya.</span></li>
-            <li><i class="fa-solid fa-xmark" style="color:#EF4444;"></i> <span><strong>Salah Garis:</strong> Menggunakan garis putus-putus (*Message Flow*) untuk urutan task di dalam organisasi yang sama.</span></li>
+            <li><i class="fa-solid fa-xmark" style="color:#EF4444;"></i> <span><strong>Salah Garis:</strong> Menggunakan garis putus-putus (<em>Message Flow</em>) untuk urutan task di dalam organisasi yang sama.</span></li>
           </ul>
         </div>
       </div>
@@ -1034,8 +1042,8 @@
           <p class="eyebrow">Persiapan Pertemuan 4</p>
           <h2>Praktik Laboratorium Virtual</h2>
           <ul class="minimal-list">
-            <li><i class="fa-solid fa-diagram-project"></i> <span>Minggu depan kita full praktik menggambar di **Draw.io**.</span></li>
-            <li><i class="fa-solid fa-swimmer"></i> <span>Materi: Mempelajari tata letak Aktor (*Pools & Lanes*).</span></li>
+            <li><i class="fa-solid fa-diagram-project"></i> <span>Minggu depan kita full praktik menggambar di <strong>Draw.io</strong>.</span></li>
+            <li><i class="fa-solid fa-swimmer"></i> <span>Materi: Mempelajari tata letak Aktor (<em>Pools & Lanes</em>).</span></li>
             <li><i class="fa-solid fa-laptop"></i> <span>Pastikan Anda join menggunakan Laptop/PC.</span></li>
           </ul>
         </div>
@@ -1056,7 +1064,7 @@
         <h1 style="font-size: 100px; margin-bottom: 32px;">Terima Kasih</h1>
         <div class="divider"></div>
         <p style="font-size: 40px; font-weight: 700; color: #0369A1; font-style: italic; margin-top: 24px;">"Desain sistem yang buruk berasal dari rancangan diagram yang salah."</p>
-        <p style="font-size: 24px; color: #94A3B8; margin-top: 64px;">Ardi Ariansyah, S.Kom., Gr. • ITBS</p>
+        <p style="font-size: 24px; color: #94A3B8; margin-top: 64px;">Ardi Ariansyah • ITBS</p>
       </div>
 
     </div> <!-- End of slides-wrapper -->
@@ -1181,5 +1189,7 @@
       document.getElementById(feedbackId).classList.add('show');
     };
   </script>
+<a class="learning-guide-link" href="Panduan_Pembelajaran.html" style="position:fixed;bottom:10px;right:12px;z-index:100;background:#0f172a;color:#fff;border:1px solid #64748b;border-radius:8px;padding:7px 10px;font:12px Arial,sans-serif;text-decoration:none;">Panduan tugas &amp; penilaian</a>
+<script src="assets/slide-accessibility.js"></script>
 </body>
 </html>

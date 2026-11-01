@@ -86,7 +86,7 @@
         <div class="hidden sm:flex items-center gap-2.5 bg-slate-900 border border-leanBorder px-3.5 py-1.5 rounded-xl shadow-inner">
           <i class="fa-solid fa-gauge-high text-emerald-400 text-sm"></i>
           <div>
-            <div class="text-[9px] uppercase tracking-wider text-slate-400 font-bold">Skor PCE (Efisiensi)</div>
+            <div class="text-[9px] uppercase tracking-wider text-slate-400 font-bold">Contoh PCE: 6/30 menit</div>
             <div id="pceDisplay" class="font-mono font-bold text-emerald-400 text-xs sm:text-sm leading-none">12%</div>
           </div>
         </div>
@@ -110,6 +110,7 @@
 
   <!-- MAIN SIMULATOR ARENA -->
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-5">
+<p style="padding:12px;border:1px solid #64748b;border-radius:10px;color:inherit;font-size:14px;">Latihan pendamping RPS. Kartu berasal dari contoh aktivitas berbeda, bukan satu alur proses. Angka PCE 20% adalah contoh terpisah: VA 6 menit / waktu siklus 30 menit; tidak dihitung dari jumlah kartu atau jawaban benar. Angka, biaya, dan perubahan indikator adalah asumsi skenario; bukan hasil pengukuran sistem nyata, nilai resmi, atau sertifikasi profesi. Bahas alasan pilihan dan risiko residual bersama dosen. <a href="Panduan_Pembelajaran.html" style="text-decoration:underline;">Panduan pembelajaran</a>.</p>
 
     <!-- REAL-TIME LEAN METRICS (4 GAUGES) -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-3.5">
@@ -118,7 +119,7 @@
       <div class="bg-leanCard border border-leanBorder rounded-2xl p-3.5 shadow-lg flex flex-col justify-between">
         <div class="flex items-center justify-between text-xs font-semibold">
           <span class="flex items-center gap-1.5 text-slate-300"><i class="fa-solid fa-star text-emerald-400"></i> Nilai Tambah (VA)</span>
-          <span id="vaCount" class="font-mono font-bold text-emerald-400">0 / 8</span>
+          <span id="vaCount" class="font-mono font-bold text-emerald-400">0 / 2</span>
         </div>
         <div class="w-full h-2 bg-slate-950 rounded-full overflow-hidden border border-slate-800 mt-2">
           <div id="vaBar" class="h-full bg-gradient-to-r from-emerald-600 to-emerald-400 transition-all duration-300 rounded-full" style="width: 0%;"></div>
@@ -133,7 +134,7 @@
       <div class="bg-leanCard border border-leanBorder rounded-2xl p-3.5 shadow-lg flex flex-col justify-between">
         <div class="flex items-center justify-between text-xs font-semibold">
           <span class="flex items-center gap-1.5 text-slate-300"><i class="fa-solid fa-shield-halved text-cyan-400"></i> Bisnis VA (BVA)</span>
-          <span id="bvaCount" class="font-mono font-bold text-cyan-400">0 / 6</span>
+          <span id="bvaCount" class="font-mono font-bold text-cyan-400">0 / 3</span>
         </div>
         <div class="w-full h-2 bg-slate-950 rounded-full overflow-hidden border border-slate-800 mt-2">
           <div id="bvaBar" class="h-full bg-gradient-to-r from-sky-500 to-cyan-400 transition-all duration-300 rounded-full" style="width: 0%;"></div>
@@ -148,7 +149,7 @@
       <div class="bg-leanCard border border-leanBorder rounded-2xl p-3.5 shadow-lg flex flex-col justify-between">
         <div class="flex items-center justify-between text-xs font-semibold">
           <span class="flex items-center gap-1.5 text-slate-300"><i class="fa-solid fa-trash-can text-rose-400"></i> Pemborosan (NVA)</span>
-          <span id="nvaCount" class="font-mono font-bold text-rose-400">0 Dihapus</span>
+          <span id="nvaCount" class="font-mono font-bold text-rose-400">0 Dikenali</span>
         </div>
         <div class="w-full h-2 bg-slate-950 rounded-full overflow-hidden border border-slate-800 mt-2">
           <div id="nvaBar" class="h-full bg-gradient-to-r from-rose-600 to-rose-400 transition-all duration-300 rounded-full" style="width: 0%;"></div>
@@ -169,7 +170,7 @@
           <div id="scoreBar" class="h-full bg-gradient-to-r from-amber-500 to-yellow-400 transition-all duration-300 rounded-full" style="width: 0%;"></div>
         </div>
         <div class="flex justify-between items-center text-[10px] text-slate-400 mt-2">
-          <span>Target Kelulusan 70%</span>
+          <span>Target Ketepatan ≥ 80%</span>
           <span id="scoreTag" class="text-slate-400 font-mono">STANDAR</span>
         </div>
       </div>
@@ -356,6 +357,7 @@
     const LEAN_TASKS = [
       {
         id: 1,
+        durationMinutes: 5,
         title: "Meracik Espresso & Ekstraksi Kopi Pesanan Pelanggan",
         desc: "Barista menimbang bubuk kopi segar dan menyeduh espresso sesuai pesanan pembeli di meja kasir.",
         type: "VA",
@@ -364,6 +366,7 @@
       },
       {
         id: 2,
+        durationMinutes: 180,
         title: "Menunggu Manajer Menandatangani Kertas Pengajuan Dana",
         desc: "Berkas pengajuan pembelian susu tertahan di meja manajer yang sedang dinas luar selama 3 hari.",
         type: "NVA",
@@ -372,6 +375,7 @@
       },
       {
         id: 3,
+        durationMinutes: 3,
         title: "Mencetak Faktur Pajak Resmi untuk Laporan Bulanan",
         desc: "Staf keuangan membuat faktur pajak digital dan melampirkannya ke pembukuan demi audit pemerintah.",
         type: "BVA",
@@ -380,6 +384,7 @@
       },
       {
         id: 4,
+        durationMinutes: 5,
         title: "Mengetik Ulang Data Pesanan Web ke Rekap Excel Manual",
         desc: "Staf admin menyalin satu per satu nama pembeli dari aplikasi online ke file Excel pembukuan fisik.",
         type: "NVA",
@@ -388,6 +393,7 @@
       },
       {
         id: 5,
+        durationMinutes: 8,
         title: "Membongkar 10 Kardus Gudang Mencari Stempel Hilang",
         desc: "Staf berjalan bolak-balik mencarikan stempel cap perusahaan yang terselip di sudut gudang belakang.",
         type: "NVA",
@@ -396,6 +402,7 @@
       },
       {
         id: 6,
+        durationMinutes: 1,
         title: "Menyerahkan Kemasan Produk Jadi ke Tangan Pembeli",
         desc: "Barista memanggil nomor antrean dan menyerahkan pesanan kopi siap saji kepada pelanggan di konter.",
         type: "VA",
@@ -404,6 +411,7 @@
       },
       {
         id: 7,
+        durationMinutes: 30,
         title: "Mengirim Arsip Kertas Pengiriman Antar Cabang via Kurir",
         desc: "Mengirimkan bundel map kertas nota fisik menggunakan jasa kurir motor ke kantor cabang seberang kota.",
         type: "NVA",
@@ -412,6 +420,7 @@
       },
       {
         id: 8,
+        durationMinutes: 10,
         title: "Mencetak 200 Formulir Pendaftaran Fisik Berlebih",
         desc: "Mencetak brosur kertas formulir pendaftaran fisik dalam jumlah besar padahal pendaftar kini online.",
         type: "NVA",
@@ -420,6 +429,7 @@
       },
       {
         id: 9,
+        durationMinutes: 10,
         title: "Audit Stok Biji Kopi dan Laporan Keuangan Harian",
         desc: "Pemeriksaan kas fisik dan opname stok gudang setiap penutupan shift malam oleh supervisor.",
         type: "BVA",
@@ -428,6 +438,7 @@
       },
       {
         id: 10,
+        durationMinutes: 12,
         title: "Memperbaiki Kesalahan Ketik Alamat Pengiriman Pelanggan",
         desc: "Staf terpaksa menelepon ulang pembeli karena salah mencatat alamat tujuan pada paket kargo.",
         type: "NVA",
@@ -436,22 +447,26 @@
       },
       {
         id: 11,
+        durationMinutes: 60,
         title: "Menumpuk 500 Map Berkas Kontrak di Lemari Tanpa Dibaca",
-        desc: "Menyimpan dokumen fisik arsip lama berbulan-bulan di sudut ruangan yang memakan tempat.",
+        desc: "Menyimpan salinan kontrak duplikat yang telah melewati retensi dan tidak lagi diperlukan, tanpa kebutuhan hukum atau operasional.",
         type: "NVA",
         waste: "Inventory (Inventori Menumpuk)",
         explanation: "Tepat! Penumpukan berkas yang tidak terpakai adalah pemborosan inventori gudang (*Inventory*)."
       },
       {
         id: 12,
+        durationMinutes: 2,
         title: "Pengujian Kualitas Rasa Biji Kopi Sangrai (QC)",
         desc: "Roaster mencicipi hasil seduhan batch sangrai pagi untuk memastikan standar aroma terjaga.",
-        type: "VA",
-        waste: "None",
-        explanation: "Benar! Kontrol kualitas rasa langsung menentukan mutu produk utama yang dirasakan oleh pelanggan."
+        type: "BVA",
+        waste: "Quality Control",
+        explanation: "Pemeriksaan mutu tidak mengubah produk yang dibeli pelanggan, tetapi diperlukan sebagai kontrol bisnis; klasifikasikan BVA dan optimalkan tanpa menghapus kontrol penting."
       }
     ];
 
+    const pceExample = { vaMinutes: 6, cycleMinutes: 30 };
+    const baselinePce = 100 * pceExample.vaMinutes / pceExample.cycleMinutes;
     // ==========================================
     // 2. STATE MANAGEMENT
     // ==========================================
@@ -473,19 +488,19 @@
       const completed = vaCount + bvaCount + nvaCount;
       
       // PCE Calculation: (VA / Total Tasks Handled) * 100
-      let pce = completed > 0 ? Math.round((vaCount / completed) * 100) : 12;
+      const pce = baselinePce.toFixed(1);
 
       document.getElementById('pceDisplay').innerText = `${pce}%`;
       document.getElementById('shiftTimerDisplay').innerText = `00:${String(shiftTimer).padStart(2, '0')}`;
 
-      document.getElementById('vaCount').innerText = `${vaCount} / 8`;
-      document.getElementById('vaBar').style.width = `${(vaCount / 8) * 100}%`;
+      document.getElementById('vaCount').innerText = `${vaCount} / ${LEAN_TASKS.filter(t => t.type === "VA").length}`;
+      document.getElementById('vaBar').style.width = `${(vaCount / LEAN_TASKS.filter(t => t.type === "VA").length) * 100}%`;
 
-      document.getElementById('bvaCount').innerText = `${bvaCount} / 4`;
-      document.getElementById('bvaBar').style.width = `${(bvaCount / 4) * 100}%`;
+      document.getElementById('bvaCount').innerText = `${bvaCount} / ${LEAN_TASKS.filter(t => t.type === "BVA").length}`;
+      document.getElementById('bvaBar').style.width = `${(bvaCount / LEAN_TASKS.filter(t => t.type === "BVA").length) * 100}%`;
 
       document.getElementById('nvaCount').innerText = `${nvaCount} Dihapus`;
-      document.getElementById('nvaBar').style.width = `${Math.min(100, (nvaCount / 6) * 100)}%`;
+      document.getElementById('nvaBar').style.width = `${Math.min(100, (nvaCount / LEAN_TASKS.filter(t => t.type === "NVA").length) * 100)}%`;
 
       document.getElementById('scoreVal').innerText = `${score} Pts`;
       document.getElementById('scoreBar').style.width = `${Math.min(100, (score / 200) * 100)}%`;
@@ -494,6 +509,7 @@
     }
 
     function loadCurrentTask() {
+      actionLocked = false;
       if (currentTaskIndex >= LEAN_TASKS.length) {
         endLeanShift(true);
         return;
@@ -501,7 +517,7 @@
 
       const cur = LEAN_TASKS[currentTaskIndex];
       document.getElementById('taskTitle').innerText = cur.title;
-      document.getElementById('taskDesc').innerText = cur.desc;
+      document.getElementById('taskDesc').innerText = cur.desc + " Durasi ilustratif: " + cur.durationMinutes + " menit.";
       
       const badge = document.getElementById('taskCategoryBadge');
       badge.innerText = `Langkah #${currentTaskIndex + 1} dari ${LEAN_TASKS.length}`;
@@ -512,6 +528,8 @@
 
     function startLeanShift() {
       if (isShiftActive) return;
+      gameEnded = false;
+      actionLocked = false;
       isShiftActive = true;
       currentTaskIndex = 0;
       score = 0;
@@ -534,7 +552,13 @@
       }, 1000);
     }
 
+    let actionLocked = false;
+    let transitionTimer = null;
+    let gameEnded = false;
     function makeLeanDecision(choice) {
+      if (actionLocked || gameEnded) return;
+      if (!isShiftActive) return;
+      actionLocked = true;
       if (!isShiftActive) {
         feedbackText.innerText = "Tekan tombol 'Mulai Shift Lean' terlebih dahulu untuk menjalankan konveyor!";
         return;
@@ -557,11 +581,11 @@
         feedbackText.innerHTML = `<strong>Kurang Tepat!</strong> Seharusnya langkah ini diklasifikasikan sebagai <strong>${cur.type}</strong>. (${cur.explanation})`;
       }
 
-      renderMetrics();
       currentTaskIndex++;
+      renderMetrics();
 
       if (currentTaskIndex < LEAN_TASKS.length) {
-        setTimeout(() => {
+        transitionTimer = setTimeout(() => {
           loadCurrentTask();
         }, 600);
       } else {
@@ -570,6 +594,9 @@
     }
 
     function endLeanShift(isFinished) {
+      gameEnded = true;
+      actionLocked = true;
+      clearTimeout(transitionTimer);
       clearInterval(timerIntervalId);
       isShiftActive = false;
 
@@ -581,26 +608,30 @@
       modal.classList.remove('hidden');
 
       const totalHandled = vaCount + bvaCount + nvaCount;
-      const finalPce = totalHandled > 0 ? Math.round((vaCount / totalHandled) * 100) : 12;
+      const finalPce = baselinePce.toFixed(1);
+      const accuracy = Math.round(100 * totalHandled / LEAN_TASKS.length);
 
-      if (score >= 120 && finalPce >= 40) {
+      if (isFinished && accuracy >= 80) {
         icon.className = "inline-flex p-4 rounded-full text-4xl mb-3 bg-emerald-500/20 text-emerald-400 border border-emerald-500";
         icon.innerHTML = '<i class="fa-solid fa-trophy"></i>';
         title.className = "font-display font-black text-2xl sm:text-3xl text-emerald-400";
-        title.innerText = "Certified Lean Six Sigma Expert (Grade A)";
-        desc.innerText = `Luar biasa! Shift Lean sukses besar. Anda berhasil membasmi pemborosan TIMWOOD, mendongkrak skor PCE menjadi ${finalPce}%, dan mengamankan total ${score} Poin Produktivitas.`;
+        title.innerText = "Latihan Lean Tuntas";
+        desc.innerText = `Luar biasa! Shift Lean sukses besar. Ketepatan klasifikasi ${accuracy}%, skor ${score} poin. PCE contoh terpisah ${finalPce}% dihitung dari durasi VA/total waktu. Mengklasifikasikan aktivitas belum mengubah proses atau menaikkan PCE.`;
       } else {
         icon.className = "inline-flex p-4 rounded-full text-4xl mb-3 bg-amber-500/20 text-amber-400 border border-amber-500";
         icon.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
         title.className = "font-display font-black text-2xl sm:text-3xl text-amber-400";
-        title.innerText = "Shift Selesai dengan Catatan Perbaikan (Grade C+)";
-        desc.innerText = `Simulasi selesai dengan skor ${score} Pts dan PCE ${finalPce}%. Di dunia nyata, pastikan aktivitas NVA benar-benar dieliminasi dan BVA diotomatisasi agar efisiensi siklus melesat naik.`;
+        title.innerText = "Latihan Lean: Tinjau Kembali Klasifikasi";
+        desc.innerText = `Ketepatan klasifikasi ${accuracy}%, skor ${score} poin; PCE contoh terpisah ${finalPce}%. Rancang pengurangan NVA dan hitung ulang durasi To-Be untuk mengevaluasi perubahan efisiensi.`;
       }
 
       window.scrollTo({ top: modal.offsetTop - 30, behavior: 'smooth' });
     }
 
     function resetLeanSimulator() {
+      clearTimeout(transitionTimer);
+      actionLocked = false;
+      gameEnded = false;
       clearInterval(timerIntervalId);
       isShiftActive = false;
       currentTaskIndex = 0;
@@ -628,5 +659,6 @@
       renderMetrics();
     };
   </script>
+<a class="learning-guide-link" href="Panduan_Pembelajaran.html" style="position:fixed;bottom:10px;right:12px;z-index:100;background:#0f172a;color:#fff;border:1px solid #64748b;border-radius:8px;padding:7px 10px;font:12px Arial,sans-serif;text-decoration:none;">Panduan tugas &amp; penilaian</a>
 </body>
 </html>

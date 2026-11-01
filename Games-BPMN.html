@@ -83,6 +83,7 @@
        TAB 1: GAME MENCOCOKKAN SIMBOL & FUNGSI (MATCHING GAME)
        ======================================================== -->
   <main id="gameTab" class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 flex flex-col gap-6">
+<p style="padding:12px;border:1px solid #64748b;border-radius:10px;color:inherit;font-size:14px;">Latihan pendamping RPS. Angka, biaya, dan perubahan indikator adalah asumsi skenario; bukan hasil pengukuran sistem nyata, nilai resmi, atau sertifikasi profesi. Bahas alasan pilihan dan risiko residual bersama dosen. <a href="Panduan_Pembelajaran.html" style="text-decoration:underline;">Panduan pembelajaran</a>.</p>
     <!-- Intro Card -->
     <div class="bg-gradient-to-r from-slate-900 to-slate-800 border border-slate-700/80 rounded-2xl p-6 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
       <div class="space-y-2">
@@ -175,7 +176,7 @@
           <label class="block text-xs font-montserrat font-bold text-slate-400 uppercase">Pilih Studi Kasus Soal Praktek:</label>
           <select id="caseSelector" onchange="loadCaseStudy(this.value)" class="mt-1 bg-slate-950 border border-slate-700 text-white rounded-lg px-3 py-1.5 text-sm font-semibold focus:outline-none focus:border-cyan-500 cursor-pointer">
             <option value="case1">Studi Kasus 1: Pemesanan Kopi Online (@kopiapatuh)</option>
-            <option value="case2">Studi Kasus 2: Pengajuan Cuti Sakit Karyawan</option>
+            <option value="case2">Studi Kasus 2: Pengajuan Cuti Tahunan</option>
             <option value="case3">Studi Kasus 3: Validasi Pembayaran Toko Online</option>
           </select>
         </div>
@@ -360,6 +361,7 @@
   </main>
 
   <!-- JAVASCRIPT LOGIC ENGINE -->
+  <script src="assets/bpmn-lab-validation.js"></script>
   <script>
     // ==========================================
     // 1. DATA MASTER: SYMBOLS & DEFINITIONS
@@ -396,7 +398,7 @@
       {
         id: 'data-store',
         name: 'Data Store Reference',
-        category: 'Artifact',
+        category: 'Data',
         svg: `<svg viewBox="0 0 100 100" class="w-16 h-16"><path d="M20,30 C20,20 80,20 80,30 L80,70 C80,80 20,80 20,70 Z" fill="#ECFEFF" stroke="#06B6D4" stroke-width="4"/><ellipse cx="50" cy="30" rx="30" ry="10" fill="#ECFEFF" stroke="#06B6D4" stroke-width="4"/><path d="M20,50 C20,60 80,60 80,50" fill="none" stroke="#06B6D4" stroke-width="3"/></svg>`,
         desc: 'Mewakili tempat penyimpanan data persisten (Database server) yang dapat dibaca dan ditulis oleh aktivitas.'
       },
@@ -413,35 +415,321 @@
     // 2. CASE STUDIES REPOSITORY
     // ==========================================
     const CASE_STUDIES = {
-      case1: {
-        title: "Studi Kasus 1: Pemesanan Kopi Online (@kopiapatuh)",
-        desc: `"Notifikasi pesanan GoFood berbunyi (Start). Kasir <strong>memeriksa stok bahan</strong>. Jika stok <em>Kosong</em>, kasir langsung <strong>membatalkan pesanan</strong> lalu selesai (End). Jika stok <em>Ada</em>, barista segera <strong>membuat kopi</strong>, kemudian kasir <strong>menyerahkan pesanan</strong> ke kurir. Proses selesai (End)."`,
-        expectedSteps: ["start", "task", "gateway-xor", "task", "end"],
-        solution: [
-          { type: 'start', text: 'Pesanan Masuk', x: 40, y: 180 },
-          { type: 'task', text: 'Memeriksa Stok Bahan', x: 200, y: 165 },
-          { type: 'gateway-xor', text: 'Stok Ada?', x: 420, y: 160 },
-          { type: 'task', text: 'Membuat Kopi', x: 580, y: 90 },
-          { type: 'task', text: 'Membatalkan Pesanan', x: 580, y: 250 },
-          { type: 'task', text: 'Menyerahkan Pesanan', x: 790, y: 90 },
-          { type: 'end', text: 'Pesanan Selesai', x: 990, y: 105 },
-          { type: 'end', text: 'Dibatalkan', x: 790, y: 265 }
-        ],
-        connections: [
-          [0, 1], [1, 2], [2, 3], [2, 4], [3, 5], [5, 6], [4, 7]
-        ]
+  "case1": {
+    "title": "Studi Kasus 1: Pemesanan Kopi Online (@kopiapatuh)",
+    "desc": "\"Notifikasi pesanan GoFood berbunyi (Start). Kasir <strong>memeriksa stok bahan</strong>. Jika stok <em>Kosong</em>, kasir langsung <strong>membatalkan pesanan</strong> lalu selesai (End). Jika stok <em>Ada</em>, barista segera <strong>membuat kopi</strong>, kemudian kasir <strong>menyerahkan pesanan</strong> ke kurir. Proses selesai (End).\"",
+    "expectedSteps": [
+      "start",
+      "task",
+      "gateway-xor",
+      "task",
+      "end"
+    ],
+    "solution": [
+      {
+        "type": "start",
+        "text": "Pesanan Masuk",
+        "x": 40,
+        "y": 180
       },
-      case2: {
-        title: "Studi Kasus 2: Pengajuan Cuti Sakit Karyawan",
-        desc: `"Karyawan merasa sakit (Start). Karyawan <strong>mengisi formulir cuti</strong> di portal HRD. Manajer kemudian <strong>memverifikasi surat dokter</strong>. Jika <em>Ditolak</em>, manajer <strong>mengirim email penolakan</strong> lalu proses berakhir. Jika <em>Disetujui</em>, sistem <strong>memotong kuota cuti</strong> lalu proses selesai."`,
-        expectedSteps: ["start", "task", "task", "gateway-xor", "task", "end"]
+      {
+        "type": "task",
+        "text": "Memeriksa Stok Bahan",
+        "x": 200,
+        "y": 165
       },
-      case3: {
-        title: "Studi Kasus 3: Validasi Pembayaran Toko Online",
-        desc: `"Pembeli mengunggah bukti transfer (Start). Staf Keuangan <strong>memvalidasi mutasi bank</strong>. Jika transfer <em>Valid</em>, staf gudang <strong>mengemas barang</strong> dan kasir <strong>mencetak invoice</strong> secara paralel, lalu paket diserahkan (End)."`,
-        expectedSteps: ["start", "task", "gateway-xor", "gateway-and", "end"]
+      {
+        "type": "gateway-xor",
+        "text": "Stok Ada?",
+        "x": 420,
+        "y": 160
+      },
+      {
+        "type": "task",
+        "text": "Membuat Kopi",
+        "x": 580,
+        "y": 90
+      },
+      {
+        "type": "task",
+        "text": "Membatalkan Pesanan",
+        "x": 580,
+        "y": 250
+      },
+      {
+        "type": "task",
+        "text": "Menyerahkan Pesanan",
+        "x": 790,
+        "y": 90
+      },
+      {
+        "type": "end",
+        "text": "Pesanan Selesai",
+        "x": 990,
+        "y": 105
+      },
+      {
+        "type": "end",
+        "text": "Dibatalkan",
+        "x": 790,
+        "y": 265
       }
-    };
+    ],
+    "connections": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3,
+        "Ada"
+      ],
+      [
+        2,
+        4,
+        "Kosong"
+      ],
+      [
+        3,
+        5
+      ],
+      [
+        5,
+        6
+      ],
+      [
+        4,
+        7
+      ]
+    ]
+  },
+  "case2": {
+    "title": "Studi Kasus 2: Pengajuan Cuti Tahunan",
+    "desc": "Karyawan mengisi formulir cuti tahunan. Manajer memverifikasi saldo cuti dan kebutuhan kerja. Jika disetujui, sistem memperbarui saldo dan mengirim konfirmasi. Jika ditolak, manajer mengirim alasan penolakan. Kedua jalur berakhir jelas.",
+    "expectedSteps": [
+      "start",
+      "task",
+      "gateway-xor",
+      "task",
+      "end"
+    ],
+    "solution": [
+      {
+        "type": "start",
+        "text": "Pengajuan Masuk",
+        "x": 30,
+        "y": 180
+      },
+      {
+        "type": "task",
+        "text": "Memeriksa Pengajuan",
+        "x": 150,
+        "y": 165
+      },
+      {
+        "type": "gateway-xor",
+        "text": "Disetujui?",
+        "x": 370,
+        "y": 160
+      },
+      {
+        "type": "task",
+        "text": "Memperbarui Saldo",
+        "x": 540,
+        "y": 80
+      },
+      {
+        "type": "task",
+        "text": "Mengirim Konfirmasi",
+        "x": 750,
+        "y": 80
+      },
+      {
+        "type": "end",
+        "text": "Disetujui",
+        "x": 990,
+        "y": 95
+      },
+      {
+        "type": "task",
+        "text": "Mengirim Penolakan",
+        "x": 540,
+        "y": 280
+      },
+      {
+        "type": "end",
+        "text": "Ditolak",
+        "x": 790,
+        "y": 295
+      }
+    ],
+    "connections": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3,
+        "Ya"
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ],
+      [
+        2,
+        6,
+        "Tidak"
+      ],
+      [
+        6,
+        7
+      ]
+    ]
+  },
+  "case3": {
+    "title": "Studi Kasus 3: Validasi Pembayaran Toko Online",
+    "desc": "Bukti transfer diterima. Keuangan memverifikasi pembayaran. Jika tidak valid, kirim penolakan. Jika valid, gudang mengemas barang dan kasir mencetak faktur secara paralel. Sesudah keduanya selesai, serahkan paket lalu proses berakhir.",
+    "expectedSteps": [
+      "start",
+      "task",
+      "gateway-xor",
+      "gateway-and",
+      "task",
+      "end"
+    ],
+    "solution": [
+      {
+        "type": "start",
+        "text": "Bukti Diterima",
+        "x": 20,
+        "y": 180
+      },
+      {
+        "type": "task",
+        "text": "Memvalidasi Transfer",
+        "x": 120,
+        "y": 165
+      },
+      {
+        "type": "gateway-xor",
+        "text": "Valid?",
+        "x": 330,
+        "y": 160
+      },
+      {
+        "type": "gateway-and",
+        "text": "Mulai Paralel",
+        "x": 470,
+        "y": 80
+      },
+      {
+        "type": "task",
+        "text": "Mengemas Barang",
+        "x": 610,
+        "y": 20
+      },
+      {
+        "type": "task",
+        "text": "Mencetak Faktur",
+        "x": 610,
+        "y": 160
+      },
+      {
+        "type": "gateway-and",
+        "text": "Keduanya Selesai",
+        "x": 820,
+        "y": 80
+      },
+      {
+        "type": "task",
+        "text": "Menyerahkan Paket",
+        "x": 930,
+        "y": 65
+      },
+      {
+        "type": "end",
+        "text": "Terkirim",
+        "x": 1130,
+        "y": 80
+      },
+      {
+        "type": "task",
+        "text": "Mengirim Penolakan",
+        "x": 470,
+        "y": 320
+      },
+      {
+        "type": "end",
+        "text": "Ditolak",
+        "x": 700,
+        "y": 335
+      }
+    ],
+    "connections": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3,
+        "Valid"
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        3,
+        5
+      ],
+      [
+        4,
+        6
+      ],
+      [
+        5,
+        6
+      ],
+      [
+        6,
+        7
+      ],
+      [
+        7,
+        8
+      ],
+      [
+        2,
+        9,
+        "Tidak valid"
+      ],
+      [
+        9,
+        10
+      ]
+    ]
+  }
+};
 
     // ==========================================
     // 3. TAB NAVIGATION
@@ -584,11 +872,11 @@
         selectedSymbolCard.element.classList.add('border-red-500', 'bg-red-950/40');
         selectedTargetCard.element.classList.add('border-red-500', 'bg-red-950/40');
 
+        const previousOne = selectedSymbolCard, previousTwo = selectedTargetCard;
+        selectedSymbolCard = null; selectedTargetCard = null;
         setTimeout(() => {
-          if (selectedSymbolCard) selectedSymbolCard.element.classList.remove('border-red-500', 'bg-red-950/40', 'border-cyan-400', 'bg-cyan-950/40');
-          if (selectedTargetCard) selectedTargetCard.element.classList.remove('border-red-500', 'bg-red-950/40', 'border-amber-400', 'bg-amber-950/40');
-          selectedSymbolCard = null;
-          selectedTargetCard = null;
+          if (previousOne) previousOne.element.classList.remove('border-red-500', 'bg-red-950/40', 'border-cyan-400', 'bg-cyan-950/40');
+          if (previousTwo) previousTwo.element.classList.remove('border-red-500', 'bg-red-950/40', 'border-amber-400', 'bg-amber-950/40');
         }, 500);
       }
     }
@@ -661,12 +949,12 @@
             <div class="w-12 h-12 rounded-full bg-emerald-950/80 border-2 border-emerald-500 shadow-md flex items-center justify-center">
               <div class="w-4 h-4 rounded-full bg-emerald-500"></div>
             </div>
-            <div class="text-[11px] font-montserrat font-bold text-slate-200 mt-1 max-w-[100px] text-center editable-text" contenteditable="true">${node.text}</div>
+            <div class="text-[11px] font-montserrat font-bold text-slate-200 mt-1 max-w-[100px] text-center editable-text" contenteditable="true">${BpmnLabAudit.escapeText(node.text)}</div>
           `;
         } else if (node.type === 'task') {
           visualHtml = `
             <div class="w-36 h-20 rounded-xl bg-slate-900 border-2 border-cyan-500 shadow-lg p-2.5 flex items-center justify-center text-center">
-              <span class="text-xs font-montserrat font-bold text-cyan-200 leading-snug editable-text" contenteditable="true">${node.text}</span>
+              <span class="text-xs font-montserrat font-bold text-cyan-200 leading-snug editable-text" contenteditable="true">${BpmnLabAudit.escapeText(node.text)}</span>
             </div>
           `;
         } else if (node.type === 'gateway-xor' || node.type === 'gateway-and') {
@@ -675,14 +963,14 @@
             <div class="w-12 h-12 rotate-45 bg-amber-950/80 border-2 border-amber-500 shadow-md flex items-center justify-center">
               <span class="-rotate-45 text-amber-400 font-extrabold text-sm">${isXor ? '✕' : '＋'}</span>
             </div>
-            <div class="text-[11px] font-montserrat font-bold text-amber-300 mt-1.5 max-w-[90px] text-center editable-text" contenteditable="true">${node.text}</div>
+            <div class="text-[11px] font-montserrat font-bold text-amber-300 mt-1.5 max-w-[90px] text-center editable-text" contenteditable="true">${BpmnLabAudit.escapeText(node.text)}</div>
           `;
         } else if (node.type === 'end') {
           visualHtml = `
             <div class="w-12 h-12 rounded-full bg-red-950/80 border-4 border-red-500 shadow-md flex items-center justify-center">
               <div class="w-4 h-4 rounded-full bg-red-500"></div>
             </div>
-            <div class="text-[11px] font-montserrat font-bold text-slate-200 mt-1 max-w-[100px] text-center editable-text" contenteditable="true">${node.text}</div>
+            <div class="text-[11px] font-montserrat font-bold text-slate-200 mt-1 max-w-[100px] text-center editable-text" contenteditable="true">${BpmnLabAudit.escapeText(node.text)}</div>
           `;
         }
 
@@ -789,7 +1077,8 @@
         // Prevent duplicate connections
         const exists = canvasConnections.some(([from, to]) => from === connectSourceIndex && to === targetIndex);
         if (!exists) {
-          canvasConnections.push([connectSourceIndex, targetIndex]);
+          const label = canvasNodes[connectSourceIndex].type === 'gateway-xor' ? (prompt('Label kondisi cabang XOR (misal: Ada / Kosong):') || '') : '';
+          canvasConnections.push([connectSourceIndex, targetIndex, label]);
         }
       }
       isConnectingMode = false;
@@ -805,9 +1094,9 @@
       // Clean associated connections & adjust indexes
       canvasConnections = canvasConnections
         .filter(([from, to]) => from !== selectedNodeIndex && to !== selectedNodeIndex)
-        .map(([from, to]) => [
+        .map(([from, to, label]) => [
           from > selectedNodeIndex ? from - 1 : from,
-          to > selectedNodeIndex ? to - 1 : to
+          to > selectedNodeIndex ? to - 1 : to, label
         ]);
 
       selectedNodeIndex = null;
@@ -831,7 +1120,7 @@
       svg.innerHTML = '';
       svg.appendChild(defs);
 
-      canvasConnections.forEach(([fromIdx, toIdx]) => {
+      canvasConnections.forEach(([fromIdx, toIdx, label]) => {
         const fromNode = canvasNodes[fromIdx];
         const toNode = canvasNodes[toIdx];
         if (!fromNode || !toNode) return;
@@ -854,6 +1143,7 @@
         path.setAttribute('marker-end', 'url(#arrow)');
 
         svg.appendChild(path);
+        if(label) { const t=document.createElementNS("http://www.w3.org/2000/svg","text"); t.setAttribute("x",midX); t.setAttribute("y",(fromY+toY)/2-8); t.setAttribute("fill","#e2e8f0"); t.textContent=label; svg.appendChild(t); }
       });
     }
 
@@ -861,60 +1151,11 @@
     // 6. AUTO-VALIDATION & TEMPLATE SOLUTION
     // ==========================================
     function validateDiagram() {
-      const caseKey = document.getElementById('caseSelector').value;
-      const caseData = CASE_STUDIES[caseKey];
-      const box = document.getElementById('validationResultBox');
-      const title = document.getElementById('validationTitle');
-      const desc = document.getElementById('validationDesc');
-      const icon = document.getElementById('validationIcon');
-
-      box.classList.remove('hidden');
-
-      // Rule 1: Check start & end nodes
-      const hasStart = canvasNodes.some(n => n.type === 'start');
-      const hasEnd = canvasNodes.some(n => n.type === 'end');
-      const hasTask = canvasNodes.some(n => n.type === 'task');
-
-      if (!hasStart) {
-        icon.className = "fa-solid fa-circle-exclamation text-amber-400 text-2xl";
-        title.className = "font-montserrat font-bold text-sm text-amber-400";
-        title.innerText = "Belum Ada Start Event!";
-        desc.innerText = "Setiap diagram alur BPMN 2.0 wajib diawali oleh minimal satu Start Event (Lingkaran Hijau).";
-        return;
-      }
-
-      if (!hasTask) {
-        icon.className = "fa-solid fa-circle-exclamation text-amber-400 text-2xl";
-        title.className = "font-montserrat font-bold text-sm text-amber-400";
-        title.innerText = "Belum Ada Aktivitas (Task)!";
-        desc.innerText = "Proses bisnis harus memiliki pekerjaan nyata yang dikerjakan (Task Persegi Tumpul).";
-        return;
-      }
-
-      if (!hasEnd) {
-        icon.className = "fa-solid fa-circle-exclamation text-amber-400 text-2xl";
-        title.className = "font-montserrat font-bold text-sm text-amber-400";
-        title.innerText = "Belum Ada End Event!";
-        desc.innerText = "Alur diagram mengambang tanpa kejelasan di mana status akhir tercapai (End Event Lingkaran Merah).";
-        return;
-      }
-
-      if (canvasConnections.length < 2) {
-        icon.className = "fa-solid fa-circle-xmark text-red-400 text-2xl";
-        title.className = "font-montserrat font-bold text-sm text-red-400";
-        title.innerText = "Alur Panah (Sequence Flow) Belum Terhubung!";
-        desc.innerText = "Gunakan tombol '+ Hubungkan' untuk merangkai jalannya panah dari Start Event menuju Task hingga ke End Event.";
-        return;
-      }
-
-      // Check task active naming
-      const invalidTaskNames = canvasNodes.filter(n => n.type === 'task' && !/^[A-Z][a-z]+/.test(n.text));
-
-      // Success Celebration
-      icon.className = "fa-solid fa-circle-check text-emerald-400 text-2xl";
-      title.className = "font-montserrat font-bold text-sm text-emerald-400";
-      title.innerText = "Validasi Berhasil: Struktur Diagram BPMN Sesuai Standar!";
-      desc.innerHTML = `Selamat! Rangkaian proses telah memenuhi kaidah BPMN 2.0: memiliki <strong>Start Event</strong>, aktivitas dengan format kerja aktif, serta alur berakhir di <strong>End Event</strong> yang valid.`;
+      const errors = BpmnLabAudit.audit(canvasNodes, canvasConnections);
+      document.getElementById('validationResultBox').classList.remove('hidden');
+      document.getElementById('validationIcon').className = errors.length ? 'fa-solid fa-triangle-exclamation text-amber-400' : 'fa-solid fa-check-circle text-emerald-400';
+      document.getElementById('validationTitle').innerText = errors.length ? 'Perbaiki Struktur Latihan' : 'Pemeriksaan Dasar Lulus';
+      document.getElementById('validationDesc').innerText = errors.length ? errors.join(' ') : 'Jalur Start–Task–End, arah koneksi, keterhubungan, dan label cabang telah diperiksa. Ini pemeriksaan terbatas; kesesuaian narasi, perilaku gateway, dan seluruh standar OMG tetap memerlukan review dosen.';
     }
 
     function loadTemplateSolution() {
@@ -946,5 +1187,6 @@
       });
     };
   </script>
+<a class="learning-guide-link" href="Panduan_Pembelajaran.html" style="position:fixed;bottom:10px;right:12px;z-index:100;background:#0f172a;color:#fff;border:1px solid #64748b;border-radius:8px;padding:7px 10px;font:12px Arial,sans-serif;text-decoration:none;">Panduan tugas &amp; penilaian</a>
 </body>
 </html>

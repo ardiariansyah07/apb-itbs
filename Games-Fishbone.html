@@ -100,6 +100,7 @@
 
   <!-- MAIN SIMULATOR ARENA -->
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-5">
+<p style="padding:12px;border:1px solid #64748b;border-radius:10px;color:inherit;font-size:14px;">Latihan pendamping RPS. Angka, biaya, dan perubahan indikator adalah asumsi skenario; bukan hasil pengukuran sistem nyata, nilai resmi, atau sertifikasi profesi. Bahas alasan pilihan dan risiko residual bersama dosen. <a href="Panduan_Pembelajaran.html" style="text-decoration:underline;">Panduan pembelajaran</a>.</p>
 
     <!-- REAL-TIME RCA METRICS (4 GAUGES) -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-3.5">
@@ -160,7 +161,7 @@
         </div>
         <div class="flex justify-between items-center text-[10px] text-slate-400 mt-2">
           <span>Target Kelulusan</span>
-          <span class="text-indigo-400 font-mono font-bold">PERMANEN</span>
+          <span class="text-indigo-400 font-mono font-bold">UJI HASIL</span>
         </div>
       </div>
 
@@ -262,7 +263,7 @@
             Kasus Portal KRS Down: Server Utama Kehabisan Memori Saat Jam Sibuk!
           </h2>
           <p id="caseSymptom" class="text-xs sm:text-sm text-slate-300 mt-2 leading-relaxed">
-            Pusat data melaporkan lonjakan CPU 100% dan ribuan mahasiswa gagal mengakses halaman KRS pada pukul 08.00 WIB. Mengapa hal ini bisa terjadi? Pilih hipotesis investigasi yang paling logis di bawah ini.
+            Bukti skenario: log menunjukkan lonjakan login serentak pukul 08.00 dan koneksi database penuh. Jadwal seluruh fakultas sama; dokumen kapasitas belum mengatur kloter atau antrean masuk. Mengapa hal ini bisa terjadi? Pilih hipotesis investigasi yang paling logis di bawah ini.
           </p>
         </div>
 
@@ -384,12 +385,12 @@
                 isCorrect: true,
                 bone: "Milieu",
                 boneText: "Antrean Virtual FIFO",
-                feedback: "Sempurna! Kombinasi aturan kloter SOP dan sistem antrean virtual menyelesaikan akar masalah secara permanen."
+                feedback: "Sempurna! Kombinasi aturan kloter SOP dan sistem antrean virtual menyelesaikan akar masalah berdasarkan bukti kasus dan perlu diuji."
               },
               {
                 text: "Beli 10 server cloud baru seharga Rp 200 Juta untuk melayani login serentak selamanya.",
                 isCorrect: false,
-                feedback: "Boros! Membeli server raksasa demi menuruti jadwal yang salah adalah solusi yang sangat tidak efisien."
+                feedback: "Dalam bukti kasus ini kapasitas tambahan saja belum mengatasi jadwal serentak. Bandingkan biaya dan hasil uji beban sebelum memilih kombinasi solusi."
               }
             ]
           }
@@ -398,7 +399,7 @@
       {
         id: 2,
         title: "Kasus Keterlambatan Pengiriman Logistik: 30 Truk Tertahan di Gerbang!",
-        symptom: "Klien korporat melayangkan protes keras karena 30 truk pengiriman kargo terlambat tiba di gudang tujuan selama 4 jam.",
+        symptom: "Bukti skenario: observasi menemukan ketik ulang nomor resi dan berat menjadi waktu terlama. Timbangan belum terintegrasi; pencetakan normal. Dokumen arsitektur mencatat satu sambungan jaringan tanpa fallback.",
         fishHead: "PENGIRIMAN TERLAMBAT",
         maxWhys: 4,
         steps: [
@@ -434,7 +435,7 @@
               {
                 text: "Karena printer kehabisan tinta hitam.",
                 isRootPath: false,
-                feedback: "Terlalu dangkal. Kehabisan tinta adalah gejala permukaan, bukan akar arsitektur."
+                feedback: "Terlalu dangkal. Dalam kasus ini bukti menunjuk proses ketik ulang sebagai hambatan dominan. Kehabisan tinta tetap dapat menjadi penyebab pada kasus lain; jangan menolaknya tanpa pemeriksaan."
               }
             ]
           },
@@ -466,7 +467,7 @@
                 isCorrect: true,
                 bone: "Material",
                 boneText: "IoT Barcode Auto-Weigh",
-                feedback: "Luar biasa! Otomatisasi pembacaan timbangan melenyapkan antrean di gerbang dalam hitungan detik."
+                feedback: "Luar biasa! Otomatisasi pembacaan timbangan berpotensi mengurangi antrean; ukur waktu dan kapasitas pos setelah uji coba."
               },
               {
                 text: "Tambahkan 10 orang satpam baru untuk membantu mencatat nomor truk pakai buku tulis.",
@@ -480,7 +481,7 @@
       {
         id: 3,
         title: "Kasus Saldo Kasir Selisih: Audit Keuangan Harian Selalu Minus!",
-        symptom: "Setiap penutupan shift malam, laporan keuangan kasir gerai selalu mengalami selisih minus tunai Rp 150.000 hingga Rp 300.000.",
+        symptom: "Bukti skenario: rekonsiliasi menemukan selisih kas, satu akun untuk lima kasir, laci tanpa serah-terima per shift, dan aplikasi tanpa identitas kasir individual. Penyebab kehilangan tertentu masih perlu diverifikasi.",
         fishHead: "SELISIH KASIR MINUS",
         maxWhys: 4,
         steps: [
@@ -584,8 +585,8 @@
       document.getElementById('scoreDisplay').innerText = `${score} Pts`;
       document.getElementById('casePhaseDisplay').innerText = `Kasus ${currentCaseIndex + 1} / ${RCA_CASES.length}`;
 
-      document.getElementById('depthVal').innerText = `Level ${currentStepIndex + 1} / ${totalSteps}`;
-      document.getElementById('depthBar').style.width = `${((currentStepIndex + 1) / totalSteps) * 100}%`;
+      document.getElementById('depthVal').innerText = `Level ${Math.min(currentStepIndex + 1, totalSteps)} / ${totalSteps}`;
+      document.getElementById('depthBar').style.width = `${(Math.min(currentStepIndex + 1, totalSteps) / totalSteps) * 100}%`;
 
       const mappedBonesCount = Object.values(revealedBones).filter(Boolean).length;
       document.getElementById('fishboneVal').innerText = `${mappedBonesCount} / 6 Duri`;
@@ -595,18 +596,19 @@
       document.getElementById('evidenceVal').innerText = `${evidenceCount} / 4 Berkas`;
       document.getElementById('evidenceBar').style.width = `${(evidenceCount / 4) * 100}%`;
 
-      document.getElementById('statusVal').innerText = currentStepIndex >= totalSteps - 1 ? "Tuntas" : "Investigasi";
+      document.getElementById('statusVal').innerText = currentStepIndex >= totalSteps ? "Tuntas" : "Investigasi";
       document.getElementById('statusBar').style.width = currentStepIndex >= totalSteps - 1 ? "100%" : `${((currentStepIndex + 1) / totalSteps) * 100}%`;
     }
 
     function renderInterrogationDesk() {
+      actionLocked = false;
       const curCase = RCA_CASES[currentCaseIndex];
       const step = curCase.steps[currentStepIndex];
 
       document.getElementById('caseBadge').innerHTML = `<i class="fa-solid fa-microscope mr-1"></i> Investigasi Kasus ${currentCaseIndex + 1} / ${RCA_CASES.length}`;
       document.getElementById('whyLevelTag').innerText = step.isFinal ? "Solusi & Root Cause" : `Pertanyaan Mengapa #${currentStepIndex + 1}`;
       document.getElementById('caseTitle').innerText = curCase.title;
-      document.getElementById('caseSymptom').innerText = step.isFinal ? "Pilih rekomendasi rekayasa proses (*To-Be*) yang menyelesaikan akar masalah secara permanen:" : step.questionText;
+      document.getElementById('caseSymptom').innerText = curCase.symptom + " Pertanyaan: " + (step.isFinal ? "Pilih rekomendasi rekayasa proses (*To-Be*) yang menyelesaikan akar masalah berdasarkan bukti kasus dan perlu diuji:" : step.questionText);
 
       document.getElementById('fishHeadText').innerText = curCase.fishHead;
 
@@ -638,7 +640,12 @@
       renderFishboneVisual();
     }
 
+    let actionLocked = false;
+    let transitionTimer = null;
+    let gameEnded = false;
     function handleOptionSelection(opt) {
+      if (actionLocked || gameEnded) return;
+      if (opt.isRootPath || opt.isCorrect) actionLocked = true;
       const feedbackBox = document.getElementById('rcaFeedbackBox');
       const feedbackText = document.getElementById('feedbackText');
 
@@ -659,11 +666,17 @@
         renderMetrics();
 
         if (currentStepIndex < curCase.steps.length) {
-          setTimeout(() => {
+          transitionTimer = setTimeout(() => {
             renderInterrogationDesk();
           }, 800);
+        } else if (currentCaseIndex < RCA_CASES.length - 1) {
+          currentCaseIndex++;
+          currentStepIndex = 0;
+          evidenceCount = 1;
+          revealedBones = { Man: false, Machine: false, Method: false, Material: false, Measurement: false, Milieu: false };
+          transitionTimer = setTimeout(() => { renderMetrics(); renderInterrogationDesk(); }, 800);
         } else {
-          triggerEndSummary(true, "Certified RCA Investigator (Grade A)", `Luar biasa! Anda berhasil menelusuri teknik 5 Whys dan memetakan kerangka Ishikawa dengan akurat. Kasus "${curCase.title}" tuntas diselesaikan hingga ke akar penyebabnya.`);
+          triggerEndSummary(true, "Simulasi Tuntas dengan Baik", `Luar biasa! Anda berhasil menelusuri teknik 5 Whys dan memetakan kerangka Ishikawa dengan akurat. Kasus "${curCase.title}" tuntas diselesaikan hingga ke akar penyebabnya.`);
         }
       } else {
         score = Math.max(0, score - 15);
@@ -689,6 +702,9 @@
     }
 
     function triggerEndSummary(isWin, title, desc) {
+      gameEnded = true;
+      actionLocked = true;
+      clearTimeout(transitionTimer);
       const modal = document.getElementById('summaryModal');
       const icon = document.getElementById('summaryIcon');
       const t = document.getElementById('summaryTitle');
@@ -712,6 +728,9 @@
     }
 
     function resetRcaSimulator() {
+      clearTimeout(transitionTimer);
+      actionLocked = false;
+      gameEnded = false;
       currentCaseIndex = 0;
       currentStepIndex = 0;
       score = 100;
@@ -731,5 +750,6 @@
       renderInterrogationDesk();
     };
   </script>
+<a class="learning-guide-link" href="Panduan_Pembelajaran.html" style="position:fixed;bottom:10px;right:12px;z-index:100;background:#0f172a;color:#fff;border:1px solid #64748b;border-radius:8px;padding:7px 10px;font:12px Arial,sans-serif;text-decoration:none;">Panduan tugas &amp; penilaian</a>
 </body>
 </html>

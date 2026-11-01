@@ -91,6 +91,7 @@
        TAB 1: GAME ATURAN SWIMLANES & ARTIFACTS
        ======================================================== -->
   <main id="gameTab" class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 flex flex-col gap-6">
+<p style="padding:12px;border:1px solid #64748b;border-radius:10px;color:inherit;font-size:14px;">Latihan pendamping RPS. Angka, biaya, dan perubahan indikator adalah asumsi skenario; bukan hasil pengukuran sistem nyata, nilai resmi, atau sertifikasi profesi. Bahas alasan pilihan dan risiko residual bersama dosen. <a href="Panduan_Pembelajaran.html" style="text-decoration:underline;">Panduan pembelajaran</a>.</p>
     
     <!-- Hero Banner -->
     <div class="bg-gradient-to-r from-slate-900 via-brandCard to-slate-900 border border-indigo-500/30 rounded-3xl p-6 sm:p-8 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6">
@@ -317,7 +318,8 @@
             <span id="selectedNodeBadge" class="text-cyan-400 font-mono font-bold">Belum Ada</span>
           </div>
           <div class="grid grid-cols-2 gap-2">
-            <button id="connectSequenceBtn" disabled onclick="startConnectingSwimlane('sequence')" class="py-2 px-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 disabled:opacity-30 disabled:pointer-events-none text-white font-montserrat font-bold text-[11px] transition text-center shadow">
+            <button id="connectAssociationBtn" onclick="startConnectingSwimlane('association')" disabled class="px-3 py-2 rounded-lg bg-violet-900 text-white disabled:opacity-40">Data Association</button>
+          <button id="connectSequenceBtn" disabled onclick="startConnectingSwimlane('sequence')" class="py-2 px-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 disabled:opacity-30 disabled:pointer-events-none text-white font-montserrat font-bold text-[11px] transition text-center shadow">
               <i class="fa-solid fa-arrow-right mr-1"></i> Panah Utuh
             </button>
             <button id="connectMessageBtn" disabled onclick="startConnectingSwimlane('message')" class="py-2 px-2 rounded-lg bg-slate-800 hover:bg-slate-700 disabled:opacity-30 disabled:pointer-events-none text-cyan-400 border border-cyan-800 font-montserrat font-bold text-[11px] transition text-center shadow">
@@ -433,6 +435,7 @@
   </main>
 
   <!-- JAVASCRIPT LOGIC ENGINE -->
+  <script src="assets/bpmn-lab-validation.js"></script>
   <script>
     // ==========================================
     // 1. DATA MASTER: SKENARIO & ELEMEN P4
@@ -479,7 +482,7 @@
         scenarioTitle: 'Bukti Berkas Fisik/PDF',
         scenarioDesc: 'Surat jalan cetak 3 rangkap atau file kuitansi transfer sementara.',
         targetName: 'Data Object (Dokumen/File)',
-        targetCategory: 'BPMN Artifact',
+        targetCategory: 'BPMN Data',
         icon: 'fa-regular fa-file-lines',
         badge: 'Masa Hidup Sementara'
       },
@@ -488,7 +491,7 @@
         scenarioTitle: 'Penyimpanan Database Server',
         scenarioDesc: 'Tabel basis data MySQL di cloud yang menyimpan riwayat akun mahasiswa.',
         targetName: 'Data Store (Basis Data)',
-        targetCategory: 'BPMN Artifact',
+        targetCategory: 'BPMN Data',
         icon: 'fa-solid fa-database',
         badge: 'Penyimpanan Persisten'
       }
@@ -498,52 +501,325 @@
     // 2. CASE STUDY BLUEPRINT SOLUTIONS
     // ==========================================
     const SWIMLANES_CASES = {
-      caseRegistration: {
-        title: "Kasus 1: Registrasi Semester Mahasiswa ITBS",
-        desc: "Mahasiswa (Pool Luar) mengirim bukti bayar ke portal kampus. Bagian Keuangan (Lane 1) memverifikasi bukti. Jika valid, BAAK (Lane 2) membuka status aktif pada Database SIAKAD (Data Store), lalu mahasiswa mencetak KSM (Data Object).",
-        pool1: "Mahasiswa (Pelanggan Eksternal)",
-        pool2: "Institut Teknologi & Bisnis Swadharma",
-        lane1: "Bagian Keuangan",
-        lane2: "Bagian Akademik (BAAK)",
-        solutionNodes: [
-          { type: 'start', text: 'Kirim Bukti Bayar', x: 220, y: 50 },
-          { type: 'task', text: 'Memverifikasi Bukti', x: 200, y: 200 },
-          { type: 'gateway-xor', text: 'Valid?', x: 420, y: 200 },
-          { type: 'task', text: 'Mengaktifkan SIAKAD', x: 580, y: 380 },
-          { type: 'data-store', text: 'DB SIAKAD SQL', x: 580, y: 470 },
-          { type: 'task', text: 'Menerbitkan KSM', x: 800, y: 50 },
-          { type: 'data-object', text: 'KSM Fisik (PDF)', x: 800, y: 110 },
-          { type: 'end', text: 'Semester Aktif', x: 990, y: 65 }
-        ],
-        solutionConnections: [
-          { from: 0, to: 1, flowType: 'message' },
-          { from: 1, to: 2, flowType: 'sequence' },
-          { from: 2, to: 3, flowType: 'sequence' },
-          { from: 3, to: 5, flowType: 'message' },
-          { from: 5, to: 7, flowType: 'sequence' }
-        ]
+  "caseRegistration": {
+    "title": "Kasus 1: Registrasi Semester Mahasiswa",
+    "desc": "Mahasiswa mengirim bukti bayar dan menerima hasil. Kampus memverifikasi: jika valid, BAAK mengaktifkan SIAKAD dan mengirim KSM; jika tidak valid, kirim penolakan. Masing-masing Pool memiliki alur sendiri; komunikasi lewat Message Flow, database/dokumen lewat Data Association.",
+    "pool1": "Mahasiswa (Eksternal)",
+    "pool2": "ITBS",
+    "lane1": "Bagian Keuangan",
+    "lane2": "Bagian Akademik",
+    "solutionNodes": [
+      {
+        "type": "start",
+        "text": "Kebutuhan KRS",
+        "x": 60,
+        "y": 50
       },
-      caseEcommerce: {
-        title: "Kasus 2: Pemrosesan Pesanan Toko Online",
-        desc: "Konsumen (Pool Luar) melakukan checkout. Kasir (Lane 1) mencetak invoice. Staf Gudang (Lane 2) mengambil stok dari Database Gudang (Data Store) dan membungkus paket sebelum kurir menjemput.",
-        pool1: "Konsumen Pembeli (Eksternal)",
-        pool2: "PT Toko Online Nusantara",
-        lane1: "Divisi Kasir & Penjualan",
-        lane2: "Divisi Gudang & Logistik",
-        solutionNodes: [
-          { type: 'start', text: 'Checkout Pesanan', x: 220, y: 50 },
-          { type: 'task', text: 'Mencetak Faktur', x: 220, y: 200 },
-          { type: 'task', text: 'Menyiapkan Barang', x: 440, y: 380 },
-          { type: 'data-store', text: 'DB Inventori', x: 440, y: 470 },
-          { type: 'end', text: 'Paket Terkirim', x: 700, y: 395 }
-        ],
-        solutionConnections: [
-          { from: 0, to: 1, flowType: 'message' },
-          { from: 1, to: 2, flowType: 'sequence' },
-          { from: 2, to: 4, flowType: 'sequence' }
-        ]
+      {
+        "type": "task",
+        "text": "Mengirim Bukti",
+        "x": 180,
+        "y": 50
+      },
+      {
+        "type": "task",
+        "text": "Menerima Hasil",
+        "x": 820,
+        "y": 50
+      },
+      {
+        "type": "end",
+        "text": "Hasil Diterima",
+        "x": 1040,
+        "y": 50
+      },
+      {
+        "type": "start",
+        "text": "Bukti Diterima",
+        "x": 60,
+        "y": 200
+      },
+      {
+        "type": "task",
+        "text": "Memverifikasi Bukti",
+        "x": 200,
+        "y": 200
+      },
+      {
+        "type": "gateway-xor",
+        "text": "Valid?",
+        "x": 420,
+        "y": 200
+      },
+      {
+        "type": "task",
+        "text": "Mengaktifkan SIAKAD",
+        "x": 600,
+        "y": 380
+      },
+      {
+        "type": "task",
+        "text": "Mengirim KSM",
+        "x": 800,
+        "y": 380
+      },
+      {
+        "type": "end",
+        "text": "KSM Dikirim",
+        "x": 1020,
+        "y": 380
+      },
+      {
+        "type": "task",
+        "text": "Mengirim Penolakan",
+        "x": 600,
+        "y": 200
+      },
+      {
+        "type": "end",
+        "text": "Bukti Ditolak",
+        "x": 820,
+        "y": 200
+      },
+      {
+        "type": "data-store",
+        "text": "DB SIAKAD",
+        "x": 600,
+        "y": 470
+      },
+      {
+        "type": "data-object",
+        "text": "Dokumen KSM",
+        "x": 800,
+        "y": 470
       }
-    };
+    ],
+    "solutionConnections": [
+      {
+        "from": 0,
+        "to": 1,
+        "flowType": "sequence",
+        "label": ""
+      },
+      {
+        "from": 1,
+        "to": 2,
+        "flowType": "sequence",
+        "label": ""
+      },
+      {
+        "from": 2,
+        "to": 3,
+        "flowType": "sequence",
+        "label": ""
+      },
+      {
+        "from": 4,
+        "to": 5,
+        "flowType": "sequence",
+        "label": ""
+      },
+      {
+        "from": 5,
+        "to": 6,
+        "flowType": "sequence",
+        "label": ""
+      },
+      {
+        "from": 6,
+        "to": 7,
+        "flowType": "sequence",
+        "label": "Valid"
+      },
+      {
+        "from": 6,
+        "to": 10,
+        "flowType": "sequence",
+        "label": "Tidak valid"
+      },
+      {
+        "from": 7,
+        "to": 8,
+        "flowType": "sequence",
+        "label": ""
+      },
+      {
+        "from": 8,
+        "to": 9,
+        "flowType": "sequence",
+        "label": ""
+      },
+      {
+        "from": 10,
+        "to": 11,
+        "flowType": "sequence",
+        "label": ""
+      },
+      {
+        "from": 1,
+        "to": 5,
+        "flowType": "message",
+        "label": ""
+      },
+      {
+        "from": 8,
+        "to": 2,
+        "flowType": "message",
+        "label": ""
+      },
+      {
+        "from": 10,
+        "to": 2,
+        "flowType": "message",
+        "label": ""
+      },
+      {
+        "from": 7,
+        "to": 12,
+        "flowType": "association",
+        "label": ""
+      },
+      {
+        "from": 8,
+        "to": 13,
+        "flowType": "association",
+        "label": ""
+      }
+    ]
+  },
+  "caseEcommerce": {
+    "title": "Kasus 2: Pemrosesan Pesanan",
+    "desc": "Pembeli mengirim pesanan dan menerima konfirmasi. Toko mencetak faktur, menyiapkan barang berdasarkan database inventori, lalu mengirim konfirmasi paket siap diambil. Pembeli dan toko memiliki alur terpisah.",
+    "pool1": "Pembeli",
+    "pool2": "PT Toko Online",
+    "lane1": "Kasir",
+    "lane2": "Gudang",
+    "solutionNodes": [
+      {
+        "type": "start",
+        "text": "Kebutuhan Produk",
+        "x": 60,
+        "y": 50
+      },
+      {
+        "type": "task",
+        "text": "Mengirim Pesanan",
+        "x": 180,
+        "y": 50
+      },
+      {
+        "type": "task",
+        "text": "Menerima Konfirmasi",
+        "x": 820,
+        "y": 50
+      },
+      {
+        "type": "end",
+        "text": "Konfirmasi Diterima",
+        "x": 1040,
+        "y": 50
+      },
+      {
+        "type": "start",
+        "text": "Pesanan Diterima",
+        "x": 60,
+        "y": 200
+      },
+      {
+        "type": "task",
+        "text": "Mencetak Faktur",
+        "x": 220,
+        "y": 200
+      },
+      {
+        "type": "task",
+        "text": "Menyiapkan Barang",
+        "x": 460,
+        "y": 380
+      },
+      {
+        "type": "task",
+        "text": "Mengirim Konfirmasi",
+        "x": 700,
+        "y": 380
+      },
+      {
+        "type": "end",
+        "text": "Paket Siap Diambil",
+        "x": 980,
+        "y": 380
+      },
+      {
+        "type": "data-store",
+        "text": "DB Inventori",
+        "x": 460,
+        "y": 470
+      }
+    ],
+    "solutionConnections": [
+      {
+        "from": 0,
+        "to": 1,
+        "flowType": "sequence",
+        "label": ""
+      },
+      {
+        "from": 1,
+        "to": 2,
+        "flowType": "sequence",
+        "label": ""
+      },
+      {
+        "from": 2,
+        "to": 3,
+        "flowType": "sequence",
+        "label": ""
+      },
+      {
+        "from": 4,
+        "to": 5,
+        "flowType": "sequence",
+        "label": ""
+      },
+      {
+        "from": 5,
+        "to": 6,
+        "flowType": "sequence",
+        "label": ""
+      },
+      {
+        "from": 6,
+        "to": 7,
+        "flowType": "sequence",
+        "label": ""
+      },
+      {
+        "from": 7,
+        "to": 8,
+        "flowType": "sequence",
+        "label": ""
+      },
+      {
+        "from": 1,
+        "to": 5,
+        "flowType": "message",
+        "label": ""
+      },
+      {
+        "from": 7,
+        "to": 2,
+        "flowType": "message",
+        "label": ""
+      },
+      {
+        "from": 9,
+        "to": 6,
+        "flowType": "association",
+        "label": ""
+      }
+    ]
+  }
+};
 
     // ==========================================
     // 3. TAB SWITCHING LOGIC
@@ -696,11 +972,11 @@
         activeScenarioCard.el.classList.add('border-rose-500', 'bg-rose-950/40');
         activeNotationCard.el.classList.add('border-rose-500', 'bg-rose-950/40');
 
+        const previousOne = activeScenarioCard, previousTwo = activeNotationCard;
+        activeScenarioCard = null; activeNotationCard = null;
         setTimeout(() => {
-          if (activeScenarioCard) activeScenarioCard.el.classList.remove('border-rose-500', 'bg-rose-950/40', 'border-cyan-400', 'bg-cyan-950/40');
-          if (activeNotationCard) activeNotationCard.el.classList.remove('border-rose-500', 'bg-rose-950/40', 'border-indigo-400', 'bg-indigo-950/40');
-          activeScenarioCard = null;
-          activeNotationCard = null;
+          if (previousOne) previousOne.el.classList.remove('border-rose-500', 'bg-rose-950/40', 'border-cyan-400', 'bg-cyan-950/40');
+          if (previousTwo) previousTwo.el.classList.remove('border-rose-500', 'bg-rose-950/40', 'border-indigo-400', 'bg-indigo-950/40');
         }, 500);
       }
     }
@@ -776,12 +1052,12 @@
             <div class="w-11 h-11 rounded-full bg-emerald-950 border-2 border-emerald-400 shadow-lg flex items-center justify-center">
               <div class="w-3.5 h-3.5 rounded-full bg-emerald-400"></div>
             </div>
-            <div class="text-[10px] font-montserrat font-bold text-slate-200 mt-1 max-w-[100px] text-center editable-text" contenteditable="true">${node.text}</div>
+            <div class="text-[10px] font-montserrat font-bold text-slate-200 mt-1 max-w-[100px] text-center editable-text" contenteditable="true">${BpmnLabAudit.escapeText(node.text)}</div>
           `;
         } else if (node.type === 'task') {
           innerHtml = `
             <div class="w-32 h-16 rounded-xl bg-slate-900 border-2 border-cyan-400 shadow-xl p-2 flex items-center justify-center text-center">
-              <span class="text-[11px] font-montserrat font-bold text-cyan-200 leading-tight editable-text" contenteditable="true">${node.text}</span>
+              <span class="text-[11px] font-montserrat font-bold text-cyan-200 leading-tight editable-text" contenteditable="true">${BpmnLabAudit.escapeText(node.text)}</span>
             </div>
           `;
         } else if (node.type === 'gateway-xor') {
@@ -789,28 +1065,28 @@
             <div class="w-10 h-10 rotate-45 bg-amber-950 border-2 border-amber-400 shadow-lg flex items-center justify-center">
               <span class="-rotate-45 text-amber-300 font-extrabold text-xs">✕</span>
             </div>
-            <div class="text-[10px] font-montserrat font-bold text-amber-300 mt-1 max-w-[90px] text-center editable-text" contenteditable="true">${node.text}</div>
+            <div class="text-[10px] font-montserrat font-bold text-amber-300 mt-1 max-w-[90px] text-center editable-text" contenteditable="true">${BpmnLabAudit.escapeText(node.text)}</div>
           `;
         } else if (node.type === 'end') {
           innerHtml = `
             <div class="w-11 h-11 rounded-full bg-rose-950 border-4 border-rose-500 shadow-lg flex items-center justify-center">
               <div class="w-3.5 h-3.5 rounded-full bg-rose-500"></div>
             </div>
-            <div class="text-[10px] font-montserrat font-bold text-slate-200 mt-1 max-w-[100px] text-center editable-text" contenteditable="true">${node.text}</div>
+            <div class="text-[10px] font-montserrat font-bold text-slate-200 mt-1 max-w-[100px] text-center editable-text" contenteditable="true">${BpmnLabAudit.escapeText(node.text)}</div>
           `;
         } else if (node.type === 'data-object') {
           innerHtml = `
             <div class="w-14 h-16 rounded-sm bg-indigo-950/90 border-2 border-indigo-400 shadow-md flex items-center justify-center text-indigo-300">
               <i class="fa-regular fa-file-lines text-xl"></i>
             </div>
-            <div class="text-[10px] font-montserrat font-bold text-indigo-200 mt-1 max-w-[90px] text-center editable-text" contenteditable="true">${node.text}</div>
+            <div class="text-[10px] font-montserrat font-bold text-indigo-200 mt-1 max-w-[90px] text-center editable-text" contenteditable="true">${BpmnLabAudit.escapeText(node.text)}</div>
           `;
         } else if (node.type === 'data-store') {
           innerHtml = `
             <div class="w-16 h-14 rounded-lg bg-teal-950/90 border-2 border-teal-400 shadow-md flex items-center justify-center text-teal-300">
               <i class="fa-solid fa-database text-xl"></i>
             </div>
-            <div class="text-[10px] font-montserrat font-bold text-teal-200 mt-1 max-w-[100px] text-center editable-text" contenteditable="true">${node.text}</div>
+            <div class="text-[10px] font-montserrat font-bold text-teal-200 mt-1 max-w-[100px] text-center editable-text" contenteditable="true">${BpmnLabAudit.escapeText(node.text)}</div>
           `;
         }
 
@@ -882,6 +1158,8 @@
         else el.classList.remove('node-selected');
       });
 
+      const associationBtn = document.getElementById("connectAssociationBtn");
+      associationBtn.disabled = index === null;
       const badge = document.getElementById('selectedNodeBadge');
       const seqBtn = document.getElementById('connectSequenceBtn');
       const msgBtn = document.getElementById('connectMessageBtn');
@@ -912,7 +1190,8 @@
         // Prevent exact duplicate link
         const exists = swimlaneConnections.some(c => c.from === connectFromIndex && c.to === targetIndex && c.flowType === connectFlowType);
         if (!exists) {
-          swimlaneConnections.push({ from: connectFromIndex, to: targetIndex, flowType: connectFlowType });
+          const label = connectFlowType === 'sequence' && swimlaneNodes[connectFromIndex].type === 'gateway-xor' ? (prompt('Label kondisi cabang XOR:') || '') : '';
+          swimlaneConnections.push({ from: connectFromIndex, to: targetIndex, flowType: connectFlowType, label });
         }
       }
       connectFlowType = null;
@@ -929,7 +1208,7 @@
         .map(c => ({
           from: c.from > activeNodeIndex ? c.from - 1 : c.from,
           to: c.to > activeNodeIndex ? c.to - 1 : c.to,
-          flowType: c.flowType
+          flowType: c.flowType, label: c.label
         }));
       activeNodeIndex = null;
       selectSwimlaneNode(null);
@@ -968,7 +1247,9 @@
         path.setAttribute('d', d);
         path.setAttribute('fill', 'none');
 
-        if (conn.flowType === 'message') {
+        if (conn.flowType === 'association') {
+          path.setAttribute('stroke', '#a78bfa'); path.setAttribute('stroke-dasharray','2 5'); path.setAttribute('marker-end','url(#arrow-sequence)');
+        } else if (conn.flowType === 'message') {
           path.setAttribute('stroke', '#06B6D4');
           path.setAttribute('stroke-width', '2.5');
           path.setAttribute('stroke-dasharray', '6 4');
@@ -980,6 +1261,7 @@
         }
 
         svg.appendChild(path);
+        if(conn.label) { const t=document.createElementNS("http://www.w3.org/2000/svg","text"); t.setAttribute("x",midX); t.setAttribute("y",(fromY+toY)/2-8); t.setAttribute("fill","#e2e8f0"); t.textContent=conn.label; svg.appendChild(t); }
       });
     }
 
@@ -987,62 +1269,11 @@
     // 6. BPMN 2.0 COMPLIANCE AUDIT ENGINE
     // ==========================================
     function validateSwimlanesDiagram() {
-      const drawer = document.getElementById('auditResultDrawer');
-      const title = document.getElementById('auditTitle');
-      const desc = document.getElementById('auditDesc');
-      const icon = document.getElementById('auditIcon');
-      drawer.classList.remove('hidden');
-
-      const hasStart = swimlaneNodes.some(n => n.type === 'start');
-      const hasEnd = swimlaneNodes.some(n => n.type === 'end');
-      const hasTask = swimlaneNodes.some(n => n.type === 'task');
-      const hasArtifact = swimlaneNodes.some(n => n.type === 'data-object' || n.type === 'data-store');
-
-      if (!hasStart || !hasEnd || !hasTask) {
-        icon.className = "fa-solid fa-triangle-exclamation text-amber-400";
-        title.className = "font-montserrat font-bold text-sm text-amber-400";
-        title.innerText = "Struktur Alur Belum Lengkap!";
-        desc.innerText = "Setiap diagram alur BPMN 2.0 wajib memiliki minimal 1 Start Event, 1 Task, dan 1 End Event.";
-        return;
-      }
-
-      // RULE AUDIT: Check Sequence Flow crossing Pool boundaries (Y < 140 is Pool 1, Y >= 140 is Pool 2)
-      let illegalSequenceFlowCount = 0;
-      swimlaneConnections.forEach(c => {
-        if (c.flowType === 'sequence') {
-          const fromNode = swimlaneNodes[c.from];
-          const toNode = swimlaneNodes[c.to];
-          const fromInPool1 = fromNode.y < 150;
-          const toInPool1 = toNode.y < 150;
-          // Crossing between Pool 1 and Pool 2 using Sequence Flow is strictly illegal in OMG BPMN 2.0!
-          if (fromInPool1 !== toInPool1) {
-            illegalSequenceFlowCount++;
-          }
-        }
-      });
-
-      if (illegalSequenceFlowCount > 0) {
-        icon.className = "fa-solid fa-ban text-rose-500";
-        title.className = "font-montserrat font-bold text-sm text-rose-400";
-        title.innerText = `Pelanggaran Kritis BPMN 2.0: ${illegalSequenceFlowCount} Sequence Flow Menyeberangi Batas Pool!`;
-        desc.innerHTML = `Menurut standar OMG BPMN 2.0, <strong>Sequence Flow (Panah Garis Utuh) DILARANG KERAS menyeberang antar-Pool</strong>. Hubungan antar-Pool (misal dari Mahasiswa ke Kampus) WAJIB menggunakan <strong>Message Flow (Panah Putus-Putus)</strong>!`;
-        return;
-      }
-
-      // Check Artifacts existence
-      if (!hasArtifact) {
-        icon.className = "fa-solid fa-circle-info text-cyan-400";
-        title.className = "font-montserrat font-bold text-sm text-cyan-400";
-        title.innerText = "Sintaks Alur Benar, Namun Belum Menyertakan Artifacts";
-        desc.innerText = "Alur Swimlanes Anda sudah patuh standar! Untuk nilai sempurna Pertemuan 4, tambahkan Data Object (KSM PDF) atau Data Store (Database SIAKAD) sebagai dokumen pendukung.";
-        return;
-      }
-
-      // Success
-      icon.className = "fa-solid fa-certificate text-emerald-400";
-      title.className = "font-montserrat font-bold text-sm text-emerald-400";
-      title.innerText = "Diagram Swimlanes & Artifacts Patuh 100% Standar BPMN 2.0!";
-      desc.innerHTML = `Kerja bagus! Diagram Anda telah mematuhi kaidah internasional: pembagian Pool &amp; Lane tepat, Sequence Flow tidak menyeberang dinding Pool, dan elemen data terpetakan secara profesional.`;
+      const errors = BpmnLabAudit.audit(swimlaneNodes, swimlaneConnections, true);
+      document.getElementById('auditResultDrawer').classList.remove('hidden');
+      document.getElementById('auditIcon').className = errors.length ? 'fa-solid fa-triangle-exclamation text-amber-400' : 'fa-solid fa-check-circle text-emerald-400';
+      document.getElementById('auditTitle').innerText = errors.length ? 'Perbaiki Struktur dan Batas Pool' : 'Pemeriksaan Dasar Lulus';
+      document.getElementById('auditDesc').innerText = errors.length ? errors.join(' ') : 'Arah, batas Pool, koneksi data, jalur Start–End tiap peserta, dan label cabang telah diperiksa. Pemeriksaan terbatas ini bukan sertifikasi kepatuhan seluruh standar OMG; kesesuaian narasi dan perilaku tetap direview dosen.';
     }
 
     function loadSwimlanesTemplateSolution() {
@@ -1068,14 +1299,6 @@
       });
     };
   </script>
+<a class="learning-guide-link" href="Panduan_Pembelajaran.html" style="position:fixed;bottom:10px;right:12px;z-index:100;background:#0f172a;color:#fff;border:1px solid #64748b;border-radius:8px;padding:7px 10px;font:12px Arial,sans-serif;text-decoration:none;">Panduan tugas &amp; penilaian</a>
 </body>
 </html>
-```
-
-### Integrasi dengan Berkas Portal (`index.html`)
-Agar mahasiswa dapat langsung mengakses game ini dari menu navigasi utama portal perkuliahan, Anda dapat memperbarui bagian tombol navigasi cepat di bar atas atau menambahkan tautan di samping tombol game sebelumnya pada `index.html`:
-
-```html
-<a href="bpmn_swimlanes_game.html" target="_blank" class="px-3.5 py-1.5 rounded-full bg-indigo-950/70 border border-indigo-700/70 text-indigo-300 text-xs font-semibold hover:bg-indigo-900/70 transition flex items-center gap-2">
-  <i class="fa-solid fa-table-columns text-cyan-400"></i> Lab Swimlanes P4
-</a>

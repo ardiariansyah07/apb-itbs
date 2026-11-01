@@ -111,6 +111,7 @@
 
   <!-- MAIN OPERATIONAL SIMULATOR ARENA -->
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-5">
+<p style="padding:12px;border:1px solid #64748b;border-radius:10px;color:inherit;font-size:14px;">Latihan pendamping RPS. Angka, biaya, dan perubahan indikator adalah asumsi skenario; bukan hasil pengukuran sistem nyata, nilai resmi, atau sertifikasi profesi. Bahas alasan pilihan dan risiko residual bersama dosen. <a href="Panduan_Pembelajaran.html" style="text-decoration:underline;">Panduan pembelajaran</a>.</p>
 
     <!-- REAL-TIME TELEMETRY SENSORS (4 DASHBOARD GAUGES) -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-3.5">
@@ -125,7 +126,7 @@
           <div id="slaBar" class="h-full bg-gradient-to-r from-sky-500 to-cyan-400 transition-all duration-300 rounded-full" style="width: 99.98%;"></div>
         </div>
         <div class="flex justify-between items-center text-[10px] text-slate-400 mt-2">
-          <span>Batas Kritis: 99.00%</span>
+          <span>Batas gagal simulasi: 98,00%</span>
           <span id="slaStatusTag" class="text-emerald-400 font-mono font-bold">NORMAL (High SLA)</span>
         </div>
       </div>
@@ -400,7 +401,7 @@
             latencyDelta: -15,
             tpsDelta: +250,
             penaltyDelta: 0,
-            feedback: "Keputusan arsitektur kelas dunia! Message Broker mencegah server crash saat menerima lonjakan spike mendadak.",
+            feedback: "Keputusan arsitektur kelas dunia! Antrean pesan dan scaling membantu mengendalikan beban; kapasitas, batas antrean, serta pemantauan tetap perlu diuji.",
             resolved: true
           },
           B: {
@@ -442,7 +443,7 @@
             latencyDelta: -20,
             tpsDelta: +80,
             penaltyDelta: 0,
-            feedback: "Tepat sasaran! Replikasi basis data dan UPS ganda menjamin ketersediaan tinggi (*High Availability*) tanpa kehilangan data.",
+            feedback: "Tepat sasaran! Replikasi basis data dan UPS ganda menjamin ketersediaan tinggi (*High Availability*) dengan risiko kehilangan data yang bergantung pada mode replikasi dan RPO; uji pemulihan tetap diperlukan.",
             resolved: true
           },
           B: {
@@ -506,7 +507,7 @@
             latencyDelta: -10,
             tpsDelta: +100,
             penaltyDelta: 0,
-            feedback: "Solusi redundansi mitra sangat baik! Memiliki secondary payment gateway menjamin proses checkout anti-macet.",
+            feedback: "Solusi redundansi mitra sangat baik! Memiliki secondary payment gateway mengurangi ketergantungan tunggal; rekonsiliasi status dan idempotensi diperlukan agar tidak menagih dua kali.",
             resolved: true
           }
         }
@@ -746,6 +747,7 @@
     }
 
     function renderIncidentDesk() {
+      actionLocked = false;
       const cur = INCIDENT_WAVES[currentWaveIndex];
       document.getElementById('incidentBadge').innerHTML = `<i class="fa-solid fa-radiation mr-1"></i> Bencana ${cur.wave} / ${INCIDENT_WAVES.length}`;
       document.getElementById('incidentTitle').innerText = cur.title;
@@ -797,7 +799,12 @@
     // ==========================================
     // 5. DECISION & INCIDENT RESOLUTION
     // ==========================================
+    let actionLocked = false;
+    let transitionTimer = null;
+    let gameEnded = false;
     function applySreDecision(choice) {
+      if (actionLocked || gameEnded) return;
+      actionLocked = true;
       clearInterval(waveIntervalId);
       const cur = INCIDENT_WAVES[currentWaveIndex];
       const opt = cur.options[choice];
@@ -833,20 +840,23 @@
       // Next Wave
       currentWaveIndex++;
       if (currentWaveIndex < INCIDENT_WAVES.length) {
-        setTimeout(() => {
+        transitionTimer = setTimeout(() => {
           renderIncidentDesk();
         }, 800);
       } else {
         // Evaluate Final Performance
-        if (slaUptime >= 99.5 && accumulatedPenalty <= 20000000) {
-          triggerEndSummary(true, "SRE High-Availability Certified (Grade A)", `Luar biasa! Sebagai Systems Analyst & SRE, Anda berhasil menjaga keandalan proses bisnis dengan SLA akhir ${slaUptime.toFixed(2)}%, menumpas seluruh Single Point of Failure (SPOF), dan meminimalkan denda operasional.`);
+        if (slaUptime >= 99.9 && accumulatedPenalty <= 20000000) {
+          triggerEndSummary(true, "SRE High-Availability Simulasi Tuntas dengan Baik", `Luar biasa! Sebagai Systems Analyst & SRE, Anda berhasil menjaga keandalan proses bisnis dengan SLA akhir ${slaUptime.toFixed(2)}%, mengurangi SPOF yang dibahas dalam kasus, dan meminimalkan denda operasional.`);
         } else {
-          triggerEndSummary(false, "Operasional Bertahan dengan Kompromi (Grade C+)", `Sistem berhasil diselamatkan namun SLA anjlok ke ${slaUptime.toFixed(2)}% dengan denda denda ${formatRupiah(accumulatedPenalty)}. Ke depannya, redundansi otomatis harus dipasang sebelum bencana terjadi.`);
+          triggerEndSummary(false, "Operasional Bertahan dengan Kompromi (Perlu Tinjauan)", `Sistem berhasil diselamatkan namun SLA anjlok ke ${slaUptime.toFixed(2)}% dengan denda denda ${formatRupiah(accumulatedPenalty)}. Ke depannya, redundansi otomatis harus dipasang sebelum bencana terjadi.`);
         }
       }
     }
 
     function triggerEndSummary(isWin, title, desc) {
+      gameEnded = true;
+      actionLocked = true;
+      clearTimeout(transitionTimer);
       clearInterval(waveIntervalId);
       const modal = document.getElementById('summaryModal');
       const icon = document.getElementById('summaryIcon');
@@ -871,6 +881,9 @@
     }
 
     function resetSimulator() {
+      clearTimeout(transitionTimer);
+      actionLocked = false;
+      gameEnded = false;
       clearInterval(waveIntervalId);
       currentWaveIndex = 0;
       budget = 50000000;
@@ -900,5 +913,6 @@
       renderIncidentDesk();
     };
   </script>
+<a class="learning-guide-link" href="Panduan_Pembelajaran.html" style="position:fixed;bottom:10px;right:12px;z-index:100;background:#0f172a;color:#fff;border:1px solid #64748b;border-radius:8px;padding:7px 10px;font:12px Arial,sans-serif;text-decoration:none;">Panduan tugas &amp; penilaian</a>
 </body>
 </html>

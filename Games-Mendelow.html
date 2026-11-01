@@ -112,6 +112,7 @@
 
   <!-- MAIN SIMULATOR ARENA -->
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+<p style="padding:12px;border:1px solid #64748b;border-radius:10px;color:inherit;font-size:14px;">Latihan pendamping RPS. Angka, biaya, dan perubahan indikator adalah asumsi skenario; bukan hasil pengukuran sistem nyata, nilai resmi, atau sertifikasi profesi. Bahas alasan pilihan dan risiko residual bersama dosen. <a href="Panduan_Pembelajaran.html" style="text-decoration:underline;">Panduan pembelajaran</a>.</p>
 
     <!-- PROJECT STATUS DASHBOARD (3 VITAL GAUGES) -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -279,7 +280,7 @@
                   Undang Regulator &amp; Pasang Sensor IoT Emisi
                 </h4>
                 <p class="text-[11px] text-slate-400 leading-snug" id="optDescA">
-                  Alokasikan anggaran pengadaan sensor filter asap otomatis dan transparan ke dinas lingkungan (Treat as High Power - Keep Satisfied).
+                  Alokasikan anggaran pengadaan sensor filter asap otomatis dan transparan ke dinas lingkungan (Power dan interest tinggi saat audit aktif - Manage Closely).
                 </p>
               </div>
               <span class="text-xs font-mono font-bold text-amber-400 shrink-0 px-2 py-1 rounded bg-slate-900 border border-slate-700" id="optCostA">
@@ -375,8 +376,8 @@
             impactFeasibility: +10,
             impactCompliance: +25,
             impactBudget: -15,
-            pinMove: { actor: 'REG', x: 25, y: 30 }, // High Power, Low-to-Mid Interest satisfied
-            coaching: "Tepat! Dinas Lingkungan memiliki Power regulasi tinggi. Menjaga kepatuhan (Keep Satisfied) mengamankan izin operasional jangka panjang."
+            pinMove: { actor: 'REG', x: 75, y: 25 }, // High Power, Low-to-Mid Interest satisfied
+            coaching: "Tepat! Dinas Lingkungan memiliki Power regulasi tinggi. Dalam krisis ini perhatian regulator meningkat: Manage Closely melalui konsultasi, bukti perbaikan, dan verifikasi. Dalam kondisi rutin dengan interest rendah, Keep Satisfied dapat sesuai."
           },
           B: {
             title: "Kirim Pengacara & Tolak Akses Masuk Dinas",
@@ -395,7 +396,7 @@
             impactFeasibility: +5,
             impactCompliance: +10,
             impactBudget: -10,
-            pinMove: { actor: 'REG', x: 40, y: 35 },
+            pinMove: { actor: 'REG', x: 75, y: 25 },
             coaching: "Cukup baik meredam warga, namun Anda tetap memerlukan sertifikat uji lab resmi dari dinas terkait."
           }
         }
@@ -418,13 +419,13 @@
           },
           B: {
             title: "Bentuk Focus Group & Optimasi Fitur Kasir",
-            desc: "Libatkan perwakilan barista merancang ulang tombol UI kasir dan bayar kompensasi lembur (Treat as Low Power, High Interest - Keep Informed).",
+            desc: "Libatkan perwakilan barista merancang ulang tombol UI kasir dan bayar kompensasi lembur (Power kolektif dan interest tinggi - Manage Closely).",
             cost: 15,
             impactFeasibility: +20,
             impactCompliance: +15,
             impactBudget: -10,
-            pinMove: { actor: 'BUR', x: 75, y: 70 },
-            coaching: "Langkah brilian! Mendidik dan mendengarkan operator harian (Keep Informed) mengubah penolakan menjadi adopsi sistem yang solid."
+            pinMove: { actor: 'BUR', x: 75, y: 25 },
+            coaching: "Langkah brilian! Ancaman mogok meningkatkan power kolektif. Libatkan perwakilan secara erat (Manage Closely), perbaiki kebutuhan kerja, dan evaluasi kesepakatan."
           },
           C: {
             title: "Berikan Bonus Tunai Tanpa Mengubah Sistem",
@@ -433,7 +434,7 @@
             impactFeasibility: -5,
             impactCompliance: +5,
             impactBudget: -25,
-            pinMove: { actor: 'BUR', x: 60, y: 65 },
+            pinMove: { actor: 'BUR', x: 75, y: 25 },
             coaching: "Uang hanya menunda krisis. Sistem yang rumit akan tetap memicu kelelahan staf di bulan berikutnya."
           }
         }
@@ -532,8 +533,8 @@
     // Bottom-Right (Low Power, High Int): X >= 50, Y >= 50
     let stakeholderPins = {
       INV: { label: 'INV', name: 'Investor Utama', color: 'bg-rose-500', x: 75, y: 25 },
-      REG: { label: 'REG', name: 'Dinas Lingkungan', color: 'bg-amber-400', x: 30, y: 20 },
-      BUR: { label: 'BUR', name: 'Serikat Buruh', color: 'bg-cyan-400', x: 65, y: 65 },
+      REG: { label: 'REG', name: 'Dinas Lingkungan', color: 'bg-amber-400', x: 75, y: 20 },
+      BUR: { label: 'BUR', name: 'Serikat Buruh', color: 'bg-cyan-400', x: 75, y: 25 },
       PLG: { label: 'PLG', name: 'Pelanggan Kampus', color: 'bg-emerald-400', x: 60, y: 80 }
     };
 
@@ -583,6 +584,7 @@
     }
 
     function renderCrisisCard() {
+      actionLocked = false;
       const crisis = CRISIS_DATA[currentRoundIndex];
       document.getElementById('crisisBadge').innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1"></i> Krisis ${crisis.round} / ${CRISIS_DATA.length}`;
       document.getElementById('crisisActorTag').innerText = crisis.actorTag;
@@ -606,7 +608,12 @@
     // ==========================================
     // 4. GAME ACTIONS & RESOLUTION
     // ==========================================
+    let actionLocked = false;
+    let transitionTimer = null;
+    let gameEnded = false;
     function takeAction(choice) {
+      if (actionLocked || gameEnded) return;
+      actionLocked = true;
       const currentCrisis = CRISIS_DATA[currentRoundIndex];
       const opt = currentCrisis.options[choice];
 
@@ -637,21 +644,24 @@
       // Advance Round
       currentRoundIndex++;
       if (currentRoundIndex < CRISIS_DATA.length) {
-        setTimeout(() => {
+        transitionTimer = setTimeout(() => {
           renderCrisisCard();
         }, 600);
       } else {
         // Evaluate Victory
         const finalScore = Math.round((feasibility + compliance + budget) / 3);
         if (finalScore >= 60) {
-          triggerEndGame(true, "Proyek Berhasil Diselamatkan (Sertifikat Grade A Unggul)", `Luar biasa! Sebagai Systems Analyst, Anda berhasil menyeimbangkan 4 Kuadran Mendelow dengan skor rata-rata kesehatan proyek ${finalScore}%. Transformasi digital berjalan mulus dan didukung seluruh aktor kunci!`);
+          triggerEndGame(true, "Proyek Berhasil Diselamatkan (Latihan Tuntas)", `Luar biasa! Sebagai Systems Analyst, Anda berhasil menyeimbangkan 4 Kuadran Mendelow dengan skor rata-rata kesehatan proyek ${finalScore}%. Transformasi digital berjalan mulus dan didukung seluruh aktor kunci!`);
         } else {
-          triggerEndGame(false, "Proyek Selesai dengan Banyak Kompromi (Grade C+)", `Proyek berhasil selesai namun mengalami friksi berat (Skor akhir: ${finalScore}%). Di dunia nyata, hubungan yang tegang dengan regulator dan serikat staf akan menjadi bom waktu di kemudian hari.`);
+          triggerEndGame(false, "Proyek Selesai dengan Banyak Kompromi (Perlu Tinjauan)", `Proyek berhasil selesai namun mengalami friksi berat (Skor akhir: ${finalScore}%). Di dunia nyata, hubungan yang tegang dengan regulator dan serikat staf akan menjadi bom waktu di kemudian hari.`);
         }
       }
     }
 
     function triggerEndGame(isSuccess, title, desc) {
+      gameEnded = true;
+      actionLocked = true;
+      clearTimeout(transitionTimer);
       const modal = document.getElementById('endGameModal');
       const icon = document.getElementById('endGameIcon');
       const t = document.getElementById('endGameTitle');
@@ -675,6 +685,9 @@
     }
 
     function resetGame() {
+      clearTimeout(transitionTimer);
+      actionLocked = false;
+      gameEnded = false;
       currentRoundIndex = 0;
       influencePoints = 60;
       feasibility = 75;
@@ -683,8 +696,8 @@
 
       stakeholderPins = {
         INV: { label: 'INV', name: 'Investor Utama', color: 'bg-rose-500', x: 75, y: 25 },
-        REG: { label: 'REG', name: 'Dinas Lingkungan', color: 'bg-amber-400', x: 30, y: 20 },
-        BUR: { label: 'BUR', name: 'Serikat Buruh', color: 'bg-cyan-400', x: 65, y: 65 },
+        REG: { label: 'REG', name: 'Dinas Lingkungan', color: 'bg-amber-400', x: 75, y: 20 },
+        BUR: { label: 'BUR', name: 'Serikat Buruh', color: 'bg-cyan-400', x: 75, y: 25 },
         PLG: { label: 'PLG', name: 'Pelanggan Kampus', color: 'bg-emerald-400', x: 60, y: 80 }
       };
 
@@ -705,5 +718,6 @@
       renderCrisisCard();
     };
   </script>
+<a class="learning-guide-link" href="Panduan_Pembelajaran.html" style="position:fixed;bottom:10px;right:12px;z-index:100;background:#0f172a;color:#fff;border:1px solid #64748b;border-radius:8px;padding:7px 10px;font:12px Arial,sans-serif;text-decoration:none;">Panduan tugas &amp; penilaian</a>
 </body>
 </html>

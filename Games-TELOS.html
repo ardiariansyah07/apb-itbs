@@ -85,7 +85,7 @@
         <div class="flex items-center gap-2.5 bg-slate-900 border border-telosBorder px-3.5 py-1.5 rounded-xl shadow-inner">
           <i class="fa-solid fa-shield-halved text-cyan-400 text-sm"></i>
           <div>
-            <div class="text-[9px] uppercase tracking-wider text-slate-400 font-bold">Indeks Kesiapan TELOS</div>
+            <div class="text-[9px] uppercase tracking-wider text-slate-400 font-bold">Skor aturan latihan</div>
             <div id="readinessDisplay" class="font-display font-black text-cyan-400 text-xs sm:text-sm leading-none">0% (Kritis)</div>
           </div>
         </div>
@@ -100,6 +100,7 @@
 
   <!-- MAIN SIMULATOR ARENA -->
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-5">
+<p style="padding:12px;border:1px solid #64748b;border-radius:10px;color:inherit;font-size:14px;">Latihan pendamping RPS. Angka, biaya, dan perubahan indikator adalah asumsi skenario; bukan hasil pengukuran sistem nyata, nilai resmi, atau sertifikasi profesi. Bahas alasan pilihan dan risiko residual bersama dosen. <a href="Panduan_Pembelajaran.html" style="text-decoration:underline;">Panduan pembelajaran</a>.</p>
 
     <!-- REAL-TIME 5 TELOS DIMENSIONS PROGRESS (5 CARDS) -->
     <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
@@ -178,7 +179,7 @@
         </div>
 
         <p class="text-xs text-slate-400">
-          Geser atau atur alokasi dana untuk 5 pilar TELOS. Pastikan tidak ada dimensi yang bernilai <strong>Rp 0</strong> saat Anda mengajukan sidang proposal, karena dewan direksi akan langsung menolak proyek Anda!
+          Ini latihan anggaran persiapan bukti TELOS, bukan rumus kelayakan. Skenario meminta total Rp 100 juta dan minimal Rp 10 juta untuk kegiatan pada setiap aspek. Proyek nyata boleh memiliki biaya berbeda atau nol pada suatu aspek jika buktinya memadai.
         </p>
 
         <!-- Allocation Sliders Container -->
@@ -254,13 +255,13 @@
             Meja Pertahanan Proposal Modernisasi UMKM
           </h2>
           <p class="text-xs sm:text-sm text-slate-300 mt-2 leading-relaxed">
-            Dewan direksi meneliti apakah alokasi anggaran investasi Rp 100 Juta Anda sudah proporsional dan tidak ada pilar TELOS yang kosong.
+            Lulus aturan anggaran belum membuktikan kelayakan. Jelaskan kapasitas teknis, manfaat bersih, kepatuhan, kesiapan SDM, dan jadwal beserta sumber/asumsinya.
           </p>
         </div>
 
         <!-- Boardroom Audit Checklist -->
         <div id="auditChecklist" class="space-y-2 text-xs bg-slate-950 p-4 rounded-2xl border border-slate-800">
-          <div class="font-bold text-white uppercase text-[10px] tracking-wider mb-1">Audit Kelayakan Sidang:</div>
+          <div class="font-bold text-white uppercase text-[10px] tracking-wider mb-1">Audit Aturan Skenario:</div>
           <div id="auditItemBudget" class="flex items-center gap-2 text-slate-300"><i class="fa-solid fa-circle text-slate-600 text-[8px]"></i> Total Anggaran Pas Rp 100 Juta</div>
           <div id="auditItemZero" class="flex items-center gap-2 text-slate-300"><i class="fa-solid fa-circle text-slate-600 text-[8px]"></i> Tiada Pilar Bernilai Rp 0</div>
           <div id="auditItemMin" class="flex items-center gap-2 text-slate-300"><i class="fa-solid fa-circle text-slate-600 text-[8px]"></i> Minimal Rp 10 Juta per Pilar</div>
@@ -339,19 +340,11 @@
       document.getElementById('schedVal').innerText = `Rp ${sched} Juta`;
       document.getElementById('schedBar').style.width = `${(sched / 60) * 100}%`;
 
-      // Readiness Index Calculation
-      let score = 0;
-      if (totalSpent === 100) score += 40;
-      if (tech >= 10 && econ >= 10 && legal >= 10 && oper >= 10 && sched >= 10) score += 60;
-      else {
-        // Penalty for zeros
-        let zeros = [tech, econ, legal, oper, sched].filter(v => v === 0).length;
-        score = Math.max(0, 60 - (zeros * 25));
-        if (totalSpent !== 100) score = Math.min(score, 50);
-      }
-
-      document.getElementById('readinessDisplay').innerText = `${score}% (${score >= 85 ? 'Sangat Layak' : (score >= 60 ? 'Cukup' : 'Berisiko')})`;
-
+      const amounts = [tech, econ, legal, oper, sched];
+      const complete = totalSpent === 100 && amounts.every(v => Number.isFinite(v) && v >= 10);
+      const score = (totalSpent === 100 ? 40 : 0) + amounts.filter(v => v >= 10).length * 12;
+      document.getElementById('readinessDisplay').innerText = score + '% (' + (complete ? 'Aturan lengkap' : 'Perlu revisi') + ')';
+      document.getElementById('summaryModal').classList.add('hidden');
       // Audit Checklist UI
       updateAuditItem('auditItemBudget', totalSpent === 100, `Total Anggaran Pas Rp 100 Juta (Saat ini: Rp ${totalSpent} Juta)`);
       updateAuditItem('auditItemZero', tech > 0 && econ > 0 && legal > 0 && oper > 0 && sched > 0, "Tiada Pilar Bernilai Rp 0");
@@ -371,7 +364,7 @@
 
     function submitVenturePitch() {
       const tech = parseInt(document.getElementById('rangeTech').value);
-      const econ = parseInt(document.getElementById('rangeEcon5') || document.getElementById('rangeEcon').value);
+      const econ = parseInt(document.getElementById('rangeEcon').value);
       const legal = parseInt(document.getElementById('rangeLegal').value);
       const oper = parseInt(document.getElementById('rangeOper').value);
       const sched = parseInt(document.getElementById('rangeSched').value);
@@ -387,14 +380,14 @@
         return;
       }
 
-      const hasZero = (tech === 0 || econ === 0 || legal === 0 || oper === 0 || sched === 0);
+      const hasZero = [tech, econ, legal, oper, sched].some(v => !Number.isFinite(v) || v < 10);
       if (hasZero) {
-        triggerEndSummary(false, "Proposal Ditolak Dewan Direksi (Fatal Flaw)", "Anda mengalokasikan Rp 0 pada salah satu pilar TELOS. Di dunia nyata, mengabaikan aspek legal atau pelatihan SDM akan memicu kebangkrutan proyek seketika.");
+        triggerEndSummary(false, "Proposal Ditolak Dewan Direksi (Fatal Flaw)", "Skenario latihan ini meminta minimal Rp 10 juta per kegiatan/aspek. Revisi anggaran Anda. Ini batas latihan, bukan standar universal kelayakan TELOS.");
         return;
       }
 
       // Success
-      triggerEndSummary(true, "Certified TELOS Master & Venture Winner (Grade A+)", "Luar biasa! Proposal modernisasi UMKM Anda disetujui bulat oleh dewan direksi. Alokasi 5 pilar TELOS sangat seimbang, menjamin kelayakan teknis, ekonomi, hukum, operasional, dan jadwal yang tepat.");
+      triggerEndSummary(true, "Aturan Anggaran Latihan Terpenuhi", "Total Rp 100 juta dan batas minimum skenario telah terpenuhi. Selanjutnya lampirkan bukti TELOS, hitung manfaat bersih dan risiko, lalu putuskan kelayakan; pembagian uang saja belum cukup.");
     }
 
     function triggerEndSummary(isWin, title, desc) {
@@ -438,5 +431,6 @@
       updateAllocation();
     };
   </script>
+<a class="learning-guide-link" href="Panduan_Pembelajaran.html" style="position:fixed;bottom:10px;right:12px;z-index:100;background:#0f172a;color:#fff;border:1px solid #64748b;border-radius:8px;padding:7px 10px;font:12px Arial,sans-serif;text-decoration:none;">Panduan tugas &amp; penilaian</a>
 </body>
 </html>

@@ -100,6 +100,7 @@
 
   <!-- MAIN SIMULATOR ARENA -->
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-5">
+<p style="padding:12px;border:1px solid #64748b;border-radius:10px;color:inherit;font-size:14px;">Latihan pendamping RPS. Indikator 0–100 adalah skor kinerja simulasi: makin tinggi makin baik pada kecepatan, efisiensi biaya, kualitas, dan fleksibilitas; bukan durasi atau rupiah aktual. Angka, biaya, dan perubahan indikator adalah asumsi skenario; bukan hasil pengukuran sistem nyata, nilai resmi, atau sertifikasi profesi. Bahas alasan pilihan dan risiko residual bersama dosen. <a href="Panduan_Pembelajaran.html" style="text-decoration:underline;">Panduan pembelajaran</a>.</p>
 
     <!-- REAL-TIME DEVIL'S QUADRANGLE EQUILIBRIUM (4 CORNERS METRICS) -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-3.5">
@@ -250,7 +251,7 @@
           <i class="fa-solid fa-user-tie text-tycoonViolet text-base mt-0.5"></i>
           <div>
             <span class="font-bold text-white block">Catatan Konsultan Senior BPR:</span>
-            <span id="feedbackText">Dalam hukum Devil's Quadrangle, menghilangkan birokrasi manual akan menaikkan Kecepatan dan Kualitas secara drastis, namun membutuhkan investasi software.</span>
+            <span id="feedbackText">Devil's Quadrangle menilai trade-off waktu, biaya, kualitas, dan fleksibilitas. Perbaikan perlu diuji; investasi tidak otomatis memperbaiki semua dimensi.</span>
           </div>
         </div>
 
@@ -328,7 +329,7 @@
             costDelta: +30,
             qualityDelta: +35,
             flexDelta: +25,
-            feedback: "Luar biasa! Integrasi database tunggal menghilangkan selisih stok dan menghadirkan akurasi data (*Quality & Time* meningkat pesat)."
+            feedback: "Luar biasa! Integrasi data membantu mengurangi selisih stok jika transaksi, hak akses, dan rekonsiliasinya benar; meningkatkan akurasi data (*Quality & Time* meningkat pesat)."
           },
           {
             text: "Wajibkan kasir dan staf gudang melakukan rapat koordinasi pencocokan buku setiap pukul 17.00 WIB.",
@@ -372,13 +373,13 @@
         desc: "Pemerintah menerbitkan aturan pajak dan metode pembayaran digital baru yang wajib diadopsi sistem perusahaan dalam 7 hari.",
         options: [
           {
-            text: "Terapkan Heuristik 'Case Triage' & Arsitektur Microservices API Modular.",
+            text: "Sesuaikan aturan bisnis dan konfigurasi modul yang sudah ada; uji kepatuhan dan dampaknya.",
             cost: 20000000,
             timeDelta: +20,
             costDelta: +20,
             qualityDelta: +25,
             flexDelta: +35,
-            feedback: "Sempurna! Arsitektur modular dan pemilahan kasus fleksibel membuat perusahaan sangat tangkas (*Agile*) beradaptasi dengan regulasi."
+            feedback: "Sempurna! Aturan yang dapat dikonfigurasi membantu perusahaan (*Agile*) beradaptasi dengan regulasi."
           },
           {
             text: "Rombak ulang seluruh sistem dari nol menggunakan bahasa pemrograman baru selama 1 tahun.",
@@ -454,6 +455,7 @@
     }
 
     function renderStrategyDesk() {
+      actionLocked = false;
       const cur = TYCOON_PHASES[currentPhaseIndex];
       document.getElementById('phaseBadge').innerHTML = `<i class="fa-solid fa-chess-board mr-1"></i> Fase Keputusan ${cur.phase} / ${TYCOON_PHASES.length}`;
       document.getElementById('crisisTitle').innerText = cur.title;
@@ -485,7 +487,12 @@
       });
     }
 
+    let actionLocked = false;
+    let transitionTimer = null;
+    let gameEnded = false;
     function makeTycoonDecision(opt) {
+      if (actionLocked || gameEnded) return;
+      actionLocked = true;
       budgetReserve -= opt.cost;
       metrics.time += opt.timeDelta;
       metrics.cost += opt.costDelta;
@@ -507,20 +514,23 @@
 
       currentPhaseIndex++;
       if (currentPhaseIndex < TYCOON_PHASES.length) {
-        setTimeout(() => {
+        transitionTimer = setTimeout(() => {
           renderStrategyDesk();
         }, 800);
       } else {
         const avgScore = Math.round((metrics.time + metrics.cost + metrics.quality + metrics.flex) / 4);
         if (avgScore >= 65) {
-          triggerEndSummary(true, "Certified BPR Master & Tycoon Expert (Grade A+)", `Luar biasa! Anda berhasil menyeimbangkan Devil's Quadrangle dengan skor keseimbangan rata-rata ${avgScore}%. Perusahaan bertransformasi menjadi entitas yang cepat, hemat, presisi, dan sangat fleksibel.`);
+          triggerEndSummary(true, "Simulasi Tuntas dengan Baik", `Luar biasa! Anda berhasil menyeimbangkan Devil's Quadrangle dengan skor keseimbangan rata-rata ${avgScore}%. Perusahaan bertransformasi menjadi entitas yang cepat, hemat, presisi, dan sangat fleksibel.`);
         } else {
-          triggerEndSummary(false, "Proyek Selesai dengan Kompromi Berat (Grade C+)", `Simulasi BPR selesai namun keseimbangan Quadrangle belum optimal (Skor rata-rata: ${avgScore}%). Di dunia nyata, pastikan otomatisasi heuristik tidak mengorbankan kualitas layanan.`);
+          triggerEndSummary(false, "Proyek Selesai dengan Kompromi Berat (Perlu Tinjauan)", `Simulasi BPR selesai namun keseimbangan Quadrangle belum optimal (Skor rata-rata: ${avgScore}%). Di dunia nyata, pastikan otomatisasi heuristik tidak mengorbankan kualitas layanan.`);
         }
       }
     }
 
     function triggerEndSummary(isWin, title, desc) {
+      gameEnded = true;
+      actionLocked = true;
+      clearTimeout(transitionTimer);
       const modal = document.getElementById('summaryModal');
       const icon = document.getElementById('summaryIcon');
       const t = document.getElementById('summaryTitle');
@@ -544,6 +554,9 @@
     }
 
     function resetTycoonSimulator() {
+      clearTimeout(transitionTimer);
+      actionLocked = false;
+      gameEnded = false;
       currentPhaseIndex = 0;
       budgetReserve = 100000000;
       metrics = { time: 25, cost: 30, quality: 40, flex: 35 };
@@ -561,5 +574,6 @@
       renderStrategyDesk();
     };
   </script>
+<a class="learning-guide-link" href="Panduan_Pembelajaran.html" style="position:fixed;bottom:10px;right:12px;z-index:100;background:#0f172a;color:#fff;border:1px solid #64748b;border-radius:8px;padding:7px 10px;font:12px Arial,sans-serif;text-decoration:none;">Panduan tugas &amp; penilaian</a>
 </body>
 </html>

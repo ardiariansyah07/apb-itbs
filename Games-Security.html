@@ -108,6 +108,7 @@
 
   <!-- MAIN SIMULATOR ARENA -->
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-5">
+<p style="padding:12px;border:1px solid #64748b;border-radius:10px;color:inherit;font-size:14px;">Latihan pendamping RPS. Angka, biaya, dan perubahan indikator adalah asumsi skenario; bukan hasil pengukuran sistem nyata, nilai resmi, atau sertifikasi profesi. Bahas alasan pilihan dan risiko residual bersama dosen. <a href="Panduan_Pembelajaran.html" style="text-decoration:underline;">Panduan pembelajaran</a>.</p>
 
     <!-- REAL-TIME SECURITY METRICS (4 GAUGES) -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-3.5">
@@ -381,13 +382,13 @@
         timeoutSeconds: 22,
         options: {
           A: {
-            title: "Wajibkan Tanda Tangan Digital HMAC & Log Audit Immutabel",
-            desc: "Aktifkan enkripsi tanda tangan pada setiap resi dan aktifkan server log audit yang tidak bisa dihapus siapapun.",
+            title: "Wajibkan Autentikasi Pesan HMAC & Log Audit Immutabel",
+            desc: "Gunakan HMAC dengan kunci terlindungi untuk memverifikasi pesan, RBAC untuk perubahan transaksi, serta log terpisah yang dibatasi dan diaudit. HMAC bukan enkripsi atau tanda tangan digital asimetris.",
             trustDelta: +20,
             confDelta: +5,
             intDelta: +25,
             availDelta: 0,
-            feedback: "Tepat sasaran! Log audit yang tidak dapat dihapus dan tanda tangan digital menjamin integritas data secara mutlak.",
+            feedback: "Tepat sasaran! HMAC memverifikasi autentisitas/integritas pesan antar pemegang kunci; kontrol akses dan log terproteksi membantu mendeteksi manipulasi. Risiko residual tetap perlu diaudit.",
             resolved: true
           },
           B: {
@@ -459,13 +460,13 @@
         timeoutSeconds: 20,
         options: {
           A: {
-            title: "Cabut Akses Publik, Enkripsi AES-256 & Laporkan ke Lembaga PDP",
+            title: "Batasi Akses Publik, Amankan Bukti & Jalankan Respons Insiden",
             desc: "Tutup celah bucket cloud seketika, enkripsi seluruh data sensitif at-rest, dan jalankan protokol darurat UU PDP.",
             trustDelta: +30,
             confDelta: +30,
             intDelta: +10,
             availDelta: 0,
-            feedback: "Respons insiden profesional! Menutup akses publik dan mematuhi regulasi UU PDP menyelamatkan reputasi perusahaan dari denda berat.",
+            feedback: "Respons insiden profesional! Pembatasan akses, pengamanan bukti, penilaian dampak, dan pemberitahuan sesuai ketentuan yang berlaku membantu membatasi dampak insiden; data yang telah bocor tidak dapat ditarik kembali hanya dengan enkripsi.",
             resolved: true
           },
           B: {
@@ -551,6 +552,7 @@
     }
 
     function renderIncidentDesk() {
+      actionLocked = false;
       const cur = THREAT_WAVES[currentWaveIndex];
       document.getElementById('incidentBadge').innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1"></i> Anomali ${cur.wave} / ${THREAT_WAVES.length} (${cur.pillar})`;
       document.getElementById('incidentTitle').innerText = cur.title;
@@ -586,7 +588,12 @@
       }, 1000);
     }
 
+    let actionLocked = false;
+    let transitionTimer = null;
+    let gameEnded = false;
     function applySecurityPatch(choice) {
+      if (actionLocked || gameEnded) return;
+      actionLocked = true;
       clearInterval(waveIntervalId);
       const cur = THREAT_WAVES[currentWaveIndex];
       const opt = cur.options[choice];
@@ -615,19 +622,22 @@
 
       currentWaveIndex++;
       if (currentWaveIndex < THREAT_WAVES.length) {
-        setTimeout(() => {
+        transitionTimer = setTimeout(() => {
           renderIncidentDesk();
         }, 1000);
       } else {
         if (trustScore >= 75 && auditFindingsCount >= 3) {
-          triggerEndSummary(true, "Certified Security-Aware Expert (Grade A+)", `Luar biasa! Sebagai Systems Analyst & SRE, Anda berhasil mengaudit dan memperkuat seluruh proses bisnis dengan Indeks Kepercayaan ${Math.round(trustScore)}%, memastikan perlindungan mutlak pada pilar Confidentiality, Integrity, dan Availability.`);
+          triggerEndSummary(true, "Simulasi Tuntas dengan Baik", `Luar biasa! Sebagai Systems Analyst & SRE, Anda berhasil mengaudit dan memperkuat seluruh proses bisnis dengan Indeks Kepercayaan ${Math.round(trustScore)}%, memperkuat perlindungan pada pilar Confidentiality, Integrity, dan Availability.`);
         } else {
-          triggerEndSummary(false, "Audit Selesai dengan Catatan Merah (Grade C+)", `Simulasi selesai namun sistem masih menyisakan banyak kerentanan (Skor Trust: ${Math.round(trustScore)}%). Di dunia nyata, budaya 'jalan pintas SOP' harus dibenahi dengan *frictionless security*.`);
+          triggerEndSummary(false, "Audit Selesai dengan Catatan Merah (Perlu Tinjauan)", `Simulasi selesai namun sistem masih menyisakan banyak kerentanan (Skor Trust: ${Math.round(trustScore)}%). Di dunia nyata, budaya 'jalan pintas SOP' harus dibenahi dengan *frictionless security*.`);
         }
       }
     }
 
     function triggerEndSummary(isWin, title, desc) {
+      gameEnded = true;
+      actionLocked = true;
+      clearTimeout(transitionTimer);
       clearInterval(waveIntervalId);
       const modal = document.getElementById('summaryModal');
       const icon = document.getElementById('summaryIcon');
@@ -652,6 +662,9 @@
     }
 
     function resetSimulator() {
+      clearTimeout(transitionTimer);
+      actionLocked = false;
+      gameEnded = false;
       clearInterval(waveIntervalId);
       currentWaveIndex = 0;
       trustScore = 100;
@@ -675,5 +688,6 @@
       renderIncidentDesk();
     };
   </script>
+<a class="learning-guide-link" href="Panduan_Pembelajaran.html" style="position:fixed;bottom:10px;right:12px;z-index:100;background:#0f172a;color:#fff;border:1px solid #64748b;border-radius:8px;padding:7px 10px;font:12px Arial,sans-serif;text-decoration:none;">Panduan tugas &amp; penilaian</a>
 </body>
 </html>
