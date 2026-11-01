@@ -2,6 +2,8 @@
 
 Tanggal penyelesaian: 30 Oktober 2026.
 
+Pembaruan penyajian 1 November 2026: materi Mendelow hanya berada di P2, slide 14–18. P5 kini berisi 42 slide untuk mahasiswa; bagian susulan Mendelow dihapus dan pengantar notasi serta tugas ditulis sebagai materi kelas. Hasil uji 36 kelompok di bawah merekam pemeriksaan paket sebelum penataan ini; setelah penataan, P2/P5 dan tautan lokal diperiksa ulang.
+
 **Seluruh paket lokal telah diperiksa, dan temuan isi serta fungsi yang teridentifikasi telah diperbaiki.** Cakupan dan urutan pembelajaran tetap mengikuti RPS. Pemeriksaan ini menyatakan hasil review dan pengujian paket yang tersedia, bukan pengesahan kurikulum institusi atau jaminan bahwa setiap kemungkinan penggunaan bebas kesalahan.
 
 ## Akses utama
@@ -11,14 +13,14 @@ Tanggal penyelesaian: 30 Oktober 2026.
 - [RPS website lengkap](./RPS_Analisa_Proses_Bisnis.html) dan [RPS Word yang diperbarui](./Rencana%20Pembelajaran%20Semester%20%28RPS%29.docx).
 - [Kuis 1: P1–P6](./Kuis1.html) dan [Kuis 2: P9–P13](./Kuis2.html).
 - [Contoh diagram As-Is, analisis, gap, dan To-Be](./Contoh_AsIs_ToBe.html).
-- [Materi susulan Mendelow di awal P5](./Pertemuan5.html#pelengkap-mendelow).
+- [Matriks Mendelow — P2, slide 14–18](./Pertemuan2.html#pelengkap-mendelow).
 
 ## Materi dan asesmen yang diselaraskan
 
 | Area | Hasil revisi |
 |---|---|
 | P1–P4 | Materi Mendelow dilengkapi; Data dan Artifacts dipisahkan; penamaan task dijelaskan sebagai pedoman keterbacaan; perbandingan flowchart/BPMN diluruskan. Materi pokok yang sudah diajarkan tidak memerlukan pengulangan keseluruhan. |
-| P5 | Susulan Mendelow dan klarifikasi tersedia sebelum As-Is. Label pembahasan kuis keempat kini A. Transisi berikutnya menuju infrastruktur/keamanan, bukan langsung To-Be. Bukti observasi daring/luring dijelaskan sejak awal proyek. |
+| P5 | Fokus pada As-Is, teknik elicitation, notasi BPMN, dan tugas proyek; Mendelow berada di P2. Label pembahasan kuis keempat kini A. Transisi berikutnya menuju infrastruktur/keamanan, bukan langsung To-Be. Bukti observasi daring/luring dijelaskan sejak awal proyek. |
 | P6–P7 | Kuis 1 diarahkan ke lembar asesmen. SPOF, risiko antrean, MFA, lane otorisasi, TLS, dan hasil autentikasi diluruskan; kontrol perlu diterapkan pada sistem, bukan hanya digambar. |
 | P8 | Materi Mendelow yang dituntut UTS kini tersedia sebelum ujian. Studi kasus, pemodelan, dan bobot UTS tetap 30%. |
 | P9–P10 | VAA, BVA, PCE berbasis waktu, dan RCA ditegaskan. Hipotesis akar masalah perlu bukti; solusi tidak menjanjikan biaya nol atau hasil permanen. |
@@ -58,7 +60,7 @@ Hasil game dinyatakan sebagai latihan, bukan sertifikasi profesi atau nilai akad
 ## Hasil verifikasi
 
 - **31 dokumen HTML**: JavaScript inline berhasil diparse; ID unik; tautan dan aset lokal ditemukan.
-- **774 slide pada 16 pertemuan**: navigasi keyboard/dropdown dan pembukaan pembahasan diuji di Chrome pada viewport 1440×1000. Tidak ditemukan teks terpotong pada elemen yang diperiksa.
+- **774 slide pada 16 pertemuan sebelum penataan; 769 slide setelah penataan**: navigasi keyboard/dropdown dan pembukaan pembahasan diuji di Chrome pada viewport 1440×1000. Tidak ditemukan teks terpotong pada elemen yang diperiksa.
 - **60 kuis interaktif**: satu kunci per soal, huruf kunci cocok dengan pembahasan; umpan balik pilihan benar/salah diuji.
 - **30 latihan seret-lepas**: setiap kategori memiliki target pada slide yang sama; penempatan ke target yang sesuai dan pemunculan umpan balik diuji melalui DOM. Ini tidak mencakup seluruh variasi perangkat sentuh.
 - **12 soal pada dua lembar kuis baru**: skor konsep benar semua 60/60, salah semua 0/60; kasus 40 poin tetap dinilai dosen, tidak diberi nilai otomatis.
